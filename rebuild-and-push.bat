@@ -24,9 +24,17 @@ if errorlevel 1 (
 
 echo.
 echo === Building %IMAGE% %NO_CACHE% ===
-docker compose build %NO_CACHE% web
+docker compose -f "%~dp0docker-compose.yml" build %NO_CACHE% web
 if errorlevel 1 (
   echo ERROR: docker compose build failed.
+  exit /b 1
+)
+
+echo.
+echo === Verifying image exists locally ===
+docker images "%IMAGE%" --format "{{.ID}}" | findstr . >nul
+if errorlevel 1 (
+  echo ERROR: Image %IMAGE% was not created by the build.
   exit /b 1
 )
 
