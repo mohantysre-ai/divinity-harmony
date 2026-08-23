@@ -1,5 +1,6 @@
 services:
   web:
+    image: smohanty010620/divinity-harmony:latest
     build:
       context: .
       dockerfile: Dockerfile
