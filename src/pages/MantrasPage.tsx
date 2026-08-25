@@ -10,7 +10,10 @@ import { useToast } from '@/hooks/use-toast';
 
 type Mantra = (typeof bundledData.mantras)[number];
 
-// Direct upload.wikimedia.org paths (Special:FilePath redirects + many hashed URLs in mantras.json are broken/404).
+// Fallback-only deity art (used when a mantra has no image, or its own image fails to load).
+// Per-mantra images now come from mantra.imageUrl in mantras.json (hash paths verified against
+// Wikimedia's MD5-based file path scheme, so each mantra shows its own correct artwork instead
+// of one of these 7 shared pictures).
 const deityImages: Record<string, string> = {
   Ganesha: 'https://upload.wikimedia.org/wikipedia/commons/6/64/Ganesha_Basohli_miniature_circa_1730_Dubost_p73.jpg',
   Shiva: 'https://upload.wikimedia.org/wikipedia/commons/b/bf/Shiva_as_the_Lord_of_Dance_LACMA_edit.jpg',
@@ -52,17 +55,21 @@ function deityFor(mantra: Mantra) {
   return 'Vedic & universal';
 }
 function imageFor(mantra: Mantra) {
-  // Prefer verified deity art over per-mantra Commons URLs (many stored hashes are stale/404).
-  return deityImages[deityFor(mantra)] || mantra.imageUrl || labelImage(deityFor(mantra));
+  // Show this mantra's own exact image first. If it's missing, fall back to shared deity art,
+  // then to a generated label. (onError below handles a broken/dead link at runtime.)
+  return mantra.imageUrl || deityImages[deityFor(mantra)] || labelImage(deityFor(mantra));
 }
 function applyDeityFallback(event: React.SyntheticEvent<HTMLImageElement>, mantra: Mantra) {
   const image = event.currentTarget;
-  if (!image.dataset.deityFallback) {
-    image.dataset.deityFallback = 'requested';
-    image.src = labelImage(deityFor(mantra));
+  const deityArt = deityImages[deityFor(mantra)];
+  const stage = image.dataset.deityFallback;
+  if (!stage && deityArt && image.src !== deityArt) {
+    image.dataset.deityFallback = 'deity';
+    image.src = deityArt;
     return;
   }
   image.onerror = null;
+  image.dataset.deityFallback = 'label';
   image.src = labelImage(deityFor(mantra));
 }
 
