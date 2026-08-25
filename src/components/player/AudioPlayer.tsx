@@ -1,22 +1,11 @@
-
-import React, { useState, useRef, useEffect } from 'react';
-import { 
-  Play, 
-  Pause, 
-  Volume2, 
-  Volume1, 
-  VolumeX, 
-  SkipBack, 
-  SkipForward,
-  Music,
-  List
-} from 'lucide-react';
+import React, { useEffect, useRef, useState } from 'react';
+import { AlertCircle, Music, Pause, Play, SkipBack, SkipForward, Volume1, Volume2, VolumeX } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Slider } from '@/components/ui/slider';
 import { formatTime } from '@/lib/utils';
 
 interface AudioPlayerProps {
-  audioUrl: string;
+  audioUrl?: string;
   title: string;
   onNext?: () => void;
   onPrevious?: () => void;
@@ -25,187 +14,59 @@ interface AudioPlayerProps {
   autoplay?: boolean;
 }
 
-const AudioPlayer: React.FC<AudioPlayerProps> = ({
-  audioUrl,
-  title,
-  onNext,
-  onPrevious,
-  hasNext = false,
-  hasPrevious = false,
-  autoplay = false
-}) => {
-  const [isPlaying, setIsPlaying] = useState(autoplay);
+const AudioPlayer: React.FC<AudioPlayerProps> = ({ audioUrl, title, onNext, onPrevious, hasNext = false, hasPrevious = false, autoplay = false }) => {
+  const audioRef = useRef<HTMLAudioElement>(null);
+  const [isPlaying, setIsPlaying] = useState(false);
   const [volume, setVolume] = useState(0.7);
   const [muted, setMuted] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
-  
+  const [error, setError] = useState('');
+
   useEffect(() => {
-    if (audioRef.current) {
-      if (isPlaying) {
-        audioRef.current.play().catch(error => {
-          console.error("Audio playback failed:", error);
-          setIsPlaying(false);
-        });
-      } else {
-        audioRef.current.pause();
-      }
-    }
-  }, [isPlaying, audioUrl]);
-  
+    const audio = audioRef.current;
+    if (!audio) return;
+    audio.pause();
+    audio.load();
+    setCurrentTime(0); setDuration(0); setIsPlaying(false); setError('');
+    if (autoplay && audioUrl) void play();
+    // The source must fully reset when a different mantra is selected.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [audioUrl]);
+
   useEffect(() => {
-    if (audioRef.current) {
-      audioRef.current.volume = muted ? 0 : volume;
-    }
-  }, [volume, muted]);
-  
-  useEffect(() => {
-    setIsPlaying(autoplay);
-    setCurrentTime(0);
-    if (audioRef.current) {
-      audioRef.current.currentTime = 0;
-      if (autoplay) {
-        audioRef.current.play().catch(error => {
-          console.error("Audio playback failed:", error);
-          setIsPlaying(false);
-        });
-      }
-    }
-  }, [audioUrl, autoplay]);
-  
-  const handleTimeUpdate = () => {
-    if (audioRef.current) {
-      setCurrentTime(audioRef.current.currentTime);
-    }
+    if (audioRef.current) audioRef.current.volume = muted ? 0 : volume;
+  }, [muted, volume]);
+
+  const play = async () => {
+    const audio = audioRef.current;
+    if (!audio || !audioUrl) return;
+    setError('');
+    try { await audio.play(); setIsPlaying(true); }
+    catch { setIsPlaying(false); setError('This recording is not available in your browser. Please select another mantra.'); }
   };
-  
-  const handleLoadedMetadata = () => {
-    if (audioRef.current) {
-      setDuration(audioRef.current.duration);
-    }
-  };
-  
-  const handleEnded = () => {
-    setIsPlaying(false);
-    setCurrentTime(0);
-    if (onNext && hasNext) {
-      onNext();
-    }
-  };
-  
-  const handleSeek = (value: number[]) => {
-    if (audioRef.current) {
-      const newTime = value[0];
-      audioRef.current.currentTime = newTime;
-      setCurrentTime(newTime);
-    }
-  };
-  
-  const handleVolumeChange = (value: number[]) => {
-    const newVolume = value[0];
-    setVolume(newVolume);
-    setMuted(newVolume === 0);
-  };
-  
-  const togglePlay = () => {
-    setIsPlaying(!isPlaying);
-  };
-  
-  const toggleMute = () => {
-    setMuted(!muted);
-  };
-  
-  const VolumeIcon = () => {
-    if (muted || volume === 0) return <VolumeX />;
-    if (volume < 0.5) return <Volume1 />;
-    return <Volume2 />;
-  };
-  
-  return (
-    <div className="audio-player">
-      <audio
-        ref={audioRef}
-        src={audioUrl}
-        onTimeUpdate={handleTimeUpdate}
-        onLoadedMetadata={handleLoadedMetadata}
-        onEnded={handleEnded}
-      />
-      
-      <div className="flex items-center gap-3 mb-3">
-        <div className="w-10 h-10 bg-hindu-orange/20 rounded-full flex items-center justify-center">
-          <Music className="text-hindu-orange w-5 h-5" />
-        </div>
-        <div className="flex-1 truncate">
-          <h3 className="font-medium truncate">{title}</h3>
-          <div className="text-xs text-muted-foreground">
-            {formatTime(currentTime)} / {formatTime(duration)}
-          </div>
-        </div>
-      </div>
-      
-      <div className="progress-bar mb-4" onClick={(e) => {
-        if (audioRef.current) {
-          const rect = e.currentTarget.getBoundingClientRect();
-          const percent = (e.clientX - rect.left) / rect.width;
-          const newTime = percent * duration;
-          audioRef.current.currentTime = newTime;
-          setCurrentTime(newTime);
-        }
-      }}>
-        <div className="progress" style={{ width: `${(currentTime / duration) * 100 || 0}%` }}></div>
-      </div>
-      
-      <div className="audio-player-controls flex items-center justify-between">
-        <div className="flex items-center gap-1">
-          <Button 
-            variant="ghost" 
-            size="icon"
-            disabled={!hasPrevious}
-            onClick={onPrevious}
-          >
-            <SkipBack className="w-5 h-5" />
-            <span className="sr-only">Previous</span>
-          </Button>
-          
-          <Button 
-            variant="outline" 
-            size="icon" 
-            className="h-12 w-12 rounded-full"
-            onClick={togglePlay}
-          >
-            {isPlaying ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5 ml-0.5" />}
-            <span className="sr-only">{isPlaying ? 'Pause' : 'Play'}</span>
-          </Button>
-          
-          <Button 
-            variant="ghost" 
-            size="icon"
-            disabled={!hasNext}
-            onClick={onNext}
-          >
-            <SkipForward className="w-5 h-5" />
-            <span className="sr-only">Next</span>
-          </Button>
-        </div>
-        
-        <div className="flex items-center gap-2 w-1/3">
-          <Button variant="ghost" size="icon" onClick={toggleMute}>
-            <VolumeIcon />
-            <span className="sr-only">{muted ? 'Unmute' : 'Mute'}</span>
-          </Button>
-          <Slider
-            value={[muted ? 0 : volume]}
-            min={0}
-            max={1}
-            step={0.01}
-            onValueChange={handleVolumeChange}
-            className="w-full"
-          />
-        </div>
-      </div>
-    </div>
-  );
+  const togglePlay = () => { if (isPlaying) { audioRef.current?.pause(); setIsPlaying(false); } else void play(); };
+  const safeDuration = Number.isFinite(duration) ? duration : 0;
+  const progress = safeDuration ? Math.min(100, (currentTime / safeDuration) * 100) : 0;
+
+  return <section className="audio-player mt-6 rounded-xl border bg-card p-5 shadow-sm" aria-label="Audio player">
+    <audio ref={audioRef} preload="metadata" src={audioUrl}
+      onTimeUpdate={() => setCurrentTime(audioRef.current?.currentTime || 0)}
+      onLoadedMetadata={() => setDuration(audioRef.current?.duration || 0)}
+      onEnded={() => { setIsPlaying(false); setCurrentTime(0); if (hasNext) onNext?.(); }}
+      onError={() => { setIsPlaying(false); setError('Audio link is unavailable. The mantra text remains available to read.'); }} />
+    <div className="mb-4 flex items-center gap-3"><div className="flex h-10 w-10 items-center justify-center rounded-full bg-hindu-orange/20"><Music className="w-5 text-hindu-orange" /></div>
+      <div className="min-w-0 flex-1"><h3 className="truncate font-medium">{title}</h3><p className="text-xs text-muted-foreground">{formatTime(currentTime)} / {formatTime(safeDuration)}</p></div></div>
+    {error && <p role="status" className="mb-3 flex items-center gap-2 rounded-md bg-destructive/10 p-2 text-sm text-destructive"><AlertCircle className="h-4 w-4" />{error}</p>}
+    <Slider value={[currentTime]} min={0} max={safeDuration || 0} step={0.1} disabled={!safeDuration}
+      onValueChange={([time]) => { if (audioRef.current) { audioRef.current.currentTime = time; setCurrentTime(time); } }} aria-label="Seek audio" />
+    <div className="mt-4 flex items-center justify-between"><div className="flex items-center gap-1">
+      <Button variant="ghost" size="icon" disabled={!hasPrevious} onClick={onPrevious}><SkipBack /><span className="sr-only">Previous</span></Button>
+      <Button variant="outline" size="icon" className="h-12 w-12 rounded-full" disabled={!audioUrl} onClick={togglePlay}>{isPlaying ? <Pause /> : <Play className="ml-0.5" />}<span className="sr-only">{isPlaying ? 'Pause' : 'Play'}</span></Button>
+      <Button variant="ghost" size="icon" disabled={!hasNext} onClick={onNext}><SkipForward /><span className="sr-only">Next</span></Button>
+    </div><div className="flex w-1/3 items-center gap-2"><Button variant="ghost" size="icon" onClick={() => setMuted(!muted)}>{muted || volume === 0 ? <VolumeX /> : volume < 0.5 ? <Volume1 /> : <Volume2 />}<span className="sr-only">{muted ? 'Unmute' : 'Mute'}</span></Button>
+      <Slider value={[muted ? 0 : volume]} min={0} max={1} step={0.01} onValueChange={([next]) => { setVolume(next); setMuted(next === 0); }} aria-label="Volume" /></div></div>
+  </section>;
 };
 
 export default AudioPlayer;
