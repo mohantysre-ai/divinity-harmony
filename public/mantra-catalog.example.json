@@ -1,0 +1,14 @@
+{
+  "mantras": [
+    {
+      "id": 10001,
+      "title": "Example Vedic Mantra",
+      "description": "Use this format for independently verified public-domain devotional content.",
+      "text": "ॐ शान्तिः शान्तिः शान्तिः",
+      "translation": "Om, peace, peace, peace.",
+      "imageUrl": "https://images.example.org/deity.jpg",
+      "audioUrl": "https://audio.example.org/recording.mp3",
+      "sourceUrl": "https://example.org/source"
+    }
+  ]
+}
