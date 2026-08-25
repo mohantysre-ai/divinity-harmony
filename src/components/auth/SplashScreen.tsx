@@ -87,7 +87,7 @@ const SplashScreen: React.FC<SplashScreenProps> = ({ onComplete }) => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-[url('/temple-bg.jpg')] bg-cover bg-center">
+      <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-orange-950 via-amber-900 to-rose-950">
         <div className="absolute inset-0 bg-gradient-to-b from-hindu-red/70 to-hindu-orange/70 mix-blend-multiply"></div>
         <div className="relative z-10 text-center">
           <div className="flex items-center justify-center mb-8">
@@ -116,7 +116,7 @@ const SplashScreen: React.FC<SplashScreenProps> = ({ onComplete }) => {
   return (
     <div className="min-h-screen flex flex-col md:flex-row">
       {/* Left side - Decorative */}
-      <div className="hidden md:block md:w-1/2 bg-[url('/temple-bg.jpg')] bg-cover bg-center relative">
+      <div className="hidden md:block md:w-1/2 bg-gradient-to-br from-orange-950 via-amber-900 to-rose-950 relative">
         <div className="absolute inset-0 bg-gradient-to-br from-hindu-red/70 to-hindu-orange/70 mix-blend-multiply"></div>
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="text-center p-10">

@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 const HeroBanner = () => {
   return (
     <div className="relative overflow-hidden rounded-xl bg-gradient-to-r from-hindu-red to-hindu-orange mb-10">
-      <div className="absolute inset-0 bg-[url('/om-pattern.png')] opacity-10"></div>
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_25%_25%,rgba(255,255,255,0.32)_0,transparent_24%),radial-gradient(circle_at_75%_75%,rgba(255,210,128,0.25)_0,transparent_28%)]"></div>
       <div className="container mx-auto px-6 py-12 md:py-24 relative z-10">
         <div className="max-w-3xl">
           <h1 className="text-4xl md:text-6xl font-bold text-white mb-4 drop-shadow-md">
