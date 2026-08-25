@@ -9,16 +9,21 @@ import bundledData from '@/data/mantras.json';
 import { useToast } from '@/hooks/use-toast';
 
 type Mantra = (typeof bundledData.mantras)[number];
+
+// Direct upload.wikimedia.org paths (Special:FilePath redirects + many hashed URLs in mantras.json are broken/404).
 const deityImages: Record<string, string> = {
-  'Ganesha': 'https://commons.wikimedia.org/wiki/Special:FilePath/Ganesha_Basohli_miniature_circa_1730_Dubost_p73.jpg?width=900',
-  'Shiva': 'https://commons.wikimedia.org/wiki/Special:FilePath/Shiva_as_the_Lord_of_Dance_LACMA_edit.jpg?width=900',
-  'Vishnu & avatars': 'https://commons.wikimedia.org/wiki/Special:FilePath/Vishnu_on_Shesha_Odisha.jpg?width=900',
-  'Divine Mother': 'https://commons.wikimedia.org/wiki/Special:FilePath/Durga_Mahishasura_Mardini.JPG?width=900',
-  'Hanuman': 'https://commons.wikimedia.org/wiki/Special:FilePath/New_Delhi_Temple_Hanuman.jpg?width=900',
-  'Vedic & planetary': 'https://commons.wikimedia.org/wiki/Special:FilePath/Surya_with_his_consorts%2C_Chhatarpur.jpg?width=900',
+  Ganesha: 'https://upload.wikimedia.org/wikipedia/commons/6/64/Ganesha_Basohli_miniature_circa_1730_Dubost_p73.jpg',
+  Shiva: 'https://upload.wikimedia.org/wikipedia/commons/b/bf/Shiva_as_the_Lord_of_Dance_LACMA_edit.jpg',
+  'Vishnu & avatars': 'https://upload.wikimedia.org/wikipedia/commons/c/c6/Vishnu_and_Lakshmi_on_Shesha_Naga%2C_ca_1870.jpg',
+  'Divine Mother': 'https://upload.wikimedia.org/wikipedia/commons/5/5f/Durga_Mahishasuramardini.jpg',
+  Hanuman: 'https://upload.wikimedia.org/wikipedia/commons/4/46/Hanuman.jpg',
+  'Vedic & planetary': 'https://upload.wikimedia.org/wikipedia/commons/9/9b/Surya_deva.jpg',
+  'Vedic & universal': 'https://upload.wikimedia.org/wikipedia/commons/c/c2/Gayatri.jpg',
 };
+
 function labelImage(label: string) {
-  return `data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="960" height="540"%3E%3Crect width="960" height="540" fill="%23551d1d"/%3E%3Ctext x="480" y="280" text-anchor="middle" font-family="serif" font-size="54" fill="white"%3E${encodeURIComponent(label)}%3C/text%3E%3C/svg%3E`;
+  const safe = encodeURIComponent(label).replace(/'/g, '%27');
+  return `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='960' height='540'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop stop-color='%237a1f1f'/%3E%3Cstop offset='1' stop-color='%23401010'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='960' height='540' fill='url(%23g)'/%3E%3Ctext x='480' y='275' text-anchor='middle' font-family='Georgia,serif' font-size='42' fill='%23f8e7c9'%3E${safe}%3C/text%3E%3C/svg%3E`;
 }
 
 function isMantra(value: unknown): value is Mantra {
@@ -47,13 +52,14 @@ function deityFor(mantra: Mantra) {
   return 'Vedic & universal';
 }
 function imageFor(mantra: Mantra) {
-  return mantra.imageUrl || deityImages[deityFor(mantra)] || labelImage(deityFor(mantra));
+  // Prefer verified deity art over per-mantra Commons URLs (many stored hashes are stale/404).
+  return deityImages[deityFor(mantra)] || mantra.imageUrl || labelImage(deityFor(mantra));
 }
 function applyDeityFallback(event: React.SyntheticEvent<HTMLImageElement>, mantra: Mantra) {
   const image = event.currentTarget;
   if (!image.dataset.deityFallback) {
     image.dataset.deityFallback = 'requested';
-    image.src = deityImages[deityFor(mantra)] || labelImage(deityFor(mantra));
+    image.src = labelImage(deityFor(mantra));
     return;
   }
   image.onerror = null;
@@ -107,17 +113,17 @@ const MantrasPage = () => {
       <p className="mx-auto mt-3 max-w-2xl text-muted-foreground">Explore {catalog.length}+ prayers, Vedic hymns and stotras. Search by deity, text or intention.</p>
       {catalogNotice && <p className="mt-2 text-sm text-muted-foreground">{catalogNotice}</p>}</div>
     <div className="grid grid-cols-1 gap-8 lg:grid-cols-3"><section className="lg:col-span-2"><article className="overflow-hidden rounded-xl bg-card shadow-lg">
-      <div className="relative aspect-video bg-muted"><img src={imageFor(currentMantra)} alt={currentMantra.title} className="h-full w-full object-cover" onError={(event) => applyDeityFallback(event, currentMantra)} />
+      <div className="relative aspect-video bg-muted"><img key={currentMantra.id} src={imageFor(currentMantra)} alt={currentMantra.title} className="h-full w-full object-cover" onError={(event) => applyDeityFallback(event, currentMantra)} />
         <span className="absolute left-4 top-4 rounded-full bg-background/85 px-3 py-1 text-xs font-semibold backdrop-blur">{deityFor(currentMantra)}</span></div>
       <div className="p-6"><h2 className="text-2xl font-bold">{currentMantra.title}</h2><p className="mt-2 text-muted-foreground">{currentMantra.description}</p>
         <blockquote className="mantra-text my-6 rounded-lg bg-muted/50 p-4 text-center text-lg">{currentMantra.text}</blockquote>
         <p className="text-sm text-muted-foreground"><strong>Translation:</strong> {currentMantra.translation}</p></div></article>
-      <AudioPlayer audioUrl={currentMantra.audioUrl} text={currentMantra.text} title={currentMantra.title} onNext={handleNext} onPrevious={handlePrevious} hasNext={currentMantraIndex < catalog.length - 1} hasPrevious={currentMantraIndex > 0} /></section>
+      <AudioPlayer text={currentMantra.text} title={currentMantra.title} onNext={handleNext} onPrevious={handlePrevious} hasNext={currentMantraIndex < catalog.length - 1} hasPrevious={currentMantraIndex > 0} /></section>
       <aside className="lg:col-span-1"><h3 className="text-xl font-bold">Mantra Library</h3><p className="mb-3 text-sm text-muted-foreground">{visibleMantras.length} matching prayers</p>
         <Input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search Shiva, Gayatri, peace…" aria-label="Search mantra library" />
         <div className="my-3 flex flex-wrap gap-2">{deities.map((item) => <Button key={item} size="sm" variant={deity === item ? 'default' : 'outline'} onClick={() => setDeity(item)}>{item}</Button>)}</div>
         <div className="max-h-[570px] space-y-3 overflow-auto pr-2">{visibleMantras.map(({ mantra, index }) => <Card key={mantra.id} role="button" tabIndex={0} className={`cursor-pointer transition-all hover:border-primary/60 ${index === currentMantraIndex ? 'border-primary ring-1 ring-primary' : ''}`} onClick={() => setCurrentMantraIndex(index)} onKeyDown={(event) => event.key === 'Enter' && setCurrentMantraIndex(index)}>
-          <CardContent className="flex gap-3 p-3"><img src={imageFor(mantra)} alt="" className="h-14 w-14 shrink-0 rounded-md object-cover" onError={(event) => applyDeityFallback(event, mantra)} />
+          <CardContent className="flex gap-3 p-3"><img key={mantra.id} src={imageFor(mantra)} alt="" className="h-14 w-14 shrink-0 rounded-md object-cover" onError={(event) => applyDeityFallback(event, mantra)} />
           <div className="min-w-0"><CardTitle className="text-base">{mantra.title}</CardTitle><CardDescription className="mt-1 text-xs">{deityFor(mantra)}</CardDescription></div></CardContent></Card>)}
           {visibleMantras.length === 0 && <p className="rounded-lg border border-dashed p-5 text-sm text-muted-foreground">No mantra found. Try another spelling or deity.</p>}</div></aside></div>
   </main></Layout></ThemeProvider>;

@@ -48,9 +48,9 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ audioUrl, text, title, onNext
     if (audioRef.current) audioRef.current.volume = muted ? 0 : volume;
   }, [muted, volume]);
 
-  const speakText = () => {
+  const speakText = (notice = 'Playing with your device voice.') => {
     if (!('speechSynthesis' in window)) {
-      setError('No supported audio source is available in this browser.');
+      setError('Voice playback is not supported in this browser.');
       return;
     }
     window.speechSynthesis.cancel();
@@ -61,7 +61,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ audioUrl, text, title, onNext
     utterance.onerror = () => { setIsSpeaking(false); setError('Device voice playback could not start.'); };
     window.speechSynthesis.speak(utterance);
     setIsSpeaking(true);
-    setError('Original recording is unavailable. Playing with your device voice.');
+    setError(notice);
   };
   const play = async () => {
     const audio = audioRef.current;
@@ -86,7 +86,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ audioUrl, text, title, onNext
       onError={() => { setIsPlaying(false); speakText(); }} />
     <div className="mb-4 flex items-center gap-3"><div className="flex h-10 w-10 items-center justify-center rounded-full bg-hindu-orange/20"><Music className="w-5 text-hindu-orange" /></div>
       <div className="min-w-0 flex-1"><h3 className="truncate font-medium">{title}</h3><p className="text-xs text-muted-foreground">{formatTime(currentTime)} / {formatTime(safeDuration)}</p></div></div>
-    {error && <p role="status" className="mb-3 flex items-center gap-2 rounded-md bg-destructive/10 p-2 text-sm text-destructive"><AlertCircle className="h-4 w-4" />{error}</p>}
+    {error && <p role="status" className={`mb-3 flex items-center gap-2 rounded-md p-2 text-sm ${error.includes('could not') || error.includes('not supported') ? 'bg-destructive/10 text-destructive' : 'bg-muted text-muted-foreground'}`}><AlertCircle className="h-4 w-4 shrink-0" />{error}</p>}
     <Slider value={[currentTime]} min={0} max={safeDuration || 0} step={0.1} disabled={!safeDuration}
       onValueChange={([time]) => { if (audioRef.current) { audioRef.current.currentTime = time; setCurrentTime(time); } }} aria-label="Seek audio" />
     <div className="mt-4 flex items-center justify-between"><div className="flex items-center gap-1">
