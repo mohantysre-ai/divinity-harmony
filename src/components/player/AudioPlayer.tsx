@@ -29,10 +29,13 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ audioUrl, title, onNext, onPr
     audio.pause();
     audio.load();
     setCurrentTime(0); setDuration(0); setIsPlaying(false); setError('');
-    if (autoplay && audioUrl) void play();
-    // The source must fully reset when a different mantra is selected.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [audioUrl]);
+    if (autoplay && audioUrl) {
+      void audio.play().then(() => setIsPlaying(true)).catch(() => {
+        setIsPlaying(false);
+        setError('This recording is not available in your browser. Please select another mantra.');
+      });
+    }
+  }, [audioUrl, autoplay]);
 
   useEffect(() => {
     if (audioRef.current) audioRef.current.volume = muted ? 0 : volume;
