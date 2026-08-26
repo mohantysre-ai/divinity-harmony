@@ -10,17 +10,16 @@ import { useToast } from '@/hooks/use-toast';
 
 type Mantra = (typeof bundledData.mantras)[number];
 
-// Verified Wikimedia Commons originals (hashed/stale Commons URLs in older data were 404).
+// Fallback-only deity art (used when a mantra has no image, or its own image fails to load).
+// Per-mantra images now come from mantra.imageUrl in mantras.json (hash paths verified against
+// Wikimedia's MD5-based file path scheme, so each mantra shows its own correct artwork instead
+// of one of these 7 shared pictures).
 const deityImages: Record<string, string> = {
   Ganesha: 'https://upload.wikimedia.org/wikipedia/commons/6/64/Ganesha_Basohli_miniature_circa_1730_Dubost_p73.jpg',
   Shiva: 'https://upload.wikimedia.org/wikipedia/commons/b/bf/Shiva_as_the_Lord_of_Dance_LACMA_edit.jpg',
   'Vishnu & avatars': 'https://upload.wikimedia.org/wikipedia/commons/c/c6/Vishnu_and_Lakshmi_on_Shesha_Naga%2C_ca_1870.jpg',
-  Krishna: 'https://upload.wikimedia.org/wikipedia/commons/6/6c/Radha_Krishna.jpg',
   'Divine Mother': 'https://upload.wikimedia.org/wikipedia/commons/5/5f/Durga_Mahishasuramardini.jpg',
-  Lakshmi: 'https://upload.wikimedia.org/wikipedia/commons/6/6d/Lakshmi.jpg',
-  Saraswati: 'https://upload.wikimedia.org/wikipedia/commons/1/12/Saraswati.jpg',
   Hanuman: 'https://upload.wikimedia.org/wikipedia/commons/4/46/Hanuman.jpg',
-  Murugan: 'https://upload.wikimedia.org/wikipedia/commons/3/3b/Kartikeya.jpg',
   'Vedic & planetary': 'https://upload.wikimedia.org/wikipedia/commons/9/9b/Surya_deva.jpg',
   'Vedic & universal': 'https://upload.wikimedia.org/wikipedia/commons/c/c2/Gayatri.jpg',
 };
@@ -47,29 +46,30 @@ function mergeCatalog(remote: Mantra[]) {
 }
 function deityFor(mantra: Mantra) {
   const value = `${mantra.title} ${mantra.description}`.toLowerCase();
-  if (/(ganesh|ganapati|vinayak)/.test(value)) return 'Ganesha';
+  if (/(shiva|rudra|linga|tandava|mrityunjaya)/.test(value)) return 'Shiva';
+  if (/(krishna|vishnu|narayana|rama|gita|purusha)/.test(value)) return 'Vishnu & avatars';
+  if (/(durga|devi|lakshmi|saraswati|shakti|gayatri|chandi)/.test(value)) return 'Divine Mother';
+  if (/(ganesh|ganapati)/.test(value)) return 'Ganesha';
   if (/(hanuman)/.test(value)) return 'Hanuman';
-  if (/(subramanya|murugan|kartikeya|skanda)/.test(value)) return 'Murugan';
-  if (/(lakshmi|kamala|kanakadhara|sri sukt)/.test(value)) return 'Lakshmi';
-  if (/(saraswati|sarasvati)/.test(value)) return 'Saraswati';
-  if (/(durga|devi|kali|tara|shakti|chandi|bhavani|annapurna|lalita|soundarya)/.test(value)) return 'Divine Mother';
-  if (/(shiva|siva|rudra|linga|tandava|mrityunjaya|dakshinamurthy|nataraja|bhairav)/.test(value)) return 'Shiva';
-  if (/(krishna|govinda|radha|madhura|bhaja govinda)/.test(value)) return 'Krishna';
-  if (/(vishnu|narayana|narasimha|rama|gita|purusha|hayagriva|venkatesh|hari)/.test(value)) return 'Vishnu & avatars';
-  if (/(surya|aditya|navagraha|chandra|shani|rahu|ketu|mangala|budha|shukra)/.test(value)) return 'Vedic & planetary';
+  if (/(surya|aditya|navagraha)/.test(value)) return 'Vedic & planetary';
   return 'Vedic & universal';
 }
 function imageFor(mantra: Mantra) {
+  // Show this mantra's own exact image first. If it's missing, fall back to shared deity art,
+  // then to a generated label. (onError below handles a broken/dead link at runtime.)
   return mantra.imageUrl || deityImages[deityFor(mantra)] || labelImage(deityFor(mantra));
 }
 function applyDeityFallback(event: React.SyntheticEvent<HTMLImageElement>, mantra: Mantra) {
   const image = event.currentTarget;
-  if (!image.dataset.deityFallback) {
-    image.dataset.deityFallback = 'requested';
-    image.src = labelImage(deityFor(mantra));
+  const deityArt = deityImages[deityFor(mantra)];
+  const stage = image.dataset.deityFallback;
+  if (!stage && deityArt && image.src !== deityArt) {
+    image.dataset.deityFallback = 'deity';
+    image.src = deityArt;
     return;
   }
   image.onerror = null;
+  image.dataset.deityFallback = 'label';
   image.src = labelImage(deityFor(mantra));
 }
 
