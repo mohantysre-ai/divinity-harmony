@@ -27,27 +27,43 @@ const IMAGES = {
   hanuman: 'https://upload.wikimedia.org/wikipedia/commons/4/46/Hanuman.jpg',
   surya: 'https://upload.wikimedia.org/wikipedia/commons/9/9b/Surya_deva.jpg',
   murugan: 'https://upload.wikimedia.org/wikipedia/commons/3/3b/Kartikeya.jpg',
-  om: 'https://upload.wikimedia.org/wikipedia/commons/b/b7/Om_symbol.svg',
-  gayatri: 'https://upload.wikimedia.org/wikipedia/commons/c/c2/Gayatri.jpg',
+  // Proper five-headed Goddess Gayatri (Raja Ravi Varma tradition), not the generic "Gayatri.jpg"
+  gayatri: 'https://upload.wikimedia.org/wikipedia/commons/b/b4/Gayatri1.jpg',
   kali: 'https://upload.wikimedia.org/wikipedia/commons/5/5f/Durga_Mahishasuramardini.jpg',
+  agni: 'https://upload.wikimedia.org/wikipedia/commons/2/2e/Agni_deva.jpg',
+  indra: 'https://upload.wikimedia.org/wikipedia/commons/3/36/Indra_deva.jpg',
+  varuna: 'https://upload.wikimedia.org/wikipedia/commons/3/35/Varuna.jpg',
+  // Vedic / peace / universal — use temple lamp / goddess imagery, NOT Om everywhere
+  veda: 'https://upload.wikimedia.org/wikipedia/commons/c/c2/Gayatri.jpg',
+  peace: 'https://upload.wikimedia.org/wikipedia/commons/1/12/Saraswati.jpg',
+  guru: 'https://upload.wikimedia.org/wikipedia/commons/b/bf/Shiva_as_the_Lord_of_Dance_LACMA_edit.jpg',
 };
 
 function classify(title = '', description = '') {
   const v = `${title} ${description}`.toLowerCase();
-  if (/(ganesh|ganapati|vinayak)/.test(v)) return 'ganesha';
+  if (/(ganesh|ganapati|vinayak|siddhi)/.test(v)) return 'ganesha';
   if (/(hanuman)/.test(v)) return 'hanuman';
-  if (/(kali|tara|chandi|bhairav)/.test(v)) return 'kali';
-  if (/(durga|devi|shakti|bhavani|annapurna|lalita|soundarya|saptashloki)/.test(v)) return 'durga';
+  if (/(^| )gayatri( |$)|goddess gayatri|vedamata/.test(v) && !/(shiva|durga|lakshmi|saraswati|hanuman|krishna|rama|vishnu|ganesh|brahma|purusha|bhumi|hamsa|matsya|kurma|varaha|vamana|parashurama|dakshinamurthy|sai|yogendra)/.test(v)) {
+    return 'gayatri';
+  }
+  if (/(kali|tara|chandi|bhairav|chhinnamasta|bagala|matangi|dhumavati|bhuvanesh|tripura|sodashi|shodashi)/.test(v)) return 'kali';
+  if (/(durga|devi|shakti|bhavani|annapurna|lalita|soundarya|saptashloki|meenakshi|kamakshi|visalakshi)/.test(v)) return 'durga';
   if (/(lakshmi|kamala|ashta.?lakshmi|kanakadhara|sri sukt)/.test(v)) return 'lakshmi';
-  if (/(saraswati|sarasvati)/.test(v)) return 'saraswati';
-  if (/(krishna|govinda|gita|radha|madhura|bhaja govinda)/.test(v)) return 'krishna';
-  if (/(rama|sita|ramayana|sundara kanda)/.test(v)) return 'rama';
-  if (/(vishnu|narayana|narasimha|hayagriva|venkatesh|panduranga|hari)/.test(v)) return 'vishnu';
-  if (/(shiva|siva|rudra|linga|tandava|mrityunjaya|dakshinamurthy|nataraja|kalabhairava)/.test(v)) return 'shiva';
-  if (/(subramanya|murugan|kartikeya|skanda)/.test(v)) return 'murugan';
-  if (/(surya|aditya|navagraha|chandra|shani|rahu|ketu|mangala|budha|shukra|guru \()/.test(v)) return 'surya';
-  if (/(gayatri)/.test(v)) return 'gayatri';
-  return 'om';
+  if (/(saraswati|sarasvati|medha)/.test(v)) return 'saraswati';
+  if (/(krishna|govinda|gita|radha|madhura|bhaja govinda|vitthala|jagannath)/.test(v)) return 'krishna';
+  if (/(rama|sita|ramayana|sundara kanda|ayodhya)/.test(v)) return 'rama';
+  if (/(vishnu|narayana|narasimha|hayagriva|venkatesh|panduranga|hari|garuda|sudarshan)/.test(v)) return 'vishnu';
+  if (/(shiva|siva|rudra|linga|tandava|mrityunjaya|dakshinamurthy|nataraja|kalabhairava|bilva)/.test(v)) return 'shiva';
+  if (/(subramanya|murugan|kartikeya|skanda|ayyappa)/.test(v)) return 'murugan';
+  if (/(surya|aditya|navagraha|chandra|shani|rahu|ketu|mangala|budha|shukra|namaskar)/.test(v)) return 'surya';
+  if (/(agni)/.test(v)) return 'agni';
+  if (/(indra)/.test(v)) return 'indra';
+  if (/(varuna)/.test(v)) return 'varuna';
+  if (/(guru|vyasa|brahma sutra|narada)/.test(v)) return 'guru';
+  if (/(shanti|peace|poornamadah|asato ma|pavamana|dyauh|sarvesham)/.test(v)) return 'peace';
+  if (/(upanishad|veda|sukta|purusha|ishavasya|katha|mundaka|taittiriya|brahma|om tat sat|pratah)/.test(v)) return 'veda';
+  // Prefer peace/veda art over Om for leftover universal mantras
+  return 'peace';
 }
 
 /** Standard public-domain enrichments for entries that only had a short namah. */

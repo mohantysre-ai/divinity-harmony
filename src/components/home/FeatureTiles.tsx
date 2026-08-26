@@ -23,7 +23,8 @@ const features = [
     color: 'from-hindu-red/30 to-hindu-red/5',
     iconColor: 'text-hindu-red',
     textColor: 'text-hindu-red',
-    badge: 'Live Now'
+    badge: 'Live Now',
+    image: 'https://img.youtube.com/vi/8opaIVCposg/hqdefault.jpg',
   },
   {
     title: 'Spiritual Music',
@@ -78,18 +79,23 @@ const FeatureTiles = () => {
             >
               <CardContent className="p-0">
                 <div className={`bg-gradient-to-br ${feature.color} p-6`}>
-                  <div className="flex items-start justify-between mb-4">
-                    <div className={`w-12 h-12 rounded-full ${feature.iconColor} bg-background flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform`}>
+                  {'image' in feature && feature.image ? (
+                    <div className="mb-4 aspect-video overflow-hidden rounded-lg bg-muted">
+                      <img src={feature.image} alt="" className="h-full w-full object-cover" loading="lazy" />
+                    </div>
+                  ) : null}
+                  <div className="mb-4 flex items-start justify-between">
+                    <div className={`flex h-12 w-12 items-center justify-center rounded-full ${feature.iconColor} bg-background shadow-sm transition-transform group-hover:scale-110`}>
                       <feature.icon className="h-6 w-6" />
                     </div>
                     {feature.badge && (
-                      <Badge className="bg-background/80 text-foreground text-xs font-medium">
+                      <Badge className="bg-background/80 text-xs font-medium text-foreground">
                         {feature.badge}
                       </Badge>
                     )}
                   </div>
-                  <h3 className={`text-xl font-bold mb-2 group-hover:${feature.textColor}`}>{feature.title}</h3>
-                  <p className="text-muted-foreground text-sm">{feature.description}</p>
+                  <h3 className={`mb-2 text-xl font-bold group-hover:${feature.textColor}`}>{feature.title}</h3>
+                  <p className="text-sm text-muted-foreground">{feature.description}</p>
                 </div>
               </CardContent>
               <CardFooter className="p-4 border-t border-border/20 flex justify-between items-center">

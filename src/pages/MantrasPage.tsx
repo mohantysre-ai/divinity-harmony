@@ -22,10 +22,11 @@ const deityImages: Record<string, string> = {
   'Divine Mother': 'https://upload.wikimedia.org/wikipedia/commons/5/5f/Durga_Mahishasuramardini.jpg',
   Lakshmi: 'https://upload.wikimedia.org/wikipedia/commons/6/6d/Lakshmi.jpg',
   Saraswati: 'https://upload.wikimedia.org/wikipedia/commons/1/12/Saraswati.jpg',
+  Gayatri: 'https://upload.wikimedia.org/wikipedia/commons/b/b4/Gayatri1.jpg',
   Hanuman: 'https://upload.wikimedia.org/wikipedia/commons/4/46/Hanuman.jpg',
   Murugan: 'https://upload.wikimedia.org/wikipedia/commons/3/3b/Kartikeya.jpg',
   'Vedic & planetary': 'https://upload.wikimedia.org/wikipedia/commons/9/9b/Surya_deva.jpg',
-  'Vedic & universal': 'https://upload.wikimedia.org/wikipedia/commons/c/c2/Gayatri.jpg',
+  'Vedic & universal': 'https://upload.wikimedia.org/wikipedia/commons/1/12/Saraswati.jpg',
 };
 
 function labelImage(label: string) {
@@ -53,6 +54,9 @@ function deityFor(mantra: Mantra) {
   if (/(ganesh|ganapati|vinayak)/.test(value)) return 'Ganesha';
   if (/(hanuman)/.test(value)) return 'Hanuman';
   if (/(subramanya|murugan|kartikeya|skanda)/.test(value)) return 'Murugan';
+  if (/(^| )gayatri( |$)/.test(value) && !/(shiva|durga|lakshmi|saraswati|hanuman|krishna|rama|vishnu|ganesh|brahma|purusha|bhumi|hamsa)/.test(value)) {
+    return 'Gayatri';
+  }
   if (/(lakshmi|kamala|kanakadhara|sri sukt)/.test(value)) return 'Lakshmi';
   if (/(saraswati|sarasvati)/.test(value)) return 'Saraswati';
   if (/(durga|devi|kali|tara|shakti|chandi|bhavani|annapurna|lalita|soundarya)/.test(value)) return 'Divine Mother';

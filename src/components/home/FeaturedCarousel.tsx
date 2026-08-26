@@ -1,80 +1,72 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { 
-  Carousel, 
-  CarouselContent, 
-  CarouselItem, 
-  CarouselPrevious, 
-  CarouselNext 
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselPrevious,
+  CarouselNext,
 } from '@/components/ui/carousel';
 import { Card, CardContent } from '@/components/ui/card';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { BookOpen, Video, Music } from 'lucide-react';
+import darshanVideos from '@/data/darshan-videos.json';
 
-// Featured content data
 const featuredContent = [
   {
     id: 1,
-    title: "Gayatri Mantra",
-    description: "Sacred verse from the Rigveda, dedicated to Savitr, the sun deity",
-    type: "mantra",
-    icon: BookOpen,
-    color: "bg-hindu-gold",
-    link: "/mantras/gayatri"
+    title: 'Gayatri Mantra',
+    description: 'Sacred verse from the Rigveda, personified as Goddess Gayatri',
+    type: 'mantra',
+    image: 'https://upload.wikimedia.org/wikipedia/commons/b/b4/Gayatri1.jpg',
+    link: '/mantras',
   },
   {
     id: 2,
-    title: "Live Darshan: Varanasi Ganga Aarti",
-    description: "Experience the divine Ganga Aarti ceremony live from Varanasi",
-    type: "darshan",
-    icon: Video,
-    color: "bg-hindu-red",
-    link: "/darshan/varanasi"
+    title: darshanVideos.videos[0]?.title ?? 'Live Temple Darshan',
+    description: darshanVideos.videos[0]?.description ?? 'Live temple streams',
+    type: 'darshan',
+    image: darshanVideos.videos[0]?.thumbnailUrl ?? '',
+    link: '/darshan',
   },
   {
     id: 3,
-    title: "Om Namah Shivaya",
-    description: "One of the most powerful and popular mantras in Hinduism",
-    type: "mantra",
-    icon: Music,
-    color: "bg-hindu-orange",
-    link: "/mantras/shiva"
+    title: 'Om Namah Shivaya',
+    description: 'One of the most powerful and popular mantras in Hinduism',
+    type: 'mantra',
+    image: 'https://upload.wikimedia.org/wikipedia/commons/b/bf/Shiva_as_the_Lord_of_Dance_LACMA_edit.jpg',
+    link: '/mantras',
   },
   {
     id: 4,
-    title: "Live Darshan: Tirupati Balaji Temple",
-    description: "Experience live darshan from the sacred Tirupati Balaji Temple",
-    type: "darshan",
-    icon: Video,
-    color: "bg-hindu-maroon",
-    link: "/darshan/tirupati"
-  }
+    title: darshanVideos.videos[1]?.title ?? 'Shirdi Live Darshan',
+    description: darshanVideos.videos[1]?.description ?? 'Live temple stream',
+    type: 'darshan',
+    image: darshanVideos.videos[1]?.thumbnailUrl ?? '',
+    link: '/darshan',
+  },
 ];
 
 const FeaturedCarousel = () => {
   const isMobile = useIsMobile();
-  
+
   return (
     <section className="my-12">
-      <h2 className="text-3xl font-bold text-center mb-10">Featured Content</h2>
-      <Carousel className="w-full max-w-5xl mx-auto">
+      <h2 className="mb-10 text-center text-3xl font-bold">Featured Content</h2>
+      <Carousel className="mx-auto w-full max-w-5xl">
         <CarouselContent>
           {featuredContent.map((item) => (
-            <CarouselItem key={item.id} className={isMobile ? "basis-full" : "basis-1/2"}>
+            <CarouselItem key={item.id} className={isMobile ? 'basis-full' : 'basis-1/2'}>
               <Link to={item.link}>
-                <Card className="hover:shadow-lg transition-shadow duration-300">
-                  <CardContent className="p-6 flex flex-col items-center">
-                    <div className={`w-14 h-14 ${item.color} rounded-full flex items-center justify-center mb-4`}>
-                      <item.icon className="h-6 w-6 text-white" />
+                <Card className="overflow-hidden transition-shadow duration-300 hover:shadow-lg">
+                  <div className="aspect-video bg-muted">
+                    <img src={item.image} alt="" className="h-full w-full object-cover" loading="lazy" />
+                  </div>
+                  <CardContent className="p-5">
+                    <div className="mb-2 inline-block rounded-full bg-muted px-3 py-1 text-xs font-medium">
+                      {item.type === 'mantra' ? 'Sacred Mantra' : 'Live Darshan'}
                     </div>
-                    <div className="text-center">
-                      <h3 className="text-xl font-bold mb-2">{item.title}</h3>
-                      <p className="text-muted-foreground text-sm">{item.description}</p>
-                      <div className="mt-4 inline-block bg-muted rounded-full px-3 py-1 text-xs font-medium">
-                        {item.type === "mantra" ? "Sacred Mantra" : "Live Darshan"}
-                      </div>
-                    </div>
+                    <h3 className="mb-2 text-xl font-bold">{item.title}</h3>
+                    <p className="text-sm text-muted-foreground">{item.description}</p>
                   </CardContent>
                 </Card>
               </Link>

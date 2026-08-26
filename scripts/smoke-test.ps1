@@ -80,7 +80,9 @@ $checks = @(
   @{ Name = "Device voice player"; Pattern = "Tap Play to hear this mantra" },
   @{ Name = "Verified Ganesha image"; Pattern = "commons/6/64/Ganesha" },
   @{ Name = "Verified Hanuman image"; Pattern = "commons/4/46/Hanuman" },
-  @{ Name = "Enriched Varuna translation"; Pattern = "clothed in waters" }
+  @{ Name = "Goddess Gayatri image"; Pattern = "commons/b/b4/Gayatri1" },
+  @{ Name = "Enriched Varuna translation"; Pattern = "clothed in waters" },
+  @{ Name = "Live Darshan Tirupati"; Pattern = "8opaIVCposg" }
 )
 
 foreach ($check in $checks) {
