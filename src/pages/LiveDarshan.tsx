@@ -3,7 +3,9 @@ import React, { useState } from 'react';
 import Layout from '@/components/layout/Layout';
 import { ThemeProvider } from '@/hooks/use-theme';
 import { Card, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import { useToast } from "@/hooks/use-toast";
+import { Youtube } from 'lucide-react';
 import darshanVideos from '@/data/darshan-videos.json';
 
 const LiveDarshan = () => {
@@ -37,8 +39,23 @@ const LiveDarshan = () => {
                   ></iframe>
                 </div>
                 <div className="p-6">
-                  <h2 className="text-2xl font-bold mb-2">{selectedVideo.title}</h2>
-                  <p className="text-muted-foreground">{selectedVideo.description}</p>
+                  <div className="flex flex-wrap items-start justify-between gap-4">
+                    <div>
+                      <h2 className="text-2xl font-bold mb-2">{selectedVideo.title}</h2>
+                      <p className="text-muted-foreground">{selectedVideo.description}</p>
+                    </div>
+                    <Button asChild variant="outline" className="shrink-0">
+                      <a
+                        href={selectedVideo.youtubeUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-2"
+                      >
+                        <Youtube className="h-4 w-4 text-red-600" />
+                        Watch on YouTube
+                      </a>
+                    </Button>
+                  </div>
                 </div>
               </div>
             </div>

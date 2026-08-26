@@ -1,7 +1,7 @@
 @echo off
 setlocal EnableExtensions
 
-REM Build, push, and redeploy Divinity Harmony Docker image.
+REM Full rebuild: commit/push to GitHub, build + push Docker image, redeploy container.
 REM Usage:
 REM   rebuild-and-push.bat
 REM   rebuild-and-push.bat --no-cache
@@ -11,20 +11,44 @@ cd /d "%~dp0"
 set "IMAGE=smohanty010620/divinity-harmony:latest"
 set "COMPOSE_FILE=%~dp0docker-compose.yml"
 set "NO_CACHE="
+set "SKIP_PUSH="
 
 if /I "%~1"=="--no-cache" set "NO_CACHE=--no-cache"
 if /I "%~1"=="/no-cache" set "NO_CACHE=--no-cache"
 
+REM ---------------------------------------------------------------------------
 echo.
-echo === Docker Hub login check ===
-docker login
+echo === [1/4] Committing changes to GitHub ===
+git add -A
+git status --porcelain | findstr . >nul
 if errorlevel 1 (
-  echo ERROR: docker login failed.
-  exit /b 1
+  echo Nothing to commit. Skipping GitHub commit/push.
+) else (
+  git commit -m "Rebuild: update Live Temple Darshan YouTube link and app changes"
+  if errorlevel 1 (
+    echo ERROR: git commit failed.
+    exit /b 1
+  )
+  git push origin main
+  if errorlevel 1 (
+    echo WARN: git push failed. Continuing with Docker build...
+  ) else (
+    echo Pushed to GitHub: https://github.com/mohantysre-ai/divinity-harmony
+  )
 )
 
+REM ---------------------------------------------------------------------------
 echo.
-echo === Building %IMAGE% %NO_CACHE% ===
+echo === [2/4] Docker Hub login ===
+docker login
+if errorlevel 1 (
+  echo WARN: docker login failed - will build and run locally without pushing to Hub.
+  set "SKIP_PUSH=1"
+)
+
+REM ---------------------------------------------------------------------------
+echo.
+echo === [3/4] Building %IMAGE% %NO_CACHE% ===
 docker compose -f "%COMPOSE_FILE%" build %NO_CACHE% web
 if errorlevel 1 (
   echo ERROR: docker compose build failed.
@@ -39,17 +63,23 @@ if errorlevel 1 (
   exit /b 1
 )
 
-echo.
-echo === Pushing %IMAGE% ===
-docker push "%IMAGE%"
-if errorlevel 1 (
-  echo ERROR: docker push failed.
-  exit /b 1
+if not defined SKIP_PUSH (
+  echo.
+  echo === Pushing %IMAGE% ===
+  docker push "%IMAGE%"
+  if errorlevel 1 (
+    echo WARN: docker push failed. Continuing with local redeploy...
+  ) else (
+    echo Pushed to Hub: https://hub.docker.com/r/smohanty010620/divinity-harmony
+  )
+) else (
+  echo.
+  echo Skipping Docker Hub push (not logged in).
 )
 
+REM ---------------------------------------------------------------------------
 echo.
-echo === Redeploying local container ===
-REM Remove legacy container name if it still holds port 7800.
+echo === [4/4] Redeploying local container ===
 docker rm -f divinity-harmony >nul 2>&1
 docker compose -f "%COMPOSE_FILE%" up -d --force-recreate --remove-orphans web
 if errorlevel 1 (
