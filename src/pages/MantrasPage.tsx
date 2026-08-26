@@ -92,6 +92,7 @@ const MantrasPage = () => {
   const [deity, setDeity] = useState('All');
   const [remoteMantras, setRemoteMantras] = useState<Mantra[]>([]);
   const [catalogNotice, setCatalogNotice] = useState('');
+  const [imageExpanded, setImageExpanded] = useState(false);
 
   useEffect(() => {
     const url = import.meta.env.VITE_MANTRA_CATALOG_URL?.trim();
@@ -109,6 +110,19 @@ const MantrasPage = () => {
       .catch(() => setCatalogNotice('Using the built-in library while the optional catalog is unavailable.'))
     return () => controller.abort();
   }, []);
+
+  useEffect(() => {
+    setImageExpanded(false);
+  }, [currentMantraIndex]);
+
+  useEffect(() => {
+    if (!imageExpanded) return;
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setImageExpanded(false);
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [imageExpanded]);
 
   const catalog = useMemo(() => mergeCatalog(remoteMantras), [remoteMantras]);
   const currentMantra = catalog[Math.min(currentMantraIndex, catalog.length - 1)];
@@ -131,9 +145,37 @@ const MantrasPage = () => {
       <h1 className="mt-2 text-3xl font-bold md:text-4xl">A living devotional library</h1>
       <p className="mx-auto mt-3 max-w-2xl text-muted-foreground">Explore {catalog.length}+ prayers, Vedic hymns and stotras. Search by deity, text or intention.</p>
       {catalogNotice && <p className="mt-2 text-sm text-muted-foreground">{catalogNotice}</p>}</div>
+    {imageExpanded && (
+      <button
+        type="button"
+        className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-4"
+        aria-label="Close full image"
+        onClick={() => setImageExpanded(false)}
+      >
+        <img
+          src={imageFor(currentMantra)}
+          alt={currentMantra.title}
+          className="max-h-[92vh] max-w-[96vw] object-contain"
+          onError={(event) => applyDeityFallback(event, currentMantra)}
+        />
+      </button>
+    )}
     <div className="grid grid-cols-1 gap-8 lg:grid-cols-3"><section className="lg:col-span-2"><article className="overflow-hidden rounded-xl bg-card shadow-lg">
-      <div className="relative aspect-video bg-muted"><img key={currentMantra.id} src={imageFor(currentMantra)} alt={currentMantra.title} className="h-full w-full object-cover" onError={(event) => applyDeityFallback(event, currentMantra)} />
-        <span className="absolute left-4 top-4 rounded-full bg-background/85 px-3 py-1 text-xs font-semibold backdrop-blur">{deityFor(currentMantra)}</span></div>
+      <button
+        type="button"
+        className="relative flex min-h-[240px] max-h-[70vh] w-full cursor-zoom-in items-center justify-center overflow-hidden bg-muted md:min-h-[360px]"
+        onClick={() => setImageExpanded(true)}
+        aria-label={`View full image for ${currentMantra.title}`}
+      >
+        <img
+          key={currentMantra.id}
+          src={imageFor(currentMantra)}
+          alt={currentMantra.title}
+          className="max-h-[70vh] w-full object-contain"
+          onError={(event) => applyDeityFallback(event, currentMantra)}
+        />
+        <span className="pointer-events-none absolute left-4 top-4 rounded-full bg-background/85 px-3 py-1 text-xs font-semibold backdrop-blur">{deityFor(currentMantra)}</span>
+      </button>
       <div className="p-6"><h2 className="text-2xl font-bold">{currentMantra.title}</h2><p className="mt-2 text-muted-foreground">{currentMantra.description}</p>
         <blockquote className="mantra-text my-6 rounded-lg bg-muted/50 p-4 text-center text-lg">{currentMantra.text}</blockquote>
         <p className="text-sm text-muted-foreground"><strong>Translation:</strong> {currentMantra.translation}</p></div></article>

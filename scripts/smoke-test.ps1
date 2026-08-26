@@ -82,7 +82,8 @@ $checks = @(
   @{ Name = "Verified Hanuman image"; Pattern = "commons/4/46/Hanuman" },
   @{ Name = "Goddess Gayatri image"; Pattern = "commons/b/b4/Gayatri1" },
   @{ Name = "Enriched Varuna translation"; Pattern = "clothed in waters" },
-  @{ Name = "Live Darshan Tirupati"; Pattern = "8opaIVCposg" }
+  @{ Name = "Live Darshan Tirupati"; Pattern = "8opaIVCposg" },
+  @{ Name = "30+ Live Darshan entries"; Pattern = "Mahakaleshwar Temple, Ujjain" }
 )
 
 foreach ($check in $checks) {
