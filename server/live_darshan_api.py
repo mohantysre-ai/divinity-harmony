@@ -19,7 +19,10 @@ from datetime import datetime, timezone
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from typing import Any, Iterator
 from urllib.parse import urlencode
+from urllib.parse import parse_qs, urlparse
 from urllib.request import Request, urlopen
+
+from sacred_text_content import fetch_chapter, fetch_sacred_content
 
 
 SEARCH_QUERIES = (
@@ -224,9 +227,38 @@ class Handler(BaseHTTPRequestHandler):
         self.wfile.write(body)
 
     def do_GET(self) -> None:  # noqa: N802 - BaseHTTPRequestHandler API
-        path = self.path.split("?", 1)[0]
+        parsed_url = urlparse(self.path)
+        path = parsed_url.path
+        query = parse_qs(parsed_url.query)
         if path == "/api/live-darshan/health":
             self._json(200, {"ok": True, "service": "live-darshan-search"})
+            return
+        if path == "/api/sacred-texts/content":
+            title = query.get("title", [""])[0].strip()[:180]
+            category = query.get("category", [""])[0].strip()[:80]
+            language = query.get("language", ["en"])[0]
+            if not title or language not in {"en", "sa"}:
+                self._json(400, {"error": "A valid title and language are required."})
+                return
+            try:
+                self._json(200, fetch_sacred_content(title, category, language))
+            except LookupError as exc:
+                self._json(404, {"error": str(exc)})
+            except Exception:
+                self._json(503, {"error": "The free-content source is temporarily unavailable."})
+            return
+        if path == "/api/sacred-texts/chapter":
+            host = query.get("host", [""])[0].strip()
+            page = query.get("page", [""])[0].strip()[:300]
+            if not host or not page:
+                self._json(400, {"error": "A valid source and chapter are required."})
+                return
+            try:
+                self._json(200, fetch_chapter(host, page))
+            except (LookupError, ValueError) as exc:
+                self._json(404, {"error": str(exc)})
+            except Exception:
+                self._json(503, {"error": "The selected chapter is temporarily unavailable."})
             return
         if path != "/api/live-darshan":
             self._json(404, {"error": "Not found"})

@@ -1,10 +1,13 @@
 import importlib.util
 import json
+import sys
 import unittest
 from pathlib import Path
 
 
-MODULE_PATH = Path(__file__).resolve().parents[1] / "server" / "live_darshan_api.py"
+SERVER_DIR = Path(__file__).resolve().parents[1] / "server"
+sys.path.insert(0, str(SERVER_DIR))
+MODULE_PATH = SERVER_DIR / "live_darshan_api.py"
 SPEC = importlib.util.spec_from_file_location("live_darshan_api", MODULE_PATH)
 api = importlib.util.module_from_spec(SPEC)
 assert SPEC and SPEC.loader

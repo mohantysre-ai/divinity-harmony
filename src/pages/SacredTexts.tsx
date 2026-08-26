@@ -6,9 +6,10 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { BookOpen, CircleCheck, Library, Search, Sparkles } from 'lucide-react';
+import { BookOpen, CircleCheck, ExternalLink, Library, Loader2, Search, Sparkles } from 'lucide-react';
 import { sacredTextCategories, sacredTexts, type SacredText } from '@/data/sacred-texts';
 import { buildSacredTextArticle } from '@/lib/sacred-text-content';
+import { fetchSacredChapter, fetchSacredSourceContent, type SacredSourceContent } from '@/lib/sacred-source-content';
 
 const categoryStyle: Record<string, { symbol: string; gradient: string }> = {
   'Vedas & Vedangas': { symbol: 'ॐ', gradient: 'from-amber-700 via-orange-600 to-yellow-500' },
@@ -29,6 +30,10 @@ const SacredTexts = () => {
   const [category, setCategory] = useState('All');
   const [selected, setSelected] = useState<SacredText | null>(null);
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
+  const [sourceContent, setSourceContent] = useState<SacredSourceContent | null>(null);
+  const [sourceLanguage, setSourceLanguage] = useState<'en' | 'sa'>('en');
+  const [sourceLoading, setSourceLoading] = useState(false);
+  const [sourceError, setSourceError] = useState('');
 
   const filteredTexts = useMemo(() => {
     const normalized = query.trim().toLowerCase();
@@ -42,6 +47,38 @@ const SacredTexts = () => {
   }, [category, query]);
 
   useEffect(() => setVisibleCount(PAGE_SIZE), [category, query]);
+
+  useEffect(() => {
+    if (!selected) return;
+    let active = true;
+    setSourceLoading(true);
+    setSourceError('');
+    setSourceContent(null);
+    fetchSacredSourceContent(selected, sourceLanguage)
+      .then((content) => active && setSourceContent(content))
+      .catch((error: Error) => active && setSourceError(error.message))
+      .finally(() => active && setSourceLoading(false));
+    return () => { active = false; };
+  }, [selected, sourceLanguage]);
+
+  const openText = (text: SacredText) => {
+    setSourceLanguage('en');
+    setSelected(text);
+  };
+
+  const selectChapter = async (page: string) => {
+    if (!sourceContent || !page || page === sourceContent.activeChapter) return;
+    setSourceLoading(true);
+    setSourceError('');
+    try {
+      const chapter = await fetchSacredChapter(sourceContent.host, page);
+      setSourceContent({ ...sourceContent, ...chapter, chapters: sourceContent.chapters });
+    } catch (error) {
+      setSourceError(error instanceof Error ? error.message : 'The selected chapter is unavailable.');
+    } finally {
+      setSourceLoading(false);
+    }
+  };
 
   const visibleTexts = filteredTexts.slice(0, visibleCount);
   const selectedArticle = selected ? buildSacredTextArticle(selected) : null;
@@ -113,8 +150,8 @@ const SacredTexts = () => {
                       </div>
                     </CardContent>
                     <CardFooter className="border-t p-4">
-                      <Button className="w-full" onClick={() => setSelected(text)}>
-                        <BookOpen className="mr-2 h-4 w-4" /> Read article
+                      <Button className="w-full" onClick={() => openText(text)}>
+                        <BookOpen className="mr-2 h-4 w-4" /> Read full details
                       </Button>
                     </CardFooter>
                   </Card>
@@ -157,8 +194,64 @@ const SacredTexts = () => {
                 </div>
 
                 <article className="space-y-8 p-7 md:p-9">
+                  <section className="rounded-2xl border bg-card p-5 md:p-6">
+                    <div className="flex flex-wrap items-start justify-between gap-4">
+                      <div>
+                        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-hindu-red">
+                          {sourceContent?.sourceType === 'wikisource' ? 'Source text' : 'Detailed source article'}
+                        </p>
+                        <h3 className="mt-2 text-2xl font-bold">{sourceContent?.title || selected.title}</h3>
+                      </div>
+                      <div className="flex gap-2">
+                        <Button size="sm" variant={sourceLanguage === 'en' ? 'default' : 'outline'} onClick={() => setSourceLanguage('en')}>English</Button>
+                        <Button size="sm" variant={sourceLanguage === 'sa' ? 'default' : 'outline'} onClick={() => setSourceLanguage('sa')}>संस्कृत</Button>
+                      </div>
+                    </div>
+
+                    {sourceLoading && !sourceContent && (
+                      <div className="flex min-h-48 items-center justify-center gap-3 text-muted-foreground">
+                        <Loader2 className="h-5 w-5 animate-spin" /> Loading the source text…
+                      </div>
+                    )}
+
+                    {sourceError && !sourceContent && (
+                      <div className="mt-5 rounded-xl border border-destructive/30 bg-destructive/5 p-4 text-sm text-destructive">
+                        {sourceError} Try English, or use the study companion below while the source is temporarily unavailable.
+                      </div>
+                    )}
+
+                    {sourceContent && (
+                      <>
+                        <div className="mt-4 flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
+                          <span>{sourceContent.source} · {sourceContent.language}</span>
+                          <a className="inline-flex items-center font-medium text-hindu-red hover:underline" href={sourceContent.url} target="_blank" rel="noreferrer">
+                            View original source <ExternalLink className="ml-1 h-3.5 w-3.5" />
+                          </a>
+                        </div>
+                        <p className="mt-2 text-xs text-muted-foreground">{sourceContent.license}</p>
+                        {sourceContent.chapters.length > 0 && (
+                          <label className="mt-5 block text-sm font-semibold">
+                            Choose chapter or section
+                            <select
+                              className="mt-2 h-11 w-full rounded-md border bg-background px-3 font-normal"
+                              value={sourceContent.activeChapter || ''}
+                              onChange={(event) => selectChapter(event.target.value)}
+                              disabled={sourceLoading}
+                            >
+                              {sourceContent.chapters.map((chapter) => <option key={chapter} value={chapter}>{chapter.replace(`${sourceContent.title}/`, '')}</option>)}
+                            </select>
+                          </label>
+                        )}
+                        <div className="relative mt-6 border-t pt-6">
+                          {sourceLoading && <Loader2 className="absolute right-0 top-3 h-5 w-5 animate-spin text-hindu-red" />}
+                          <div className="whitespace-pre-wrap text-base leading-8 text-foreground/90">{sourceContent.content}</div>
+                        </div>
+                      </>
+                    )}
+                  </section>
+
                   <section>
-                    <p className="text-xs font-semibold uppercase tracking-[0.18em] text-hindu-red">Knowledge article</p>
+                    <p className="text-xs font-semibold uppercase tracking-[0.18em] text-hindu-red">Study companion</p>
                     <h3 className="mt-2 text-2xl font-bold">Background and meaning</h3>
                     <p className="mt-3 text-base leading-8 text-muted-foreground">{selectedArticle.introduction}</p>
                   </section>
@@ -210,11 +303,6 @@ const SacredTexts = () => {
                     </div>
                   )}
 
-                  <div className="rounded-xl bg-muted/50 p-4 text-sm leading-6 text-muted-foreground">
-                    <strong className="text-foreground">Reading status:</strong> This is a complete educational article,
-                    not the full Sanskrit scripture or a full translation. Original texts and translations will only be
-                    attached when a verified public-domain or appropriately licensed edition is available.
-                  </div>
                 </article>
               </>
             )}
