@@ -20,8 +20,9 @@ REM ---------------------------------------------------------------------------
 echo.
 echo === [1/4] Committing changes to GitHub ===
 git add -A
-git status --porcelain | findstr . >nul
-if errorlevel 1 (
+set "GIT_DIRTY="
+for /f %%i in ('git status --porcelain 2^>nul') do set "GIT_DIRTY=1"
+if not defined GIT_DIRTY (
   echo Nothing to commit. Skipping GitHub commit/push.
 ) else (
   git commit -m "Rebuild: update Live Temple Darshan YouTube link and app changes"
@@ -57,8 +58,9 @@ if errorlevel 1 (
 
 echo.
 echo === Verifying image exists locally ===
-docker images "%IMAGE%" --format "{{.ID}}" | findstr . >nul
-if errorlevel 1 (
+set "IMG_FOUND="
+for /f %%i in ('docker images -q "%IMAGE%" 2^>nul') do set "IMG_FOUND=1"
+if not defined IMG_FOUND (
   echo ERROR: Image %IMAGE% was not created by the build.
   exit /b 1
 )
