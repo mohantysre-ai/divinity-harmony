@@ -1,0 +1,19 @@
+---
+description: After code changes, always run rebuild-and-push with smoke tests
+alwaysApply: true
+---
+
+# Auto build, push, and test after changes
+
+When you finish implementing code or data changes in this repo that should go live:
+
+1. Run `rebuild-and-push.bat` from the repo root (or with `--message "..."` for a clear commit message).
+2. Do **not** stop after only editing files — the script must:
+   - commit/push to GitHub (unless `--skip-git`)
+   - build the Docker image
+   - push `smohanty010620/divinity-harmony:latest` to Docker Hub
+   - recreate the local container on port 7800
+   - run `scripts/smoke-test.ps1` and fail if checks fail
+3. If the bat script fails mid-way, manually complete push + `docker compose up -d --force-recreate web` + smoke test.
+4. Report the smoke-test result and the live/local JS bundle name to the user.
+5. Never claim catalog/features are live without a passing smoke test against `http://localhost:7800` (and ideally `https://mantra.sigq.in` when production pulls the same image).

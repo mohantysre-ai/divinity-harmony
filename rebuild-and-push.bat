@@ -1,10 +1,12 @@
 @echo off
-setlocal EnableExtensions
+setlocal EnableExtensions EnableDelayedExpansion
 
-REM Full rebuild: commit/push to GitHub, build + push Docker image, redeploy container.
+REM Full pipeline: optional git commit/push -> Docker build -> Hub push -> redeploy -> smoke test
 REM Usage:
 REM   rebuild-and-push.bat
 REM   rebuild-and-push.bat --no-cache
+REM   rebuild-and-push.bat --skip-git
+REM   rebuild-and-push.bat --message "feat: expand mantras"
 
 cd /d "%~dp0"
 
@@ -12,35 +14,58 @@ set "IMAGE=smohanty010620/divinity-harmony:latest"
 set "COMPOSE_FILE=%~dp0docker-compose.yml"
 set "NO_CACHE="
 set "SKIP_PUSH="
+set "SKIP_GIT="
+set "COMMIT_MSG=chore: rebuild and deploy divinity-harmony"
 
-if /I "%~1"=="--no-cache" set "NO_CACHE=--no-cache"
-if /I "%~1"=="/no-cache" set "NO_CACHE=--no-cache"
-
-REM ---------------------------------------------------------------------------
-echo.
-echo === [1/4] Committing changes to GitHub ===
-git add -A
-set "GIT_DIRTY="
-for /f %%i in ('git status --porcelain 2^>nul') do set "GIT_DIRTY=1"
-if not defined GIT_DIRTY (
-  echo Nothing to commit. Skipping GitHub commit/push.
-) else (
-  git commit -m "Rebuild: update Live Temple Darshan YouTube link and app changes"
-  if errorlevel 1 (
-    echo ERROR: git commit failed.
+:parse_args
+if "%~1"=="" goto args_done
+if /I "%~1"=="--no-cache" set "NO_CACHE=--no-cache" & shift & goto parse_args
+if /I "%~1"=="/no-cache" set "NO_CACHE=--no-cache" & shift & goto parse_args
+if /I "%~1"=="--skip-git" set "SKIP_GIT=1" & shift & goto parse_args
+if /I "%~1"=="--message" (
+  if "%~2"=="" (
+    echo ERROR: --message requires a value
     exit /b 1
   )
-  git push origin main
-  if errorlevel 1 (
-    echo WARN: git push failed. Continuing with Docker build...
+  set "COMMIT_MSG=%~2"
+  shift
+  shift
+  goto parse_args
+)
+echo Unknown argument: %~1
+exit /b 1
+:args_done
+
+REM ---------------------------------------------------------------------------
+if defined SKIP_GIT (
+  echo.
+  echo === [1/5] Skipping Git commit/push ^(--skip-git^) ===
+) else (
+  echo.
+  echo === [1/5] Committing changes to GitHub ===
+  git add -A
+  set "GIT_DIRTY="
+  for /f "delims=" %%i in ('git status --porcelain 2^>nul') do set "GIT_DIRTY=1"
+  if not defined GIT_DIRTY (
+    echo Nothing to commit. Skipping GitHub commit/push.
   ) else (
-    echo Pushed to GitHub: https://github.com/mohantysre-ai/divinity-harmony
+    git commit -m "!COMMIT_MSG!"
+    if errorlevel 1 (
+      echo ERROR: git commit failed.
+      exit /b 1
+    )
+    git push origin HEAD
+    if errorlevel 1 (
+      echo WARN: git push failed. Continuing with Docker build...
+    ) else (
+      echo Pushed to GitHub: https://github.com/mohantysre-ai/divinity-harmony
+    )
   )
 )
 
 REM ---------------------------------------------------------------------------
 echo.
-echo === [2/4] Docker Hub login ===
+echo === [2/5] Docker Hub login ===
 docker login
 if errorlevel 1 (
   echo WARN: docker login failed - will build and run locally without pushing to Hub.
@@ -49,7 +74,7 @@ if errorlevel 1 (
 
 REM ---------------------------------------------------------------------------
 echo.
-echo === [3/4] Building %IMAGE% %NO_CACHE% ===
+echo === [3/5] Building %IMAGE% %NO_CACHE% ===
 docker compose -f "%COMPOSE_FILE%" build %NO_CACHE% web
 if errorlevel 1 (
   echo ERROR: docker compose build failed.
@@ -58,12 +83,12 @@ if errorlevel 1 (
 
 echo.
 echo === Verifying image exists locally ===
-set "IMG_FOUND="
-for /f %%i in ('docker images -q "%IMAGE%" 2^>nul') do set "IMG_FOUND=1"
-if not defined IMG_FOUND (
+docker image inspect "%IMAGE%" >nul 2>&1
+if errorlevel 1 (
   echo ERROR: Image %IMAGE% was not created by the build.
   exit /b 1
 )
+echo Image OK.
 
 if not defined SKIP_PUSH (
   echo.
@@ -76,16 +101,25 @@ if not defined SKIP_PUSH (
   )
 ) else (
   echo.
-  echo Skipping Docker Hub push (not logged in).
+  echo Skipping Docker Hub push ^(not logged in^).
 )
 
 REM ---------------------------------------------------------------------------
 echo.
-echo === [4/4] Redeploying local container ===
+echo === [4/5] Redeploying local container ===
 docker rm -f divinity-harmony >nul 2>&1
 docker compose -f "%COMPOSE_FILE%" up -d --force-recreate --remove-orphans web
 if errorlevel 1 (
   echo ERROR: failed to recreate local container.
+  exit /b 1
+)
+
+REM ---------------------------------------------------------------------------
+echo.
+echo === [5/5] Smoke testing http://localhost:7800 ===
+powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0scripts\smoke-test.ps1" -BaseUrl "http://localhost:7800"
+if errorlevel 1 (
+  echo ERROR: smoke test failed. Container is up but checks did not pass.
   exit /b 1
 )
 
