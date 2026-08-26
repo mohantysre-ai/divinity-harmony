@@ -10,7 +10,6 @@ import {
   Home,
   BookOpen,
   Video,
-  Music,
   FileText,
   Settings,
   LogIn,
@@ -34,7 +33,6 @@ const Navigation = [
   { name: 'Home', href: '/', icon: Home },
   { name: 'Mantras', href: '/mantras', icon: BookOpen },
   { name: 'Live Darshan', href: '/darshan', icon: Video },
-  { name: 'MP3 Player', href: '/mp3-player', icon: Music },
   { name: 'Sacred Texts', href: '/pdf-reader', icon: FileText },
 ];
 

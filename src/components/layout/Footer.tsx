@@ -81,12 +81,6 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
-                <Link to="/mp3-player" className="text-muted-foreground hover:text-primary transition-colors flex items-center gap-1 group">
-                  <span className="h-0.5 w-0 bg-hindu-red group-hover:w-2 transition-all duration-300"></span>
-                  Spiritual Music
-                </Link>
-              </li>
-              <li>
                 <Link to="/pdf-reader" className="text-muted-foreground hover:text-primary transition-colors flex items-center gap-1 group">
                   <span className="h-0.5 w-0 bg-hindu-red group-hover:w-2 transition-all duration-300"></span>
                   Sacred Texts
