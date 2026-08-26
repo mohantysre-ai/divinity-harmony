@@ -18,8 +18,12 @@ const deityImages: Record<string, string> = {
   Ganesha: 'https://upload.wikimedia.org/wikipedia/commons/6/64/Ganesha_Basohli_miniature_circa_1730_Dubost_p73.jpg',
   Shiva: 'https://upload.wikimedia.org/wikipedia/commons/b/bf/Shiva_as_the_Lord_of_Dance_LACMA_edit.jpg',
   'Vishnu & avatars': 'https://upload.wikimedia.org/wikipedia/commons/c/c6/Vishnu_and_Lakshmi_on_Shesha_Naga%2C_ca_1870.jpg',
+  Krishna: 'https://upload.wikimedia.org/wikipedia/commons/6/6c/Radha_Krishna.jpg',
   'Divine Mother': 'https://upload.wikimedia.org/wikipedia/commons/5/5f/Durga_Mahishasuramardini.jpg',
+  Lakshmi: 'https://upload.wikimedia.org/wikipedia/commons/6/6d/Lakshmi.jpg',
+  Saraswati: 'https://upload.wikimedia.org/wikipedia/commons/1/12/Saraswati.jpg',
   Hanuman: 'https://upload.wikimedia.org/wikipedia/commons/4/46/Hanuman.jpg',
+  Murugan: 'https://upload.wikimedia.org/wikipedia/commons/3/3b/Kartikeya.jpg',
   'Vedic & planetary': 'https://upload.wikimedia.org/wikipedia/commons/9/9b/Surya_deva.jpg',
   'Vedic & universal': 'https://upload.wikimedia.org/wikipedia/commons/c/c2/Gayatri.jpg',
 };
@@ -46,12 +50,16 @@ function mergeCatalog(remote: Mantra[]) {
 }
 function deityFor(mantra: Mantra) {
   const value = `${mantra.title} ${mantra.description}`.toLowerCase();
-  if (/(shiva|rudra|linga|tandava|mrityunjaya)/.test(value)) return 'Shiva';
-  if (/(krishna|vishnu|narayana|rama|gita|purusha)/.test(value)) return 'Vishnu & avatars';
-  if (/(durga|devi|lakshmi|saraswati|shakti|gayatri|chandi)/.test(value)) return 'Divine Mother';
-  if (/(ganesh|ganapati)/.test(value)) return 'Ganesha';
+  if (/(ganesh|ganapati|vinayak)/.test(value)) return 'Ganesha';
   if (/(hanuman)/.test(value)) return 'Hanuman';
-  if (/(surya|aditya|navagraha)/.test(value)) return 'Vedic & planetary';
+  if (/(subramanya|murugan|kartikeya|skanda)/.test(value)) return 'Murugan';
+  if (/(lakshmi|kamala|kanakadhara|sri sukt)/.test(value)) return 'Lakshmi';
+  if (/(saraswati|sarasvati)/.test(value)) return 'Saraswati';
+  if (/(durga|devi|kali|tara|shakti|chandi|bhavani|annapurna|lalita|soundarya)/.test(value)) return 'Divine Mother';
+  if (/(shiva|siva|rudra|linga|tandava|mrityunjaya|dakshinamurthy|nataraja|bhairav)/.test(value)) return 'Shiva';
+  if (/(krishna|govinda|radha|madhura|bhaja govinda)/.test(value)) return 'Krishna';
+  if (/(vishnu|narayana|narasimha|rama|gita|purusha|hayagriva|venkatesh|hari)/.test(value)) return 'Vishnu & avatars';
+  if (/(surya|aditya|navagraha|chandra|shani|rahu|ketu|mangala|budha|shukra)/.test(value)) return 'Vedic & planetary';
   return 'Vedic & universal';
 }
 function imageFor(mantra: Mantra) {
