@@ -16,6 +16,7 @@ set "NO_CACHE="
 set "SKIP_PUSH="
 set "SKIP_GIT="
 set "COMMIT_MSG=chore: rebuild and deploy divinity-harmony"
+if defined COMMIT_MSG_ENV set "COMMIT_MSG=%COMMIT_MSG_ENV%"
 
 :parse_args
 if "%~1"=="" goto args_done
