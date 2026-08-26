@@ -6,8 +6,9 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { BookOpen, Library, Search, Sparkles } from 'lucide-react';
+import { BookOpen, CircleCheck, Library, Search, Sparkles } from 'lucide-react';
 import { sacredTextCategories, sacredTexts, type SacredText } from '@/data/sacred-texts';
+import { buildSacredTextArticle } from '@/lib/sacred-text-content';
 
 const categoryStyle: Record<string, { symbol: string; gradient: string }> = {
   'Vedas & Vedangas': { symbol: 'ॐ', gradient: 'from-amber-700 via-orange-600 to-yellow-500' },
@@ -43,6 +44,7 @@ const SacredTexts = () => {
   useEffect(() => setVisibleCount(PAGE_SIZE), [category, query]);
 
   const visibleTexts = filteredTexts.slice(0, visibleCount);
+  const selectedArticle = selected ? buildSacredTextArticle(selected) : null;
 
   return (
     <ThemeProvider>
@@ -112,7 +114,7 @@ const SacredTexts = () => {
                     </CardContent>
                     <CardFooter className="border-t p-4">
                       <Button className="w-full" onClick={() => setSelected(text)}>
-                        <BookOpen className="mr-2 h-4 w-4" /> Read overview
+                        <BookOpen className="mr-2 h-4 w-4" /> Read article
                       </Button>
                     </CardFooter>
                   </Card>
@@ -143,25 +145,77 @@ const SacredTexts = () => {
         </main>
 
         <Dialog open={Boolean(selected)} onOpenChange={(open) => !open && setSelected(null)}>
-          <DialogContent className="max-h-[85vh] max-w-2xl overflow-y-auto">
-            {selected && (
+          <DialogContent className="max-h-[90vh] max-w-4xl overflow-y-auto p-0">
+            {selected && selectedArticle && (
               <>
-                <DialogHeader>
-                  <Badge variant="outline" className="mb-2 w-fit">{selected.category}</Badge>
-                  <DialogTitle className="text-2xl">{selected.title}</DialogTitle>
-                </DialogHeader>
-                <p className="text-sm font-medium text-hindu-red">{selected.tradition}</p>
-                <p className="text-base leading-7 text-muted-foreground">{selected.description}</p>
-                <div>
-                  <h3 className="mb-3 font-semibold">Key themes</h3>
-                  <div className="flex flex-wrap gap-2">
-                    {selected.topics.map((topic) => <Badge key={topic} variant="secondary">{topic}</Badge>)}
+                <div className={`bg-gradient-to-br p-7 text-white ${categoryStyle[selected.category]?.gradient || categoryStyle['Itihasa & Sacred Narratives'].gradient}`}>
+                  <DialogHeader>
+                    <Badge className="mb-3 w-fit border-white/30 bg-black/20 text-white hover:bg-black/20">{selected.category}</Badge>
+                    <DialogTitle className="text-left text-3xl text-white">{selected.title}</DialogTitle>
+                  </DialogHeader>
+                  <p className="mt-2 text-sm font-medium text-white/85">{selected.tradition}</p>
+                </div>
+
+                <article className="space-y-8 p-7 md:p-9">
+                  <section>
+                    <p className="text-xs font-semibold uppercase tracking-[0.18em] text-hindu-red">Knowledge article</p>
+                    <h3 className="mt-2 text-2xl font-bold">Background and meaning</h3>
+                    <p className="mt-3 text-base leading-8 text-muted-foreground">{selectedArticle.introduction}</p>
+                  </section>
+
+                  <section className="rounded-2xl border bg-muted/25 p-5">
+                    <h3 className="text-xl font-bold">What this resource teaches</h3>
+                    <ul className="mt-4 space-y-3">
+                      {selectedArticle.keyPoints.map((point) => (
+                        <li key={point} className="flex gap-3 text-sm leading-6 text-muted-foreground">
+                          <CircleCheck className="mt-0.5 h-5 w-5 flex-none text-hindu-red" />
+                          <span>{point}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </section>
+
+                  <section>
+                    <h3 className="text-xl font-bold">Why it matters</h3>
+                    <p className="mt-3 leading-7 text-muted-foreground">{selectedArticle.significance}</p>
+                  </section>
+
+                  <section>
+                    <h3 className="text-xl font-bold">How to study it</h3>
+                    <ol className="mt-4 space-y-3">
+                      {selectedArticle.studyPath.map((step, index) => (
+                        <li key={step} className="flex gap-3 text-sm leading-6 text-muted-foreground">
+                          <span className="flex h-6 w-6 flex-none items-center justify-center rounded-full bg-primary text-xs font-bold text-primary-foreground">{index + 1}</span>
+                          <span>{step}</span>
+                        </li>
+                      ))}
+                    </ol>
+                  </section>
+
+                  <section className="rounded-2xl bg-hindu-gold/10 p-5">
+                    <h3 className="font-bold">Tradition and interpretation</h3>
+                    <p className="mt-2 text-sm leading-6 text-muted-foreground">{selectedArticle.context}</p>
+                  </section>
+
+                  <section>
+                    <h3 className="mb-3 font-semibold">Key themes</h3>
+                    <div className="flex flex-wrap gap-2">
+                      {selected.topics.map((topic) => <Badge key={topic} variant="secondary">{topic}</Badge>)}
+                    </div>
+                  </section>
+
+                  {selectedArticle.practiceNote && (
+                    <div className="rounded-xl border border-hindu-red/20 bg-hindu-red/5 p-4 text-sm leading-6 text-muted-foreground">
+                      <strong className="text-foreground">Practice note:</strong> {selectedArticle.practiceNote}
+                    </div>
+                  )}
+
+                  <div className="rounded-xl bg-muted/50 p-4 text-sm leading-6 text-muted-foreground">
+                    <strong className="text-foreground">Reading status:</strong> This is a complete educational article,
+                    not the full Sanskrit scripture or a full translation. Original texts and translations will only be
+                    attached when a verified public-domain or appropriately licensed edition is available.
                   </div>
-                </div>
-                <div className="rounded-xl bg-muted/50 p-4 text-sm text-muted-foreground">
-                  This overview is part of the expanding Hindu heritage index. Full translations and ritual
-                  instructions should be added only from verified public-domain or appropriately licensed editions.
-                </div>
+                </article>
               </>
             )}
           </DialogContent>
