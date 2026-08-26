@@ -129,7 +129,129 @@ const seeds: SacredTextSeed[] = [
   { title: 'Pitru Sukta', category: 'Hymns & Mantras', tradition: 'Rigvedic ancestral hymns', description: 'Hymns honoring the forebears and asking for their goodwill, studied here as the Vedic foundation of ancestor remembrance.', topics: ['ancestors', 'pitrs', 'remembrance'] },
 ];
 
-export const sacredTexts: SacredText[] = seeds.map((text, index) => ({
+const minorUpanishads = [
+  'Akshi Upanishad', 'Amritabindu Upanishad', 'Amritanada Upanishad', 'Annapurna Upanishad',
+  'Aruni Upanishad', 'Atma Upanishad', 'Atmabodha Upanishad', 'Avadhuta Upanishad',
+  'Bahvricha Upanishad', 'Bhasmajabala Upanishad', 'Bhikshuka Upanishad', 'Brahma Upanishad',
+  'Brahmavidya Upanishad', 'Brihajjabala Upanishad', 'Dakshinamurti Upanishad', 'Dattatreya Upanishad',
+  'Dhyanabindu Upanishad', 'Ekakshara Upanishad', 'Ganapati Atharvashirsha Upanishad', 'Garbhopanishad',
+  'Gopala Tapani Upanishad', 'Hamsa Upanishad', 'Hayagriva Upanishad', 'Jabala Upanishad',
+  'Jabali Upanishad', 'Kaivalya Upanishad', 'Kalisantarana Upanishad', 'Kshurika Upanishad',
+  'Krishna Upanishad', 'Kundika Upanishad', 'Mahavakya Upanishad', 'Maitreya Upanishad',
+  'Mandala Brahmana Upanishad', 'Mantrika Upanishad', 'Muktika Upanishad', 'Nadabindu Upanishad',
+  'Narada Parivrajaka Upanishad', 'Narayana Upanishad', 'Nirvana Upanishad', 'Nrisimha Tapani Upanishad',
+  'Paingala Upanishad', 'Panchabrahma Upanishad', 'Paramahamsa Upanishad', 'Paramahamsa Parivrajaka Upanishad',
+  'Pashupata Brahma Upanishad', 'Pranagnihotra Upanishad', 'Rama Rahasya Upanishad', 'Rama Tapani Upanishad',
+  'Rudra Hridaya Upanishad', 'Rudraksha Jabala Upanishad', 'Sandilya Upanishad', 'Sannyasa Upanishad',
+  'Sarasvati Rahasya Upanishad', 'Sariraka Upanishad', 'Sarvasara Upanishad', 'Saubhagyalakshmi Upanishad',
+  'Savitri Upanishad', 'Sita Upanishad', 'Skanda Upanishad', 'Subala Upanishad',
+  'Suka Rahasya Upanishad', 'Surya Upanishad', 'Tejobindu Upanishad', 'Tripura Upanishad',
+  'Tripura Tapini Upanishad', 'Trisikhi Brahmana Upanishad', 'Tulasi Upanishad', 'Turiyatita Avadhuta Upanishad',
+  'Varaha Upanishad', 'Vasudeva Upanishad', 'Yoga Chudamani Upanishad', 'Yoga Kundalini Upanishad',
+  'Yoga Shikha Upanishad', 'Yoga Tattva Upanishad', 'Yajnavalkya Upanishad', 'Adhyatma Upanishad',
+];
+
+const deityNames = [
+  'Agni', 'Brahma', 'Vishnu', 'Shiva', 'Krishna', 'Rama', 'Narasimha', 'Vamana', 'Varaha', 'Matsya',
+  'Kurma', 'Parashurama', 'Balarama', 'Jagannath', 'Venkateswara', 'Vitthala', 'Dattatreya', 'Dhanvantari',
+  'Ganesha', 'Kartikeya', 'Hanuman', 'Ayyappa', 'Surya', 'Chandra', 'Indra', 'Varuna', 'Vayu', 'Kubera',
+  'Yama', 'Vishwakarma', 'Dakshinamurti', 'Nataraja', 'Ardhanarishvara', 'Harihara', 'Lakshmi', 'Saraswati',
+  'Parvati', 'Durga', 'Kali', 'Lalita Tripurasundari', 'Bhuvaneshwari', 'Tara', 'Chinnamasta', 'Dhumavati',
+  'Bagalamukhi', 'Matangi', 'Kamala', 'Annapurna', 'Sita', 'Radha', 'Rukmini', 'Andal',
+];
+
+const sacredPlaces = [
+  'Kashi Vishwanath', 'Kedarnath', 'Somnath', 'Mahakaleshwar Ujjain', 'Omkareshwar', 'Baidyanath Dham',
+  'Rameshwaram', 'Mallikarjuna Srisailam', 'Bhimashankar', 'Nageshwar', 'Trimbakeshwar', 'Grishneshwar',
+  'Badrinath', 'Dwarka', 'Puri Jagannath', 'Rameswaram Char Dham', 'Tirumala Tirupati', 'Srirangam',
+  'Guruvayur', 'Udupi Krishna', 'Pandharpur', 'Nathdwara', 'Vrindavan', 'Mathura', 'Ayodhya', 'Chitrakoot',
+  'Haridwar', 'Rishikesh', 'Prayagraj', 'Gaya', 'Kurukshetra', 'Pushkar', 'Kanchipuram', 'Madurai Meenakshi',
+  'Chidambaram', 'Thanjavur Brihadeeswara', 'Arunachala Tiruvannamalai', 'Kalahasti', 'Kollur Mookambika',
+  'Kamakhya', 'Kalighat', 'Dakshineswar', 'Tarapith', 'Vaishno Devi', 'Jwalamukhi', 'Vindhyachal',
+  'Konark Surya', 'Modhera Sun Temple', 'Sabarimala', 'Palani', 'Tiruchendur', 'Swamimalai', 'Kukke Subramanya',
+  'Hampi Virupaksha', 'Belur Chennakeshava', 'Halebidu Hoysaleswara', 'Lingaraj Bhubaneswar', 'Mukteshwar Bhubaneswar',
+  'Sakshi Gopal', 'Alarnath Brahmagiri', 'Taratarini', 'Biraja Jajpur', 'Akshardham', 'Pashupatinath',
+];
+
+const festivals = [
+  'Diwali', 'Holi', 'Navaratri', 'Durga Puja', 'Dussehra', 'Janmashtami', 'Rama Navami', 'Maha Shivaratri',
+  'Ganesh Chaturthi', 'Ratha Yatra', 'Makar Sankranti', 'Pongal', 'Onam', 'Vishu', 'Ugadi', 'Gudi Padwa',
+  'Akshaya Tritiya', 'Vasant Panchami', 'Guru Purnima', 'Raksha Bandhan', 'Karva Chauth', 'Chhath Puja',
+  'Kartik Purnima', 'Dev Deepavali', 'Vaikuntha Ekadashi', 'Narasimha Jayanti', 'Hanuman Jayanti',
+  'Parashurama Jayanti', 'Gita Jayanti', 'Dattatreya Jayanti', 'Skanda Sashti', 'Thaipusam', 'Kumbh Mela',
+  'Amarnath Yatra', 'Kanwar Yatra', 'Savitri Brata', 'Raja Parba', 'Nuakhai', 'Bali Yatra', 'Pana Sankranti',
+  'Mahalaya', 'Pitru Paksha Amavasya', 'Tulsi Vivah', 'Govardhan Puja', 'Bhai Dooj', 'Ananta Chaturdashi',
+];
+
+const rishisAndTeachers = [
+  'Vashistha', 'Vishwamitra', 'Atri', 'Bharadvaja', 'Gautama Rishi', 'Jamadagni', 'Kashyapa', 'Agastya',
+  'Yajnavalkya', 'Gargi Vachaknavi', 'Maitreyi', 'Nachiketa', 'Narada', 'Vyasa', 'Valmiki', 'Shuka',
+  'Kapila', 'Patanjali', 'Jaimini', 'Kanada', 'Akshapada Gautama', 'Badarayana', 'Ashtavakra', 'Dattatreya',
+  'Adi Shankaracharya', 'Ramanujacharya', 'Madhvacharya', 'Nimbarkacharya', 'Vallabhacharya', 'Chaitanya Mahaprabhu',
+  'Basavanna', 'Ramprasad Sen', 'Tulsidas', 'Surdas', 'Mirabai', 'Kabir', 'Namdev', 'Tukaram', 'Jnaneshwar',
+  'Narsinh Mehta', 'Andal', 'Nammalvar', 'Appar', 'Sambandar', 'Manikkavacakar', 'Ramana Maharshi',
+];
+
+const additionalTexts = [
+  'Devi Bhagavata Purana', 'Ganesha Purana', 'Mudgala Purana', 'Kalika Purana', 'Saura Purana',
+  'Narasimha Purana', 'Brihaddharma Purana', 'Vishnudharmottara Purana', 'Shiva Rahasya', 'Aditya Purana',
+  'Vayu Purana', 'Nilamata Purana', 'Samba Purana', 'Kapila Purana', 'Ekamarra Purana', 'Kalki Purana',
+  'Adhyatma Ramayana', 'Ananda Ramayana', 'Kamba Ramayanam', 'Ranganatha Ramayanam', 'Krittivasi Ramayana',
+  'Jagamohana Ramayana', 'Molla Ramayana', 'Ramakien Comparative Guide', 'Mahabharata Harivamsha', 'Bhagavata Mahatmya',
+  'Lalita Sahasranama', 'Vishnu Sahasranama', 'Shiva Sahasranama', 'Ganesha Sahasranama', 'Lakshmi Sahasranama',
+  'Durga Saptashati', 'Saundarya Lahari', 'Shivananda Lahari', 'Bhaja Govindam', 'Vivekachudamani',
+  'Atma Bodha', 'Aparokshanubhuti', 'Upadesha Sahasri', 'Gaudapada Karika', 'Yoga Taravali',
+  'Tirumantiram', 'Tevaram', 'Tiruvachakam', 'Nalayira Divya Prabandham', 'Tiruppavai', 'Tirukkural Dharma Guide',
+  'Abhinavagupta Tantraloka', 'Shiva Sutras of Vasugupta', 'Spanda Karika', 'Vijnana Bhairava Tantra',
+  'Kularnava Tantra', 'Mahanirvana Tantra', 'Rudra Yamala Overview', 'Devi Rahasya', 'Prapanchasara Tantra',
+  'Pancharatra Agamas', 'Vaikhanasa Agamas', 'Shaiva Agamas', 'Shakta Agamas', 'Kashyapa Shilpa Shastra',
+  'Manasara', 'Mayamata', 'Samarangana Sutradhara', 'Natya Shastra', 'Arthashastra Dharma Context',
+  'Charaka Samhita Heritage Guide', 'Sushruta Samhita Heritage Guide', 'Ashtanga Hridaya Heritage Guide',
+  'Brihat Samhita', 'Surya Siddhanta', 'Aryabhatiya Sacred Astronomy Context', 'Lilavati', 'Yuktibhasha',
+  'Dharma Sindhu', 'Nirnaya Sindhu', 'Chaturvarga Chintamani', 'Hemadri Vrata Khanda', 'Smriti Chandrika',
+];
+
+const ancestralTopics = [
+  'Nitya Tarpana', 'Amavasya Tarpana', 'Mahalaya Shraddha', 'Ekoddishta Shraddha', 'Parvana Shraddha',
+  'Sapindikarana', 'Pinda Dana', 'Gaya Shraddha', 'Narayanabali Tradition', 'Tripindi Shraddha',
+  'Asthi Visarjana', 'Preta Kriya Overview', 'Dashaha Mourning Period', 'Ekadasha and Dwadasha Rites',
+  'Annual Tithi Shraddha', 'Matru Shraddha', 'Pitru Rin', 'Rishi Rin', 'Deva Rin', 'Kuladeva Tradition',
+  'Kuladevi Tradition', 'Ishta Devata', 'Grama Devata', 'Vamsha and Family Memory', 'Sapta Pitrus',
+  'Pitru Loka', 'Ancestral Dreams in Tradition', 'Food and Charity in Remembrance', 'Brahmana Bhojana Context',
+  'Sacred Kusha Grass', 'Tilodaka Offering', 'Pancha Mahayajnas', 'Bhuta Yajna', 'Manushya Yajna',
+  'Brahma Yajna', 'Deva Yajna', 'Pitru Yajna', 'Family Genealogy Preservation', 'Regional Shraddha Customs',
+  'Women and Ancestor Remembrance',
+];
+
+const expandedSeeds: SacredTextSeed[] = [
+  ...minorUpanishads.map((title) => ({
+    title,
+    category: 'Upanishads',
+    tradition: 'Minor Upanishad · Muktika tradition',
+    description: `${title} belongs to the wider Upanishadic heritage and is indexed here for its contemplative, devotional, yogic or renunciant teachings.`,
+    topics: ['Upanishad', 'spiritual knowledge', 'text guide'],
+  })),
+  ...deityNames.flatMap((name) => [
+    { title: `${name}: Sacred Stories`, category: 'Deities & Sacred Lore', tradition: 'Vedic-Puranic heritage', description: `A guide to the principal sacred narratives, relationships and theological roles associated with ${name}.`, topics: [name, 'mythology', 'sacred stories'] },
+    { title: `${name}: Iconography and Symbols`, category: 'Deities & Sacred Lore', tradition: 'Temple and art tradition', description: `Explains the forms, attributes, vehicles, gestures and visual symbolism traditionally associated with ${name}.`, topics: [name, 'iconography', 'symbols'] },
+    { title: `${name}: Names and Epithets`, category: 'Deities & Sacred Lore', tradition: 'Devotional tradition', description: `Introduces important names and epithets of ${name}, with the qualities and stories those names remember.`, topics: [name, 'sacred names', 'qualities'] },
+    { title: `${name}: Mantras, Worship and Festivals`, category: 'Hymns & Mantras', tradition: 'Devotional practice overview', description: `An educational overview of prayers, worship customs, sacred days and regional festivals connected with ${name}.`, topics: [name, 'mantra context', 'festivals'] },
+  ]),
+  ...sacredPlaces.flatMap((place) => [
+    { title: `${place}: Sacred Place Guide`, category: 'Itihasa & Sacred Narratives', tradition: 'Tirtha and temple heritage', description: `Introduces the sacred history, presiding deity, major legends and pilgrimage significance of ${place}.`, topics: [place, 'tirtha', 'pilgrimage'] },
+    { title: `${place}: Temple Traditions and Festivals`, category: 'Ancestors & Dharma', tradition: 'Regional temple heritage', description: `A guide to the worship traditions, annual celebrations, local customs and cultural heritage associated with ${place}.`, topics: [place, 'temple tradition', 'festival'] },
+  ]),
+  ...festivals.map((name) => ({ title: `${name}: Meaning and Traditions`, category: 'Ancestors & Dharma', tradition: 'Festival heritage', description: `Explores the sacred narratives, calendar setting, household observances and regional diversity of ${name}.`, topics: [name, 'festival', 'calendar'] })),
+  ...rishisAndTeachers.map((name) => ({ title: `${name}: Rishi and Teacher Guide`, category: 'Philosophy & Yoga', tradition: 'Guru and teaching lineage', description: `Introduces the life traditions, teachings, texts and continuing influence associated with ${name}.`, topics: [name, 'teacher', 'lineage'] })),
+  ...additionalTexts.map((title) => ({ title, category: 'Itihasa & Sacred Narratives', tradition: 'Expanded Hindu textual heritage', description: `A reference guide to ${title}, its traditional setting, major themes, influence and place within Hindu knowledge traditions.`, topics: ['scripture', 'heritage', 'study guide'] })),
+  ...ancestralTopics.map((name) => ({ title: `${name}: Ancestral Dharma Guide`, category: 'Ancestors & Dharma', tradition: 'Family and regional tradition', description: `A respectful educational overview of ${name}, including its symbolism, family context and regional variation; ritual details require qualified guidance.`, topics: [name, 'ancestors', 'family dharma'] })),
+];
+
+const uniqueSeeds = [...seeds, ...expandedSeeds].filter((text, index, all) =>
+  all.findIndex((candidate) => candidate.title.trim().toLowerCase() === text.title.trim().toLowerCase()) === index,
+);
+
+export const sacredTexts: SacredText[] = uniqueSeeds.map((text, index) => ({
   ...text,
   id: index + 1,
 }));

@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import Layout from '@/components/layout/Layout';
 import { ThemeProvider } from '@/hooks/use-theme';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
@@ -21,10 +21,13 @@ const categoryStyle: Record<string, { symbol: string; gradient: string }> = {
   'Hymns & Mantras': { symbol: 'मन्त्र', gradient: 'from-teal-800 via-cyan-700 to-sky-500' },
 };
 
+const PAGE_SIZE = 60;
+
 const SacredTexts = () => {
   const [query, setQuery] = useState('');
   const [category, setCategory] = useState('All');
   const [selected, setSelected] = useState<SacredText | null>(null);
+  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
 
   const filteredTexts = useMemo(() => {
     const normalized = query.trim().toLowerCase();
@@ -37,6 +40,10 @@ const SacredTexts = () => {
     });
   }, [category, query]);
 
+  useEffect(() => setVisibleCount(PAGE_SIZE), [category, query]);
+
+  const visibleTexts = filteredTexts.slice(0, visibleCount);
+
   return (
     <ThemeProvider>
       <Layout>
@@ -46,11 +53,11 @@ const SacredTexts = () => {
             <p className="text-sm font-semibold uppercase tracking-[0.2em] text-hindu-red">Sanatana knowledge library</p>
             <h1 className="mt-3 text-4xl font-bold md:text-5xl">Sacred Texts & Hindu Heritage</h1>
             <p className="mx-auto mt-4 max-w-3xl text-muted-foreground">
-              Explore 100 essential guides covering Vedas, Upanishads, Puranas, Gitas, sacred narratives, philosophy,
-              Hindu deities, Vedic hymns, family dharma and ancestral traditions.
+              Explore a growing library covering Vedas, Upanishads, Puranas, Gitas, sacred narratives, philosophy,
+              Hindu deities, Vedic hymns, temples, teachers, family dharma and ancestral traditions.
             </p>
             <div className="mt-6 flex flex-wrap justify-center gap-3">
-              <Badge variant="secondary" className="px-4 py-2 text-sm"><Library className="mr-2 h-4 w-4" />100 resources</Badge>
+              <Badge variant="secondary" className="px-4 py-2 text-sm"><Library className="mr-2 h-4 w-4" />{sacredTexts.length} resources</Badge>
               <Badge variant="secondary" className="px-4 py-2 text-sm"><BookOpen className="mr-2 h-4 w-4" />9 knowledge paths</Badge>
             </div>
           </section>
@@ -86,8 +93,8 @@ const SacredTexts = () => {
 
           {filteredTexts.length ? (
             <section className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
-              {filteredTexts.map((text) => {
-                const style = categoryStyle[text.category];
+              {visibleTexts.map((text) => {
+                const style = categoryStyle[text.category] || categoryStyle['Itihasa & Sacred Narratives'];
                 return (
                   <Card key={text.id} className="group flex h-full flex-col overflow-hidden border-border/60 transition-all hover:-translate-y-1 hover:shadow-xl">
                     <div className={`relative flex h-40 items-center justify-center bg-gradient-to-br ${style.gradient}`}>
@@ -120,6 +127,14 @@ const SacredTexts = () => {
             </section>
           )}
 
+          {visibleCount < filteredTexts.length && (
+            <div className="mt-8 flex justify-center">
+              <Button variant="outline" size="lg" onClick={() => setVisibleCount((count) => count + PAGE_SIZE)}>
+                Load {Math.min(PAGE_SIZE, filteredTexts.length - visibleCount)} more resources
+              </Button>
+            </div>
+          )}
+
           <section className="mt-10 rounded-2xl border bg-muted/30 p-5 text-sm text-muted-foreground">
             <strong className="text-foreground">Respectful-use note:</strong> This library provides educational overviews,
             not priestly or legal instruction. Ancestral rites, initiation practices and recitation rules vary by family,
@@ -144,7 +159,7 @@ const SacredTexts = () => {
                   </div>
                 </div>
                 <div className="rounded-xl bg-muted/50 p-4 text-sm text-muted-foreground">
-                  This overview is part of the curated 100-resource Hindu heritage index. Full translations and ritual
+                  This overview is part of the expanding Hindu heritage index. Full translations and ritual
                   instructions should be added only from verified public-domain or appropriately licensed editions.
                 </div>
               </>
