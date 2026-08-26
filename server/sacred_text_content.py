@@ -81,6 +81,20 @@ def _api(host: str, params: dict[str, str]) -> dict[str, Any]:
         return json.load(response)
 
 
+def _json_url(url: str) -> dict[str, Any]:
+    request = Request(url, headers={"User-Agent": USER_AGENT, "Accept-Language": "en"})
+    with urlopen(request, timeout=TIMEOUT_SECONDS) as response:
+        return json.load(response)
+
+
+def _text_url(url: str) -> str:
+    request = Request(url, headers={"User-Agent": USER_AGENT, "Accept-Language": "en"})
+    with urlopen(request, timeout=TIMEOUT_SECONDS) as response:
+        payload = response.read()
+        charset = response.headers.get_content_charset() or "utf-8"
+        return payload.decode(charset, errors="replace")
+
+
 def _search(host: str, query: str, limit: int = 8) -> list[str]:
     data = _api(host, {
         "action": "query", "list": "search", "srsearch": query, "srnamespace": "0",
@@ -203,12 +217,51 @@ def _wikipedia_content(title: str) -> dict[str, Any] | None:
     return None
 
 
+def _gutenberg_content(title: str) -> dict[str, Any] | None:
+    """Load a complete public-domain edition through the Gutendex catalog."""
+    query = _clean_search_title(title)
+    data = _json_url(f"https://gutendex.com/books?{urlencode({'search': query})}")
+    books = data.get("results", [])
+    books = sorted(books, key=lambda book: _candidate_score(query, book.get("title", "")))
+    for book in books[:8]:
+        subjects = " ".join(book.get("subjects", [])).lower()
+        shelves = " ".join(book.get("bookshelves", [])).lower()
+        if not any(term in f"{subjects} {shelves}" for term in ("hindu", "sanskrit", "sacred", "veda", "yoga", "india")):
+            continue
+        formats = book.get("formats", {})
+        content_url = next(
+            (url for mime, url in formats.items() if mime.startswith("text/html") and url),
+            next((url for mime, url in formats.items() if mime.startswith("text/plain") and url), None),
+        )
+        if not content_url:
+            continue
+        raw = _text_url(content_url)
+        content = html_to_text(raw) if "html" in next((mime for mime, url in formats.items() if url == content_url), "") else raw
+        content = re.sub(r"\n{3,}", "\n\n", content).strip()
+        if len(content) < 1000:
+            continue
+        book_id = book.get("id")
+        return {
+            "source": "Project Gutenberg",
+            "sourceType": "gutenberg",
+            "host": "gutenberg.org",
+            "language": "English",
+            "title": book.get("title", query),
+            "url": f"https://www.gutenberg.org/ebooks/{book_id}",
+            "license": "Public-domain edition; Project Gutenberg usage terms apply.",
+            "content": content,
+            "activeChapter": None,
+            "chapters": [],
+        }
+    return None
+
+
 def fetch_sacred_content(title: str, category: str, language: str = "en") -> dict[str, Any]:
     scripture_category = category in {"Vedas & Vedangas", "Upanishads", "Puranas", "Gitas"}
     if language == "sa":
         result = _wikisource_content(title, "sa")
     elif scripture_category:
-        result = _wikisource_content(title, "en") or _wikipedia_content(title)
+        result = _wikisource_content(title, "en") or _gutenberg_content(title) or _wikipedia_content(title)
     else:
         result = _wikipedia_content(title) or _wikisource_content(title, "en")
     if not result:

@@ -2,7 +2,7 @@ import type { SacredText } from '@/data/sacred-texts';
 
 export type SacredSourceContent = {
   source: string;
-  sourceType: 'wikisource' | 'wikipedia';
+  sourceType: 'wikisource' | 'gutenberg' | 'wikipedia';
   host: string;
   language: string;
   title: string;

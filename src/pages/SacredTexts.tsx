@@ -224,8 +224,8 @@ const SacredTexts = () => {
                       <>
                         <div className="mt-4 flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
                           <span>{sourceContent.source} · {sourceContent.language}</span>
-                          <a className="inline-flex items-center font-medium text-hindu-red hover:underline" href={sourceContent.url} target="_blank" rel="noreferrer">
-                            View original source <ExternalLink className="ml-1 h-3.5 w-3.5" />
+                          <a className="inline-flex items-center text-muted-foreground hover:text-hindu-red hover:underline" href={sourceContent.url} target="_blank" rel="noreferrer">
+                            Source &amp; license <ExternalLink className="ml-1 h-3.5 w-3.5" />
                           </a>
                         </div>
                         <p className="mt-2 text-xs text-muted-foreground">{sourceContent.license}</p>
