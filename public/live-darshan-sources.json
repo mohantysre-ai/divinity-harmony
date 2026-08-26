@@ -1,0 +1,20 @@
+{
+  "sources": [
+    {
+      "channelId": "UCT1egsvA08YcdMLiEu1DTRg",
+      "name": "Somnath Temple — Official",
+      "temple": "Shree Somnath Temple",
+      "deity": "Lord Shiva",
+      "location": "Prabhas Patan, Gujarat",
+      "officialUrl": "https://somnath.org/somnath-live-darshan"
+    },
+    {
+      "channelId": "UCF9FdiMBENIbM6jb44zWmCQ",
+      "name": "Shree Siddhivinayak Ganapati Temple Trust",
+      "temple": "Siddhivinayak Temple",
+      "deity": "Lord Ganesha",
+      "location": "Mumbai, Maharashtra",
+      "officialUrl": "https://www.siddhivinayak.org/live-darshan"
+    }
+  ]
+}
