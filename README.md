@@ -20,4 +20,14 @@ Set `VITE_MANTRA_CATALOG_URL` to expand the built-in mantra catalog with a hoste
 
 ## Live temple darshan
 
-Visitors do not need an API key. A GitHub Actions job refreshes `public/live-darshan-feed.json` every five minutes by discovering YouTube videos whose current status is live. The page reads that published feed at runtime. Run **Refresh live darshan feed** from the Actions tab to update it immediately.
+Visitors do not need an API key. The production container runs a same-origin
+`/api/live-darshan` service that reads YouTube's live-filtered temple/darshan
+search results, keeps only videos carrying YouTube's current LIVE badge, and
+caches the results for five minutes. It has no fixed channel list or result cap.
+
+For local development, run the API and Vite in separate terminals:
+
+```bash
+python3 server/live_darshan_api.py
+npm run dev
+```
