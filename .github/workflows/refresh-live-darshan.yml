@@ -1,0 +1,28 @@
+name: Refresh live darshan feed
+
+on:
+  schedule:
+    - cron: '*/5 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install --disable-pip-version-check yt-dlp
+      - run: python scripts/refresh_live_darshan.py
+      - name: Commit updated live feed
+        run: |
+          if git diff --quiet -- public/live-darshan-feed.json; then exit 0; fi
+          git config user.name 'divinity-harmony-bot'
+          git config user.email 'divinity-harmony-bot@users.noreply.github.com'
+          git add public/live-darshan-feed.json
+          git commit -m 'Refresh live darshan feed'
+          git push
