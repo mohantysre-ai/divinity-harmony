@@ -1,12 +1,20 @@
 name: Refresh live darshan feed
 
 on:
+  push:
+    paths:
+      - '.github/workflows/refresh-live-darshan.yml'
+      - 'scripts/refresh_live_darshan.py'
   schedule:
     - cron: '*/5 * * * *'
   workflow_dispatch:
 
 permissions:
   contents: write
+
+concurrency:
+  group: live-darshan-feed
+  cancel-in-progress: false
 
 jobs:
   refresh:
