@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Layout from '@/components/layout/Layout';
-import { ThemeProvider, useTheme } from '@/hooks/use-theme';
+import { ThemeProvider } from '@/hooks/use-theme';
+import { useTheme } from '@/hooks/theme-context';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';

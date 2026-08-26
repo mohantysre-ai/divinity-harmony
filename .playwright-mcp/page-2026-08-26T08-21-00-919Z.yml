@@ -1,0 +1,278 @@
+- generic [active] [ref=f3e1]:
+  - generic [ref=f3e2]:
+    - region "Notifications (F8)":
+      - list [ref=f3e319]:
+        - listitem [ref=f3e344]:
+          - generic [ref=f3e345]:
+            - generic [ref=f3e346]: Video Selected
+            - generic [ref=f3e347]: "Now showing: Live Darshan from Tiruvannamalai Arunachaleswarar Temple"
+          - button [ref=f3e348] [cursor=pointer]
+    - region "Notifications alt+T"
+    - generic [ref=f3e3]:
+      - banner [ref=f3e4]:
+        - navigation [ref=f3e6]:
+          - link "ॐ Divinity Harmony" [ref=f3e8] [cursor=pointer]:
+            - /url: /
+            - generic [ref=f3e9]: ॐ
+            - generic [ref=f3e11]: Divinity Harmony
+          - generic [ref=f3e12]:
+            - generic [ref=f3e13]:
+              - link "Home" [ref=f3e14] [cursor=pointer]:
+                - /url: /
+              - link "Mantras" [ref=f3e18] [cursor=pointer]:
+                - /url: /mantras
+              - link "Live Darshan" [ref=f3e21] [cursor=pointer]:
+                - /url: /darshan
+              - link "MP3 Player" [ref=f3e25] [cursor=pointer]:
+                - /url: /mp3-player
+              - link "Sacred Texts" [ref=f3e30] [cursor=pointer]:
+                - /url: /pdf-reader
+            - button [ref=f3e34] [cursor=pointer]
+            - button "Toggle theme" [ref=f3e35] [cursor=pointer]
+            - button "Login" [ref=f3e37] [cursor=pointer]
+      - main [ref=f3e39]:
+        - generic [ref=f3e40]:
+          - heading "Live Temple Darshan" [level=1] [ref=f3e41]
+          - generic [ref=f3e42]:
+            - generic [ref=f3e44]:
+              - iframe [ref=f3e46]:
+                - generic [ref=f4e1]:
+                  - generic "YouTube Video Player" [ref=f4e3]
+                  - generic [ref=f4e5]:
+                    - generic:
+                      - generic:
+                        - generic [ref=f4e6] [cursor=pointer]
+                        - button "Play video" [ref=f4e10] [cursor=pointer]
+                        - button "Hide player controls" [ref=f4e14] [cursor=pointer]
+                        - generic [ref=f4e16]:
+                          - generic [ref=f4e21]:
+                            - generic [ref=f4e22]:
+                              - 'link "#HDLive: || SVBCLIVE STREAMING|SVBCHD LIVE" [ref=f4e23] [cursor=pointer]':
+                                - /url: https://www.youtube.com/watch?v=8opaIVCposg
+                              - link "SVBCTTD LIVE TV" [ref=f4e24] [cursor=pointer]:
+                                - /url: /channel/UCr-rncMg0kC_FiDsfype1wQ
+                            - generic [ref=f4e26]:
+                              - button [ref=f4e27] [cursor=pointer]
+                              - generic [ref=f4e29]:
+                                - generic: SVBCTTD LIVE TV
+                                - generic: 111K subscribers
+                          - generic [ref=f4e30]:
+                            - button "Share" [ref=f4e33] [cursor=pointer]
+                            - link "Watch on YouTube" [ref=f4e44] [cursor=pointer]:
+                              - /url: https://www.youtube.com/watch?v=8opaIVCposg
+                              - generic [ref=f4e45]: Watch on
+              - generic [ref=f3e48]:
+                - generic [ref=f3e49]:
+                  - heading "Live Darshan from Tiruvannamalai Arunachaleswarar Temple" [level=2] [ref=f3e353]
+                  - paragraph [ref=f3e51]: Connect with Lord Shiva at the sacred Arunachala hill
+                - link "Watch on YouTube" [ref=f3e52] [cursor=pointer]:
+                  - /url: https://www.youtube.com/watch?v=8opaIVCposg
+            - generic [ref=f3e53]:
+              - heading "Available Darshans" [level=3] [ref=f3e54]
+              - generic [ref=f3e55]:
+                - generic [ref=f3e57] [cursor=pointer]:
+                  - img "Live Darshan from Varanasi Ganga Aarti" [ref=f3e59]
+                  - generic [ref=f3e60]:
+                    - heading "Live Darshan from Varanasi Ganga Aarti" [level=4] [ref=f3e61]
+                    - paragraph [ref=f3e62]: Experience the divine Ganga Aarti ceremony live from Varanasi
+                - generic [ref=f3e64] [cursor=pointer]:
+                  - img "Live Darshan from Tirupati Balaji Temple" [ref=f3e66]
+                  - generic [ref=f3e67]:
+                    - heading "Live Darshan from Tirupati Balaji Temple" [level=4] [ref=f3e68]
+                    - paragraph [ref=f3e69]: Experience live darshan from the sacred Tirupati Balaji Temple
+                - generic [ref=f3e71] [cursor=pointer]:
+                  - img "Live Darshan from Shirdi Sai Baba Temple" [ref=f3e73]
+                  - generic [ref=f3e74]:
+                    - heading "Live Darshan from Shirdi Sai Baba Temple" [level=4] [ref=f3e75]
+                    - paragraph [ref=f3e76]: Connect with the divine presence of Sai Baba through this live darshan
+                - generic [ref=f3e78] [cursor=pointer]:
+                  - img "Live Darshan from Dwarkadheesh Temple" [ref=f3e80]
+                  - generic [ref=f3e81]:
+                    - heading "Live Darshan from Dwarkadheesh Temple" [level=4] [ref=f3e82]
+                    - paragraph [ref=f3e83]: Witness the serenity of Lord Krishna's temple through this live darshan
+                - generic [ref=f3e85] [cursor=pointer]:
+                  - img "Live Darshan from Badrinath Temple" [ref=f3e87]
+                  - generic [ref=f3e88]:
+                    - heading "Live Darshan from Badrinath Temple" [level=4] [ref=f3e89]
+                    - paragraph [ref=f3e90]: Experience the divine aura of one of the holiest Hindu temples
+                - generic [ref=f3e92] [cursor=pointer]:
+                  - img "Live Darshan from Somnath Temple" [ref=f3e94]
+                  - generic [ref=f3e95]:
+                    - heading "Live Darshan from Somnath Temple" [level=4] [ref=f3e96]
+                    - paragraph [ref=f3e97]: Connect with the sacred energy of one of the 12 Jyotirlingas
+                - generic [ref=f3e99] [cursor=pointer]:
+                  - img "Live Darshan from Kashi Vishwanath Temple" [ref=f3e101]
+                  - generic [ref=f3e102]:
+                    - heading "Live Darshan from Kashi Vishwanath Temple" [level=4] [ref=f3e103]
+                    - paragraph [ref=f3e104]: Experience the divine darshan from this ancient temple dedicated to Lord Shiva
+                - generic [ref=f3e106] [cursor=pointer]:
+                  - img "Live Darshan from Kedarnath Temple" [ref=f3e108]
+                  - generic [ref=f3e109]:
+                    - heading "Live Darshan from Kedarnath Temple" [level=4] [ref=f3e110]
+                    - paragraph [ref=f3e111]: Connect with the divine abode of Lord Shiva in the Himalayas
+                - generic [ref=f3e113] [cursor=pointer]:
+                  - img "Live Darshan from Meenakshi Temple, Madurai" [ref=f3e115]
+                  - generic [ref=f3e116]:
+                    - heading "Live Darshan from Meenakshi Temple, Madurai" [level=4] [ref=f3e117]
+                    - paragraph [ref=f3e118]: Experience the architectural and spiritual grandeur of this ancient temple
+                - generic [ref=f3e120] [cursor=pointer]:
+                  - img "Live Darshan from Jagannath Temple, Puri" [ref=f3e122]
+                  - generic [ref=f3e123]:
+                    - heading "Live Darshan from Jagannath Temple, Puri" [level=4] [ref=f3e124]
+                    - paragraph [ref=f3e125]: Witness the divine presence of Lord Jagannath through this live darshan
+                - generic [ref=f3e127] [cursor=pointer]:
+                  - img "Live Darshan from Shri Ram Janmabhoomi Mandir, Ayodhya" [ref=f3e129]
+                  - generic [ref=f3e130]:
+                    - heading "Live Darshan from Shri Ram Janmabhoomi Mandir, Ayodhya" [level=4] [ref=f3e131]
+                    - paragraph [ref=f3e132]: Experience the divine presence of Ram Lalla at the sacred birthplace of Lord Ram
+                - generic [ref=f3e134] [cursor=pointer]:
+                  - img "Live Darshan from Mahakaleshwar Temple, Ujjain" [ref=f3e136]
+                  - generic [ref=f3e137]:
+                    - heading "Live Darshan from Mahakaleshwar Temple, Ujjain" [level=4] [ref=f3e138]
+                    - paragraph [ref=f3e139]: Witness the sacred Bhasma Aarti and darshan of one of the 12 Jyotirlingas
+                - generic [ref=f3e141] [cursor=pointer]:
+                  - img "Live Darshan from Vaishno Devi Temple" [ref=f3e143]
+                  - generic [ref=f3e144]:
+                    - heading "Live Darshan from Vaishno Devi Temple" [level=4] [ref=f3e145]
+                    - paragraph [ref=f3e146]: Seek the blessings of Mata Vaishno Devi through live darshan
+                - generic [ref=f3e148] [cursor=pointer]:
+                  - img "Live Darshan from ISKCON Bangalore Temple" [ref=f3e150]
+                  - generic [ref=f3e151]:
+                    - heading "Live Darshan from ISKCON Bangalore Temple" [level=4] [ref=f3e152]
+                    - paragraph [ref=f3e153]: Experience live darshan of Sri Sri Radha Krishna at ISKCON Bangalore
+                - generic [ref=f3e155] [cursor=pointer]:
+                  - img "Live Darshan from Golden Temple, Amritsar" [ref=f3e157]
+                  - generic [ref=f3e158]:
+                    - heading "Live Darshan from Golden Temple, Amritsar" [level=4] [ref=f3e159]
+                    - paragraph [ref=f3e160]: Experience the divine peace of Harmandir Sahib with live Gurbani Kirtan
+                - generic [ref=f3e162] [cursor=pointer]:
+                  - img "Live Darshan from Akshardham Temple, Delhi" [ref=f3e164]
+                  - generic [ref=f3e165]:
+                    - heading "Live Darshan from Akshardham Temple, Delhi" [level=4] [ref=f3e166]
+                    - paragraph [ref=f3e167]: Witness the spiritual grandeur of Swaminarayan Akshardham
+                - generic [ref=f3e169] [cursor=pointer]:
+                  - img "Live Darshan from Siddhivinayak Temple, Mumbai" [ref=f3e171]
+                  - generic [ref=f3e172]:
+                    - heading "Live Darshan from Siddhivinayak Temple, Mumbai" [level=4] [ref=f3e173]
+                    - paragraph [ref=f3e174]: Seek blessings of Lord Ganesha at Siddhivinayak Temple
+                - generic [ref=f3e176] [cursor=pointer]:
+                  - img "Live Darshan from Sabarimala Ayyappa Temple" [ref=f3e178]
+                  - generic [ref=f3e179]:
+                    - heading "Live Darshan from Sabarimala Ayyappa Temple" [level=4] [ref=f3e180]
+                    - paragraph [ref=f3e181]: Witness the sacred rituals at the holiest Ayyappa temple
+                - generic [ref=f3e183] [cursor=pointer]:
+                  - img "Live Darshan from Lingaraj Temple, Bhubaneswar" [ref=f3e185]
+                  - generic [ref=f3e186]:
+                    - heading "Live Darshan from Lingaraj Temple, Bhubaneswar" [level=4] [ref=f3e187]
+                    - paragraph [ref=f3e188]: Experience the divine darshan of Baba Lingaraj in Bhubaneswar
+                - generic [ref=f3e190] [cursor=pointer]:
+                  - img "Live Darshan from Kamakhya Temple, Guwahati" [ref=f3e192]
+                  - generic [ref=f3e193]:
+                    - heading "Live Darshan from Kamakhya Temple, Guwahati" [level=4] [ref=f3e194]
+                    - paragraph [ref=f3e195]: Experience the divine Shakti Peeth in Guwahati, Assam
+                - generic [ref=f3e197] [cursor=pointer]:
+                  - img "Live Darshan from Kalighat Temple, Kolkata" [ref=f3e199]
+                  - generic [ref=f3e200]:
+                    - heading "Live Darshan from Kalighat Temple, Kolkata" [level=4] [ref=f3e201]
+                    - paragraph [ref=f3e202]: Seek blessings at one of the 51 Shakti Peethas
+                - generic [ref=f3e204] [cursor=pointer]:
+                  - img "Live Darshan from Banke Bihari Temple, Vrindavan" [ref=f3e206]
+                  - generic [ref=f3e207]:
+                    - heading "Live Darshan from Banke Bihari Temple, Vrindavan" [level=4] [ref=f3e208]
+                    - paragraph [ref=f3e209]: Connect with Lord Krishna in his Banke Bihari form in Vrindavan
+                - generic [ref=f3e211] [cursor=pointer]:
+                  - img "Live Darshan from Guruvayur Temple, Kerala" [ref=f3e213]
+                  - generic [ref=f3e214]:
+                    - heading "Live Darshan from Guruvayur Temple, Kerala" [level=4] [ref=f3e215]
+                    - paragraph [ref=f3e216]: Experience the divine darshan of Lord Krishna at Guruvayur
+                - generic [ref=f3e218] [cursor=pointer]:
+                  - img "Live Darshan from Padmanabhaswamy Temple, Thiruvananthapuram" [ref=f3e220]
+                  - generic [ref=f3e221]:
+                    - heading "Live Darshan from Padmanabhaswamy Temple, Thiruvananthapuram" [level=4] [ref=f3e222]
+                    - paragraph [ref=f3e223]: Witness the divine Anantha Sayanam of Lord Vishnu
+                - generic [ref=f3e225] [cursor=pointer]:
+                  - img "Live Darshan from Tiruvannamalai Arunachaleswarar Temple" [ref=f3e227]
+                  - generic [ref=f3e228]:
+                    - heading "Live Darshan from Tiruvannamalai Arunachaleswarar Temple" [level=4] [ref=f3e229]
+                    - paragraph [ref=f3e230]: Connect with Lord Shiva at the sacred Arunachala hill
+      - contentinfo [ref=f3e231]:
+        - generic [ref=f3e232]:
+          - generic [ref=f3e233]:
+            - heading "Subscribe to Our Newsletter" [level=3] [ref=f3e234]
+            - paragraph [ref=f3e235]: Receive updates on new mantras, upcoming live darshans, and spiritual wisdom directly to your inbox.
+            - generic [ref=f3e236]:
+              - textbox "Enter your email" [ref=f3e237]
+              - button "Subscribe" [ref=f3e238] [cursor=pointer]
+          - generic [ref=f3e239]:
+            - generic [ref=f3e240]:
+              - link "ॐ Divinity Harmony" [ref=f3e241] [cursor=pointer]:
+                - /url: /
+                - generic [ref=f3e242]: ॐ
+                - generic [ref=f3e244]: Divinity Harmony
+              - paragraph [ref=f3e245]: Connecting souls through ancient mantras, live darshans, and spiritual knowledge for a harmonious life.
+              - generic [ref=f3e246]:
+                - button "Facebook" [ref=f3e247] [cursor=pointer]
+                - button "Twitter" [ref=f3e249] [cursor=pointer]
+                - button "Instagram" [ref=f3e251] [cursor=pointer]
+                - button "Youtube" [ref=f3e253] [cursor=pointer]
+            - generic [ref=f3e255]:
+              - heading "Quick Links" [level=3] [ref=f3e256]
+              - list [ref=f3e257]:
+                - listitem [ref=f3e258]:
+                  - link "Home" [ref=f3e259] [cursor=pointer]:
+                    - /url: /
+                - listitem [ref=f3e260]:
+                  - link "Mantras" [ref=f3e261] [cursor=pointer]:
+                    - /url: /mantras
+                - listitem [ref=f3e262]:
+                  - link "Live Darshan" [ref=f3e263] [cursor=pointer]:
+                    - /url: /darshan
+                - listitem [ref=f3e264]:
+                  - link "Spiritual Music" [ref=f3e265] [cursor=pointer]:
+                    - /url: /mp3-player
+                - listitem [ref=f3e266]:
+                  - link "Sacred Texts" [ref=f3e267] [cursor=pointer]:
+                    - /url: /pdf-reader
+                - listitem [ref=f3e268]:
+                  - link "Settings" [ref=f3e269] [cursor=pointer]:
+                    - /url: /settings
+            - generic [ref=f3e270]:
+              - heading "Resources" [level=3] [ref=f3e271]
+              - list [ref=f3e272]:
+                - listitem [ref=f3e273]:
+                  - link "Community Forum" [ref=f3e274] [cursor=pointer]:
+                    - /url: "#"
+                - listitem [ref=f3e275]:
+                  - link "Meditation Resources" [ref=f3e276] [cursor=pointer]:
+                    - /url: "#"
+                - listitem [ref=f3e277]:
+                  - link "Spiritual Guides" [ref=f3e278] [cursor=pointer]:
+                    - /url: "#"
+                - listitem [ref=f3e279]:
+                  - link "Help Center" [ref=f3e280] [cursor=pointer]:
+                    - /url: "#"
+                - listitem [ref=f3e281]:
+                  - link "Donation Program" [ref=f3e282] [cursor=pointer]:
+                    - /url: "#"
+            - generic [ref=f3e287]:
+              - heading "Contact Us" [level=3] [ref=f3e288]
+              - list [ref=f3e289]:
+                - listitem [ref=f3e290]:
+                  - generic [ref=f3e295]: contact@divinityharmony.com
+                - listitem [ref=f3e296]:
+                  - generic [ref=f3e300]: +1 (123) 456-7890
+                - listitem [ref=f3e301]:
+                  - generic [ref=f3e306]: Divine Harmony Center,Spiritual Avenue, Peace City
+          - generic [ref=f3e307]:
+            - paragraph [ref=f3e308]: © 2026 Divinity Harmony. All rights reserved.
+            - generic [ref=f3e309]:
+              - link "Privacy Policy" [ref=f3e310] [cursor=pointer]:
+                - /url: "#"
+              - link "Terms of Service" [ref=f3e311] [cursor=pointer]:
+                - /url: "#"
+              - link "Accessibility" [ref=f3e312] [cursor=pointer]:
+                - /url: "#"
+            - generic [ref=f3e313]:
+              - generic [ref=f3e314]: Made with
+              - generic [ref=f3e317]: for a spiritual world
+  - status [ref=f3e354]: "Notification Video SelectedNow showing: Live Darshan from Tiruvannamalai Arunachaleswarar Temple"

@@ -6,7 +6,10 @@
       "description": "Experience the divine Ganga Aarti ceremony live from Varanasi",
       "thumbnailUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/Varanasi_Ganga_aarti.jpg/1200px-Varanasi_Ganga_aarti.jpg",
       "embedUrl": "https://www.youtube.com/embed/xYV1IJfpKmw",
-      "youtubeUrl": "https://www.youtube.com/watch?v=xYV1IJfpKmw"
+      "youtubeUrl": "https://www.youtube.com/watch?v=xYV1IJfpKmw",
+      "category": "Jyotirlinga",
+      "deity": "Lord Shiva",
+      "location": "Varanasi, Uttar Pradesh"
     },
     {
       "id": 2,
@@ -14,7 +17,10 @@
       "description": "Experience live darshan from the sacred Tirupati Balaji Temple",
       "thumbnailUrl": "https://upload.wikimedia.org/wikipedia/commons/4/48/Lord_venkateswara_pic.jpg",
       "embedUrl": "https://www.youtube.com/embed/CidH8F9h8Lw",
-      "youtubeUrl": "https://www.youtube.com/watch?v=CidH8F9h8Lw"
+      "youtubeUrl": "https://www.youtube.com/watch?v=CidH8F9h8Lw",
+      "category": "Temple",
+      "deity": "Lord Venkateswara",
+      "location": "Tirupati, Andhra Pradesh"
     },
     {
       "id": 3,
@@ -22,7 +28,10 @@
       "description": "Connect with the divine presence of Sai Baba through this live darshan",
       "thumbnailUrl": "https://upload.wikimedia.org/wikipedia/commons/9/9c/SaiBaba.JPG",
       "embedUrl": "https://www.youtube.com/embed/zcDVnWGZa8c",
-      "youtubeUrl": "https://www.youtube.com/watch?v=zcDVnWGZa8c"
+      "youtubeUrl": "https://www.youtube.com/watch?v=zcDVnWGZa8c",
+      "category": "Temple",
+      "deity": "Sai Baba",
+      "location": "Shirdi, Maharashtra"
     },
     {
       "id": 4,
@@ -30,7 +39,10 @@
       "description": "Witness the serenity of Lord Krishna's temple through this live darshan",
       "thumbnailUrl": "https://upload.wikimedia.org/wikipedia/commons/5/5c/Dwarkadhish_Temple.jpg",
       "embedUrl": "https://www.youtube.com/embed/SakrGdyRjRI",
-      "youtubeUrl": "https://www.youtube.com/watch?v=SakrGdyRjRI"
+      "youtubeUrl": "https://www.youtube.com/watch?v=SakrGdyRjRI",
+      "category": "Char Dham",
+      "deity": "Lord Krishna",
+      "location": "Dwarka, Gujarat"
     },
     {
       "id": 5,
@@ -38,15 +50,21 @@
       "description": "Experience the divine aura of one of the holiest Hindu temples",
       "thumbnailUrl": "https://upload.wikimedia.org/wikipedia/commons/c/c6/Badrinath_Temple.jpg",
       "embedUrl": "https://www.youtube.com/embed/1RHKc0Di92U",
-      "youtubeUrl": "https://www.youtube.com/watch?v=1RHKc0Di92U"
+      "youtubeUrl": "https://www.youtube.com/watch?v=1RHKc0Di92U",
+      "category": "Char Dham",
+      "deity": "Lord Vishnu",
+      "location": "Badrinath, Uttarakhand"
     },
     {
       "id": 6,
       "title": "Live Darshan from Somnath Temple",
       "description": "Connect with the sacred energy of one of the 12 Jyotirlingas",
       "thumbnailUrl": "https://upload.wikimedia.org/wikipedia/commons/3/36/Somnath_Temple_Gujarat.jpg",
-      "embedUrl": "https://www.youtube.com/embed/Rl4KmDUK9AA",
-      "youtubeUrl": "https://www.youtube.com/watch?v=Rl4KmDUK9AA"
+      "embedUrl": "https://www.youtube.com/embed/Wu321m2SUKY",
+      "youtubeUrl": "https://www.youtube.com/watch?v=Wu321m2SUKY",
+      "category": "Jyotirlinga",
+      "deity": "Lord Shiva",
+      "location": "Prabhas Patan, Gujarat"
     },
     {
       "id": 7,
@@ -54,7 +72,10 @@
       "description": "Experience the divine darshan from this ancient temple dedicated to Lord Shiva",
       "thumbnailUrl": "https://upload.wikimedia.org/wikipedia/commons/a/a8/Vishwanath_Temple%2C_BHU.jpg",
       "embedUrl": "https://www.youtube.com/embed/RIFxnl7xUdU",
-      "youtubeUrl": "https://www.youtube.com/watch?v=RIFxnl7xUdU"
+      "youtubeUrl": "https://www.youtube.com/watch?v=RIFxnl7xUdU",
+      "category": "Jyotirlinga",
+      "deity": "Lord Shiva",
+      "location": "Varanasi, Uttar Pradesh"
     },
     {
       "id": 8,
@@ -62,7 +83,10 @@
       "description": "Connect with the divine abode of Lord Shiva in the Himalayas",
       "thumbnailUrl": "https://upload.wikimedia.org/wikipedia/commons/f/f7/Kedarnath_Temple.JPG",
       "embedUrl": "https://www.youtube.com/embed/KBX5xyIXaJ4",
-      "youtubeUrl": "https://www.youtube.com/watch?v=KBX5xyIXaJ4"
+      "youtubeUrl": "https://www.youtube.com/watch?v=KBX5xyIXaJ4",
+      "category": "Char Dham",
+      "deity": "Lord Shiva",
+      "location": "Kedarnath, Uttarakhand"
     },
     {
       "id": 9,
@@ -70,15 +94,186 @@
       "description": "Experience the architectural and spiritual grandeur of this ancient temple",
       "thumbnailUrl": "https://upload.wikimedia.org/wikipedia/commons/1/1a/India-7550_-_Flickr_-_archer10_%28Dennis%29.jpg",
       "embedUrl": "https://www.youtube.com/embed/6O8SQYoL5jo",
-      "youtubeUrl": "https://www.youtube.com/watch?v=6O8SQYoL5jo"
+      "youtubeUrl": "https://www.youtube.com/watch?v=6O8SQYoL5jo",
+      "category": "Temple",
+      "deity": "Goddess Meenakshi",
+      "location": "Madurai, Tamil Nadu"
     },
     {
       "id": 10,
       "title": "Live Darshan from Jagannath Temple, Puri",
       "description": "Witness the divine presence of Lord Jagannath through this live darshan",
       "thumbnailUrl": "https://upload.wikimedia.org/wikipedia/commons/f/ff/Shree_Jagannatha_Temple%2C_Puri.jpg",
-      "embedUrl": "https://www.youtube.com/embed/2QgKiH5PGI8",
-      "youtubeUrl": "https://www.youtube.com/watch?v=2QgKiH5PGI8"
+      "embedUrl": "https://www.youtube.com/embed/BN0-_tCu43c",
+      "youtubeUrl": "https://www.youtube.com/watch?v=BN0-_tCu43c",
+      "category": "Char Dham",
+      "deity": "Lord Jagannath",
+      "location": "Puri, Odisha"
+    },
+    {
+      "id": 11,
+      "title": "Live Darshan from Shri Ram Janmabhoomi Mandir, Ayodhya",
+      "description": "Experience the divine presence of Ram Lalla at the sacred birthplace of Lord Ram",
+      "thumbnailUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Ayodhya_Ram_Mandir_Prarambh.jpg/1200px-Ayodhya_Ram_Mandir_Prarambh.jpg",
+      "embedUrl": "https://www.youtube.com/embed/nL8MIMlnBVA",
+      "youtubeUrl": "https://www.youtube.com/watch?v=nL8MIMlnBVA",
+      "category": "Temple",
+      "deity": "Lord Ram",
+      "location": "Ayodhya, Uttar Pradesh"
+    },
+    {
+      "id": 12,
+      "title": "Live Darshan from Mahakaleshwar Temple, Ujjain",
+      "description": "Witness the sacred Bhasma Aarti and darshan of one of the 12 Jyotirlingas",
+      "thumbnailUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Mahakaleshwar_Temple_Ujjain.jpg/1200px-Mahakaleshwar_Temple_Ujjain.jpg",
+      "embedUrl": "https://www.youtube.com/embed/vZmQe1kNYY0",
+      "youtubeUrl": "https://www.youtube.com/watch?v=vZmQe1kNYY0",
+      "category": "Jyotirlinga",
+      "deity": "Lord Shiva",
+      "location": "Ujjain, Madhya Pradesh"
+    },
+    {
+      "id": 13,
+      "title": "Live Darshan from Vaishno Devi Temple",
+      "description": "Seek the blessings of Mata Vaishno Devi through live darshan",
+      "thumbnailUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Vaishno_Devi_Temple.jpg/1200px-Vaishno_Devi_Temple.jpg",
+      "embedUrl": "https://www.youtube.com/embed/uEY1DPGQX7g",
+      "youtubeUrl": "https://www.youtube.com/watch?v=uEY1DPGQX7g",
+      "category": "Shakti Peeth",
+      "deity": "Goddess Vaishno Devi",
+      "location": "Katra, Jammu and Kashmir"
+    },
+    {
+      "id": 14,
+      "title": "Live Darshan from ISKCON Bangalore Temple",
+      "description": "Experience live darshan of Sri Sri Radha Krishna at ISKCON Bangalore",
+      "thumbnailUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/ISKCON_Bangalore_Temple.jpg/1200px-ISKCON_Bangalore_Temple.jpg",
+      "embedUrl": "https://www.youtube.com/embed/m02rvILzruA",
+      "youtubeUrl": "https://www.youtube.com/watch?v=m02rvILzruA",
+      "category": "Temple",
+      "deity": "Sri Sri Radha Krishna",
+      "location": "Bangalore, Karnataka"
+    },
+    {
+      "id": 15,
+      "title": "Live Darshan from Golden Temple, Amritsar",
+      "description": "Experience the divine peace of Harmandir Sahib with live Gurbani Kirtan",
+      "thumbnailUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/Harmandir_Sahib_Golden_Temple%2C_Amritsar%2C_Punjab%2C_India.jpg/1200px-Harmandir_Sahib_Golden_Temple%2C_Amritsar%2C_Punjab%2C_India.jpg",
+      "embedUrl": "https://www.youtube.com/embed/X8cQRQrca28",
+      "youtubeUrl": "https://www.youtube.com/watch?v=X8cQRQrca28",
+      "category": "Gurudwara",
+      "deity": "Guru Granth Sahib",
+      "location": "Amritsar, Punjab"
+    },
+    {
+      "id": 16,
+      "title": "Live Darshan from Akshardham Temple, Delhi",
+      "description": "Witness the spiritual grandeur of Swaminarayan Akshardham",
+      "thumbnailUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Akshardham_Temple_Delhi.jpg/1200px-Akshardham_Temple_Delhi.jpg",
+      "embedUrl": "https://www.youtube.com/embed/7QjUPwJOnuo",
+      "youtubeUrl": "https://www.youtube.com/watch?v=7QjUPwJOnuo",
+      "category": "Temple",
+      "deity": "Lord Swaminarayan",
+      "location": "New Delhi, Delhi"
+    },
+    {
+      "id": 17,
+      "title": "Live Darshan from Siddhivinayak Temple, Mumbai",
+      "description": "Seek blessings of Lord Ganesha at Siddhivinayak Temple",
+      "thumbnailUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Siddhivinayak_Temple_Mumbai.jpg/1200px-Siddhivinayak_Temple_Mumbai.jpg",
+      "embedUrl": "https://www.youtube.com/embed/8opaIVCposg",
+      "youtubeUrl": "https://www.youtube.com/watch?v=8opaIVCposg",
+      "category": "Temple",
+      "deity": "Lord Ganesha",
+      "location": "Mumbai, Maharashtra"
+    },
+    {
+      "id": 18,
+      "title": "Live Darshan from Sabarimala Ayyappa Temple",
+      "description": "Witness the sacred rituals at the holiest Ayyappa temple",
+      "thumbnailUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/Sabarimala_Temple.jpg/1200px-Sabarimala_Temple.jpg",
+      "embedUrl": "https://www.youtube.com/embed/sIDH6z4YXEY",
+      "youtubeUrl": "https://www.youtube.com/watch?v=sIDH6z4YXEY",
+      "category": "Temple",
+      "deity": "Lord Ayyappa",
+      "location": "Sabarimala, Kerala"
+    },
+    {
+      "id": 19,
+      "title": "Live Darshan from Lingaraj Temple, Bhubaneswar",
+      "description": "Experience the divine darshan of Baba Lingaraj in Bhubaneswar",
+      "thumbnailUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8b/Lingaraj_Temple%2C_Bhubaneswar.jpg/1200px-Lingaraj_Temple%2C_Bhubaneswar.jpg",
+      "embedUrl": "https://www.youtube.com/embed/Bg1oLWuIr6U",
+      "youtubeUrl": "https://www.youtube.com/watch?v=Bg1oLWuIr6U",
+      "category": "Temple",
+      "deity": "Lord Shiva",
+      "location": "Bhubaneswar, Odisha"
+    },
+    {
+      "id": 20,
+      "title": "Live Darshan from Kamakhya Temple, Guwahati",
+      "description": "Experience the divine Shakti Peeth in Guwahati, Assam",
+      "thumbnailUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Kamakhya_Temple.jpg/1200px-Kamakhya_Temple.jpg",
+      "embedUrl": "https://www.youtube.com/embed/8opaIVCposg",
+      "youtubeUrl": "https://www.youtube.com/watch?v=8opaIVCposg",
+      "category": "Shakti Peeth",
+      "deity": "Goddess Kamakhya",
+      "location": "Guwahati, Assam"
+    },
+    {
+      "id": 21,
+      "title": "Live Darshan from Kalighat Temple, Kolkata",
+      "description": "Seek blessings at one of the 51 Shakti Peethas",
+      "thumbnailUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Kalighat_Temple_Kolkata.jpg/1200px-Kalighat_Temple_Kolkata.jpg",
+      "embedUrl": "https://www.youtube.com/embed/8opaIVCposg",
+      "youtubeUrl": "https://www.youtube.com/watch?v=8opaIVCposg",
+      "category": "Shakti Peeth",
+      "deity": "Goddess Kali",
+      "location": "Kolkata, West Bengal"
+    },
+    {
+      "id": 22,
+      "title": "Live Darshan from Banke Bihari Temple, Vrindavan",
+      "description": "Connect with Lord Krishna in his Banke Bihari form in Vrindavan",
+      "thumbnailUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Banke_Bihari_Temple_Vrindavan.jpg/1200px-Banke_Bihari_Temple_Vrindavan.jpg",
+      "embedUrl": "https://www.youtube.com/embed/8opaIVCposg",
+      "youtubeUrl": "https://www.youtube.com/watch?v=8opaIVCposg",
+      "category": "Temple",
+      "deity": "Lord Krishna",
+      "location": "Vrindavan, Uttar Pradesh"
+    },
+    {
+      "id": 23,
+      "title": "Live Darshan from Guruvayur Temple, Kerala",
+      "description": "Experience the divine darshan of Lord Krishna at Guruvayur",
+      "thumbnailUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Guruvayur_Temple.jpg/1200px-Guruvayur_Temple.jpg",
+      "embedUrl": "https://www.youtube.com/embed/8opaIVCposg",
+      "youtubeUrl": "https://www.youtube.com/watch?v=8opaIVCposg",
+      "category": "Temple",
+      "deity": "Lord Krishna",
+      "location": "Guruvayur, Kerala"
+    },
+    {
+      "id": 24,
+      "title": "Live Darshan from Padmanabhaswamy Temple, Thiruvananthapuram",
+      "description": "Witness the divine Anantha Sayanam of Lord Vishnu",
+      "thumbnailUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/Padmanabhaswamy_Temple.jpg/1200px-Padmanabhaswamy_Temple.jpg",
+      "embedUrl": "https://www.youtube.com/embed/8opaIVCposg",
+      "youtubeUrl": "https://www.youtube.com/watch?v=8opaIVCposg",
+      "category": "Temple",
+      "deity": "Lord Vishnu",
+      "location": "Thiruvananthapuram, Kerala"
+    },
+    {
+      "id": 25,
+      "title": "Live Darshan from Tiruvannamalai Arunachaleswarar Temple",
+      "description": "Connect with Lord Shiva at the sacred Arunachala hill",
+      "thumbnailUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Arunachaleswarar_Temple_Tiruvannamalai.jpg/1200px-Arunachaleswarar_Temple_Tiruvannamalai.jpg",
+      "embedUrl": "https://www.youtube.com/embed/8opaIVCposg",
+      "youtubeUrl": "https://www.youtube.com/watch?v=8opaIVCposg",
+      "category": "Temple",
+      "deity": "Lord Shiva",
+      "location": "Tiruvannamalai, Tamil Nadu"
     }
   ]
 }

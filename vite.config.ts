@@ -5,13 +5,23 @@ import path from "path";
 // https://vitejs.dev/config/
 export default defineConfig({
    server: {
-     host: "::",
-     port: 7800,
-   },
-  plugins: [react()],
-  resolve: {
-    alias: {
-      "@": path.resolve(__dirname, "./src"),
+      host: "::",
+      port: 7800,
     },
-  },
-});
+   plugins: [react()],
+   resolve: {
+     alias: {
+       "@": path.resolve(__dirname, "./src"),
+     },
+   },
+   build: {
+     rollupOptions: {
+       output: {
+         manualChunks: {
+           'react-vendor': ['react', 'react-dom'],
+           'router-vendor': ['react-router-dom'],
+         },
+       },
+     },
+   },
+ });

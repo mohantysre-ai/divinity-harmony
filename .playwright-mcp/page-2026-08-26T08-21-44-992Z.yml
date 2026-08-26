@@ -1,0 +1,753 @@
+- generic [ref=f10e2]:
+  - region "Notifications (F8)":
+    - list
+  - region "Notifications alt+T"
+  - generic [ref=f10e3]:
+    - banner [ref=f10e4]:
+      - navigation [ref=f10e6]:
+        - link "ॐ Divinity Harmony" [ref=f10e8] [cursor=pointer]:
+          - /url: /
+          - generic [ref=f10e9]: ॐ
+          - generic [ref=f10e11]: Divinity Harmony
+        - generic [ref=f10e12]:
+          - generic [ref=f10e13]:
+            - link "Home" [ref=f10e14] [cursor=pointer]:
+              - /url: /
+            - link "Mantras" [ref=f10e18] [cursor=pointer]:
+              - /url: /mantras
+            - link "Live Darshan" [ref=f10e21] [cursor=pointer]:
+              - /url: /darshan
+            - link "MP3 Player" [ref=f10e25] [cursor=pointer]:
+              - /url: /mp3-player
+            - link "Sacred Texts" [ref=f10e30] [cursor=pointer]:
+              - /url: /pdf-reader
+          - button [ref=f10e34] [cursor=pointer]
+          - button "Toggle theme" [ref=f10e35] [cursor=pointer]
+          - button "Login" [ref=f10e37] [cursor=pointer]
+    - main [ref=f10e39]:
+      - main [ref=f10e40]:
+        - generic [ref=f10e41]:
+          - paragraph [ref=f10e42]: Sacred Mantras
+          - heading "A living devotional library" [level=1] [ref=f10e43]
+          - paragraph [ref=f10e44]: Explore 150+ prayers, Vedic hymns and stotras. Search by deity, text or intention.
+        - generic [ref=f10e45]:
+          - generic [ref=f10e46]:
+            - article [ref=f10e47]:
+              - generic [ref=f10e48]:
+                - img "Gayatri Mantra" [ref=f10e49]
+                - generic [ref=f10e50]: Divine Mother
+              - generic [ref=f10e51]:
+                - heading "Gayatri Mantra" [level=2] [ref=f10e52]
+                - paragraph [ref=f10e53]: One of the most popular and ancient mantras from the Rig Veda dedicated to Savitr, the sun deity
+                - blockquote [ref=f10e54]: ॐ भूर्भुवः स्वः तत्सवितुर्वरेण्यं भर्गो देवस्य धीमहि धियो यो नः प्रचोदयात्।
+                - paragraph [ref=f10e55]:
+                  - strong [ref=f10e56]: "Translation:"
+                  - text: We meditate on the glory of the Creator; Who has created the Universe; Who is worthy of worship; Who is the embodiment of Knowledge and Light; Who is the remover of all sins and ignorance; May He enlighten our intellect.
+            - region "Audio player" [ref=f10e57]:
+              - generic [ref=f10e64]:
+                - heading "Gayatri Mantra" [level=3] [ref=f10e65]
+                - paragraph [ref=f10e66]: Tap Play to hear this mantra
+              - generic [ref=f10e67]:
+                - generic [ref=f10e68]:
+                  - button "Previous" [disabled]
+                  - button "Play" [ref=f10e69] [cursor=pointer]
+                  - button "Next" [ref=f10e71] [cursor=pointer]
+                - generic [ref=f10e73]:
+                  - button "Mute" [ref=f10e74] [cursor=pointer]
+                  - generic "Volume" [ref=f10e76]:
+                    - slider [ref=f10e80]
+          - complementary [ref=f10e81]:
+            - heading "Mantra Library" [level=3] [ref=f10e82]
+            - paragraph [ref=f10e83]: 150 matching prayers
+            - textbox "Search mantra library" [ref=f10e84]:
+              - /placeholder: Search Shiva, Gayatri, peace…
+            - generic [ref=f10e85]:
+              - button "All" [ref=f10e86] [cursor=pointer]
+              - button "Divine Mother" [ref=f10e87] [cursor=pointer]
+              - button "Ganesha" [ref=f10e88] [cursor=pointer]
+              - button "Hanuman" [ref=f10e89] [cursor=pointer]
+              - button "Shiva" [ref=f10e90] [cursor=pointer]
+              - button "Vedic & planetary" [ref=f10e91] [cursor=pointer]
+              - button "Vedic & universal" [ref=f10e92] [cursor=pointer]
+              - button "Vishnu & avatars" [ref=f10e93] [cursor=pointer]
+            - generic [ref=f10e94]:
+              - button [ref=f10e95] [cursor=pointer]:
+                - generic [ref=f10e97]:
+                  - heading "Gayatri Mantra" [level=3] [ref=f10e98]
+                  - paragraph [ref=f10e99]: Divine Mother
+              - button [ref=f10e100] [cursor=pointer]:
+                - generic [ref=f10e102]:
+                  - heading "Om Namah Shivaya" [level=3] [ref=f10e103]
+                  - paragraph [ref=f10e104]: Shiva
+              - button [ref=f10e105] [cursor=pointer]:
+                - generic [ref=f10e107]:
+                  - heading "Maha Mrityunjaya Mantra" [level=3] [ref=f10e108]
+                  - paragraph [ref=f10e109]: Shiva
+              - button [ref=f10e110] [cursor=pointer]:
+                - generic [ref=f10e112]:
+                  - heading "Hare Krishna Maha Mantra" [level=3] [ref=f10e113]
+                  - paragraph [ref=f10e114]: Vishnu & avatars
+              - button [ref=f10e115] [cursor=pointer]:
+                - generic [ref=f10e117]:
+                  - heading "Ganesh Mantra" [level=3] [ref=f10e118]
+                  - paragraph [ref=f10e119]: Ganesha
+              - button [ref=f10e120] [cursor=pointer]:
+                - generic [ref=f10e122]:
+                  - heading "Shanti Mantra" [level=3] [ref=f10e123]
+                  - paragraph [ref=f10e124]: Vedic & universal
+              - button [ref=f10e125] [cursor=pointer]:
+                - generic [ref=f10e127]:
+                  - heading "Durga Mantra" [level=3] [ref=f10e128]
+                  - paragraph [ref=f10e129]: Divine Mother
+              - button [ref=f10e130] [cursor=pointer]:
+                - generic [ref=f10e132]:
+                  - heading "Hanuman Chalisa" [level=3] [ref=f10e133]
+                  - paragraph [ref=f10e134]: Hanuman
+              - button [ref=f10e135] [cursor=pointer]:
+                - generic [ref=f10e137]:
+                  - heading "Saraswati Mantra" [level=3] [ref=f10e138]
+                  - paragraph [ref=f10e139]: Divine Mother
+              - button [ref=f10e140] [cursor=pointer]:
+                - generic [ref=f10e142]:
+                  - heading "Lakshmi Mantra" [level=3] [ref=f10e143]
+                  - paragraph [ref=f10e144]: Divine Mother
+              - button [ref=f10e145] [cursor=pointer]:
+                - generic [ref=f10e147]:
+                  - heading "Surya Mantra" [level=3] [ref=f10e148]
+                  - paragraph [ref=f10e149]: Vedic & planetary
+              - button [ref=f10e150] [cursor=pointer]:
+                - generic [ref=f10e152]:
+                  - heading "Vishnu Sahasranama" [level=3] [ref=f10e153]
+                  - paragraph [ref=f10e154]: Vishnu & avatars
+              - button [ref=f10e155] [cursor=pointer]:
+                - generic [ref=f10e157]:
+                  - heading "Navagraha Mantra" [level=3] [ref=f10e158]
+                  - paragraph [ref=f10e159]: Vedic & planetary
+              - button [ref=f10e160] [cursor=pointer]:
+                - generic [ref=f10e162]:
+                  - heading "Aditya Hridayam" [level=3] [ref=f10e163]
+                  - paragraph [ref=f10e164]: Vishnu & avatars
+              - button [ref=f10e165] [cursor=pointer]:
+                - generic [ref=f10e167]:
+                  - heading "Rudra Namakam" [level=3] [ref=f10e168]
+                  - paragraph [ref=f10e169]: Shiva
+              - button [ref=f10e170] [cursor=pointer]:
+                - generic [ref=f10e172]:
+                  - heading "Rama Raksha Stotra" [level=3] [ref=f10e173]
+                  - paragraph [ref=f10e174]: Vishnu & avatars
+              - button [ref=f10e175] [cursor=pointer]:
+                - generic [ref=f10e177]:
+                  - heading "Shiva Tandava Stotram" [level=3] [ref=f10e178]
+                  - paragraph [ref=f10e179]: Shiva
+              - button [ref=f10e180] [cursor=pointer]:
+                - generic [ref=f10e182]:
+                  - heading "Kanakadhara Stotram" [level=3] [ref=f10e183]
+                  - paragraph [ref=f10e184]: Divine Mother
+              - button [ref=f10e185] [cursor=pointer]:
+                - generic [ref=f10e187]:
+                  - heading "Ashtalakshmi Stotram" [level=3] [ref=f10e188]
+                  - paragraph [ref=f10e189]: Divine Mother
+              - button [ref=f10e190] [cursor=pointer]:
+                - generic [ref=f10e192]:
+                  - heading "Lingashtakam" [level=3] [ref=f10e193]
+                  - paragraph [ref=f10e194]: Shiva
+              - button [ref=f10e195] [cursor=pointer]:
+                - generic [ref=f10e197]:
+                  - heading "Purusha Suktam" [level=3] [ref=f10e198]
+                  - paragraph [ref=f10e199]: Vishnu & avatars
+              - button [ref=f10e200] [cursor=pointer]:
+                - generic [ref=f10e202]:
+                  - heading "Sri Suktam" [level=3] [ref=f10e203]
+                  - paragraph [ref=f10e204]: Divine Mother
+              - button [ref=f10e205] [cursor=pointer]:
+                - generic [ref=f10e207]:
+                  - heading "Ganesha Pancharatnam" [level=3] [ref=f10e208]
+                  - paragraph [ref=f10e209]: Ganesha
+              - button [ref=f10e210] [cursor=pointer]:
+                - generic [ref=f10e212]:
+                  - heading "Narayana Suktam" [level=3] [ref=f10e213]
+                  - paragraph [ref=f10e214]: Vishnu & avatars
+              - button [ref=f10e215] [cursor=pointer]:
+                - generic [ref=f10e217]:
+                  - heading "Aditya Hridayam" [level=3] [ref=f10e218]
+                  - paragraph [ref=f10e219]: Vishnu & avatars
+              - button [ref=f10e220] [cursor=pointer]:
+                - generic [ref=f10e222]:
+                  - heading "Devi Mahatmyam" [level=3] [ref=f10e223]
+                  - paragraph [ref=f10e224]: Divine Mother
+              - button [ref=f10e225] [cursor=pointer]:
+                - generic [ref=f10e227]:
+                  - heading "Bhagavad Gita Chapter 2, Verse 47" [level=3] [ref=f10e228]
+                  - paragraph [ref=f10e229]: Vishnu & avatars
+              - button [ref=f10e230] [cursor=pointer]:
+                - generic [ref=f10e232]:
+                  - heading "Dakshinamurthy Stotram" [level=3] [ref=f10e233]
+                  - paragraph [ref=f10e234]: Shiva
+              - button [ref=f10e235] [cursor=pointer]:
+                - generic [ref=f10e237]:
+                  - heading "Nirvana Shatakam" [level=3] [ref=f10e238]
+                  - paragraph [ref=f10e239]: Vedic & universal
+              - button [ref=f10e240] [cursor=pointer]:
+                - generic [ref=f10e242]:
+                  - heading "Shiv Mahimna Stotra" [level=3] [ref=f10e243]
+                  - paragraph [ref=f10e244]: Shiva
+              - button [ref=f10e245] [cursor=pointer]:
+                - generic [ref=f10e247]:
+                  - heading "Soundarya Lahari" [level=3] [ref=f10e248]
+                  - paragraph [ref=f10e249]: Vedic & universal
+              - button [ref=f10e250] [cursor=pointer]:
+                - generic [ref=f10e252]:
+                  - heading "Bhaja Govindam" [level=3] [ref=f10e253]
+                  - paragraph [ref=f10e254]: Vishnu & avatars
+              - button [ref=f10e255] [cursor=pointer]:
+                - generic [ref=f10e257]:
+                  - heading "Chamakam" [level=3] [ref=f10e258]
+                  - paragraph [ref=f10e259]: Vishnu & avatars
+              - button [ref=f10e260] [cursor=pointer]:
+                - generic [ref=f10e262]:
+                  - heading "Narasimha Kavacham" [level=3] [ref=f10e263]
+                  - paragraph [ref=f10e264]: Vishnu & avatars
+              - button [ref=f10e265] [cursor=pointer]:
+                - generic [ref=f10e267]:
+                  - heading "Arunachala Siva" [level=3] [ref=f10e268]
+                  - paragraph [ref=f10e269]: Shiva
+              - button [ref=f10e270] [cursor=pointer]:
+                - generic [ref=f10e272]:
+                  - heading "Hanuman Mantra" [level=3] [ref=f10e273]
+                  - paragraph [ref=f10e274]: Hanuman
+              - button [ref=f10e275] [cursor=pointer]:
+                - generic [ref=f10e277]:
+                  - heading "Narayana Mantra" [level=3] [ref=f10e278]
+                  - paragraph [ref=f10e279]: Vishnu & avatars
+              - button [ref=f10e280] [cursor=pointer]:
+                - generic [ref=f10e282]:
+                  - heading "Subramanya Mantra" [level=3] [ref=f10e283]
+                  - paragraph [ref=f10e284]: Shiva
+              - button [ref=f10e285] [cursor=pointer]:
+                - generic [ref=f10e287]:
+                  - heading "Durga Saptashati Path" [level=3] [ref=f10e288]
+                  - paragraph [ref=f10e289]: Divine Mother
+              - button [ref=f10e290] [cursor=pointer]:
+                - generic [ref=f10e292]:
+                  - heading "Vishnu Mantra" [level=3] [ref=f10e293]
+                  - paragraph [ref=f10e294]: Vishnu & avatars
+              - button [ref=f10e295] [cursor=pointer]:
+                - generic [ref=f10e297]:
+                  - heading "Krishna Mantra" [level=3] [ref=f10e298]
+                  - paragraph [ref=f10e299]: Vishnu & avatars
+              - button [ref=f10e300] [cursor=pointer]:
+                - generic [ref=f10e302]:
+                  - heading "Lalita Sahasranama" [level=3] [ref=f10e303]
+                  - paragraph [ref=f10e304]: Vedic & universal
+              - button [ref=f10e305] [cursor=pointer]:
+                - generic [ref=f10e307]:
+                  - heading "Ashtavinayak Vandana" [level=3] [ref=f10e308]
+                  - paragraph [ref=f10e309]: Ganesha
+              - button [ref=f10e310] [cursor=pointer]:
+                - generic [ref=f10e312]:
+                  - heading "Navkar Mantra" [level=3] [ref=f10e313]
+                  - paragraph [ref=f10e314]: Vedic & universal
+              - button [ref=f10e315] [cursor=pointer]:
+                - generic [ref=f10e317]:
+                  - heading "Shri Kali Navamtrim Siddha Mantra" [level=3] [ref=f10e318]
+                  - paragraph [ref=f10e319]: Vedic & universal
+              - button [ref=f10e320] [cursor=pointer]:
+                - generic [ref=f10e322]:
+                  - heading "Tara Mantra" [level=3] [ref=f10e323]
+                  - paragraph [ref=f10e324]: Divine Mother
+              - button [ref=f10e325] [cursor=pointer]:
+                - generic [ref=f10e327]:
+                  - heading "Annapurna Stotram" [level=3] [ref=f10e328]
+                  - paragraph [ref=f10e329]: Vedic & universal
+              - button [ref=f10e330] [cursor=pointer]:
+                - generic [ref=f10e332]:
+                  - heading "Brahma Mantra" [level=3] [ref=f10e333]
+                  - paragraph [ref=f10e334]: Vedic & universal
+              - button [ref=f10e335] [cursor=pointer]:
+                - generic [ref=f10e337]:
+                  - heading "Indra Mantra" [level=3] [ref=f10e338]
+                  - paragraph [ref=f10e339]: Vedic & universal
+              - button [ref=f10e340] [cursor=pointer]:
+                - generic [ref=f10e342]:
+                  - heading "Varuna Mantra" [level=3] [ref=f10e343]
+                  - paragraph [ref=f10e344]: Vedic & universal
+              - button [ref=f10e345] [cursor=pointer]:
+                - generic [ref=f10e347]:
+                  - heading "Agni Mantra" [level=3] [ref=f10e348]
+                  - paragraph [ref=f10e349]: Vedic & universal
+              - button [ref=f10e350] [cursor=pointer]:
+                - generic [ref=f10e352]:
+                  - heading "Yama Mantra" [level=3] [ref=f10e353]
+                  - paragraph [ref=f10e354]: Vedic & universal
+              - button [ref=f10e355] [cursor=pointer]:
+                - generic [ref=f10e357]:
+                  - heading "Kubera Mantra" [level=3] [ref=f10e358]
+                  - paragraph [ref=f10e359]: Vedic & universal
+              - button [ref=f10e360] [cursor=pointer]:
+                - generic [ref=f10e362]:
+                  - heading "Vayu Mantra" [level=3] [ref=f10e363]
+                  - paragraph [ref=f10e364]: Vedic & universal
+              - button [ref=f10e365] [cursor=pointer]:
+                - generic [ref=f10e367]:
+                  - heading "Niranjana Mantra" [level=3] [ref=f10e368]
+                  - paragraph [ref=f10e369]: Vedic & universal
+              - button [ref=f10e370] [cursor=pointer]:
+                - generic [ref=f10e372]:
+                  - heading "Vishwamitra Gayatri Mantra" [level=3] [ref=f10e373]
+                  - paragraph [ref=f10e374]: Divine Mother
+              - button [ref=f10e375] [cursor=pointer]:
+                - generic [ref=f10e377]:
+                  - heading "Hiranyagarbha Suktam" [level=3] [ref=f10e378]
+                  - paragraph [ref=f10e379]: Vedic & universal
+              - button [ref=f10e380] [cursor=pointer]:
+                - generic [ref=f10e382]:
+                  - heading "Ishavasya Upanishad" [level=3] [ref=f10e383]
+                  - paragraph [ref=f10e384]: Vedic & universal
+              - button [ref=f10e385] [cursor=pointer]:
+                - generic [ref=f10e387]:
+                  - heading "Pavamana Abhyaroha" [level=3] [ref=f10e388]
+                  - paragraph [ref=f10e389]: Vedic & universal
+              - button [ref=f10e390] [cursor=pointer]:
+                - generic [ref=f10e392]:
+                  - heading "Shanti Mantra from Brihadaranyaka Upanishad" [level=3] [ref=f10e393]
+                  - paragraph [ref=f10e394]: Vedic & universal
+              - button [ref=f10e395] [cursor=pointer]:
+                - generic [ref=f10e397]:
+                  - heading "Guru Brahma Guru Vishnu" [level=3] [ref=f10e398]
+                  - paragraph [ref=f10e399]: Vishnu & avatars
+              - button [ref=f10e400] [cursor=pointer]:
+                - generic [ref=f10e402]:
+                  - heading "Karpura-Gauram Karunavtaram" [level=3] [ref=f10e403]
+                  - paragraph [ref=f10e404]: Shiva
+              - button [ref=f10e405] [cursor=pointer]:
+                - generic [ref=f10e407]:
+                  - heading "Kalabhairava Ashtakam" [level=3] [ref=f10e408]
+                  - paragraph [ref=f10e409]: Shiva
+              - button [ref=f10e410] [cursor=pointer]:
+                - generic [ref=f10e412]:
+                  - heading "Siddheshvari Stotra" [level=3] [ref=f10e413]
+                  - paragraph [ref=f10e414]: Vedic & universal
+              - button [ref=f10e415] [cursor=pointer]:
+                - generic [ref=f10e417]:
+                  - heading "Aditya Hridayam (Full Version)" [level=3] [ref=f10e418]
+                  - paragraph [ref=f10e419]: Vishnu & avatars
+              - button [ref=f10e420] [cursor=pointer]:
+                - generic [ref=f10e422]:
+                  - heading "Lakshmi Stuti" [level=3] [ref=f10e423]
+                  - paragraph [ref=f10e424]: Vishnu & avatars
+              - button [ref=f10e425] [cursor=pointer]:
+                - generic [ref=f10e427]:
+                  - heading "Narayana Kavacham" [level=3] [ref=f10e428]
+                  - paragraph [ref=f10e429]: Vishnu & avatars
+              - button [ref=f10e430] [cursor=pointer]:
+                - generic [ref=f10e432]:
+                  - heading "Kala Bhairava Ashtakam" [level=3] [ref=f10e433]
+                  - paragraph [ref=f10e434]: Vedic & universal
+              - button [ref=f10e435] [cursor=pointer]:
+                - generic [ref=f10e437]:
+                  - heading "Ram Raksha Stotram (Full Version)" [level=3] [ref=f10e438]
+                  - paragraph [ref=f10e439]: Vishnu & avatars
+              - button [ref=f10e440] [cursor=pointer]:
+                - generic [ref=f10e442]:
+                  - heading "Ganga Stotram" [level=3] [ref=f10e443]
+                  - paragraph [ref=f10e444]: Vedic & universal
+              - button [ref=f10e445] [cursor=pointer]:
+                - generic [ref=f10e447]:
+                  - heading "Narasimha Stotram" [level=3] [ref=f10e448]
+                  - paragraph [ref=f10e449]: Vishnu & avatars
+              - button [ref=f10e450] [cursor=pointer]:
+                - generic [ref=f10e452]:
+                  - heading "Ganesha Pancharatnam (Full Version)" [level=3] [ref=f10e453]
+                  - paragraph [ref=f10e454]: Ganesha
+              - button [ref=f10e455] [cursor=pointer]:
+                - generic [ref=f10e457]:
+                  - heading "Vishnu Gayatri Mantra" [level=3] [ref=f10e458]
+                  - paragraph [ref=f10e459]: Vishnu & avatars
+              - button [ref=f10e460] [cursor=pointer]:
+                - generic [ref=f10e462]:
+                  - heading "Valmiki Ramayana Sloka" [level=3] [ref=f10e463]
+                  - paragraph [ref=f10e464]: Vishnu & avatars
+              - button [ref=f10e465] [cursor=pointer]:
+                - generic [ref=f10e467]:
+                  - heading "Shuka Gayatri Mantra" [level=3] [ref=f10e468]
+                  - paragraph [ref=f10e469]: Divine Mother
+              - button [ref=f10e470] [cursor=pointer]:
+                - generic [ref=f10e472]:
+                  - heading "Kali Mantra" [level=3] [ref=f10e473]
+                  - paragraph [ref=f10e474]: Divine Mother
+              - button [ref=f10e475] [cursor=pointer]:
+                - generic [ref=f10e477]:
+                  - heading "Bhavani Ashtakam" [level=3] [ref=f10e478]
+                  - paragraph [ref=f10e479]: Vedic & universal
+              - button [ref=f10e480] [cursor=pointer]:
+                - generic [ref=f10e482]:
+                  - heading "Devi Kavacham" [level=3] [ref=f10e483]
+                  - paragraph [ref=f10e484]: Divine Mother
+              - button [ref=f10e485] [cursor=pointer]:
+                - generic [ref=f10e487]:
+                  - heading "Dattatreya Mantra" [level=3] [ref=f10e488]
+                  - paragraph [ref=f10e489]: Shiva
+              - button [ref=f10e490] [cursor=pointer]:
+                - generic [ref=f10e492]:
+                  - heading "Sita Ram Mantra" [level=3] [ref=f10e493]
+                  - paragraph [ref=f10e494]: Vishnu & avatars
+              - button [ref=f10e495] [cursor=pointer]:
+                - generic [ref=f10e497]:
+                  - heading "Ganesh Atharvashirsha" [level=3] [ref=f10e498]
+                  - paragraph [ref=f10e499]: Ganesha
+              - button [ref=f10e500] [cursor=pointer]:
+                - generic [ref=f10e502]:
+                  - heading "Shiva Gayatri Mantra" [level=3] [ref=f10e503]
+                  - paragraph [ref=f10e504]: Shiva
+              - button [ref=f10e505] [cursor=pointer]:
+                - generic [ref=f10e507]:
+                  - heading "Shiva Tandava Stotram (Full Version)" [level=3] [ref=f10e508]
+                  - paragraph [ref=f10e509]: Shiva
+              - button [ref=f10e510] [cursor=pointer]:
+                - generic [ref=f10e512]:
+                  - heading "Durga Gayatri Mantra" [level=3] [ref=f10e513]
+                  - paragraph [ref=f10e514]: Divine Mother
+              - button [ref=f10e515] [cursor=pointer]:
+                - generic [ref=f10e517]:
+                  - heading "Lakshmi Gayatri Mantra" [level=3] [ref=f10e518]
+                  - paragraph [ref=f10e519]: Divine Mother
+              - button [ref=f10e520] [cursor=pointer]:
+                - generic [ref=f10e522]:
+                  - heading "Saraswati Gayatri Mantra" [level=3] [ref=f10e523]
+                  - paragraph [ref=f10e524]: Divine Mother
+              - button [ref=f10e525] [cursor=pointer]:
+                - generic [ref=f10e527]:
+                  - heading "Hanuman Gayatri Mantra" [level=3] [ref=f10e528]
+                  - paragraph [ref=f10e529]: Divine Mother
+              - button [ref=f10e530] [cursor=pointer]:
+                - generic [ref=f10e532]:
+                  - heading "Krishna Gayatri Mantra" [level=3] [ref=f10e533]
+                  - paragraph [ref=f10e534]: Vishnu & avatars
+              - button [ref=f10e535] [cursor=pointer]:
+                - generic [ref=f10e537]:
+                  - heading "Ganesha Gayatri Mantra" [level=3] [ref=f10e538]
+                  - paragraph [ref=f10e539]: Divine Mother
+              - button [ref=f10e540] [cursor=pointer]:
+                - generic [ref=f10e542]:
+                  - heading "Rama Gayatri Mantra" [level=3] [ref=f10e543]
+                  - paragraph [ref=f10e544]: Vishnu & avatars
+              - button [ref=f10e545] [cursor=pointer]:
+                - generic [ref=f10e547]:
+                  - heading "Hayagriva Mantra" [level=3] [ref=f10e548]
+                  - paragraph [ref=f10e549]: Vishnu & avatars
+              - button [ref=f10e550] [cursor=pointer]:
+                - generic [ref=f10e552]:
+                  - heading "Ketu Mantra" [level=3] [ref=f10e553]
+                  - paragraph [ref=f10e554]: Vedic & universal
+              - button [ref=f10e555] [cursor=pointer]:
+                - generic [ref=f10e557]:
+                  - heading "Rahu Mantra" [level=3] [ref=f10e558]
+                  - paragraph [ref=f10e559]: Vedic & universal
+              - button [ref=f10e560] [cursor=pointer]:
+                - generic [ref=f10e562]:
+                  - heading "Shani Mantra" [level=3] [ref=f10e563]
+                  - paragraph [ref=f10e564]: Vedic & universal
+              - button [ref=f10e565] [cursor=pointer]:
+                - generic [ref=f10e567]:
+                  - heading "Budha Mantra" [level=3] [ref=f10e568]
+                  - paragraph [ref=f10e569]: Vedic & universal
+              - button [ref=f10e570] [cursor=pointer]:
+                - generic [ref=f10e572]:
+                  - heading "Guru (Jupiter) Mantra" [level=3] [ref=f10e573]
+                  - paragraph [ref=f10e574]: Vedic & universal
+              - button [ref=f10e575] [cursor=pointer]:
+                - generic [ref=f10e577]:
+                  - heading "Mangala (Mars) Mantra" [level=3] [ref=f10e578]
+                  - paragraph [ref=f10e579]: Vedic & universal
+              - button [ref=f10e580] [cursor=pointer]:
+                - generic [ref=f10e582]:
+                  - heading "Shukra (Venus) Mantra" [level=3] [ref=f10e583]
+                  - paragraph [ref=f10e584]: Vedic & universal
+              - button [ref=f10e585] [cursor=pointer]:
+                - generic [ref=f10e587]:
+                  - heading "Chandra (Moon) Mantra" [level=3] [ref=f10e588]
+                  - paragraph [ref=f10e589]: Vedic & universal
+              - button [ref=f10e590] [cursor=pointer]:
+                - generic [ref=f10e592]:
+                  - heading "Sundara Kanda" [level=3] [ref=f10e593]
+                  - paragraph [ref=f10e594]: Vishnu & avatars
+              - button [ref=f10e595] [cursor=pointer]:
+                - generic [ref=f10e597]:
+                  - heading "Purusha Gayatri Mantra" [level=3] [ref=f10e598]
+                  - paragraph [ref=f10e599]: Vishnu & avatars
+              - button [ref=f10e600] [cursor=pointer]:
+                - generic [ref=f10e602]:
+                  - heading "Brahma Gayatri Mantra" [level=3] [ref=f10e603]
+                  - paragraph [ref=f10e604]: Divine Mother
+              - button [ref=f10e605] [cursor=pointer]:
+                - generic [ref=f10e607]:
+                  - heading "Panduranga Ashtakam" [level=3] [ref=f10e608]
+                  - paragraph [ref=f10e609]: Vishnu & avatars
+              - button [ref=f10e610] [cursor=pointer]:
+                - generic [ref=f10e612]:
+                  - heading "Venkatesh Ashtakam" [level=3] [ref=f10e613]
+                  - paragraph [ref=f10e614]: Vishnu & avatars
+              - button [ref=f10e615] [cursor=pointer]:
+                - generic [ref=f10e617]:
+                  - heading "Naga Panchami Mantra" [level=3] [ref=f10e618]
+                  - paragraph [ref=f10e619]: Vedic & universal
+              - button [ref=f10e620] [cursor=pointer]:
+                - generic [ref=f10e622]:
+                  - heading "Dhanvantari Mantra" [level=3] [ref=f10e623]
+                  - paragraph [ref=f10e624]: Vedic & universal
+              - button [ref=f10e625] [cursor=pointer]:
+                - generic [ref=f10e627]:
+                  - heading "Nataraja Stotram" [level=3] [ref=f10e628]
+                  - paragraph [ref=f10e629]: Shiva
+              - button [ref=f10e630] [cursor=pointer]:
+                - generic [ref=f10e632]:
+                  - heading "Yogendra Gayatri Mantra" [level=3] [ref=f10e633]
+                  - paragraph [ref=f10e634]: Divine Mother
+              - button [ref=f10e635] [cursor=pointer]:
+                - generic [ref=f10e637]:
+                  - heading "Matsya Gayatri Mantra" [level=3] [ref=f10e638]
+                  - paragraph [ref=f10e639]: Vishnu & avatars
+              - button [ref=f10e640] [cursor=pointer]:
+                - generic [ref=f10e642]:
+                  - heading "Kurma Gayatri Mantra" [level=3] [ref=f10e643]
+                  - paragraph [ref=f10e644]: Vishnu & avatars
+              - button [ref=f10e645] [cursor=pointer]:
+                - generic [ref=f10e647]:
+                  - heading "Varaha Gayatri Mantra" [level=3] [ref=f10e648]
+                  - paragraph [ref=f10e649]: Vishnu & avatars
+              - button [ref=f10e650] [cursor=pointer]:
+                - generic [ref=f10e652]:
+                  - heading "Vamana Gayatri Mantra" [level=3] [ref=f10e653]
+                  - paragraph [ref=f10e654]: Vishnu & avatars
+              - button [ref=f10e655] [cursor=pointer]:
+                - generic [ref=f10e657]:
+                  - heading "Parashurama Gayatri Mantra" [level=3] [ref=f10e658]
+                  - paragraph [ref=f10e659]: Vishnu & avatars
+              - button [ref=f10e660] [cursor=pointer]:
+                - generic [ref=f10e662]:
+                  - heading "Dakshinamurthy Gayatri Mantra" [level=3] [ref=f10e663]
+                  - paragraph [ref=f10e664]: Shiva
+              - button [ref=f10e665] [cursor=pointer]:
+                - generic [ref=f10e667]:
+                  - heading "Sai Baba Gayatri Mantra" [level=3] [ref=f10e668]
+                  - paragraph [ref=f10e669]: Divine Mother
+              - button [ref=f10e670] [cursor=pointer]:
+                - generic [ref=f10e672]:
+                  - heading "Satya Narayana Stotram" [level=3] [ref=f10e673]
+                  - paragraph [ref=f10e674]: Vishnu & avatars
+              - button [ref=f10e675] [cursor=pointer]:
+                - generic [ref=f10e677]:
+                  - heading "Guru Stotram" [level=3] [ref=f10e678]
+                  - paragraph [ref=f10e679]: Vedic & universal
+              - button [ref=f10e680] [cursor=pointer]:
+                - generic [ref=f10e682]:
+                  - heading "Yaksha Prashna" [level=3] [ref=f10e683]
+                  - paragraph [ref=f10e684]: Vedic & universal
+              - button [ref=f10e685] [cursor=pointer]:
+                - generic [ref=f10e687]:
+                  - heading "Hari Nama Sankirtana" [level=3] [ref=f10e688]
+                  - paragraph [ref=f10e689]: Vishnu & avatars
+              - button [ref=f10e690] [cursor=pointer]:
+                - generic [ref=f10e692]:
+                  - heading "Ekadasi Vrata Katha" [level=3] [ref=f10e693]
+                  - paragraph [ref=f10e694]: Vedic & universal
+              - button [ref=f10e695] [cursor=pointer]:
+                - generic [ref=f10e697]:
+                  - heading "Aum Dhyanam" [level=3] [ref=f10e698]
+                  - paragraph [ref=f10e699]: Vedic & universal
+              - button [ref=f10e700] [cursor=pointer]:
+                - generic [ref=f10e702]:
+                  - heading "Brahma Sutra" [level=3] [ref=f10e703]
+                  - paragraph [ref=f10e704]: Vedic & universal
+              - button [ref=f10e705] [cursor=pointer]:
+                - generic [ref=f10e707]:
+                  - heading "Bhagavad Gita Chapter 1, Verse 1" [level=3] [ref=f10e708]
+                  - paragraph [ref=f10e709]: Vishnu & avatars
+              - button [ref=f10e710] [cursor=pointer]:
+                - generic [ref=f10e712]:
+                  - heading "Bhishma Stuti" [level=3] [ref=f10e713]
+                  - paragraph [ref=f10e714]: Vedic & universal
+              - button [ref=f10e715] [cursor=pointer]:
+                - generic [ref=f10e717]:
+                  - heading "Dhruva Stuti" [level=3] [ref=f10e718]
+                  - paragraph [ref=f10e719]: Vishnu & avatars
+              - button [ref=f10e720] [cursor=pointer]:
+                - generic [ref=f10e722]:
+                  - heading "Prahlada Stuti" [level=3] [ref=f10e723]
+                  - paragraph [ref=f10e724]: Vishnu & avatars
+              - button [ref=f10e725] [cursor=pointer]:
+                - generic [ref=f10e727]:
+                  - heading "Bhumi Gayatri Mantra" [level=3] [ref=f10e728]
+                  - paragraph [ref=f10e729]: Divine Mother
+              - button [ref=f10e730] [cursor=pointer]:
+                - generic [ref=f10e732]:
+                  - heading "Tulasi Stotram" [level=3] [ref=f10e733]
+                  - paragraph [ref=f10e734]: Vedic & universal
+              - button [ref=f10e735] [cursor=pointer]:
+                - generic [ref=f10e737]:
+                  - heading "Hamsa Gayatri Mantra" [level=3] [ref=f10e738]
+                  - paragraph [ref=f10e739]: Divine Mother
+              - button [ref=f10e740] [cursor=pointer]:
+                - generic [ref=f10e742]:
+                  - heading "Bhagavad Gita Chapter 15, Verse 15" [level=3] [ref=f10e743]
+                  - paragraph [ref=f10e744]: Vishnu & avatars
+              - button [ref=f10e745] [cursor=pointer]:
+                - generic [ref=f10e747]:
+                  - heading "Veda Vyasa Stuti" [level=3] [ref=f10e748]
+                  - paragraph [ref=f10e749]: Vedic & universal
+              - button [ref=f10e750] [cursor=pointer]:
+                - generic [ref=f10e752]:
+                  - heading "Kanaka Dhara Stotram (Full Version)" [level=3] [ref=f10e753]
+                  - paragraph [ref=f10e754]: Vedic & universal
+              - button [ref=f10e755] [cursor=pointer]:
+                - generic [ref=f10e757]:
+                  - heading "Lalita Trishati" [level=3] [ref=f10e758]
+                  - paragraph [ref=f10e759]: Vedic & universal
+              - button [ref=f10e760] [cursor=pointer]:
+                - generic [ref=f10e762]:
+                  - heading "Narada Bhakti Sutra" [level=3] [ref=f10e763]
+                  - paragraph [ref=f10e764]: Vedic & universal
+              - button [ref=f10e765] [cursor=pointer]:
+                - generic [ref=f10e767]:
+                  - heading "Taraka Mantra" [level=3] [ref=f10e768]
+                  - paragraph [ref=f10e769]: Vedic & universal
+              - button [ref=f10e770] [cursor=pointer]:
+                - generic [ref=f10e772]:
+                  - heading "Guru Paduka Stotram" [level=3] [ref=f10e773]
+                  - paragraph [ref=f10e774]: Vedic & universal
+              - button [ref=f10e775] [cursor=pointer]:
+                - generic [ref=f10e777]:
+                  - heading "Kubera Mantra (Extended)" [level=3] [ref=f10e778]
+                  - paragraph [ref=f10e779]: Vedic & universal
+              - button [ref=f10e780] [cursor=pointer]:
+                - generic [ref=f10e782]:
+                  - heading "Chandi Path" [level=3] [ref=f10e783]
+                  - paragraph [ref=f10e784]: Divine Mother
+              - button [ref=f10e785] [cursor=pointer]:
+                - generic [ref=f10e787]:
+                  - heading "Saptashloki Durga" [level=3] [ref=f10e788]
+                  - paragraph [ref=f10e789]: Divine Mother
+              - button [ref=f10e790] [cursor=pointer]:
+                - generic [ref=f10e792]:
+                  - heading "Siva Sankalpam" [level=3] [ref=f10e793]
+                  - paragraph [ref=f10e794]: Vedic & universal
+              - button [ref=f10e795] [cursor=pointer]:
+                - generic [ref=f10e797]:
+                  - heading "Shiva Mahimna Stotra (Full Version)" [level=3] [ref=f10e798]
+                  - paragraph [ref=f10e799]: Shiva
+              - button [ref=f10e800] [cursor=pointer]:
+                - generic [ref=f10e802]:
+                  - heading "Shri Rudram" [level=3] [ref=f10e803]
+                  - paragraph [ref=f10e804]: Shiva
+              - button [ref=f10e805] [cursor=pointer]:
+                - generic [ref=f10e807]:
+                  - heading "Vishnu Sahasranama (Full Version)" [level=3] [ref=f10e808]
+                  - paragraph [ref=f10e809]: Vishnu & avatars
+              - button [ref=f10e810] [cursor=pointer]:
+                - generic [ref=f10e812]:
+                  - heading "Bhagavad Gita Chapter 18, Verse 66" [level=3] [ref=f10e813]
+                  - paragraph [ref=f10e814]: Vishnu & avatars
+              - button [ref=f10e815] [cursor=pointer]:
+                - generic [ref=f10e817]:
+                  - heading "Upanishad Mantras" [level=3] [ref=f10e818]
+                  - paragraph [ref=f10e819]: Vedic & universal
+              - button [ref=f10e820] [cursor=pointer]:
+                - generic [ref=f10e822]:
+                  - heading "Maha Ganapati Mantra" [level=3] [ref=f10e823]
+                  - paragraph [ref=f10e824]: Ganesha
+              - button [ref=f10e825] [cursor=pointer]:
+                - generic [ref=f10e827]:
+                  - heading "Mahamrityunjaya Mantra (Full Version)" [level=3] [ref=f10e828]
+                  - paragraph [ref=f10e829]: Shiva
+              - button [ref=f10e830] [cursor=pointer]:
+                - generic [ref=f10e832]:
+                  - heading "Shodashi Mantra" [level=3] [ref=f10e833]
+                  - paragraph [ref=f10e834]: Vedic & universal
+              - button [ref=f10e835] [cursor=pointer]:
+                - generic [ref=f10e837]:
+                  - heading "Navagraha Shanti Mantra" [level=3] [ref=f10e838]
+                  - paragraph [ref=f10e839]: Vedic & planetary
+              - button [ref=f10e840] [cursor=pointer]:
+                - generic [ref=f10e842]:
+                  - heading "Ashta Lakshmi Stotram (Full Version)" [level=3] [ref=f10e843]
+                  - paragraph [ref=f10e844]: Divine Mother
+    - contentinfo [ref=f10e845]:
+      - generic [ref=f10e846]:
+        - generic [ref=f10e847]:
+          - heading "Subscribe to Our Newsletter" [level=3] [ref=f10e848]
+          - paragraph [ref=f10e849]: Receive updates on new mantras, upcoming live darshans, and spiritual wisdom directly to your inbox.
+          - generic [ref=f10e850]:
+            - textbox "Enter your email" [ref=f10e851]
+            - button "Subscribe" [ref=f10e852] [cursor=pointer]
+        - generic [ref=f10e853]:
+          - generic [ref=f10e854]:
+            - link "ॐ Divinity Harmony" [ref=f10e855] [cursor=pointer]:
+              - /url: /
+              - generic [ref=f10e856]: ॐ
+              - generic [ref=f10e858]: Divinity Harmony
+            - paragraph [ref=f10e859]: Connecting souls through ancient mantras, live darshans, and spiritual knowledge for a harmonious life.
+            - generic [ref=f10e860]:
+              - button "Facebook" [ref=f10e861] [cursor=pointer]
+              - button "Twitter" [ref=f10e863] [cursor=pointer]
+              - button "Instagram" [ref=f10e865] [cursor=pointer]
+              - button "Youtube" [ref=f10e867] [cursor=pointer]
+          - generic [ref=f10e869]:
+            - heading "Quick Links" [level=3] [ref=f10e870]
+            - list [ref=f10e871]:
+              - listitem [ref=f10e872]:
+                - link "Home" [ref=f10e873] [cursor=pointer]:
+                  - /url: /
+              - listitem [ref=f10e874]:
+                - link "Mantras" [ref=f10e875] [cursor=pointer]:
+                  - /url: /mantras
+              - listitem [ref=f10e876]:
+                - link "Live Darshan" [ref=f10e877] [cursor=pointer]:
+                  - /url: /darshan
+              - listitem [ref=f10e878]:
+                - link "Spiritual Music" [ref=f10e879] [cursor=pointer]:
+                  - /url: /mp3-player
+              - listitem [ref=f10e880]:
+                - link "Sacred Texts" [ref=f10e881] [cursor=pointer]:
+                  - /url: /pdf-reader
+              - listitem [ref=f10e882]:
+                - link "Settings" [ref=f10e883] [cursor=pointer]:
+                  - /url: /settings
+          - generic [ref=f10e884]:
+            - heading "Resources" [level=3] [ref=f10e885]
+            - list [ref=f10e886]:
+              - listitem [ref=f10e887]:
+                - link "Community Forum" [ref=f10e888] [cursor=pointer]:
+                  - /url: "#"
+              - listitem [ref=f10e889]:
+                - link "Meditation Resources" [ref=f10e890] [cursor=pointer]:
+                  - /url: "#"
+              - listitem [ref=f10e891]:
+                - link "Spiritual Guides" [ref=f10e892] [cursor=pointer]:
+                  - /url: "#"
+              - listitem [ref=f10e893]:
+                - link "Help Center" [ref=f10e894] [cursor=pointer]:
+                  - /url: "#"
+              - listitem [ref=f10e895]:
+                - link "Donation Program" [ref=f10e896] [cursor=pointer]:
+                  - /url: "#"
+          - generic [ref=f10e901]:
+            - heading "Contact Us" [level=3] [ref=f10e902]
+            - list [ref=f10e903]:
+              - listitem [ref=f10e904]:
+                - generic [ref=f10e909]: contact@divinityharmony.com
+              - listitem [ref=f10e910]:
+                - generic [ref=f10e914]: +1 (123) 456-7890
+              - listitem [ref=f10e915]:
+                - generic [ref=f10e920]: Divine Harmony Center,Spiritual Avenue, Peace City
+        - generic [ref=f10e921]:
+          - paragraph [ref=f10e922]: © 2026 Divinity Harmony. All rights reserved.
+          - generic [ref=f10e923]:
+            - link "Privacy Policy" [ref=f10e924] [cursor=pointer]:
+              - /url: "#"
+            - link "Terms of Service" [ref=f10e925] [cursor=pointer]:
+              - /url: "#"
+            - link "Accessibility" [ref=f10e926] [cursor=pointer]:
+              - /url: "#"
+          - generic [ref=f10e927]:
+            - generic [ref=f10e928]: Made with
+            - generic [ref=f10e931]: for a spiritual world
