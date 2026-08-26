@@ -1,0 +1,84 @@
+{
+  "videos": [
+    {
+      "id": 1,
+      "title": "Live Darshan from Varanasi Ganga Aarti",
+      "description": "Experience the divine Ganga Aarti ceremony live from Varanasi",
+      "thumbnailUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/Varanasi_Ganga_aarti.jpg/1200px-Varanasi_Ganga_aarti.jpg",
+      "embedUrl": "https://www.youtube.com/embed/xYV1IJfpKmw",
+      "youtubeUrl": "https://www.youtube.com/watch?v=xYV1IJfpKmw"
+    },
+    {
+      "id": 2,
+      "title": "Live Darshan from Tirupati Balaji Temple",
+      "description": "Experience live darshan from the sacred Tirupati Balaji Temple",
+      "thumbnailUrl": "https://upload.wikimedia.org/wikipedia/commons/4/48/Lord_venkateswara_pic.jpg",
+      "embedUrl": "https://www.youtube.com/embed/CidH8F9h8Lw",
+      "youtubeUrl": "https://www.youtube.com/watch?v=CidH8F9h8Lw"
+    },
+    {
+      "id": 3,
+      "title": "Live Darshan from Shirdi Sai Baba Temple",
+      "description": "Connect with the divine presence of Sai Baba through this live darshan",
+      "thumbnailUrl": "https://upload.wikimedia.org/wikipedia/commons/9/9c/SaiBaba.JPG",
+      "embedUrl": "https://www.youtube.com/embed/zcDVnWGZa8c",
+      "youtubeUrl": "https://www.youtube.com/watch?v=zcDVnWGZa8c"
+    },
+    {
+      "id": 4,
+      "title": "Live Darshan from Dwarkadheesh Temple",
+      "description": "Witness the serenity of Lord Krishna's temple through this live darshan",
+      "thumbnailUrl": "https://upload.wikimedia.org/wikipedia/commons/5/5c/Dwarkadhish_Temple.jpg",
+      "embedUrl": "https://www.youtube.com/embed/SakrGdyRjRI",
+      "youtubeUrl": "https://www.youtube.com/watch?v=SakrGdyRjRI"
+    },
+    {
+      "id": 5,
+      "title": "Live Darshan from Badrinath Temple",
+      "description": "Experience the divine aura of one of the holiest Hindu temples",
+      "thumbnailUrl": "https://upload.wikimedia.org/wikipedia/commons/c/c6/Badrinath_Temple.jpg",
+      "embedUrl": "https://www.youtube.com/embed/1RHKc0Di92U",
+      "youtubeUrl": "https://www.youtube.com/watch?v=1RHKc0Di92U"
+    },
+    {
+      "id": 6,
+      "title": "Live Darshan from Somnath Temple",
+      "description": "Connect with the sacred energy of one of the 12 Jyotirlingas",
+      "thumbnailUrl": "https://upload.wikimedia.org/wikipedia/commons/3/36/Somnath_Temple_Gujarat.jpg",
+      "embedUrl": "https://www.youtube.com/embed/Rl4KmDUK9AA",
+      "youtubeUrl": "https://www.youtube.com/watch?v=Rl4KmDUK9AA"
+    },
+    {
+      "id": 7,
+      "title": "Live Darshan from Kashi Vishwanath Temple",
+      "description": "Experience the divine darshan from this ancient temple dedicated to Lord Shiva",
+      "thumbnailUrl": "https://upload.wikimedia.org/wikipedia/commons/a/a8/Vishwanath_Temple%2C_BHU.jpg",
+      "embedUrl": "https://www.youtube.com/embed/RIFxnl7xUdU",
+      "youtubeUrl": "https://www.youtube.com/watch?v=RIFxnl7xUdU"
+    },
+    {
+      "id": 8,
+      "title": "Live Darshan from Kedarnath Temple",
+      "description": "Connect with the divine abode of Lord Shiva in the Himalayas",
+      "thumbnailUrl": "https://upload.wikimedia.org/wikipedia/commons/f/f7/Kedarnath_Temple.JPG",
+      "embedUrl": "https://www.youtube.com/embed/KBX5xyIXaJ4",
+      "youtubeUrl": "https://www.youtube.com/watch?v=KBX5xyIXaJ4"
+    },
+    {
+      "id": 9,
+      "title": "Live Darshan from Meenakshi Temple, Madurai",
+      "description": "Experience the architectural and spiritual grandeur of this ancient temple",
+      "thumbnailUrl": "https://upload.wikimedia.org/wikipedia/commons/1/1a/India-7550_-_Flickr_-_archer10_%28Dennis%29.jpg",
+      "embedUrl": "https://www.youtube.com/embed/6O8SQYoL5jo",
+      "youtubeUrl": "https://www.youtube.com/watch?v=6O8SQYoL5jo"
+    },
+    {
+      "id": 10,
+      "title": "Live Darshan from Jagannath Temple, Puri",
+      "description": "Witness the divine presence of Lord Jagannath through this live darshan",
+      "thumbnailUrl": "https://upload.wikimedia.org/wikipedia/commons/f/ff/Shree_Jagannatha_Temple%2C_Puri.jpg",
+      "embedUrl": "https://www.youtube.com/embed/2QgKiH5PGI8",
+      "youtubeUrl": "https://www.youtube.com/watch?v=2QgKiH5PGI8"
+    }
+  ]
+}
