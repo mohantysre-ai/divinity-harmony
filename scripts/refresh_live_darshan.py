@@ -19,21 +19,27 @@ def run(command, timeout):
 def main():
     items = {}
     for query in QUERIES:
-        search = run(["yt-dlp", "--quiet", "--no-warnings", "--skip-download", "--flat-playlist", "--dump-single-json", f"ytsearch50:{query}"], 120) or {}
+        # Extract the search entries once. The earlier implementation made a
+        # second request for every result, which made YouTube throttle the CI
+        # runner and left an empty feed despite live results on YouTube.
+        search = run([
+            "yt-dlp", "--quiet", "--no-warnings", "--skip-download",
+            "--dump-single-json", "--extractor-args", "youtube:player_client=web_safari",
+            f"ytsearch50:{query}",
+        ], 180) or {}
         for entry in search.get("entries", []):
             video_id = entry.get("id")
             if not video_id or video_id in items:
                 continue
-            detail = run(["yt-dlp", "--quiet", "--no-warnings", "--skip-download", "--dump-single-json", f"https://www.youtube.com/watch?v={video_id}"], 45)
-            if not detail or detail.get("live_status") != "is_live":
+            if entry.get("live_status") != "is_live" and not entry.get("is_live"):
                 continue
-            timestamp = detail.get("release_timestamp")
+            timestamp = entry.get("release_timestamp") or entry.get("timestamp")
             items[video_id] = {
                 "videoId": video_id,
-                "title": detail.get("title") or "Live Temple Darshan",
-                "description": detail.get("description") or "Live darshan stream",
-                "channelTitle": detail.get("channel") or detail.get("uploader") or "YouTube channel",
-                "channelId": detail.get("channel_id") or "",
+                "title": entry.get("title") or "Live Temple Darshan",
+                "description": entry.get("description") or "Live darshan stream",
+                "channelTitle": entry.get("channel") or entry.get("uploader") or "YouTube channel",
+                "channelId": entry.get("channel_id") or "",
                 "startedAt": datetime.fromtimestamp(timestamp, timezone.utc).isoformat() if timestamp else None,
             }
     OUTPUT.write_text(json.dumps({"updatedAt": datetime.now(timezone.utc).isoformat(), "items": list(items.values())}, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
