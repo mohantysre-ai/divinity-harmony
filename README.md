@@ -20,4 +20,4 @@ Set `VITE_MANTRA_CATALOG_URL` to expand the built-in mantra catalog with a hoste
 
 ## Live temple darshan
 
-Live Darshan searches YouTube for streams that YouTube reports as live. Enable **YouTube Data API v3** in Google Cloud and either set `VITE_YOUTUBE_API_KEY` in the deployment environment or use the **Add key** control on the Live Darshan page. Restrict browser API keys to the app domain and do not commit keys to the repository.
+Visitors do not need an API key. A GitHub Actions job refreshes `public/live-darshan-feed.json` every five minutes by discovering YouTube videos whose current status is live. The page reads that published feed at runtime. Run **Refresh live darshan feed** from the Actions tab to update it immediately.
