@@ -3,48 +3,26 @@ import Layout from '@/components/layout/Layout';
 import { ThemeProvider } from '@/hooks/use-theme';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ExternalLink, Radio, RefreshCw, Youtube } from 'lucide-react';
+import { Radio, RefreshCw, Youtube } from 'lucide-react';
 import { getLiveDarshans, type LiveDarshan } from '@/lib/live-darshan';
 
 const POLL_MS = 5 * 60 * 1000;
-
 const LiveDarshan = () => {
   const [darshans, setDarshans] = useState<LiveDarshan[]>([]);
   const [selected, setSelected] = useState<LiveDarshan | null>(null);
-  const [message, setMessage] = useState('Checking official temple channels…');
+  const [message, setMessage] = useState('Searching YouTube for live temple darshan…');
   const [loading, setLoading] = useState(true);
-
   const refresh = useCallback(async () => {
     setLoading(true);
-    try {
-      const live = await getLiveDarshans();
-      setDarshans(live);
-      setSelected((current) => live.find((item) => item.videoId === current?.videoId) || live[0] || null);
-      setMessage(live.length ? `${live.length} verified temple stream${live.length === 1 ? '' : 's'} live now.` : 'No approved temple channel is live right now. This page refreshes automatically.');
-    } catch (error) {
-      setMessage(error instanceof Error ? error.message : 'Unable to verify live streams.');
-    } finally { setLoading(false); }
+    try { const live = await getLiveDarshans(); setDarshans(live); setSelected((current) => live.find((item) => item.videoId === current?.videoId) || live[0] || null); setMessage(live.length ? `${live.length} live darshan stream${live.length === 1 ? '' : 's'} found now.` : 'No matching YouTube stream is live right now. This page refreshes automatically.'); }
+    catch (error) { setMessage(error instanceof Error ? error.message : 'Unable to discover live streams.'); }
+    finally { setLoading(false); }
   }, []);
-
-  useEffect(() => {
-    void refresh();
-    const interval = window.setInterval(() => void refresh(), POLL_MS);
-    return () => window.clearInterval(interval);
-  }, [refresh]);
-
+  useEffect(() => { void refresh(); const interval = window.setInterval(() => void refresh(), POLL_MS); return () => window.clearInterval(interval); }, [refresh]);
   return <ThemeProvider><Layout><main className="container mx-auto py-8">
-    <div className="mb-8 text-center"><div className="mb-2 flex justify-center gap-2 text-sm font-semibold text-red-600"><Radio className="h-4 w-4 animate-pulse" /> VERIFIED LIVE ONLY</div>
-      <h1 className="text-3xl font-bold md:text-4xl">Live Temple Darshan</h1>
-      <p className="mx-auto mt-3 max-w-2xl text-muted-foreground">Only streams currently live from the approved official temple registry appear here. No recordings, re-uploads, or “live” labels without a live signal.</p>
-      <div className="mt-4 flex justify-center"><Button variant="outline" onClick={() => void refresh()} disabled={loading}><RefreshCw className={`mr-2 h-4 w-4 ${loading ? 'animate-spin' : ''}`} />Refresh live status</Button></div>
-    </div>
+    <div className="mb-8 text-center"><div className="mb-2 flex justify-center gap-2 text-sm font-semibold text-red-600"><Radio className="h-4 w-4 animate-pulse" /> LIVE NOW · COMMUNITY DISCOVERY</div><h1 className="text-3xl font-bold md:text-4xl">Live Temple Darshan</h1><p className="mx-auto mt-3 max-w-2xl text-muted-foreground">Every stream shown is currently reported live by YouTube for temple/darshan searches. Results are dynamic, have no fixed catalog limit, and refresh every five minutes.</p><div className="mt-4 flex justify-center"><Button variant="outline" onClick={() => void refresh()} disabled={loading}><RefreshCw className={`mr-2 h-4 w-4 ${loading ? 'animate-spin' : ''}`} />Refresh live status</Button></div></div>
     <p role="status" className="mb-5 text-center text-sm text-muted-foreground">{message}</p>
-    {selected ? <div className="grid grid-cols-1 gap-8 lg:grid-cols-3"><section className="lg:col-span-2 overflow-hidden rounded-xl bg-card shadow-lg">
-      <div className="relative aspect-video"><iframe key={selected.videoId} src={`https://www.youtube-nocookie.com/embed/${selected.videoId}?autoplay=1&rel=0`} title={selected.title} allow="autoplay; encrypted-media; picture-in-picture" allowFullScreen className="absolute inset-0 h-full w-full border-0" /></div>
-      <div className="p-6"><h2 className="text-2xl font-bold">{selected.temple}</h2><p className="mt-2 text-muted-foreground">{selected.title}</p><p className="mt-2 text-xs text-muted-foreground">{selected.location} · {selected.deity}</p>
-        <Button asChild className="mt-4" variant="outline"><a href={selected.officialUrl} target="_blank" rel="noopener noreferrer"><ExternalLink className="mr-2 h-4 w-4" />Official temple live page</a></Button></div></section>
-      <aside className="lg:col-span-1"><h2 className="mb-4 text-xl font-bold">Live now</h2><div className="max-h-[600px] space-y-3 overflow-auto pr-2">{darshans.map((item) => <Card key={item.videoId} onClick={() => setSelected(item)} className={`cursor-pointer ${selected.videoId === item.videoId ? 'border-primary ring-1 ring-primary' : ''}`}><CardContent className="p-4"><p className="flex items-center gap-2 text-xs font-bold text-red-600"><Radio className="h-3 w-3" />LIVE</p><h3 className="mt-1 font-medium">{item.temple}</h3><p className="text-xs text-muted-foreground">{item.location}</p></CardContent></Card>)}</div></aside></div>
-    : <div className="mx-auto max-w-xl rounded-xl border border-dashed bg-card p-8 text-center"><Youtube className="mx-auto mb-3 h-8 w-8 text-red-600" /><h2 className="font-semibold">No verified temple stream is live now</h2><p className="mt-2 text-sm text-muted-foreground">The registry has no limit. Add official temple channel IDs to the source registry; any channel that starts a live stream appears automatically on the next poll.</p></div>}
+    {selected ? <div className="grid grid-cols-1 gap-8 lg:grid-cols-3"><section className="lg:col-span-2 overflow-hidden rounded-xl bg-card shadow-lg"><div className="relative aspect-video"><iframe key={selected.videoId} src={`https://www.youtube-nocookie.com/embed/${selected.videoId}?autoplay=1&rel=0`} title={selected.title} allow="autoplay; encrypted-media; picture-in-picture" allowFullScreen className="absolute inset-0 h-full w-full border-0" /></div><div className="p-6"><h2 className="text-2xl font-bold">{selected.title}</h2><p className="mt-2 text-muted-foreground">{selected.channelTitle}</p><p className="mt-3 text-xs text-muted-foreground">Live status comes from YouTube at refresh time. Community-discovered stream; please use judgement before donations or transactions.</p></div></section><aside className="lg:col-span-1"><h2 className="mb-4 text-xl font-bold">Live now</h2><div className="max-h-[600px] space-y-3 overflow-auto pr-2">{darshans.map((item) => <Card key={item.videoId} onClick={() => setSelected(item)} className={`cursor-pointer ${selected.videoId === item.videoId ? 'border-primary ring-1 ring-primary' : ''}`}><CardContent className="p-4"><p className="flex items-center gap-2 text-xs font-bold text-red-600"><Radio className="h-3 w-3" />LIVE</p><h3 className="mt-1 line-clamp-2 font-medium">{item.title}</h3><p className="line-clamp-1 text-xs text-muted-foreground">{item.channelTitle}</p></CardContent></Card>)}</div></aside></div> : <div className="mx-auto max-w-xl rounded-xl border border-dashed bg-card p-8 text-center"><Youtube className="mx-auto mb-3 h-8 w-8 text-red-600" /><h2 className="font-semibold">No matching stream is live now</h2><p className="mt-2 text-sm text-muted-foreground">New live temple links are found automatically whenever YouTube reports them as live.</p></div>}
   </main></Layout></ThemeProvider>;
 };
 export default LiveDarshan;
