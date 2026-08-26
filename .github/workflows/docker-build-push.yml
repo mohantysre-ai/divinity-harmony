@@ -1,4 +1,5 @@
 name: Build and push Docker image
+run-name: Docker build and smoke test
 
 on:
   push:
