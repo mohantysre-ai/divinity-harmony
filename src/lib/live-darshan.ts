@@ -15,8 +15,8 @@ function queries() {
   return configured?.length ? configured : DEFAULT_QUERIES;
 }
 
-export async function getLiveDarshans(signal?: AbortSignal): Promise<LiveDarshan[]> {
-  const apiKey = import.meta.env.VITE_YOUTUBE_API_KEY?.trim();
+export async function getLiveDarshans(apiKey?: string, signal?: AbortSignal): Promise<LiveDarshan[]> {
+  apiKey = apiKey?.trim() || import.meta.env.VITE_YOUTUBE_API_KEY?.trim();
   if (!apiKey) throw new Error('Live discovery is not configured yet.');
   const results = await Promise.all(queries().map(async (query) => {
     const params = new URLSearchParams({ key: apiKey, part: 'snippet', q: query, eventType: 'live', type: 'video', maxResults: '50', order: 'date' });
