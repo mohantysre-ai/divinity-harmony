@@ -1,4 +1,4 @@
-# Divinity Harmony
+# Divinity Harmony App
 
 A devotional web application for reading and listening to sacred mantras, stotras and Vedic prayers.
 
