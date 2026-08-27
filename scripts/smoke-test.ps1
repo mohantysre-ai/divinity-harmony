@@ -117,6 +117,15 @@ try {
   Fail "30+ Live Darshan streams ($($_.Exception.Message))"
 }
 
+# Optional: when the image was built with Supabase env vars, the client must be present.
+if ($js -and ($js -match 'supabase\.co')) {
+  Pass "Supabase URL baked into JS bundle"
+} elseif ($env:VITE_SUPABASE_URL -and $env:VITE_SUPABASE_PUBLISHABLE_KEY) {
+  Fail "Supabase env set but URL not found in JS bundle (rebuild with docker compose build args)"
+} else {
+  Write-Host "SKIP: Supabase not configured for this build (guest mode)" -ForegroundColor Yellow
+}
+
 # Local catalog file check when present
 $catalogPath = Join-Path $PSScriptRoot "..\src\data\mantras.json"
 if (Test-Path $catalogPath) {

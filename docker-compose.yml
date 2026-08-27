@@ -4,6 +4,13 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      args:
+        VITE_SUPABASE_URL: ${VITE_SUPABASE_URL:-}
+        VITE_SUPABASE_PUBLISHABLE_KEY: ${VITE_SUPABASE_PUBLISHABLE_KEY:-}
+        VITE_SUPABASE_ANON_KEY: ${VITE_SUPABASE_ANON_KEY:-}
+        VITE_LIVE_DARSHAN_FEED_URL: ${VITE_LIVE_DARSHAN_FEED_URL:-}
+        VITE_SUPPORT_URL: ${VITE_SUPPORT_URL:-}
+        VITE_SITE_URL: ${VITE_SITE_URL:-https://mantra.sigq.in}
     ports:
       - "7800:80"
     environment:
