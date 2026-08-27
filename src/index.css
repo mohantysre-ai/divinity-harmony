@@ -141,6 +141,12 @@
   .home-path { @apply overflow-hidden transition-colors duration-500 hover:bg-orange-50 dark:hover:bg-orange-950/20; }
   .home-path::after { content: ''; @apply absolute -bottom-24 -right-24 h-56 w-56 rounded-full border border-orange-800/10 transition-transform duration-700; box-shadow: 0 0 0 28px rgba(154,52,18,.035), 0 0 0 56px rgba(154,52,18,.025); }
   .home-path:hover::after { transform: translate(-18px,-18px) scale(1.08); }
+  .home-feature-card { @apply relative overflow-hidden rounded-[1.75rem] border border-orange-950/10 bg-white shadow-[0_20px_60px_-35px_rgba(120,53,15,.35)] transition-all duration-500 dark:bg-card; }
+  .home-feature-card:hover, .home-feature-card.is-active { transform: translateY(-9px); border-color: rgba(234,88,12,.42); box-shadow: 0 28px 70px -34px rgba(154,52,18,.55); }
+  .home-feature-card.is-active::after { content:''; @apply pointer-events-none absolute inset-0 rounded-[1.75rem] ring-2 ring-orange-500/20; }
+  .home-feature-progress span { width: 38%; transition: width .7s cubic-bezier(.2,.8,.2,1); }
+  .home-feature-card:hover .home-feature-progress span, .home-feature-card.is-active .home-feature-progress span { width: 100%; }
+  .home-feature-glow { animation: home-feature-drift 9s ease-in-out infinite; }
   .home-lotus-grid { background-image: radial-gradient(circle at center, transparent 31%, rgba(154,52,18,.08) 32%, transparent 33%), repeating-conic-gradient(from 22.5deg, rgba(194,65,12,.08) 0deg 2deg, transparent 2deg 45deg); animation: home-breathe 6s ease-in-out infinite; }
 
   @keyframes home-rise { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
@@ -148,10 +154,11 @@
   @keyframes home-spin { to { transform: rotate(360deg); } }
   @keyframes home-spin-reverse { to { transform: rotate(-360deg); } }
   @keyframes home-breathe { 0%,100% { transform: scale(1); } 50% { transform: scale(1.025); } }
+  @keyframes home-feature-drift { 0%,100% { transform: translate3d(0,0,0); } 50% { transform: translate3d(90px,32px,0); } }
 
   @media (prefers-reduced-motion: reduce) {
-    .home-orb, .home-rise, .home-mandala, .home-mandala-ring, .home-moment-card, .home-lotus-grid { animation: none !important; }
-    .home-moment-card:hover { transform: none; }
+    .home-orb, .home-rise, .home-mandala, .home-mandala-ring, .home-moment-card, .home-lotus-grid, .home-feature-glow { animation: none !important; }
+    .home-moment-card:hover, .home-feature-card:hover, .home-feature-card.is-active { transform: none; }
   }
 
   .feature-tile {

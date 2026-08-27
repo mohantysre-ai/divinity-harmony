@@ -1,34 +1,27 @@
-import { ArrowRight, BookOpen, Languages, Radio, Search, Volume2 } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { ArrowUpRight, BookOpen, Languages, Radio, Search, Sparkles, Volume2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import bundledData from '@/data/mantras.json';
+import { sacredTexts } from '@/data/sacred-texts';
 
-const paths = [
-  { number: '01', title: 'Sacred Mantras', text: 'Search by deity, read the Sanskrit, and listen with an uninterrupted player.', href: '/mantras', icon: Volume2 },
-  { number: '02', title: 'Live Darshan', text: 'Watch active temple broadcasts discovered dynamically from across YouTube.', href: '/darshan', icon: Radio },
-  { number: '03', title: 'Sacred Texts', text: 'Study Vedas, Gitas, Puranas, philosophy, ancestry, and Hindu heritage.', href: '/pdf-reader', icon: BookOpen },
+type LivePayload={items?:unknown[]};
+const paths=[
+ {number:'01',eyebrow:'Listen & chant',title:'Sacred Mantras',text:'Read the Sanskrit, understand the meaning and continue your daily japa.',href:'/mantras',icon:Volume2,image:'/feature-mantras.svg',tone:'from-orange-950/95 via-red-900/65 to-transparent',metric:`${bundledData.mantras.length}+`,metricLabel:'mantras',action:'Start listening'},
+ {number:'02',eyebrow:'Temple broadcasts',title:'Live Darshan',text:'Enter temple streams that are being discovered and refreshed automatically.',href:'/darshan',icon:Radio,image:'/feature-darshan.svg',tone:'from-purple-950/95 via-rose-900/65 to-transparent',metric:'—',metricLabel:'checking live',action:'Watch darshan'},
+ {number:'03',eyebrow:'Read & reflect',title:'Sacred Texts',text:'Explore Vedas, Gitas, Puranas, philosophy, ancestry and Hindu heritage.',href:'/scriptures',icon:BookOpen,image:'/feature-scriptures.svg',tone:'from-emerald-950/95 via-teal-900/65 to-transparent',metric:`${sacredTexts.length}+`,metricLabel:'works',action:'Open library'}
 ];
 
-const FeatureTiles = () => (
-  <>
-    <section className="bg-[#fffaf1] py-20 dark:bg-background sm:py-24">
-      <div className="container mx-auto px-5 lg:px-8">
-        <div className="mx-auto mb-12 max-w-2xl text-center"><p className="text-xs font-semibold uppercase tracking-[0.22em] text-orange-700">Your spiritual library</p><h2 className="mt-3 font-sanskrit text-3xl font-bold tracking-tight sm:text-5xl">Ancient wisdom, thoughtfully presented.</h2><p className="mt-5 leading-7 text-muted-foreground">Built for everyday practice—from a two-minute mantra to a deep scripture study.</p></div>
-        <div className="grid overflow-hidden rounded-[2rem] border border-orange-950/10 bg-white shadow-[0_24px_80px_-45px_rgba(120,53,15,.45)] dark:bg-card lg:grid-cols-3">
-          {paths.map((path) => (
-            <Link key={path.title} to={path.href} className="home-path group relative min-h-[340px] border-b border-orange-950/10 p-8 last:border-b-0 lg:border-b-0 lg:border-r lg:last:border-r-0">
-              <div className="flex items-center justify-between"><span className="text-xs font-bold tracking-[0.2em] text-orange-700">{path.number}</span><path.icon className="h-6 w-6 text-orange-700 transition-transform duration-500 group-hover:rotate-6 group-hover:scale-110" /></div>
-              <div className="mt-28"><h3 className="font-sanskrit text-2xl font-bold">{path.title}</h3><p className="mt-3 text-sm leading-7 text-muted-foreground">{path.text}</p><span className="mt-6 inline-flex items-center text-sm font-semibold text-orange-800">Explore <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" /></span></div>
-            </Link>
-          ))}
-        </div>
-      </div>
-    </section>
-    <section className="bg-[#f5ead8] py-20 dark:bg-stone-900/60 sm:py-24">
-      <div className="container mx-auto grid items-center gap-12 px-5 lg:grid-cols-2 lg:px-8">
-        <div className="relative mx-auto aspect-square w-full max-w-md rounded-full border border-orange-900/15 p-8"><div className="home-lotus-grid flex h-full items-center justify-center rounded-full border border-orange-900/10 bg-gradient-to-br from-orange-100 to-amber-50 dark:from-orange-950/40 dark:to-stone-950"><div className="text-center"><span className="block font-sanskrit text-7xl text-orange-800 dark:text-amber-400">ॐ</span><span className="mt-3 block text-xs font-semibold uppercase tracking-[0.3em] text-orange-900/60 dark:text-amber-200/60">Listen · Read · Reflect</span></div></div></div>
-        <div><p className="text-xs font-semibold uppercase tracking-[0.22em] text-orange-700">Designed around you</p><h2 className="mt-3 font-sanskrit text-3xl font-bold tracking-tight sm:text-5xl">Find what speaks to your heart.</h2><p className="mt-5 max-w-xl text-base leading-8 text-muted-foreground">Move naturally between sound, sacred image, meaning, and source text. Every path is searchable and designed to remain calm on mobile as well as desktop.</p><div className="mt-8 grid gap-4 sm:grid-cols-2"><div className="rounded-2xl border border-orange-900/10 bg-white/65 p-5 backdrop-blur dark:bg-card/70"><Search className="h-5 w-5 text-orange-700" /><h3 className="mt-3 font-semibold">Fast discovery</h3><p className="mt-1 text-sm text-muted-foreground">Search hundreds of resources.</p></div><div className="rounded-2xl border border-orange-900/10 bg-white/65 p-5 backdrop-blur dark:bg-card/70"><Languages className="h-5 w-5 text-orange-700" /><h3 className="mt-3 font-semibold">Sanskrit & English</h3><p className="mt-1 text-sm text-muted-foreground">Original text and clear context.</p></div></div></div>
-      </div>
-    </section>
-  </>
-);
-
+const FeatureTiles=()=>{
+ const[active,setActive]=useState(0);const[liveCount,setLiveCount]=useState<number|null>(null);
+ useEffect(()=>{const timer=window.setInterval(()=>setActive(v=>(v+1)%paths.length),4200);return()=>window.clearInterval(timer);},[]);
+ useEffect(()=>{const controller=new AbortController();void fetch('/api/live-darshan',{signal:controller.signal}).then(r=>r.ok?r.json():Promise.reject()).then((d:LivePayload)=>setLiveCount(d.items?.length??0)).catch(()=>setLiveCount(null));return()=>controller.abort();},[]);
+ return <><section className="relative overflow-hidden bg-[#fff8ed] py-20 dark:bg-background sm:py-24"><div className="home-feature-glow absolute -left-32 top-28 h-80 w-80 rounded-full bg-orange-300/20 blur-3xl"/><div className="container relative mx-auto px-5 lg:px-8">
+  <div className="mx-auto mb-12 max-w-2xl text-center"><p className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.22em] text-orange-700"><Sparkles className="h-4 w-4"/>Your spiritual library</p><h2 className="mt-3 font-sanskrit text-3xl font-bold tracking-tight sm:text-5xl">Three living paths. One sacred space.</h2><p className="mt-5 leading-7 text-muted-foreground">Choose sound, darshan or scripture—each experience responds, updates and moves with you.</p></div>
+  <div className="grid gap-6 lg:grid-cols-3">{paths.map((path,index)=>{const metric=index===1?(liveCount==null?'…':String(liveCount)):path.metric;const metricLabel=index===1?(liveCount&&liveCount>0?'live now':'streams found'):path.metricLabel;return <Link key={path.title} to={path.href} onMouseEnter={()=>setActive(index)} onFocus={()=>setActive(index)} className={`home-feature-card group ${active===index?'is-active':''}`}>
+   <div className="relative h-56 overflow-hidden"><img src={path.image} alt="" className="h-full w-full object-cover transition duration-700 group-hover:scale-110"/><div className={`absolute inset-0 bg-gradient-to-t ${path.tone}`}/><div className="absolute left-5 top-5 flex items-center gap-2 rounded-full border border-white/20 bg-black/20 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[.16em] text-white backdrop-blur"><path.icon className={`h-3.5 w-3.5 ${index===1&&liveCount&&liveCount>0?'animate-pulse text-red-300':''}`}/>{path.eyebrow}</div><div className="absolute bottom-5 left-5 text-white"><span className="text-3xl font-bold">{metric}</span><span className="ml-2 text-xs uppercase tracking-[.15em] text-white/65">{metricLabel}</span></div><span className="absolute right-5 top-5 text-xs font-bold tracking-[.22em] text-white/60">{path.number}</span></div>
+   <div className="p-6"><div className="flex items-start justify-between gap-4"><div><h3 className="font-sanskrit text-2xl font-bold">{path.title}</h3><p className="mt-3 min-h-14 text-sm leading-7 text-muted-foreground">{path.text}</p></div><span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-orange-900/10 text-orange-800 transition duration-300 group-hover:rotate-45 group-hover:bg-orange-700 group-hover:text-white"><ArrowUpRight className="h-4 w-4"/></span></div><div className="mt-5 flex items-center justify-between border-t border-orange-950/10 pt-4"><span className="text-sm font-semibold text-orange-800">{path.action}</span><span className="home-feature-progress h-1 w-16 overflow-hidden rounded-full bg-orange-950/10"><span className="block h-full bg-orange-600"/></span></div></div>
+  </Link>;})}</div>
+ </div></section>
+ <section className="bg-[#f5ead8] py-20 dark:bg-stone-900/60 sm:py-24"><div className="container mx-auto grid items-center gap-12 px-5 lg:grid-cols-2 lg:px-8"><div className="relative mx-auto aspect-square w-full max-w-md rounded-full border border-orange-900/15 p-8"><div className="home-lotus-grid flex h-full items-center justify-center rounded-full border border-orange-900/10 bg-gradient-to-br from-orange-100 to-amber-50 dark:from-orange-950/40 dark:to-stone-950"><div className="text-center"><span className="block font-sanskrit text-7xl text-orange-800 dark:text-amber-400">ॐ</span><span className="mt-3 block text-xs font-semibold uppercase tracking-[0.3em] text-orange-900/60 dark:text-amber-200/60">Listen · Read · Reflect</span></div></div></div><div><p className="text-xs font-semibold uppercase tracking-[0.22em] text-orange-700">Designed around you</p><h2 className="mt-3 font-sanskrit text-3xl font-bold tracking-tight sm:text-5xl">Find what speaks to your heart.</h2><p className="mt-5 max-w-xl text-base leading-8 text-muted-foreground">Move naturally between sound, sacred image, meaning and source text. Every path remains calm and responsive across mobile and desktop.</p><div className="mt-8 grid gap-4 sm:grid-cols-2"><div className="rounded-2xl border border-orange-900/10 bg-white/65 p-5 backdrop-blur dark:bg-card/70"><Search className="h-5 w-5 text-orange-700"/><h3 className="mt-3 font-semibold">Fast discovery</h3><p className="mt-1 text-sm text-muted-foreground">Search hundreds of resources.</p></div><div className="rounded-2xl border border-orange-900/10 bg-white/65 p-5 backdrop-blur dark:bg-card/70"><Languages className="h-5 w-5 text-orange-700"/><h3 className="mt-3 font-semibold">Sanskrit & English</h3><p className="mt-1 text-sm text-muted-foreground">Original text and clear context.</p></div></div></div></div></section></>;
+};
 export default FeatureTiles;
