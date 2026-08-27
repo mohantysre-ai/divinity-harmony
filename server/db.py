@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import os
 import sqlite3
+from urllib.parse import quote, quote_plus
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -51,17 +52,23 @@ def init_db() -> None:
           cache_key TEXT PRIMARY KEY, response TEXT NOT NULL, updated_at TEXT NOT NULL
         );
         """)
-        count = db.execute("SELECT COUNT(*) FROM priests").fetchone()[0]
-        if not count:
-            db.executemany(
-                "INSERT INTO priests(id,name,city,state,languages,services,verified) VALUES(?,?,?,?,?,?,1)",
-                [
-                    (1, "Acharya Directory — Varanasi", "Varanasi", "Uttar Pradesh", "Hindi,Sanskrit", "Griha Pravesh,Satyanarayan Puja,Shraddha"),
-                    (2, "Vedic Priest Directory — Bengaluru", "Bengaluru", "Karnataka", "Kannada,Telugu,Hindi,Sanskrit", "Ganesha Puja,Navagraha Homa,Wedding rituals"),
-                    (3, "Temple Priest Directory — Bhubaneswar", "Bhubaneswar", "Odisha", "Odia,Hindi,Sanskrit", "Jagannath Puja,Griha Pravesh,Ancestral rites"),
-                    (4, "Vedic Services Directory — Mumbai", "Mumbai", "Maharashtra", "Marathi,Hindi,Sanskrit", "Satyanarayan Puja,Vastu Puja,Marriage rituals"),
-                ],
-            )
+        db.executemany(
+            "INSERT OR IGNORE INTO priests(id,name,city,state,languages,services,verified) VALUES(?,?,?,?,?,?,1)",
+            [
+                (1, "Pandit & Acharya Search", "Varanasi", "Uttar Pradesh", "Hindi,Sanskrit", "Griha Pravesh,Satyanarayan Puja,Shraddha"),
+                (2, "Vedic Priest Search", "Bengaluru", "Karnataka", "Kannada,Telugu,Hindi,Sanskrit", "Ganesha Puja,Navagraha Homa,Wedding rituals"),
+                (3, "Temple Priest Search", "Bhubaneswar", "Odisha", "Odia,Hindi,Sanskrit", "Jagannath Puja,Griha Pravesh,Ancestral rites"),
+                (4, "Pandit & Puja Service Search", "Mumbai", "Maharashtra", "Marathi,Hindi,Sanskrit", "Satyanarayan Puja,Vastu Puja,Marriage rituals"),
+                (5, "Pandit & Puja Service Search", "Delhi", "Delhi", "Hindi,Sanskrit,Punjabi", "Griha Pravesh,Wedding rituals,Navagraha Puja"),
+                (6, "Vedic Priest Search", "Hyderabad", "Telangana", "Telugu,Hindi,Sanskrit", "Satyanarayan Puja,Homam,Namakarana"),
+                (7, "Vadhyar & Priest Search", "Chennai", "Tamil Nadu", "Tamil,Sanskrit,Telugu", "Ganapathi Homam,Ayush Homam,Wedding rituals"),
+                (8, "Pandit & Puja Service Search", "Kolkata", "West Bengal", "Bengali,Hindi,Sanskrit", "Durga Puja,Lakshmi Puja,Griha Pravesh"),
+                (9, "Pandit & Puja Service Search", "Pune", "Maharashtra", "Marathi,Hindi,Sanskrit", "Satyanarayan Puja,Vastu Shanti,Marriage rituals"),
+                (10, "Vedic Priest Search", "Ahmedabad", "Gujarat", "Gujarati,Hindi,Sanskrit", "Griha Pravesh,Satyanarayan Puja,Havan"),
+                (11, "Pandit & Puja Service Search", "Jaipur", "Rajasthan", "Hindi,Sanskrit,Rajasthani", "Griha Pravesh,Wedding rituals,Havan"),
+                (12, "Purohit & Puja Service Search", "Puri", "Odisha", "Odia,Hindi,Sanskrit", "Jagannath Puja,Shraddha,Ancestral rites"),
+            ],
+        )
 
 
 def now() -> str:
@@ -111,7 +118,19 @@ def set_favorite(device_id: str, resource_type: str, resource_id: str, active: b
 def list_priests() -> list[dict]:
     with connect() as db:
         rows = db.execute("SELECT * FROM priests WHERE verified=1 ORDER BY state,city,name").fetchall()
-    return [{**dict(row), "languages": row["languages"].split(","), "services": row["services"].split(",")} for row in rows]
+    items = []
+    for row in rows:
+        query = f"pandit priest puja services {row['city']} {row['state']}"
+        city_path = quote(row["city"].replace(" ", "-"), safe="-")
+        items.append({
+            **dict(row),
+            "languages": row["languages"].split(","),
+            "services": row["services"].split(","),
+            "google_maps_url": f"https://www.google.com/maps/search/?api=1&query={quote_plus(query)}",
+            "google_search_url": f"https://www.google.com/search?q={quote_plus(query + ' contact phone')}",
+            "justdial_url": f"https://www.justdial.com/{city_path}/Pandits-For-Puja/nct-11242705",
+        })
+    return items
 
 
 def cached_explanation(key: str) -> str | None:

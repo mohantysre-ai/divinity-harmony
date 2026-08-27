@@ -1,22 +1,23 @@
-import { useEffect, useState } from 'react';
-import { CalendarDays, MapPin, Sunrise, Sunset } from 'lucide-react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { CalendarDays, CloudSun, Compass, Loader2, MapPin, MoonStar, Sparkles, Sunrise, Sunset } from 'lucide-react';
 
-type Panchang = { date:string;tithi:string;nakshatra:string;yoga:string;karana:string;sunrise:string;sunset:string;precision:string };
+type Panchang = {date:string;tithi:string;nakshatra:string;yoga:string;karana:string;sunrise:string;sunset:string;precision:string;paksha:string;moon_phase:string;weekday:string;nakshatra_index:number;tithi_index:number};
+const glyphs=['♈','♉','✦','☾','♊','💧','🏹','✿','🐍','♌','🛏','☀','✋','◆','🌿','⚖','🏺','☂','🌱','🌊','🐘','👂','🥁','◯','⚔','♓','🐟'];
 
-export default function PanchangWidget() {
-  const [data, setData] = useState<Panchang | null>(null);
-  const [locationUsed, setLocationUsed] = useState(false);
-  const load = (lat?: number, lon?: number) => {
-    const params = new URLSearchParams({ date: new Date().toISOString().slice(0, 10) });
-    if (lat != null && lon != null) { params.set('lat', String(lat)); params.set('lon', String(lon)); }
-    void fetch(`/api/panchang?${params}`).then((response) => response.json()).then(setData).catch(() => setData(null));
-  };
-  useEffect(() => { load(); }, []);
-  const localize = () => navigator.geolocation?.getCurrentPosition((position) => { setLocationUsed(true); load(position.coords.latitude, position.coords.longitude); });
-  return <section className="bg-gradient-to-r from-orange-900 to-red-900 py-8 text-orange-50">
-    <div className="container mx-auto px-5 lg:px-8"><div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
-      <div><p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[.2em] text-orange-200"><CalendarDays className="h-4 w-4" />Today’s Panchang</p><h2 className="mt-2 text-2xl font-bold">{data?.tithi || 'Loading daily calendar…'}</h2><button onClick={localize} className="mt-2 inline-flex items-center text-xs text-orange-200 hover:text-white"><MapPin className="mr-1 h-3 w-3" />{locationUsed ? 'Using your location' : 'Use my location'}</button></div>
-      {data && <div className="grid grid-cols-2 gap-x-8 gap-y-3 text-sm sm:grid-cols-3 lg:grid-cols-5"><div><span className="block text-orange-300">Nakshatra</span>{data.nakshatra}</div><div><span className="block text-orange-300">Yoga</span>{data.yoga}</div><div><span className="block text-orange-300">Karana</span>{data.karana}</div><div><span className="flex items-center gap-1 text-orange-300"><Sunrise className="h-3 w-3" />Sunrise</span>{data.sunrise}</div><div><span className="flex items-center gap-1 text-orange-300"><Sunset className="h-3 w-3" />Sunset</span>{data.sunset}</div></div>}
-    </div>{data && <p className="mt-5 text-[11px] text-orange-200/75">{data.precision}</p>}</div>
-  </section>;
+export default function PanchangWidget(){
+ const[data,setData]=useState<Panchang|null>(null);const[locationUsed,setLocationUsed]=useState(false);const[loading,setLoading]=useState(true);const[locationError,setLocationError]=useState('');
+ const load=useCallback((lat?:number,lon?:number)=>{setLoading(true);const params=new URLSearchParams({date:new Date().toLocaleDateString('en-CA')});if(lat!=null&&lon!=null){params.set('lat',String(lat));params.set('lon',String(lon));}void fetch(`/api/panchang?${params}`).then(r=>{if(!r.ok)throw new Error();return r.json();}).then(setData).catch(()=>setData(null)).finally(()=>setLoading(false));},[]);
+ useEffect(()=>load(),[load]);
+ const localize=()=>{setLocationError('');if(!navigator.geolocation){setLocationError('Location is not supported by this browser.');return;}navigator.geolocation.getCurrentPosition(p=>{setLocationUsed(true);load(p.coords.latitude,p.coords.longitude);},()=>setLocationError('Location permission was not granted. Showing India overview.'),{enableHighAccuracy:false,timeout:8000,maximumAge:3600000});};
+ const symbol=useMemo(()=>glyphs[data?.nakshatra_index??0]||'✦',[data]);
+ const cards=data?[
+  {label:'Nakshatra',value:data.nakshatra,detail:`Star ${data.nakshatra_index+1} of 27`,icon:<span className="text-3xl">{symbol}</span>,color:'from-violet-500/20 to-indigo-500/5'},
+  {label:'Tithi',value:data.tithi,detail:data.paksha,icon:<MoonStar className="h-7 w-7"/>,color:'from-amber-500/20 to-orange-500/5'},
+  {label:'Yoga',value:data.yoga,detail:'Sun–Moon combination',icon:<Sparkles className="h-7 w-7"/>,color:'from-rose-500/20 to-pink-500/5'},
+  {label:'Karana',value:data.karana,detail:'Half-tithi division',icon:<Compass className="h-7 w-7"/>,color:'from-emerald-500/20 to-teal-500/5'}]:[];
+ return <section className="relative overflow-hidden bg-[#2b0b12] py-12 text-orange-50"><div className="absolute inset-0 opacity-30 [background-image:radial-gradient(circle_at_20%_10%,#f59e0b33,transparent_35%),radial-gradient(circle_at_90%_80%,#c2410c44,transparent_38%)]"/><div className="container relative mx-auto px-5 lg:px-8"><div className="grid gap-8 xl:grid-cols-[1.1fr_1.9fr]">
+  <div className="group relative min-h-[290px] overflow-hidden rounded-[2rem] border border-orange-300/20 shadow-2xl shadow-black/20"><img src="/panchang-orbit.svg" alt="Sun, moon and nakshatra celestial calendar" className="absolute inset-0 h-full w-full object-cover transition duration-700 group-hover:scale-105"/><div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent"/><div className="absolute inset-x-0 bottom-0 p-6"><p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[.22em] text-amber-200"><CalendarDays className="h-4 w-4"/>Today’s Panchang</p><h2 className="mt-2 text-3xl font-bold">{data?.weekday||'Daily calendar'}</h2><p className="mt-1 text-sm text-orange-100/80">{data?new Date(`${data.date}T12:00:00`).toLocaleDateString(undefined,{day:'numeric',month:'long',year:'numeric'}):'Loading today’s details…'}</p><button onClick={localize} className="mt-4 inline-flex items-center rounded-full border border-orange-200/30 bg-black/20 px-4 py-2 text-xs font-medium backdrop-blur transition hover:-translate-y-0.5 hover:bg-orange-500/30">{loading?<Loader2 className="mr-2 h-3.5 w-3.5 animate-spin"/>:<MapPin className="mr-2 h-3.5 w-3.5"/>}{locationUsed?'Panchang localized':'Use my location'}</button></div></div>
+  <div><div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">{cards.map((c,i)=><article key={c.label} style={{animationDelay:`${i*90}ms`}} className={`animate-fade-in rounded-3xl border border-white/10 bg-gradient-to-br ${c.color} p-5 backdrop-blur transition duration-300 hover:-translate-y-2 hover:border-orange-300/40 hover:shadow-xl`}><div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/10 text-amber-200">{c.icon}</div><p className="mt-5 text-xs uppercase tracking-[.18em] text-orange-200/70">{c.label}</p><h3 className="mt-1 text-lg font-bold">{c.value}</h3><p className="mt-1 text-xs text-orange-100/60">{c.detail}</p></article>)}</div>
+  {data&&<div className="mt-4 grid gap-4 sm:grid-cols-3"><div className="rounded-2xl border border-white/10 bg-white/5 p-4"><span className="flex items-center gap-2 text-xs text-orange-200"><Sunrise className="h-4 w-4"/>Sunrise</span><strong className="mt-1 block text-xl">{data.sunrise}</strong></div><div className="rounded-2xl border border-white/10 bg-white/5 p-4"><span className="flex items-center gap-2 text-xs text-orange-200"><Sunset className="h-4 w-4"/>Sunset</span><strong className="mt-1 block text-xl">{data.sunset}</strong></div><div className="rounded-2xl border border-white/10 bg-white/5 p-4"><span className="flex items-center gap-2 text-xs text-orange-200"><CloudSun className="h-4 w-4"/>Moon</span><strong className="mt-1 block text-xl">{data.moon_phase}</strong></div></div>}{locationError&&<p className="mt-3 text-xs text-amber-200">{locationError}</p>}{data&&<p className="mt-4 text-[11px] leading-5 text-orange-100/55">{data.precision}</p>}</div>
+ </div></div></section>;
 }

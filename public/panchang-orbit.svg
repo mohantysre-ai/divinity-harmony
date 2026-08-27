@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 520" role="img" aria-labelledby="title desc">
+  <title id="title">Sun, moon and nakshatra orbit</title><desc id="desc">Decorative Hindu calendar artwork with celestial orbits</desc>
+  <defs><radialGradient id="sky"><stop stop-color="#7c2d12"/><stop offset="1" stop-color="#2b0b12"/></radialGradient><radialGradient id="sun"><stop stop-color="#fff7c2"/><stop offset=".45" stop-color="#fbbf24"/><stop offset="1" stop-color="#f97316"/></radialGradient></defs>
+  <rect width="800" height="520" rx="48" fill="url(#sky)"/>
+  <g fill="none" stroke="#fbbf24" stroke-opacity=".25"><ellipse cx="405" cy="260" rx="270" ry="155"/><ellipse cx="405" cy="260" rx="215" ry="115"/><circle cx="405" cy="260" r="72"/></g>
+  <circle cx="405" cy="260" r="60" fill="url(#sun)"/><g fill="#fde68a"><circle cx="165" cy="188" r="9"/><circle cx="630" cy="338" r="7"/><circle cx="570" cy="116" r="5"/><circle cx="257" cy="390" r="5"/></g>
+  <path d="M205 115a48 48 0 1 0 46 78 52 52 0 1 1-46-78" fill="#fff7d6"/><text x="405" y="277" text-anchor="middle" font-size="52" fill="#9a3412">ॐ</text>
+</svg>
