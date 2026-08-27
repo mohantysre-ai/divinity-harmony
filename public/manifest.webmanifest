@@ -1,0 +1,10 @@
+{
+  "name": "Divinity Harmony",
+  "short_name": "Divinity",
+  "description": "Sacred mantras, live temple darshan, scriptures and Hindu heritage.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#fffaf1",
+  "theme_color": "#9a3412",
+  "icons": [{ "src": "/divinity-icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }]
+}

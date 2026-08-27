@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Layout from '@/components/layout/Layout';
 import { ThemeProvider } from '@/hooks/use-theme';
 import { useTheme } from '@/hooks/theme-context';
@@ -11,6 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { useToast } from '@/components/ui/use-toast';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Separator } from '@/components/ui/separator';
+import { deviceHeaders } from '@/lib/device';
 
 const UserSettings = () => {
   const { toast } = useToast();
@@ -18,22 +19,33 @@ const UserSettings = () => {
   
   // State for user settings
   const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
+  const [gotra, setGotra] = useState('');
   const [notifications, setNotifications] = useState(true);
   const [autoplay, setAutoplay] = useState(false);
   const [language, setLanguage] = useState('english');
+
+  useEffect(() => {
+    void fetch('/api/profile', { headers: deviceHeaders() }).then((response) => response.json()).then((profile) => {
+      setName(profile.name || ''); setGotra(profile.gotra || ''); setLanguage(profile.language || 'english');
+    }).catch(() => undefined);
+    setAutoplay(localStorage.getItem('preference:autoplay') === 'true');
+    setNotifications(localStorage.getItem('preference:notifications') !== 'false');
+  }, []);
   
   // Form submission handler
-  const handleSaveProfile = (e: React.FormEvent) => {
+  const handleSaveProfile = async (e: React.FormEvent) => {
     e.preventDefault();
+    const response = await fetch('/api/profile', { method: 'POST', headers: deviceHeaders(), body: JSON.stringify({ name, gotra, language }) });
     toast({
-      title: "Profile Updated",
-      description: "Your profile settings have been saved.",
+      title: response.ok ? "Profile Updated" : "Unable to save",
+      description: response.ok ? "Your profile is saved to this device identity." : "Please try again.",
     });
   };
   
   const handleSavePreferences = (e: React.FormEvent) => {
     e.preventDefault();
+    localStorage.setItem('preference:autoplay', String(autoplay));
+    localStorage.setItem('preference:notifications', String(notifications));
     toast({
       title: "Preferences Updated",
       description: "Your preferences have been saved.",
@@ -74,13 +86,12 @@ const UserSettings = () => {
                     </div>
                     
                     <div className="space-y-2">
-                      <Label htmlFor="email">Email</Label>
+                      <Label htmlFor="gotra">Gotra or family tradition (optional)</Label>
                       <Input 
-                        id="email" 
-                        type="email" 
-                        value={email} 
-                        onChange={(e) => setEmail(e.target.value)} 
-                        placeholder="your.email@example.com"
+                        id="gotra"
+                        value={gotra}
+                        onChange={(e) => setGotra(e.target.value)}
+                        placeholder="Enter only if known"
                       />
                     </div>
                     
@@ -208,4 +219,4 @@ const UserSettings = () => {
   );
 };
 
-export default UserSettings; 
+export default UserSettings;

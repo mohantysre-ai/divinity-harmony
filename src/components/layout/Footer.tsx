@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
 
 const Footer = () => {
+  const supportUrl = import.meta.env.VITE_SUPPORT_URL?.trim();
   return (
     <footer className="bg-muted/30 border-t border-muted pt-16 pb-8">
       <div className="container px-4 mx-auto">
@@ -81,7 +82,7 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
-                <Link to="/pdf-reader" className="text-muted-foreground hover:text-primary transition-colors flex items-center gap-1 group">
+                <Link to="/scriptures" className="text-muted-foreground hover:text-primary transition-colors flex items-center gap-1 group">
                   <span className="h-0.5 w-0 bg-hindu-red group-hover:w-2 transition-all duration-300"></span>
                   Sacred Texts
                 </Link>
@@ -99,35 +100,29 @@ const Footer = () => {
             <h3 className="text-base font-semibold mb-4 tracking-wide">Resources</h3>
             <ul className="space-y-2.5 text-sm">
               <li>
-                <a href="#" className="text-muted-foreground hover:text-primary transition-colors flex items-center gap-1.5 group">
+                <Link to="/deities" className="text-muted-foreground hover:text-primary transition-colors flex items-center gap-1.5 group">
                   <span className="h-0.5 w-0 bg-hindu-orange group-hover:w-2 transition-all duration-300"></span>
-                  Community Forum
-                </a>
+                  Deity Encyclopedia
+                </Link>
               </li>
               <li>
-                <a href="#" className="text-muted-foreground hover:text-primary transition-colors flex items-center gap-1.5 group">
+                <Link to="/temples" className="text-muted-foreground hover:text-primary transition-colors flex items-center gap-1.5 group">
                   <span className="h-0.5 w-0 bg-hindu-orange group-hover:w-2 transition-all duration-300"></span>
-                  Meditation Resources
-                </a>
+                  Temple Locator
+                </Link>
               </li>
               <li>
-                <a href="#" className="text-muted-foreground hover:text-primary transition-colors flex items-center gap-1.5 group">
+                <Link to="/priests" className="text-muted-foreground hover:text-primary transition-colors flex items-center gap-1.5 group">
                   <span className="h-0.5 w-0 bg-hindu-orange group-hover:w-2 transition-all duration-300"></span>
-                  Spiritual Guides
-                </a>
+                  Priest & Puja Directory
+                </Link>
               </li>
-              <li>
-                <a href="#" className="text-muted-foreground hover:text-primary transition-colors flex items-center gap-1.5 group">
+              {supportUrl && <li>
+                <a href={supportUrl} target="_blank" rel="noreferrer" className="text-muted-foreground hover:text-primary transition-colors flex items-center gap-1.5 group">
                   <span className="h-0.5 w-0 bg-hindu-orange group-hover:w-2 transition-all duration-300"></span>
-                  Help Center
+                  Support Divinity Harmony <ExternalLink className="ml-1 h-3 w-3 inline" />
                 </a>
-              </li>
-              <li>
-                <a href="#" className="text-muted-foreground hover:text-primary transition-colors flex items-center gap-1.5 group">
-                  <span className="h-0.5 w-0 bg-hindu-orange group-hover:w-2 transition-all duration-300"></span>
-                  Donation Program <ExternalLink className="ml-1 h-3 w-3 inline" />
-                </a>
-              </li>
+              </li>}
             </ul>
           </div>
           

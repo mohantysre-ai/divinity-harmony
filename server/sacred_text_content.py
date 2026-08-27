@@ -5,6 +5,7 @@ from __future__ import annotations
 import html
 import json
 import re
+from functools import lru_cache
 from html.parser import HTMLParser
 from typing import Any
 from urllib.parse import urlencode
@@ -256,6 +257,7 @@ def _gutenberg_content(title: str) -> dict[str, Any] | None:
     return None
 
 
+@lru_cache(maxsize=512)
 def fetch_sacred_content(title: str, category: str, language: str = "en") -> dict[str, Any]:
     scripture_category = category in {"Vedas & Vedangas", "Upanishads", "Puranas", "Gitas"}
     if language == "sa":
@@ -269,6 +271,7 @@ def fetch_sacred_content(title: str, category: str, language: str = "en") -> dic
     return result
 
 
+@lru_cache(maxsize=1024)
 def fetch_chapter(host: str, page: str) -> dict[str, Any]:
     if host not in {"en.wikisource.org", "sa.wikisource.org"}:
         raise ValueError("Unsupported source host")

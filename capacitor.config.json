@@ -1,0 +1,6 @@
+{
+  "appId": "in.sigq.divinityharmony",
+  "appName": "Divinity Harmony",
+  "webDir": "dist",
+  "server": { "androidScheme": "https" }
+}

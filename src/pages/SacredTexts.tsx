@@ -10,6 +10,7 @@ import { BookOpen, CircleCheck, ExternalLink, Library, Loader2, Search, Sparkles
 import { sacredTextCategories, sacredTexts, type SacredText } from '@/data/sacred-texts';
 import { buildSacredTextArticle } from '@/lib/sacred-text-content';
 import { fetchSacredChapter, fetchSacredSourceContent, type SacredSourceContent } from '@/lib/sacred-source-content';
+import { useSearchParams } from 'react-router-dom';
 
 const categoryStyle: Record<string, { symbol: string; gradient: string }> = {
   'Vedas & Vedangas': { symbol: 'ॐ', gradient: 'from-amber-700 via-orange-600 to-yellow-500' },
@@ -34,6 +35,7 @@ const SacredTexts = () => {
   const [sourceLanguage, setSourceLanguage] = useState<'en' | 'sa'>('en');
   const [sourceLoading, setSourceLoading] = useState(false);
   const [sourceError, setSourceError] = useState('');
+  const [searchParams] = useSearchParams();
 
   const filteredTexts = useMemo(() => {
     const normalized = query.trim().toLowerCase();
@@ -47,6 +49,7 @@ const SacredTexts = () => {
   }, [category, query]);
 
   useEffect(() => setVisibleCount(PAGE_SIZE), [category, query]);
+  useEffect(() => { const initial = searchParams.get('search'); if (initial) setQuery(initial); }, [searchParams]);
 
   useEffect(() => {
     if (!selected) return;

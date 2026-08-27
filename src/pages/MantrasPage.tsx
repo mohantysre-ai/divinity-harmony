@@ -7,6 +7,12 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import bundledData from '@/data/mantras.json';
 import { useToast } from '@/hooks/use-toast';
+import { useSearchParams } from 'react-router-dom';
+import { devanagariToIast } from '@/lib/transliterate';
+import JapaCounter from '@/components/mantras/JapaCounter';
+import { Languages, Sparkles } from 'lucide-react';
+import { Heart } from 'lucide-react';
+import { deviceHeaders } from '@/lib/device';
 
 type Mantra = (typeof bundledData.mantras)[number];
 
@@ -93,6 +99,17 @@ const MantrasPage = () => {
   const [remoteMantras, setRemoteMantras] = useState<Mantra[]>([]);
   const [catalogNotice, setCatalogNotice] = useState('');
   const [imageExpanded, setImageExpanded] = useState(false);
+  const [script, setScript] = useState<'devanagari' | 'iast'>('devanagari');
+  const [explanation, setExplanation] = useState('');
+  const [explaining, setExplaining] = useState(false);
+  const [favorites, setFavorites] = useState<Set<string>>(new Set());
+  const [searchParams] = useSearchParams();
+
+  useEffect(() => {
+    const initial = searchParams.get('search');
+    if (initial) setQuery(initial);
+  }, [searchParams]);
+  useEffect(() => { void fetch('/api/favorites', { headers: deviceHeaders() }).then(r=>r.json()).then(d=>setFavorites(new Set((d.items||[]).filter((x:{resource_type:string})=>x.resource_type==='mantra').map((x:{resource_id:string})=>x.resource_id)))).catch(()=>undefined); }, []);
 
   useEffect(() => {
     const url = import.meta.env.VITE_MANTRA_CATALOG_URL?.trim();
@@ -126,6 +143,7 @@ const MantrasPage = () => {
 
   const catalog = useMemo(() => mergeCatalog(remoteMantras), [remoteMantras]);
   const currentMantra = catalog[Math.min(currentMantraIndex, catalog.length - 1)];
+  const displayedText = script === 'iast' ? devanagariToIast(currentMantra.text) : currentMantra.text;
   const deities = useMemo(() => ['All', ...Array.from(new Set(catalog.map(deityFor))).sort()], [catalog]);
   const visibleMantras = useMemo(() => catalog.map((mantra, index) => ({ mantra, index }))
     .filter(({ mantra }) => {
@@ -139,6 +157,16 @@ const MantrasPage = () => {
   const handlePrevious = () => currentMantraIndex > 0
     ? setCurrentMantraIndex(currentMantraIndex - 1)
     : toast({ title: 'Start of library', description: 'You are at the first mantra.' });
+  const explainMantra = async () => {
+    setExplaining(true); setExplanation('');
+    try { const response = await fetch('/api/explain', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ text: currentMantra.text }) }); const data = await response.json(); setExplanation(data.explanation || data.error || 'Explanation unavailable.'); }
+    catch { setExplanation('Explanation is temporarily unavailable.'); }
+    finally { setExplaining(false); }
+  };
+  const toggleFavorite = async () => {
+    const id=String(currentMantra.id); const active=!favorites.has(id); const next=new Set(favorites); if (active) next.add(id); else next.delete(id); setFavorites(next);
+    await fetch('/api/favorites',{method:'POST',headers:deviceHeaders(),body:JSON.stringify({resourceType:'mantra',resourceId:id,active})}).catch(()=>undefined);
+  };
 
   return <ThemeProvider><Layout><main className="container mx-auto py-8">
     <div className="mb-8 text-center"><p className="text-sm font-medium uppercase tracking-[0.24em] text-primary">Sacred Mantras</p>
@@ -176,10 +204,15 @@ const MantrasPage = () => {
         />
         <span className="pointer-events-none absolute left-4 top-4 rounded-full bg-background/85 px-3 py-1 text-xs font-semibold backdrop-blur">{deityFor(currentMantra)}</span>
       </button>
-      <div className="p-6"><h2 className="text-2xl font-bold">{currentMantra.title}</h2><p className="mt-2 text-muted-foreground">{currentMantra.description}</p>
-        <blockquote className="mantra-text my-6 rounded-lg bg-muted/50 p-4 text-center text-lg">{currentMantra.text}</blockquote>
-        <p className="text-sm text-muted-foreground"><strong>Translation:</strong> {currentMantra.translation}</p></div></article>
-      <AudioPlayer text={currentMantra.text} title={currentMantra.title} onNext={handleNext} onPrevious={handlePrevious} hasNext={currentMantraIndex < catalog.length - 1} hasPrevious={currentMantraIndex > 0} /></section>
+      <div className="p-6"><div className="flex items-start justify-between gap-4"><h2 className="text-2xl font-bold">{currentMantra.title}</h2><Button size="icon" variant="outline" onClick={toggleFavorite} aria-label="Favorite mantra"><Heart className={`h-4 w-4 ${favorites.has(String(currentMantra.id))?'fill-red-600 text-red-600':''}`}/></Button></div><p className="mt-2 text-muted-foreground">{currentMantra.description}</p>
+        <div className="mt-5 flex justify-center gap-2"><Button size="sm" variant={script==='devanagari'?'default':'outline'} onClick={()=>setScript('devanagari')}><Languages className="mr-1 h-4 w-4"/>देवनागरी</Button><Button size="sm" variant={script==='iast'?'default':'outline'} onClick={()=>setScript('iast')}>IAST</Button></div>
+        <blockquote className="mantra-text my-6 rounded-lg bg-muted/50 p-4 text-center text-lg">{displayedText}</blockquote>
+        <p className="text-sm text-muted-foreground"><strong>Translation:</strong> {currentMantra.translation}</p>
+        <Button className="mt-5" variant="outline" onClick={explainMantra} disabled={explaining}><Sparkles className="mr-2 h-4 w-4"/>{explaining?'Explaining…':'Explain this mantra'}</Button>
+        {explanation&&<div className="mt-4 rounded-xl border bg-orange-50/60 p-4 text-sm leading-6 dark:bg-orange-950/20"><strong>Meaning and context:</strong> {explanation}</div>}
+      </div></article>
+      <AudioPlayer text={currentMantra.text} title={currentMantra.title} onNext={handleNext} onPrevious={handlePrevious} hasNext={currentMantraIndex < catalog.length - 1} hasPrevious={currentMantraIndex > 0} />
+      <JapaCounter mantraId={currentMantra.id}/></section>
       <aside className="lg:col-span-1"><h3 className="text-xl font-bold">Mantra Library</h3><p className="mb-3 text-sm text-muted-foreground">{visibleMantras.length} matching prayers</p>
         <Input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search Shiva, Gayatri, peace…" aria-label="Search mantra library" />
         <div className="my-3 flex flex-wrap gap-2">{deities.map((item) => <Button key={item} size="sm" variant={deity === item ? 'default' : 'outline'} onClick={() => setDeity(item)}>{item}</Button>)}</div>

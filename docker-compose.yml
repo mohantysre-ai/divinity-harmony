@@ -6,4 +6,11 @@ services:
       dockerfile: Dockerfile
     ports:
       - "7800:80"
+    environment:
+      DH_DB_PATH: /data/divinity-harmony.db
+    volumes:
+      - divinity-data:/data
     restart: unless-stopped
+
+volumes:
+  divinity-data:

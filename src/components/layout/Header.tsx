@@ -15,7 +15,10 @@ import {
   LogIn,
   LogOut,
   User,
-  Bell
+  Bell,
+  Landmark,
+  MapPin,
+  Users
 } from 'lucide-react';
 import {
   DropdownMenu,
@@ -33,7 +36,10 @@ const Navigation = [
   { name: 'Home', href: '/', icon: Home },
   { name: 'Mantras', href: '/mantras', icon: BookOpen },
   { name: 'Live Darshan', href: '/darshan', icon: Video },
-  { name: 'Sacred Texts', href: '/pdf-reader', icon: FileText },
+  { name: 'Scriptures', href: '/scriptures', icon: FileText },
+  { name: 'Deities', href: '/deities', icon: Landmark },
+  { name: 'Temples', href: '/temples', icon: MapPin },
+  { name: 'Priests', href: '/priests', icon: Users },
 ];
 
 const Header = () => {
@@ -81,7 +87,7 @@ const Header = () => {
           </div>
 
           {/* Desktop navigation */}
-          <div className="hidden md:flex md:items-center md:gap-1">
+          <div className="hidden xl:flex xl:items-center xl:gap-1">
             <div className="bg-muted/50 rounded-full px-1 py-1 flex items-center mr-2">
               {Navigation.map((item) => {
                 const isActive = location.pathname === item.href;
@@ -163,7 +169,7 @@ const Header = () => {
           </div>
 
           {/* Mobile menu button */}
-          <div className="flex items-center gap-2 md:hidden">
+          <div className="flex items-center gap-2 xl:hidden">
             <Button
               variant="ghost"
               size="icon"
@@ -204,7 +210,7 @@ const Header = () => {
 
       {/* Mobile menu */}
       {mobileMenuOpen && (
-        <div className="md:hidden bg-background/90 backdrop-blur border-b border-border/40 animate-in slide-in-from-top-5">
+        <div className="xl:hidden bg-background/90 backdrop-blur border-b border-border/40 animate-in slide-in-from-top-5">
           <div className="container space-y-1 py-3">
             {Navigation.map((item) => {
               const isActive = location.pathname === item.href;

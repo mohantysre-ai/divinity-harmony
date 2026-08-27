@@ -24,6 +24,9 @@ from urllib.parse import parse_qs, urlparse
 from urllib.request import Request, urlopen
 
 from sacred_text_content import fetch_chapter, fetch_sacred_content
+from ai_explain import explain
+from db import get_profile, init_db, list_favorites, list_priests, save_japa, save_profile, set_favorite
+from panchang import daily_panchang
 
 
 SEARCH_QUERIES = (
@@ -301,6 +304,32 @@ class Handler(BaseHTTPRequestHandler):
         if path == "/api/live-darshan/health":
             self._json(200, {"ok": True, "service": "live-darshan-search"})
             return
+        if path == "/api/panchang":
+            day = query.get("date", [datetime.now(timezone.utc).date().isoformat()])[0][:10]
+            try:
+                lat = float(query.get("lat", ["20.5937"])[0])
+                lon = float(query.get("lon", ["78.9629"])[0])
+                self._json(200, daily_panchang(day, lat, lon))
+            except (ValueError, OverflowError):
+                self._json(400, {"error": "A valid date and coordinates are required."})
+            return
+        if path == "/api/priests":
+            self._json(200, {"items": list_priests()})
+            return
+        if path == "/api/profile":
+            device_id = self.headers.get("X-Device-ID", "")[:100]
+            if not device_id:
+                self._json(400, {"error": "Device identity is required."})
+            else:
+                self._json(200, get_profile(device_id))
+            return
+        if path == "/api/favorites":
+            device_id = self.headers.get("X-Device-ID", "")[:100]
+            if not device_id:
+                self._json(400, {"error": "Device identity is required."})
+            else:
+                self._json(200, {"items": list_favorites(device_id)})
+            return
         if path == "/api/sacred-texts/content":
             title = query.get("title", [""])[0].strip()[:180]
             category = query.get("category", [""])[0].strip()[:80]
@@ -342,11 +371,54 @@ class Handler(BaseHTTPRequestHandler):
                 },
             )
 
+    def _read_json(self) -> dict[str, Any]:
+        try:
+            length = min(int(self.headers.get("Content-Length", "0")), 100_000)
+            payload = json.loads(self.rfile.read(length) or b"{}")
+            return payload if isinstance(payload, dict) else {}
+        except (ValueError, json.JSONDecodeError):
+            return {}
+
+    def do_POST(self) -> None:  # noqa: N802 - BaseHTTPRequestHandler API
+        path = urlparse(self.path).path
+        payload = self._read_json()
+        device_id = self.headers.get("X-Device-ID", "")[:100]
+        if path == "/api/explain":
+            text = str(payload.get("text", "")).strip()
+            word = str(payload.get("word", "")).strip()
+            if not text and not word:
+                self._json(400, {"error": "Text or a word is required."})
+                return
+            try:
+                self._json(200, explain(text, word))
+            except Exception:
+                self._json(503, {"error": "Explanation is temporarily unavailable."})
+            return
+        if not device_id:
+            self._json(400, {"error": "Device identity is required."})
+            return
+        if path == "/api/profile":
+            self._json(200, save_profile(device_id, payload))
+            return
+        if path == "/api/japa":
+            try:
+                result = save_japa(device_id, str(payload.get("mantraId", "")), int(payload.get("count", 0)), str(payload.get("date", "")))
+                self._json(200, result)
+            except (TypeError, ValueError):
+                self._json(400, {"error": "Valid mantra, count, and date values are required."})
+            return
+        if path == "/api/favorites":
+            items = set_favorite(device_id, str(payload.get("resourceType", "mantra")), str(payload.get("resourceId", "")), bool(payload.get("active", True)))
+            self._json(200, {"items": items})
+            return
+        self._json(404, {"error": "Not found"})
+
     def log_message(self, message: str, *args: Any) -> None:
         print(f"live-darshan-api: {message % args}", flush=True)
 
 
 if __name__ == "__main__":
+    init_db()
     server = ThreadingHTTPServer(("127.0.0.1", PORT), Handler)
     print(f"live-darshan-api: listening on 127.0.0.1:{PORT}", flush=True)
     server.serve_forever()
