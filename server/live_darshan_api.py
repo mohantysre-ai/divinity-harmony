@@ -14,6 +14,7 @@ import json
 import os
 import threading
 import time
+import re
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime, timezone
 from html.parser import HTMLParser
@@ -25,7 +26,7 @@ from urllib.request import Request, urlopen
 
 from sacred_text_content import fetch_chapter, fetch_sacred_content
 from ai_explain import explain
-from db import get_profile, init_db, list_favorites, list_priests, save_japa, save_profile, set_favorite
+from db import get_profile, init_db, list_favorites, list_priests, save_japa, save_profile, set_favorite, subscribe_newsletter
 from panchang import daily_panchang
 
 
@@ -393,6 +394,13 @@ class Handler(BaseHTTPRequestHandler):
                 self._json(200, explain(text, word))
             except Exception:
                 self._json(503, {"error": "Explanation is temporarily unavailable."})
+            return
+        if path == "/api/newsletter":
+            email = str(payload.get("email", "")).strip().lower()
+            if len(email) > 254 or not re.fullmatch(r"[^\s@]+@[^\s@]+\.[^\s@]+", email):
+                self._json(400, {"error": "A valid email address is required."})
+                return
+            self._json(200, subscribe_newsletter(email))
             return
         if not device_id:
             self._json(400, {"error": "Device identity is required."})

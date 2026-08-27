@@ -39,6 +39,13 @@ class PlatformFeatureTests(unittest.TestCase):
         self.assertIn(result["source"], {"glossary", "cache"})
         self.assertTrue(result["explanation"])
 
+    def test_newsletter_subscription_is_idempotent(self):
+        first = db.subscribe_newsletter(" Devotee@Example.com ")
+        second = db.subscribe_newsletter("devotee@example.com")
+        self.assertTrue(first["subscribed"])
+        self.assertFalse(first["alreadySubscribed"])
+        self.assertTrue(second["alreadySubscribed"])
+
 
 if __name__ == "__main__":
     unittest.main()

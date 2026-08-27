@@ -14,6 +14,7 @@ import DeitiesPage from "./pages/DeitiesPage";
 import TemplesPage from "./pages/TemplesPage";
 import PriestDirectoryPage from "./pages/PriestDirectoryPage";
 import { AuthProvider } from "./hooks/use-auth";
+import LegalPage from "./pages/LegalPage";
 
 const queryClient = new QueryClient();
 
@@ -36,6 +37,7 @@ const App = () => (
             <Route path="/priests" element={<PriestDirectoryPage />} />
             <Route path="/settings" element={<UserSettings />} />
             <Route path="/login" element={<SplashScreen />} />
+            <Route path="/legal/:type" element={<LegalPage />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

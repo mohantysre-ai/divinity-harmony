@@ -51,6 +51,10 @@ def init_db() -> None:
         CREATE TABLE IF NOT EXISTS explain_cache (
           cache_key TEXT PRIMARY KEY, response TEXT NOT NULL, updated_at TEXT NOT NULL
         );
+        CREATE TABLE IF NOT EXISTS newsletter_subscribers (
+          email TEXT PRIMARY KEY, status TEXT NOT NULL DEFAULT 'active',
+          consent_at TEXT NOT NULL, source TEXT NOT NULL DEFAULT 'website'
+        );
         """)
         db.executemany(
             "INSERT OR IGNORE INTO priests(id,name,city,state,languages,services,verified) VALUES(?,?,?,?,?,?,1)",
@@ -142,3 +146,15 @@ def cached_explanation(key: str) -> str | None:
 def cache_explanation(key: str, response: str) -> None:
     with connect() as db:
         db.execute("INSERT OR REPLACE INTO explain_cache(cache_key,response,updated_at) VALUES(?,?,?)", (key, response, now()))
+
+
+def subscribe_newsletter(email: str) -> dict:
+    normalized = email.strip().lower()
+    with connect() as db:
+        existing = db.execute("SELECT status FROM newsletter_subscribers WHERE email=?", (normalized,)).fetchone()
+        db.execute(
+            """INSERT INTO newsletter_subscribers(email,status,consent_at,source) VALUES(?,?,?,?)
+               ON CONFLICT(email) DO UPDATE SET status='active',consent_at=excluded.consent_at""",
+            (normalized, "active", now(), "website"),
+        )
+    return {"subscribed": True, "alreadySubscribed": bool(existing and existing["status"] == "active")}
