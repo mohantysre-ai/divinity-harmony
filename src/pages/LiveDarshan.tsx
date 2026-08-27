@@ -11,7 +11,7 @@ const POLL_MS = 5 * 60 * 1000;
 const LiveDarshan = () => {
   const [darshans, setDarshans] = useState<LiveDarshanItem[]>([]);
   const [selected, setSelected] = useState<LiveDarshanItem | null>(null);
-  const [message, setMessage] = useState('Searching YouTube for live temple darshan...');
+  const [message, setMessage] = useState('Searching live temple sources...');
   const [loading, setLoading] = useState(true);
 
   const refresh = useCallback(async () => {
@@ -23,10 +23,10 @@ const LiveDarshan = () => {
       setSelected((current) => live.find((item) => item.videoId === current?.videoId) || live[0] || null);
       if (live.length) {
         setMessage(
-          `${live.length} stream${live.length === 1 ? '' : 's'} currently marked LIVE by YouTube${feed.stale ? ' (last successful search)' : ''}.`,
+          `${live.length} stream${live.length === 1 ? '' : 's'} currently marked LIVE across connected sources${feed.stale ? ' (last successful search)' : ''}.`,
         );
       } else {
-        setMessage('YouTube currently reports no matching live temple stream. This page will search again automatically.');
+        setMessage('Connected sources currently report no matching live temple stream. This page will search again automatically.');
       }
     } catch (error) {
       setMessage(error instanceof Error ? error.message : 'Unable to search live streams right now.');
@@ -48,12 +48,12 @@ const LiveDarshan = () => {
           <div className="mb-8 text-center">
             <div className="mb-2 flex justify-center gap-2 text-sm font-semibold text-red-600">
               <Radio className="h-4 w-4 animate-pulse" />
-              LIVE NOW <span aria-hidden="true">•</span> YOUTUBE DISCOVERY
+              LIVE NOW <span aria-hidden="true">•</span> MULTI-SOURCE DISCOVERY
             </div>
             <h1 className="text-3xl font-bold md:text-4xl">Live Temple Darshan</h1>
             <p className="mx-auto mt-3 max-w-2xl text-muted-foreground">
-              Current live results are discovered directly from YouTube temple and darshan searches. There is no
-              fixed temple list, no visitor API key, and results refresh every five minutes.
+              Current streams are discovered from YouTube live search and the LiveDarshanHub temple directory. There
+              is no visitor API key, duplicate streams are removed, and results refresh every five minutes.
             </p>
             <div className="mt-4 flex justify-center">
               <Button variant="outline" onClick={() => void refresh()} disabled={loading}>
@@ -88,8 +88,8 @@ const LiveDarshan = () => {
                   </div>
                   {selected.description && <p className="mt-3 line-clamp-3 text-sm text-muted-foreground">{selected.description}</p>}
                   <p className="mt-3 text-xs text-muted-foreground">
-                    YouTube marked this stream LIVE at the last refresh. This is a community-discovered link; use
-                    judgement before donations or transactions.
+                    This stream was marked LIVE by {selected.source === 'live-darshan-hub' ? 'LiveDarshanHub' : 'YouTube'} at the last refresh.
+                    {' '}Use judgement before donations or transactions.
                   </p>
                 </div>
               </section>

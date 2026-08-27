@@ -9,7 +9,8 @@ export type LiveDarshan = {
   thumbnailUrl?: string;
   url?: string;
   embedUrl?: string;
-  source?: 'youtube-live-search';
+  source?: 'youtube-live-search' | 'live-darshan-hub';
+  sourcePage?: string;
 };
 
 export type LiveDarshanFeed = {

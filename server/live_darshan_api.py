@@ -16,6 +16,7 @@ import threading
 import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime, timezone
+from html.parser import HTMLParser
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from typing import Any, Iterator
 from urllib.parse import urlencode
@@ -38,6 +39,7 @@ SEARCH_QUERIES = (
     "लाइव आरती दर्शन",
 )
 YOUTUBE_SEARCH_URL = "https://www.youtube.com/results"
+LIVE_DARSHAN_HUB_URL = "https://livedarshanhub.com/live-darshan/"
 LIVE_FILTER = "EgJAAQ=="
 CACHE_SECONDS = int(os.environ.get("LIVE_DARSHAN_CACHE_SECONDS", "300"))
 REQUEST_TIMEOUT_SECONDS = int(os.environ.get("LIVE_DARSHAN_TIMEOUT_SECONDS", "20"))
@@ -162,6 +164,68 @@ def fetch_query(query: str) -> list[dict[str, Any]]:
     return parse_live_results(extract_initial_data(page))
 
 
+class LiveDarshanHubParser(HTMLParser):
+    """Read only the cards that LiveDarshanHub publishes in its live grid."""
+
+    def __init__(self) -> None:
+        super().__init__()
+        self.items: list[dict[str, Any]] = []
+        self.images: dict[str, str] = {}
+        self.seen: set[str] = set()
+
+    def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
+        values = {key: html.unescape(value or "") for key, value in attrs}
+        if tag == "img" and "ldh-ld-card__img" in values.get("class", ""):
+            title = values.get("alt", "").strip()
+            source = values.get("src", "").strip()
+            if title and source:
+                self.images[title] = source
+            return
+        if tag != "button" or "ldh-ld-card__play-btn" not in values.get("class", ""):
+            return
+        video_id = values.get("data-video", "").strip()
+        title = values.get("data-title", "").strip()
+        if not video_id or not title or video_id in self.seen:
+            return
+        self.seen.add(video_id)
+        location = values.get("data-location", "").strip()
+        deity = values.get("data-deity", "").strip()
+        about = values.get("data-about", "").strip()
+        self.items.append({
+            "videoId": video_id,
+            "title": title,
+            "description": about or f"Live darshan from {title}",
+            "channelTitle": " · ".join(filter(None, (deity, location))) or "Temple live stream",
+            "channelId": "",
+            "thumbnailUrl": self.images.get(title, ""),
+            "watchingNow": "",
+            "startedAt": "",
+            "url": f"https://www.youtube.com/watch?v={video_id}",
+            "embedUrl": f"https://www.youtube-nocookie.com/embed/{video_id}?autoplay=1&rel=0",
+            "source": "live-darshan-hub",
+            "sourcePage": values.get("data-url", LIVE_DARSHAN_HUB_URL),
+        })
+
+
+def parse_live_darshan_hub(page: str) -> list[dict[str, Any]]:
+    parser = LiveDarshanHubParser()
+    parser.feed(page)
+    return parser.items
+
+
+def fetch_live_darshan_hub() -> list[dict[str, Any]]:
+    request = Request(
+        LIVE_DARSHAN_HUB_URL,
+        headers={
+            "User-Agent": "DivinityHarmony/1.0 (+https://github.com/mohantysre-ai/divinity-harmony)",
+            "Accept-Language": "en-IN,en;q=0.9",
+        },
+    )
+    with urlopen(request, timeout=REQUEST_TIMEOUT_SECONDS) as response:
+        page = response.read().decode("utf-8", errors="replace")
+    return parse_live_darshan_hub(page)
+
+
 class LiveSearchCache:
     def __init__(self) -> None:
         self._lock = threading.Lock()
@@ -178,17 +242,21 @@ class LiveSearchCache:
         items: dict[str, dict[str, Any]] = {}
         errors: list[str] = []
         successful_queries = 0
-        with ThreadPoolExecutor(max_workers=min(5, len(SEARCH_QUERIES))) as executor:
-            futures = {executor.submit(fetch_query, query): query for query in SEARCH_QUERIES}
+        discovery_jobs: list[tuple[str, Any, tuple[Any, ...]]] = [
+            (f"youtube:{query}", fetch_query, (query,)) for query in SEARCH_QUERIES
+        ]
+        discovery_jobs.append(("live-darshan-hub", fetch_live_darshan_hub, ()))
+        with ThreadPoolExecutor(max_workers=min(6, len(discovery_jobs))) as executor:
+            futures = {executor.submit(callback, *args): name for name, callback, args in discovery_jobs}
             for future in as_completed(futures):
-                query = futures[future]
+                source_name = futures[future]
                 try:
                     query_items = future.result()
                     successful_queries += 1
                     for item in query_items:
                         items.setdefault(item["videoId"], item)
                 except Exception as exc:  # Network/parser errors are summarized for the UI.
-                    errors.append(f"{query}: {type(exc).__name__}")
+                    errors.append(f"{source_name}: {type(exc).__name__}")
 
         with self._lock:
             if successful_queries:
@@ -206,9 +274,9 @@ class LiveSearchCache:
         return {
             "updatedAt": updated,
             "items": self._items,
-            "source": "youtube-live-search",
+            "source": "multi-source-live-search",
             "stale": stale,
-            "queryCount": len(SEARCH_QUERIES),
+            "queryCount": len(SEARCH_QUERIES) + 1,
             "error": self._last_error if stale else None,
         }
 

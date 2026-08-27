@@ -65,6 +65,22 @@ class LiveDarshanParserTests(unittest.TestCase):
         }
         self.assertEqual(api.parse_live_results(data)[0]["videoId"], "overlayLive1")
 
+    def test_parses_live_darshan_hub_cards_and_deduplicates_buttons(self):
+        page = '''
+        <article class="ldh-ld-card">
+          <img class="ldh-ld-card__img" src="https://example.com/temple.jpg" alt="Shree Temple">
+          <button class="ldh-ld-card__play-btn" data-video="abc123" data-title="Shree Temple"
+            data-location="Puri, Odisha" data-deity="Jagannath" data-about="Daily temple darshan"
+            data-url="https://livedarshanhub.com/temple/shree-temple/"></button>
+          <button class="ldh-ld-card__play-btn" data-video="abc123" data-title="Shree Temple"></button>
+        </article>
+        '''
+        results = api.parse_live_darshan_hub(page)
+        self.assertEqual(len(results), 1)
+        self.assertEqual(results[0]["videoId"], "abc123")
+        self.assertEqual(results[0]["thumbnailUrl"], "https://example.com/temple.jpg")
+        self.assertEqual(results[0]["source"], "live-darshan-hub")
+
 
 if __name__ == "__main__":
     unittest.main()
