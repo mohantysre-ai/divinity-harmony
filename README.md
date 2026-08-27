@@ -99,8 +99,36 @@ cp .env.example .env
 | `VITE_MANTRA_CATALOG_URL` | No | Merges a hosted, validated mantra JSON catalog with bundled content. |
 | `VITE_LIVE_DARSHAN_FEED_URL` | No | Uses an alternative public Live Darshan feed. |
 | `VITE_SUPPORT_URL` | No | Displays an optional external donation/support destination. |
+| `VITE_SUPABASE_URL` | For accounts | Supabase project URL used by browser authentication. |
+| `VITE_SUPABASE_PUBLISHABLE_KEY` | For accounts | Supabase publishable key. The legacy anon key is also accepted. |
 
 Visitors do not need to provide an API key.
+
+## Supabase authentication and profile photos
+
+Login, registration, password recovery, persistent sessions, profile metadata and
+avatar uploads use Supabase. Guest browsing and local preferences continue to
+work when Supabase is not configured.
+
+1. Create a Supabase project.
+2. Open **SQL Editor** and run [`supabase/setup.sql`](supabase/setup.sql). This
+   creates the public `avatars` bucket, limits images to 2 MB and installs
+   row-level policies so authenticated users can modify only their own folder.
+3. In **Authentication → URL Configuration**, set the Site URL to
+   `https://mantra.sigq.in` and add
+   `https://mantra.sigq.in/settings` as a redirect URL.
+4. Add these deployment variables:
+
+```env
+VITE_SUPABASE_URL=https://YOUR_PROJECT.supabase.co
+VITE_SUPABASE_PUBLISHABLE_KEY=YOUR_PUBLISHABLE_KEY
+```
+
+5. Rebuild the frontend. Vite variables are embedded at build time, so restarting
+   an old image is not sufficient.
+
+The publishable key is intended for browser use. Never put a Supabase
+`service_role` key in this application or in any `VITE_*` variable.
 
 ## Mantra catalog
 

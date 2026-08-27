@@ -1,9 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useRef, useState, type FormEvent } from 'react';
+import { Camera, Loader2, LogIn, LogOut, ShieldCheck, UserRound } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
 import Layout from '@/components/layout/Layout';
 import { ThemeProvider } from '@/hooks/use-theme';
 import { useTheme } from '@/hooks/theme-context';
+import { useAuth } from '@/hooks/use-auth';
+import { supabase } from '@/lib/supabase';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
@@ -11,212 +15,23 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { useToast } from '@/components/ui/use-toast';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Separator } from '@/components/ui/separator';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { deviceHeaders } from '@/lib/device';
 
-const UserSettings = () => {
-  const { toast } = useToast();
-  const { theme, setTheme } = useTheme();
-  
-  // State for user settings
-  const [name, setName] = useState('');
-  const [gotra, setGotra] = useState('');
-  const [notifications, setNotifications] = useState(true);
-  const [autoplay, setAutoplay] = useState(false);
-  const [language, setLanguage] = useState('english');
-
-  useEffect(() => {
-    void fetch('/api/profile', { headers: deviceHeaders() }).then((response) => response.json()).then((profile) => {
-      setName(profile.name || ''); setGotra(profile.gotra || ''); setLanguage(profile.language || 'english');
-    }).catch(() => undefined);
-    setAutoplay(localStorage.getItem('preference:autoplay') === 'true');
-    setNotifications(localStorage.getItem('preference:notifications') !== 'false');
-  }, []);
-  
-  // Form submission handler
-  const handleSaveProfile = async (e: React.FormEvent) => {
-    e.preventDefault();
-    const response = await fetch('/api/profile', { method: 'POST', headers: deviceHeaders(), body: JSON.stringify({ name, gotra, language }) });
-    toast({
-      title: response.ok ? "Profile Updated" : "Unable to save",
-      description: response.ok ? "Your profile is saved to this device identity." : "Please try again.",
-    });
-  };
-  
-  const handleSavePreferences = (e: React.FormEvent) => {
-    e.preventDefault();
-    localStorage.setItem('preference:autoplay', String(autoplay));
-    localStorage.setItem('preference:notifications', String(notifications));
-    toast({
-      title: "Preferences Updated",
-      description: "Your preferences have been saved.",
-    });
-  };
-
-  return (
-    <ThemeProvider>
-      <Layout>
-        <div className="container mx-auto py-8">
-          <h1 className="text-3xl font-bold mb-6">User Settings</h1>
-          
-          <Tabs defaultValue="profile" className="w-full">
-            <TabsList className="mb-6">
-              <TabsTrigger value="profile">Profile</TabsTrigger>
-              <TabsTrigger value="preferences">Preferences</TabsTrigger>
-              <TabsTrigger value="notifications">Notifications</TabsTrigger>
-            </TabsList>
-            
-            <TabsContent value="profile">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Profile Information</CardTitle>
-                  <CardDescription>
-                    Update your personal information and how others see you on the platform.
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <form onSubmit={handleSaveProfile} className="space-y-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="name">Name</Label>
-                      <Input 
-                        id="name" 
-                        value={name} 
-                        onChange={(e) => setName(e.target.value)} 
-                        placeholder="Your name"
-                      />
-                    </div>
-                    
-                    <div className="space-y-2">
-                      <Label htmlFor="gotra">Gotra or family tradition (optional)</Label>
-                      <Input 
-                        id="gotra"
-                        value={gotra}
-                        onChange={(e) => setGotra(e.target.value)}
-                        placeholder="Enter only if known"
-                      />
-                    </div>
-                    
-                    <div className="space-y-2">
-                      <Label htmlFor="language">Preferred Language</Label>
-                      <Select value={language} onValueChange={setLanguage}>
-                        <SelectTrigger id="language">
-                          <SelectValue placeholder="Select language" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="english">English</SelectItem>
-                          <SelectItem value="hindi">Hindi</SelectItem>
-                          <SelectItem value="sanskrit">Sanskrit</SelectItem>
-                          <SelectItem value="tamil">Tamil</SelectItem>
-                          <SelectItem value="telugu">Telugu</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    
-                    <Button type="submit">Save Profile</Button>
-                  </form>
-                </CardContent>
-              </Card>
-            </TabsContent>
-            
-            <TabsContent value="preferences">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Appearance & Preferences</CardTitle>
-                  <CardDescription>
-                    Customize how the application looks and behaves.
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <form onSubmit={handleSavePreferences} className="space-y-6">
-                    <div className="space-y-4">
-                      <div className="flex items-center justify-between">
-                        <div className="space-y-0.5">
-                          <Label htmlFor="theme">Dark Theme</Label>
-                          <p className="text-sm text-muted-foreground">
-                            Enable dark mode for a comfortable viewing experience in low light.
-                          </p>
-                        </div>
-                        <Switch 
-                          id="theme"
-                          checked={theme === 'dark'}
-                          onCheckedChange={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-                        />
-                      </div>
-                      
-                      <Separator />
-                      
-                      <div className="flex items-center justify-between">
-                        <div className="space-y-0.5">
-                          <Label htmlFor="autoplay">Autoplay Media</Label>
-                          <p className="text-sm text-muted-foreground">
-                            Automatically play audio and video content when available.
-                          </p>
-                        </div>
-                        <Switch 
-                          id="autoplay"
-                          checked={autoplay}
-                          onCheckedChange={setAutoplay}
-                        />
-                      </div>
-                    </div>
-                    
-                    <Button type="submit">Save Preferences</Button>
-                  </form>
-                </CardContent>
-              </Card>
-            </TabsContent>
-            
-            <TabsContent value="notifications">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Notification Settings</CardTitle>
-                  <CardDescription>
-                    Manage your notification preferences.
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <form className="space-y-6">
-                    <div className="space-y-4">
-                      <div className="flex items-center justify-between">
-                        <div className="space-y-0.5">
-                          <Label htmlFor="notifications">Enable Notifications</Label>
-                          <p className="text-sm text-muted-foreground">
-                            Receive notifications about new content and events.
-                          </p>
-                        </div>
-                        <Switch 
-                          id="notifications"
-                          checked={notifications}
-                          onCheckedChange={setNotifications}
-                        />
-                      </div>
-                      
-                      <Separator />
-                      
-                      <div className="flex items-center justify-between opacity-50" style={{ pointerEvents: notifications ? 'auto' : 'none' }}>
-                        <div className="space-y-0.5">
-                          <Label htmlFor="email-notifications">Email Notifications</Label>
-                          <p className="text-sm text-muted-foreground">
-                            Receive updates via email.
-                          </p>
-                        </div>
-                        <Switch 
-                          id="email-notifications"
-                          checked={notifications}
-                          onCheckedChange={setNotifications}
-                        />
-                      </div>
-                    </div>
-                    
-                    <Button type="submit">Save Notification Settings</Button>
-                  </form>
-                </CardContent>
-              </Card>
-            </TabsContent>
-          </Tabs>
-        </div>
-      </Layout>
-    </ThemeProvider>
-  );
-};
-
-export default UserSettings;
+export default function UserSettings(){
+ const{toast}=useToast();const{theme,setTheme}=useTheme();const{user,loading,configured,signOut}=useAuth();const navigate=useNavigate();const fileRef=useRef<HTMLInputElement>(null);
+ const[name,setName]=useState('');const[gotra,setGotra]=useState('');const[language,setLanguage]=useState('english');const[avatar,setAvatar]=useState('');const[uploading,setUploading]=useState(false);const[notifications,setNotifications]=useState(true);const[autoplay,setAutoplay]=useState(false);
+ useEffect(()=>{if(user){setName(String(user.user_metadata?.display_name||''));setGotra(String(user.user_metadata?.gotra||''));setLanguage(String(user.user_metadata?.language||'english'));setAvatar(String(user.user_metadata?.avatar_url||''));}else if(!loading){void fetch('/api/profile',{headers:deviceHeaders()}).then(r=>r.json()).then(p=>{setName(p.name||'');setGotra(p.gotra||'');setLanguage(p.language||'english');}).catch(()=>undefined);}setAutoplay(localStorage.getItem('preference:autoplay')==='true');setNotifications(localStorage.getItem('preference:notifications')!=='false');},[user,loading]);
+ const saveProfile=async(e:FormEvent)=>{e.preventDefault();if(user&&supabase){const{error}=await supabase.auth.updateUser({data:{display_name:name.trim(),gotra:gotra.trim(),language,avatar_url:avatar}});toast({title:error?'Unable to save':'Profile updated',description:error?.message||'Your Supabase profile is synchronized across devices.',variant:error?'destructive':'default'});return;}const response=await fetch('/api/profile',{method:'POST',headers:deviceHeaders(),body:JSON.stringify({name,gotra,language})});toast({title:response.ok?'Guest profile saved':'Unable to save',description:response.ok?'Saved only in this browser identity. Sign in to synchronize it.':'Please try again.',variant:response.ok?'default':'destructive'});};
+ const uploadAvatar=async(file?:File)=>{if(!file||!user||!supabase)return;if(!file.type.startsWith('image/')||file.size>2*1024*1024){toast({title:'Choose a JPG, PNG or WebP under 2 MB',variant:'destructive'});return;}setUploading(true);const extension=(file.name.split('.').pop()||'jpg').toLowerCase().replace(/[^a-z0-9]/g,'');const path=`${user.id}/avatar.${extension}`;const{error}=await supabase.storage.from('avatars').upload(path,file,{upsert:true,contentType:file.type,cacheControl:'3600'});if(error){setUploading(false);toast({title:'Avatar upload failed',description:error.message,variant:'destructive'});return;}const{data}=supabase.storage.from('avatars').getPublicUrl(path);const url=`${data.publicUrl}?v=${Date.now()}`;const{error:updateError}=await supabase.auth.updateUser({data:{avatar_url:url}});setUploading(false);if(updateError){toast({title:'Avatar update failed',description:updateError.message,variant:'destructive'});return;}setAvatar(url);toast({title:'Profile photo updated'});};
+ const savePreferences=(e:FormEvent)=>{e.preventDefault();localStorage.setItem('preference:autoplay',String(autoplay));localStorage.setItem('preference:notifications',String(notifications));toast({title:'Preferences updated'});};
+ const initials=(name||user?.email||'DH').slice(0,2).toUpperCase();
+ return <ThemeProvider><Layout><main className="container mx-auto px-4 py-10"><div className="mb-7"><p className="text-xs font-semibold uppercase tracking-[.2em] text-orange-700">Your account</p><h1 className="mt-2 text-4xl font-bold">User Settings</h1><p className="mt-2 text-muted-foreground">{user?'Your account is connected securely through Supabase.':'Guest preferences remain on this browser.'}</p></div>
+ {!configured&&<div className="mb-6 rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900">Supabase is not configured in this deployment. Add the two public environment variables described in the README.</div>}
+ <Tabs defaultValue="profile"><TabsList className="mb-6"><TabsTrigger value="profile">Profile</TabsTrigger><TabsTrigger value="preferences">Preferences</TabsTrigger><TabsTrigger value="account">Account</TabsTrigger></TabsList>
+ <TabsContent value="profile"><Card className="overflow-hidden rounded-3xl"><div className="h-24 bg-gradient-to-r from-orange-800 via-red-800 to-amber-700"/><CardContent className="-mt-12 pb-8"><div className="mb-7 flex flex-col gap-5 sm:flex-row sm:items-end"><div className="relative w-fit"><Avatar className="h-28 w-28 border-4 border-background shadow-xl"><AvatarImage src={avatar} alt={name||'Profile photo'}/><AvatarFallback className="text-2xl">{initials}</AvatarFallback></Avatar>{user&&<><input ref={fileRef} className="hidden" type="file" accept="image/jpeg,image/png,image/webp" onChange={e=>void uploadAvatar(e.target.files?.[0])}/><Button type="button" size="icon" disabled={uploading} onClick={()=>fileRef.current?.click()} className="absolute bottom-0 right-0 rounded-full">{uploading?<Loader2 className="h-4 w-4 animate-spin"/>:<Camera className="h-4 w-4"/>}</Button></>}</div><div className="pb-2"><h2 className="text-2xl font-bold">{name||'Devotee'}</h2><p className="text-sm text-muted-foreground">{user?.email||'Guest profile'}</p>{user&&<span className="mt-2 inline-flex items-center text-xs font-medium text-emerald-700"><ShieldCheck className="mr-1 h-3.5 w-3.5"/>Authenticated profile</span>}</div></div>{!user&&<div className="mb-6 flex flex-col items-start justify-between gap-3 rounded-2xl bg-orange-50 p-4 sm:flex-row sm:items-center dark:bg-orange-950/20"><div><p className="font-semibold">Synchronize your profile and photo</p><p className="text-sm text-muted-foreground">Sign in to use secure cross-device storage.</p></div><Button asChild><Link to="/login"><LogIn className="mr-2 h-4 w-4"/>Sign in</Link></Button></div>}
+ <form onSubmit={saveProfile} className="grid gap-5 md:grid-cols-2"><div className="space-y-2"><Label htmlFor="name">Display name</Label><Input id="name" value={name} onChange={e=>setName(e.target.value)} placeholder="Your name"/></div><div className="space-y-2"><Label htmlFor="gotra">Gotra or family tradition (optional)</Label><Input id="gotra" value={gotra} onChange={e=>setGotra(e.target.value)} placeholder="Enter only if known"/></div><div className="space-y-2"><Label>Preferred language</Label><Select value={language} onValueChange={setLanguage}><SelectTrigger><SelectValue/></SelectTrigger><SelectContent>{['english','hindi','sanskrit','tamil','telugu','odia','bengali','marathi','kannada','gujarati'].map(x=><SelectItem key={x} value={x}>{x[0].toUpperCase()+x.slice(1)}</SelectItem>)}</SelectContent></Select></div><div className="flex items-end"><Button type="submit" className="w-full md:w-auto">Save profile</Button></div></form></CardContent></Card></TabsContent>
+ <TabsContent value="preferences"><Card className="rounded-3xl"><CardHeader><CardTitle>Appearance and playback</CardTitle><CardDescription>These preferences remain available even when browsing as a guest.</CardDescription></CardHeader><CardContent><form onSubmit={savePreferences} className="space-y-6"><div className="flex items-center justify-between"><div><Label>Dark theme</Label><p className="text-sm text-muted-foreground">Use the darker devotional palette.</p></div><Switch checked={theme==='dark'} onCheckedChange={()=>setTheme(theme==='dark'?'light':'dark')}/></div><Separator/><div className="flex items-center justify-between"><div><Label>Autoplay media</Label><p className="text-sm text-muted-foreground">Start available recordings automatically.</p></div><Switch checked={autoplay} onCheckedChange={setAutoplay}/></div><Separator/><div className="flex items-center justify-between"><div><Label>Notifications</Label><p className="text-sm text-muted-foreground">Remember your notification preference.</p></div><Switch checked={notifications} onCheckedChange={setNotifications}/></div><Button type="submit">Save preferences</Button></form></CardContent></Card></TabsContent>
+ <TabsContent value="account"><Card className="rounded-3xl"><CardHeader><CardTitle>Account security</CardTitle><CardDescription>{user?'Your session is managed and refreshed by Supabase Auth.':'Sign in to access account security.'}</CardDescription></CardHeader><CardContent>{loading?<Loader2 className="h-5 w-5 animate-spin"/>:user?<div className="space-y-5"><div className="flex items-center gap-3 rounded-2xl border p-4"><UserRound className="h-5 w-5 text-orange-700"/><div><p className="font-medium">{user.email}</p><p className="text-xs text-muted-foreground">User ID: {user.id}</p></div></div><Button variant="destructive" onClick={()=>void signOut().then(()=>navigate('/'))}><LogOut className="mr-2 h-4 w-4"/>Sign out</Button></div>:<Button asChild><Link to="/login"><LogIn className="mr-2 h-4 w-4"/>Sign in or create account</Link></Button>}</CardContent></Card></TabsContent>
+ </Tabs></main></Layout></ThemeProvider>;
+}

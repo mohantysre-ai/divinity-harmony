@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useTheme } from '@/hooks/theme-context';
 import { Button } from '@/components/ui/button';
@@ -14,7 +14,6 @@ import {
   Settings,
   LogIn,
   LogOut,
-  User,
   Bell,
   Landmark,
   MapPin,
@@ -30,7 +29,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useToast } from '@/components/ui/use-toast';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
+import { useAuth } from '@/hooks/use-auth';
 
 const Navigation = [
   { name: 'Home', href: '/', icon: Home },
@@ -45,26 +44,21 @@ const Navigation = [
 const Header = () => {
   const { theme, setTheme } = useTheme();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const { user, signOut } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
   const location = useLocation();
   
-  // Check if user is logged in
-  useEffect(() => {
-    const loggedInStatus = localStorage.getItem('isLoggedIn');
-    if (loggedInStatus === 'true') {
-      setIsLoggedIn(true);
-    }
-  }, []);
+  const displayName=String(user?.user_metadata?.display_name||user?.email?.split('@')[0]||'Devotee');
+  const avatarUrl=String(user?.user_metadata?.avatar_url||'');
+  const initials=displayName.slice(0,2).toUpperCase();
   
   const handleLogin = () => {
     navigate('/login');
   };
   
-  const handleLogout = () => {
-    localStorage.removeItem('isLoggedIn');
-    setIsLoggedIn(false);
+  const handleLogout = async () => {
+    await signOut();
     toast({
       title: "Logged Out",
       description: "You have been successfully logged out.",
@@ -125,17 +119,17 @@ const Header = () => {
             </Button>
           
             {/* User account menu */}
-            {isLoggedIn ? (
+            {user ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" size="sm" className="flex items-center gap-2 px-2 hover:bg-background/80">
                     <Avatar className="h-8 w-8">
-                      <AvatarImage src="https://i.pravatar.cc/150?img=30" />
-                      <AvatarFallback>DH</AvatarFallback>
+                      <AvatarImage src={avatarUrl} alt={displayName} />
+                      <AvatarFallback>{initials}</AvatarFallback>
                     </Avatar>
                     <div className="flex flex-col items-start text-xs">
-                      <span className="font-medium">Devotee</span>
-                      <span className="text-muted-foreground">User</span>
+                      <span className="max-w-24 truncate font-medium">{displayName}</span>
+                      <span className="text-muted-foreground">Signed in</span>
                     </div>
                   </Button>
                 </DropdownMenuTrigger>
@@ -179,11 +173,8 @@ const Header = () => {
               {theme === 'dark' ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
             </Button>
             
-            {isLoggedIn ? (
-              <Avatar className="h-8 w-8">
-                <AvatarImage src="https://i.pravatar.cc/150?img=30" />
-                <AvatarFallback>DH</AvatarFallback>
-              </Avatar>
+            {user ? (
+              <Link to="/settings"><Avatar className="h-8 w-8"><AvatarImage src={avatarUrl} alt={displayName}/><AvatarFallback>{initials}</AvatarFallback></Avatar></Link>
             ) : (
               <Button
                 variant="default"
@@ -238,7 +229,7 @@ const Header = () => {
               <Settings className="h-5 w-5 mr-3" />
               Settings
             </Link>
-            {isLoggedIn && (
+            {user && (
               <Button 
                 variant="ghost" 
                 className="w-full justify-start px-3 py-2.5 text-sm font-medium rounded-lg text-destructive hover:bg-destructive/10 hover:text-destructive"
