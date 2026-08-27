@@ -131,13 +131,16 @@
   .home-arch-border { height: 18px; background: radial-gradient(18px 14px at 50% 100%, transparent 69%, rgba(154,52,18,.18) 71% 78%, transparent 80%) 0 0/36px 18px repeat-x; }
 
   .home-stars { background-image: radial-gradient(circle, rgba(251,191,36,.7) 1px, transparent 1px); background-size: 38px 38px; mask-image: linear-gradient(to bottom, black, transparent 82%); }
-  .home-moment-card { @apply relative overflow-hidden rounded-[1.75rem] border border-white/10 p-7 shadow-2xl transition-all duration-500; animation: home-rise .7s ease-out both; }
+  .home-moment-card { @apply relative overflow-hidden rounded-[1.75rem] border border-orange-950/10 p-7 text-stone-900 shadow-[0_20px_60px_-38px_rgba(120,53,15,.45)] transition-all duration-500 dark:border-white/10 dark:text-amber-50 dark:shadow-2xl; animation: home-rise .7s ease-out both; }
   .home-moment-card::before { content: ''; @apply absolute -right-16 -top-16 h-48 w-48 rounded-full bg-white/10 blur-2xl transition-transform duration-700; }
   .home-moment-card:hover { transform: translateY(-8px); border-color: rgba(251,191,36,.35); }
   .home-moment-card:hover::before { transform: scale(1.35); }
-  .home-moment-sun { background: linear-gradient(145deg, #9a3412, #c2410c); }
-  .home-moment-flame { background: linear-gradient(145deg, #7f1d1d, #991b1b); }
-  .home-moment-night { background: linear-gradient(145deg, #292524, #44403c); }
+  .home-moment-sun { background: linear-gradient(145deg, #fff7ed, #ffedd5); }
+  .home-moment-flame { background: linear-gradient(145deg, #fff1f2, #ffe4e6); }
+  .home-moment-night { background: linear-gradient(145deg, #f5f3ff, #ede9fe); }
+  .dark .home-moment-sun { background: linear-gradient(145deg, #9a3412, #c2410c); }
+  .dark .home-moment-flame { background: linear-gradient(145deg, #7f1d1d, #991b1b); }
+  .dark .home-moment-night { background: linear-gradient(145deg, #292524, #44403c); }
   .home-path { @apply overflow-hidden transition-colors duration-500 hover:bg-orange-50 dark:hover:bg-orange-950/20; }
   .home-path::after { content: ''; @apply absolute -bottom-24 -right-24 h-56 w-56 rounded-full border border-orange-800/10 transition-transform duration-700; box-shadow: 0 0 0 28px rgba(154,52,18,.035), 0 0 0 56px rgba(154,52,18,.025); }
   .home-path:hover::after { transform: translate(-18px,-18px) scale(1.08); }
