@@ -82,8 +82,7 @@ $checks = @(
   @{ Name = "Verified Hanuman image"; Pattern = "commons/4/46/Hanuman" },
   @{ Name = "Goddess Gayatri image"; Pattern = "commons/b/b4/Gayatri1" },
   @{ Name = "Enriched Varuna translation"; Pattern = "clothed in waters" },
-  @{ Name = "Live Darshan Tirupati"; Pattern = "8opaIVCposg" },
-  @{ Name = "30+ Live Darshan entries"; Pattern = "Mahakaleshwar Temple, Ujjain" }
+  @{ Name = "Live Darshan UI"; Pattern = "Live Temple Darshan" }
 )
 
 foreach ($check in $checks) {
@@ -92,6 +91,30 @@ foreach ($check in $checks) {
   } else {
     Fail $check.Name
   }
+}
+
+# Live streams are fetched at runtime from /api/live-darshan (not baked into the JS bundle).
+try {
+  $health = Invoke-RestMethod -Uri "$BaseUrl/api/live-darshan/health" -TimeoutSec 20
+  if ($health.ok -eq $true) {
+    Pass "Live Darshan API health"
+  } else {
+    Fail "Live Darshan API health (ok != true)"
+  }
+} catch {
+  Fail "Live Darshan API health ($($_.Exception.Message))"
+}
+
+try {
+  $feed = Invoke-RestMethod -Uri "$BaseUrl/api/live-darshan" -TimeoutSec 45
+  $count = @($feed.items).Count
+  if ($count -ge 30) {
+    Pass "30+ Live Darshan streams ($count live)"
+  } else {
+    Fail "30+ Live Darshan streams (got $count)"
+  }
+} catch {
+  Fail "30+ Live Darshan streams ($($_.Exception.Message))"
 }
 
 # Local catalog file check when present
