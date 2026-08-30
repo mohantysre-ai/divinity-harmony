@@ -2,6 +2,8 @@ import type { AppLocale } from "@/hooks/use-locale";
 import { UI_KEYS, type UiKey, type UiLocale } from "@/lib/ui-keys";
 import packs from "@/lib/locale-packs.json";
 
+export type { UiKey };
+
 const localePacks = packs as Record<UiLocale, Record<UiKey, string>>;
 
 export function translateKey(locale: AppLocale, key: UiKey): string {

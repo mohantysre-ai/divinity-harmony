@@ -24,7 +24,10 @@ def regional_preference(lat: float, lon: float) -> dict:
  req=Request(f"https://nominatim.openstreetmap.org/reverse?{params}",headers={"User-Agent":"DivinityHarmony/1.0 (https://mantra.sigq.in)","Accept-Language":"en"})
  with urlopen(req,timeout=8) as response: payload=json.loads(response.read().decode("utf-8"))
  address=payload.get("address",{});state=str(address.get("state","")).strip();country=str(address.get("country_code","")).lower()
+ city=str(address.get("city") or address.get("town") or address.get("village") or address.get("county") or "").strip()
+ country_name=str(address.get("country") or "").strip()
+ place=", ".join(part for part in (city, state, country_name) if part)
  script,language=STATE_SCRIPTS.get(state.casefold(),("devanagari","Sanskrit / Hindi"))
- result={"script":script,"language":language,"locale":STATE_LOCALES.get(state.casefold(),"en"),"state":state,"countryCode":country}
+ result={"script":script,"language":language,"locale":STATE_LOCALES.get(state.casefold(),"en"),"state":state,"countryCode":country,"place":place or state}
  with _LOCK:_CACHE[key]=(now,result)
  return result

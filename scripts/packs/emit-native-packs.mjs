@@ -5,10 +5,13 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { guPack } from "./gu-pack.mjs";
-
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const KEYS = Object.keys(guPack);
+const root = path.join(__dirname, "../..");
+const KEYS = Object.keys(
+  JSON.parse(
+    fs.readFileSync(path.join(root, "src/lib/ui-keys-export.json"), "utf8"),
+  ),
+);
 
 /** @type {Record<string, Record<string, string>>} */
 const NATIVE = JSON.parse(

@@ -86,7 +86,7 @@ const packs = {
     tailSupplement.kn,
   ),
   bn: mergePack(bnPack, tailSupplement.bn),
-  gu: guPack,
+  gu: mergePack(guPack, tailSupplement.gu),
   mr: mrPack,
   ta: taPack,
   te: tePack,
@@ -95,6 +95,14 @@ const packs = {
   pa: paPack,
   as: asPack,
 };
+
+for (const [locale, pack] of Object.entries(packs)) {
+  const tail = tailSupplement[locale];
+  if (!tail) continue;
+  for (const [key, value] of Object.entries(tail)) {
+    if (!(key in pack)) pack[key] = value;
+  }
+}
 
 for (const [locale, pack] of Object.entries(packs)) {
   const missing = KEY_LIST.filter((k) => !pack[k]);

@@ -15,19 +15,21 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
+import { useLocale } from "@/hooks/use-locale";
+import type { UiKey } from "@/lib/ui-keys";
 
-const product = [
-  ["My Dharma", "/my-dharma"],
-  ["Mantra Library", "/mantras"],
-  ["Live Temple Darshan", "/darshan"],
-  ["Sacred Texts", "/scriptures"],
-];
-const discover = [
-  ["Culture of India", "/culture"],
-  ["Pravachan & Reading", "/wisdom"],
-  ["Vedic Astrology", "/astrology"],
-  ["Temple & Priest Directory", "/temples"],
-];
+const productKeys = [
+  ["myDharma", "/my-dharma"],
+  ["mantraLibrary", "/mantras"],
+  ["liveTempleDarshan", "/darshan"],
+  ["sacredTexts", "/scriptures"],
+] as const;
+const discoverKeys = [
+  ["cultureOfIndia", "/culture"],
+  ["pravachanReading", "/wisdom"],
+  ["vedicAstrology", "/astrology"],
+  ["templePriestDirectory", "/temples"],
+] as const;
 const socials = [
   {
     label: "Facebook",
@@ -47,6 +49,7 @@ const socials = [
 ].filter((item) => item.url);
 
 export default function Footer() {
+  const { tk } = useLocale();
   const [email, setEmail] = useState("");
   const [consent, setConsent] = useState(false);
   const [state, setState] = useState<"idle" | "loading" | "success" | "error">(
@@ -59,7 +62,7 @@ export default function Footer() {
     e.preventDefault();
     if (!consent) {
       setState("error");
-      setMessage("Please confirm that you want to receive email updates.");
+      setMessage(tk("pleaseConfirmSubscribe"));
       return;
     }
     setState("loading");
@@ -74,13 +77,13 @@ export default function Footer() {
       setState("success");
       setMessage(
         data.alreadySubscribed
-          ? "You are already subscribed."
-          : "Welcome—your subscription is confirmed.",
+          ? tk("alreadySubscribed")
+          : tk("welcomeSubscribed"),
       );
       setEmail("");
     } catch (error) {
       setState("error");
-      setMessage(error instanceof Error ? error.message : "Please try again.");
+      setMessage(error instanceof Error ? error.message : tk("pleaseTryAgain"));
     }
   };
   return (
@@ -91,14 +94,14 @@ export default function Footer() {
           <div className="absolute -right-10 -top-20 h-64 w-64 rounded-full border border-amber-200/15 shadow-[0_0_0_32px_rgba(253,230,138,.05),0_0_0_64px_rgba(253,230,138,.035)]" />
           <div className="relative">
             <p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[.2em] text-amber-200">
-              <Sparkles className="h-4 w-4" />A thoughtful note, occasionally
+              <Sparkles className="h-4 w-4" />
+              {tk("newsletterTagline")}
             </p>
             <h2 className="mt-3 text-3xl font-bold md:text-4xl">
-              Carry the practice with you.
+              {tk("carryPractice")}
             </h2>
             <p className="mt-3 max-w-xl leading-7 text-orange-100/75">
-              New mantras, sacred-text additions and useful festival
-              guidance—without daily noise.
+              {tk("newsletterDesc")}
             </p>
           </div>
           <form onSubmit={subscribe} className="relative mt-7 lg:mt-0">
@@ -108,8 +111,8 @@ export default function Footer() {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="Email address"
-                aria-label="Newsletter email"
+                placeholder={tk("emailAddressPlaceholder")}
+                aria-label={tk("newsletterEmail")}
                 className="h-12 border-white/20 bg-white text-stone-900 placeholder:text-stone-500 sm:flex-1"
               />
               <Button
@@ -120,7 +123,7 @@ export default function Footer() {
                   <Loader2 className="h-4 w-4 animate-spin" />
                 ) : (
                   <>
-                    Subscribe
+                    {tk("subscribe")}
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </>
                 )}
@@ -137,8 +140,7 @@ export default function Footer() {
                 htmlFor="newsletter-consent"
                 className="text-xs font-normal leading-5 text-orange-100/75"
               >
-                I agree to receive email updates. I can unsubscribe from any
-                message.
+                {tk("subscribeAgreement")}
               </Label>
             </div>
             {message && (
@@ -160,11 +162,10 @@ export default function Footer() {
               <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-orange-700 to-red-700 text-xl font-bold text-white shadow-lg">
                 ॐ
               </span>
-              <span className="text-xl font-bold">Divinity Harmony</span>
+              <span className="text-xl font-bold">{tk("divinityHarmony")}</span>
             </Link>
             <p className="mt-5 max-w-sm text-sm leading-7 text-muted-foreground">
-              A calm digital space for mantra practice, temple darshan, Hindu
-              sacred literature and everyday devotional learning.
+              {tk("footerTagline")}
             </p>
             {socials.length > 0 && (
               <div className="mt-6 flex gap-2">
@@ -183,17 +184,17 @@ export default function Footer() {
               </div>
             )}
           </div>
-          <FooterColumn title="Practice" links={product} />
-          <FooterColumn title="Discover" links={discover} />
+          <FooterColumn title={tk("practice")} links={productKeys} tk={tk} />
+          <FooterColumn title={tk("discover")} links={discoverKeys} tk={tk} />
           <div>
-            <h3 className="font-bold">Trust & support</h3>
+            <h3 className="font-bold">{tk("trustAndSupport")}</h3>
             <ul className="mt-5 space-y-3 text-sm">
               <li>
                 <Link
                   className="text-muted-foreground hover:text-orange-700"
                   to="/legal/privacy"
                 >
-                  Privacy policy
+                  {tk("privacyPolicy")}
                 </Link>
               </li>
               <li>
@@ -201,7 +202,7 @@ export default function Footer() {
                   className="text-muted-foreground hover:text-orange-700"
                   to="/legal/terms"
                 >
-                  Terms of use
+                  {tk("termsOfUse")}
                 </Link>
               </li>
               <li>
@@ -209,7 +210,7 @@ export default function Footer() {
                   className="text-muted-foreground hover:text-orange-700"
                   to="/legal/accessibility"
                 >
-                  Accessibility
+                  {tk("accessibility")}
                 </Link>
               </li>
               {contactEmail && (
@@ -231,7 +232,7 @@ export default function Footer() {
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    Support the project
+                    {tk("supportTheProject")}
                     <ExternalLink className="ml-1.5 h-3.5 w-3.5" />
                   </a>
                 </li>
@@ -240,28 +241,33 @@ export default function Footer() {
           </div>
         </div>
         <div className="flex flex-col gap-3 border-t border-orange-950/10 py-6 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
-          <p>© {new Date().getFullYear()} Divinity Harmony.</p>
-          <p>
-            Educational devotional content · Verify muhurta and formal rites
-            with a qualified regional source.
-          </p>
+          <p>© {new Date().getFullYear()} {tk("divinityHarmony")}.</p>
+          <p>{tk("footerDisclaimer")}</p>
         </div>
       </div>
     </footer>
   );
 }
-function FooterColumn({ title, links }: { title: string; links: string[][] }) {
+function FooterColumn({
+  title,
+  links,
+  tk,
+}: {
+  title: string;
+  links: readonly (readonly [UiKey, string])[];
+  tk: (key: UiKey) => string;
+}) {
   return (
     <div>
       <h3 className="font-bold">{title}</h3>
       <ul className="mt-5 space-y-3 text-sm">
-        {links.map(([label, url]) => (
+        {links.map(([labelKey, url]) => (
           <li key={url}>
             <Link
               className="group inline-flex items-center text-muted-foreground transition hover:translate-x-1 hover:text-orange-700"
               to={url}
             >
-              {label}
+              {tk(labelKey)}
               <ArrowRight className="ml-1.5 h-3 w-0 opacity-0 transition-all group-hover:w-3 group-hover:opacity-100" />
             </Link>
           </li>

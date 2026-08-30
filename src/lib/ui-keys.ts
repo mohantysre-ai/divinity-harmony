@@ -247,6 +247,39 @@ export const UI_KEYS = {
   welcomeSubscribed: "Welcome—your subscription is confirmed.",
   pleaseTryAgain: "Please try again.",
   liveLabel: "Live",
+  astrologyIntro:
+    "Astronomical calculations and traditional interpretations must be distinguished. This area teaches the system without fear-based predictions or automatic sales remedies.",
+  birthPlacePlaceholder: "City, state, country",
+  natalChartDisclaimer:
+    "A natal chart is not generated until an ephemeris-grade backend and place/time-zone resolver are enabled. The app will not fabricate one.",
+  birthDetailsSaved: "Birth details saved",
+  birthDetailsSavedDesc: "Your birth date, time and place stay privately on this device.",
+  birthDetailsAutoFilled: "Birth place suggested from your location.",
+  useMyLocationBirth: "Use my location for birth place",
+  conceptRashi: "Rashi",
+  conceptRashiDesc: "The zodiac sign occupied by a graha.",
+  conceptLagna: "Lagna",
+  conceptLagnaDesc: "The ascendant calculated from exact birth time and place.",
+  conceptNakshatraJyotisha: "Nakshatra",
+  conceptNakshatraJyotishaDesc:
+    "One of 27 lunar mansions used in Panchang and Jyotisha.",
+  conceptDasha: "Dasha",
+  conceptDashaDesc:
+    "A time-period framework; Vimshottari is one widely used system.",
+  conceptGochara: "Gochara",
+  conceptGocharaDesc: "Current planetary transits relative to a natal reference.",
+  conceptAyanamsha: "Ayanamsha",
+  conceptAyanamshaDesc:
+    "The chosen sidereal offset; calculation settings must name it.",
+  grahaSuryaVitality: "Surya · vitality",
+  grahaChandraMind: "Chandra · mind",
+  grahaMangalaAction: "Mangala · action",
+  grahaBudhaIntellect: "Budha · intellect",
+  grahaGuruWisdom: "Guru · wisdom",
+  grahaShukraHarmony: "Shukra · harmony",
+  grahaShaniDiscipline: "Shani · discipline",
+  grahaRahuAmplification: "Rahu · amplification",
+  grahaKetuRelease: "Ketu · release",
 } as const;
 
 export type UiKey = keyof typeof UI_KEYS;
