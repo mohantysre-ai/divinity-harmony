@@ -22,7 +22,7 @@ const mapUrl = (temple: Temple) => {
 };
 
 export default function TemplesPage() {
-  const { tk, ui } = useLocale();
+  const { tk, lc } = useLocale();
   const [query, setQuery] = useState('');
   const [position, setPosition] = useState<{ lat: number; lon: number } | null>(null);
   const [selected, setSelected] = useState<Temple>(temples[0]);
@@ -81,7 +81,7 @@ export default function TemplesPage() {
               loading="lazy"
             />
             <div className="p-4">
-              <strong>{ui(selected.name)}</strong>
+              <strong>{lc(selected.name)}</strong>
               <span className="ml-2 text-sm text-muted-foreground">
                 {selected.city}, {selected.state}
               </span>
@@ -96,13 +96,13 @@ export default function TemplesPage() {
                 className={`rounded-2xl border bg-card p-6 text-left shadow-sm transition hover:-translate-y-1 ${selected.id === temple.id ? 'border-orange-600 ring-1 ring-orange-600' : ''}`}
               >
                 <div className="flex items-start justify-between gap-3">
-                  <Badge>{ui(temple.type)}</Badge>
+                  <Badge>{lc(temple.type)}</Badge>
                   {temple.distance != null && (
                     <span className="text-xs text-muted-foreground">{Math.round(temple.distance)} km</span>
                   )}
                 </div>
-                <h2 className="mt-5 text-xl font-bold">{ui(temple.name)}</h2>
-                <p className="mt-2 text-sm text-orange-700">{ui(temple.deity)}</p>
+                <h2 className="mt-5 text-xl font-bold">{lc(temple.name)}</h2>
+                <p className="mt-2 text-sm text-orange-700">{lc(temple.deity)}</p>
                 <p className="mt-3 flex items-center text-sm text-muted-foreground">
                   <MapPin className="mr-2 h-4 w-4" />
                   {temple.city}, {temple.state}

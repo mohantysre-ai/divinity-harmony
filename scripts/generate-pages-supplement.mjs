@@ -132,7 +132,8 @@ const hi = {
 
 const packs = { or, hi };
 for (const loc of ["bn", "gu", "mr", "ta", "te", "ml", "kn", "pa", "as"]) {
-  packs[loc] = { ...hi };
+  // Filled by: node scripts/packs/translate-ui-supplements.mjs
+  packs[loc] = packs[loc] ?? {};
 }
 
 const outPath = path.join(__dirname, "packs/pages-supplement.json");

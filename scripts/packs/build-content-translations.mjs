@@ -156,11 +156,13 @@ function applySanskritFixes(text, glossary) {
 }
 
 /** Remove stray Latin letters from translated text (keep Devanagari/Odia digits and punctuation) */
-function stripLatin(text, script) {
+function stripLatin(text, locale) {
+  if (!["hi", "or", "mr", "gu", "pa"].includes(locale)) return text;
   // Allow ${placeholders}, numbers, punctuation, and target script
   const odiaRange = /[\u0B00-\u0B7F]/;
   const devaRange = /[\u0900-\u097F]/;
-  const isTarget = script === "or" ? odiaRange : devaRange;
+  const isTarget = locale === "or" ? odiaRange : devaRange;
+  void isTarget;
 
   // Replace common untranslated English words that slipped through
   const commonFixes = {
@@ -197,7 +199,7 @@ function stripLatin(text, script) {
   };
 
   let out = text;
-  for (const [from, to] of Object.entries(commonFixes[script] || {})) {
+  for (const [from, to] of Object.entries(commonFixes[locale === "or" ? "or" : "hi"] || {})) {
     out = out.split(from).join(to);
   }
   return out;
@@ -246,7 +248,7 @@ async function buildLocale(locale, glossary, outFile) {
       const en = batch[j];
       let val = translated[j];
       val = applySanskritFixes(val, glossary);
-      val = stripLatin(val, locale === "or" ? "or" : "hi");
+      val = stripLatin(val, locale);
       result[en] = val;
     }
     done += batch.length;
@@ -260,8 +262,45 @@ async function buildLocale(locale, glossary, outFile) {
   return { path: outPath, count: Object.keys(result).length };
 }
 
-console.log(`Translating ${englishStrings.length} strings...`);
-const orResult = await buildLocale("or", sanskritOr, "content-translations-or.json");
-const hiResult = await buildLocale("hi", sanskritHi, "content-translations-hi.json");
+const LOCALE_CONFIG = {
+  hi: { glossary: sanskritHi, file: "content-translations-hi.json" },
+  or: { glossary: sanskritOr, file: "content-translations-or.json" },
+  bn: { glossary: {}, file: "content-translations-bn.json" },
+  gu: { glossary: sanskritHi, file: "content-translations-gu.json" },
+  mr: { glossary: sanskritHi, file: "content-translations-mr.json" },
+  ta: { glossary: {}, file: "content-translations-ta.json" },
+  te: { glossary: {}, file: "content-translations-te.json" },
+  ml: { glossary: {}, file: "content-translations-ml.json" },
+  kn: { glossary: {}, file: "content-translations-kn.json" },
+  pa: { glossary: sanskritHi, file: "content-translations-pa.json" },
+  as: { glossary: {}, file: "content-translations-as.json" },
+};
 
-console.log(JSON.stringify({ or: orResult, hi: hiResult }, null, 2));
+const argLocales = process.argv.slice(2).filter((x) => x in LOCALE_CONFIG);
+const toBuild =
+  argLocales.length > 0
+    ? argLocales
+    : ["ta", "te", "ml", "kn", "bn", "gu", "mr", "pa", "as"];
+
+console.log(`Translating ${englishStrings.length} strings for: ${toBuild.join(", ")}`);
+const results = {};
+
+for (const locale of toBuild) {
+  const cfg = LOCALE_CONFIG[locale];
+  const outPath = path.join(__dirname, cfg.file);
+  if (fs.existsSync(outPath) && process.env.FORCE_CONTENT !== "1") {
+    try {
+      const existing = JSON.parse(fs.readFileSync(outPath, "utf8"));
+      if (Object.keys(existing).length >= englishStrings.length * 0.95) {
+        console.log(`Skip ${locale} — ${Object.keys(existing).length} keys exist`);
+        results[locale] = { path: outPath, count: Object.keys(existing).length, skipped: true };
+        continue;
+      }
+    } catch {
+      /* rebuild */
+    }
+  }
+  results[locale] = await buildLocale(locale, cfg.glossary, cfg.file);
+}
+
+console.log(JSON.stringify(results, null, 2));

@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build:content-packs": "node scripts/packs/extract-content-strings.mjs && node scripts/packs/build-content-packs.mjs",
+    "build:regional-packs": "node scripts/packs/translate-ui-supplements.mjs && node scripts/packs/extract-content-strings.mjs && node scripts/packs/build-content-translations.mjs && node scripts/packs/build-content-packs.mjs && node scripts/write-locale-packs.mjs",
     "build": "npm run build:content-packs && vite build && node scripts/prerender.mjs",
     "build:dev": "vite build --mode development",
     "lint": "eslint .",

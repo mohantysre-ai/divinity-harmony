@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, type ReactNode } from 'react';
 import Layout from '@/components/layout/Layout';
 import { ThemeProvider } from '@/hooks/use-theme';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
@@ -6,27 +6,73 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { BookOpen, CircleCheck, ExternalLink, Library, Loader2, Search, Sparkles } from 'lucide-react';
+import { BookOpen, CircleCheck, ExternalLink, Flame, Landmark, Library, Loader2, Scroll, Search, Sparkles, Sun } from 'lucide-react';
 import { sacredTextCategories, sacredTexts, type SacredText } from '@/data/sacred-texts';
 import { buildSacredTextArticle } from '@/lib/sacred-text-content';
 import { fetchSacredChapter, fetchSacredSourceContent, type SacredSourceContent } from '@/lib/sacred-source-content';
+import { sacredTextGradient, sacredTextImageFit, sacredTextImageUrl } from '@/lib/sacred-text-art';
 import { useSearchParams } from 'react-router-dom';
 import { useLocale } from '@/hooks/use-locale';
 import { sacredCategoryKey } from '@/lib/sacred-category-i18n';
 
-const categoryStyle: Record<string, { symbol: string; gradient: string }> = {
-  'Vedas & Vedangas': { symbol: 'ॐ', gradient: 'from-amber-700 via-orange-600 to-yellow-500' },
-  Upanishads: { symbol: 'तत्', gradient: 'from-indigo-800 via-violet-700 to-purple-500' },
-  Puranas: { symbol: 'पुराण', gradient: 'from-rose-800 via-red-700 to-orange-500' },
-  Gitas: { symbol: 'गीता', gradient: 'from-blue-800 via-sky-700 to-cyan-500' },
-  'Itihasa & Sacred Narratives': { symbol: 'धर्म', gradient: 'from-emerald-800 via-green-700 to-lime-500' },
-  'Philosophy & Yoga': { symbol: 'योग', gradient: 'from-slate-800 via-indigo-700 to-blue-500' },
-  'Deities & Sacred Lore': { symbol: 'देव', gradient: 'from-fuchsia-800 via-pink-700 to-rose-500' },
-  'Ancestors & Dharma': { symbol: 'पितृ', gradient: 'from-stone-800 via-amber-800 to-orange-600' },
-  'Hymns & Mantras': { symbol: 'मन्त्र', gradient: 'from-teal-800 via-cyan-700 to-sky-500' },
+const categoryStyle: Record<string, { Icon: typeof BookOpen; accent: string }> = {
+  'Vedas & Vedangas': { Icon: Scroll, accent: 'from-amber-500/25 to-orange-600/10' },
+  Upanishads: { Icon: Sun, accent: 'from-violet-500/25 to-indigo-600/10' },
+  Puranas: { Icon: BookOpen, accent: 'from-rose-500/25 to-red-600/10' },
+  Gitas: { Icon: Flame, accent: 'from-sky-500/25 to-blue-600/10' },
+  'Itihasa & Sacred Narratives': { Icon: Landmark, accent: 'from-emerald-500/25 to-green-600/10' },
+  'Philosophy & Yoga': { Icon: Sparkles, accent: 'from-indigo-500/25 to-slate-600/10' },
+  'Deities & Sacred Lore': { Icon: Sparkles, accent: 'from-fuchsia-500/25 to-pink-600/10' },
+  'Ancestors & Dharma': { Icon: Flame, accent: 'from-amber-600/25 to-stone-600/10' },
+  'Hymns & Mantras': { Icon: Scroll, accent: 'from-cyan-500/25 to-teal-600/10' },
 };
 
 const PAGE_SIZE = 60;
+
+function SacredTextHero({
+  text,
+  tall = false,
+  children,
+}: {
+  text: SacredText;
+  tall?: boolean;
+  children?: ReactNode;
+}) {
+  const style = categoryStyle[text.category] || categoryStyle['Itihasa & Sacred Narratives'];
+  const [imageFailed, setImageFailed] = useState(false);
+  const imageUrl = sacredTextImageUrl(text.title, text.category, text.id);
+  const imageFit = sacredTextImageFit(text.category, text.id);
+  const overlay = sacredTextGradient(text.category);
+  const CategoryIcon = style.Icon;
+
+  return (
+    <div className={`relative overflow-hidden ${tall ? 'min-h-[220px]' : 'h-52'}`}>
+      <div className={`absolute inset-0 bg-gradient-to-br ${overlay}`} />
+      {!imageFailed && (
+        <img
+          src={imageUrl}
+          alt=""
+          loading="lazy"
+          decoding="async"
+          className={`absolute inset-0 h-full w-full object-cover ${imageFit} scale-105 transition duration-700 ease-out group-hover:scale-110`}
+          onError={() => setImageFailed(true)}
+        />
+      )}
+      <div className={`absolute inset-0 bg-gradient-to-t ${overlay} via-black/45 to-black/15`} />
+      <div className={`absolute inset-0 bg-gradient-to-br ${style.accent}`} />
+      <div className="pointer-events-none absolute -right-6 -top-6 h-40 w-40 rounded-full bg-hindu-gold/15 blur-3xl transition duration-700 group-hover:scale-125" />
+      <CategoryIcon
+        className="pointer-events-none absolute bottom-3 right-4 h-14 w-14 text-white/20 md:h-16 md:w-16"
+        strokeWidth={1.25}
+        aria-hidden
+      />
+      <Badge className="absolute left-4 top-4 border-white/25 bg-black/35 text-white backdrop-blur-sm hover:bg-black/35">
+        #{text.id}
+      </Badge>
+      {children}
+    </div>
+  );
+}
 
 const SacredTexts = () => {
   const { tk, lc } = useLocale();
@@ -137,31 +183,40 @@ const SacredTexts = () => {
 
           {filteredTexts.length ? (
             <section className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
-              {visibleTexts.map((text) => {
-                const style = categoryStyle[text.category] || categoryStyle['Itihasa & Sacred Narratives'];
-                return (
-                  <Card key={text.id} className="group flex h-full flex-col overflow-hidden border-border/60 transition-all hover:-translate-y-1 hover:shadow-xl">
-                    <div className={`relative flex h-40 items-center justify-center bg-gradient-to-br ${style.gradient}`}>
-                      <span className="select-none text-4xl font-bold text-white/95 drop-shadow-md">{style.symbol}</span>
-                      <Badge className="absolute left-4 top-4 border-white/30 bg-black/25 text-white hover:bg-black/25">#{text.id}</Badge>
+              {visibleTexts.map((text, index) => (
+                <Card
+                  key={text.id}
+                  style={{ animationDelay: `${Math.min(index, 24) * 40}ms` }}
+                  className="scripture-card group flex h-full flex-col overflow-hidden rounded-3xl border-border/50 shadow-md transition-all duration-500 hover:-translate-y-2 hover:border-hindu-gold/40 hover:shadow-2xl animate-fade-in"
+                >
+                  <SacredTextHero text={text}>
+                    <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 via-black/45 to-transparent p-5 pt-16">
+                      <Badge variant="secondary" className="mb-2 border-white/20 bg-white/15 text-white backdrop-blur-sm hover:bg-white/15">
+                        {tk(sacredCategoryKey(text.category))}
+                      </Badge>
+                      <h2 className="line-clamp-2 text-lg font-bold leading-snug text-white drop-shadow-md">
+                        {lc(text.title)}
+                      </h2>
                     </div>
-                    <CardContent className="flex-1 p-6">
-                      <Badge variant="outline" className="mb-3">{tk(sacredCategoryKey(text.category))}</Badge>
-                      <h2 className="text-xl font-bold leading-tight">{lc(text.title)}</h2>
-                      <p className="mt-2 text-xs font-medium text-hindu-red">{lc(text.tradition)}</p>
-                      <p className="mt-3 line-clamp-3 text-sm text-muted-foreground">{lc(text.description)}</p>
-                      <div className="mt-4 flex flex-wrap gap-1.5">
-                        {text.topics.slice(0, 3).map((topic) => <Badge key={topic} variant="secondary" className="font-normal">{lc(topic)}</Badge>)}
-                      </div>
-                    </CardContent>
-                    <CardFooter className="border-t p-4">
-                      <Button className="w-full" onClick={() => openText(text)}>
-                        <BookOpen className="mr-2 h-4 w-4" /> {tk('readFullDetails')}
-                      </Button>
-                    </CardFooter>
-                  </Card>
-                );
-              })}
+                  </SacredTextHero>
+                  <CardContent className="flex-1 space-y-3 p-5">
+                    <p className="text-xs font-semibold uppercase tracking-wide text-hindu-red">{lc(text.tradition)}</p>
+                    <p className="line-clamp-3 text-sm leading-relaxed text-muted-foreground">{lc(text.description)}</p>
+                    <div className="flex flex-wrap gap-1.5 pt-1">
+                      {text.topics.slice(0, 3).map((topic) => (
+                        <Badge key={topic} variant="secondary" className="font-normal transition-colors group-hover:border-hindu-gold/30">
+                          {lc(topic)}
+                        </Badge>
+                      ))}
+                    </div>
+                  </CardContent>
+                  <CardFooter className="border-t bg-muted/20 p-4">
+                    <Button className="w-full transition-transform group-hover:scale-[1.02]" onClick={() => openText(text)}>
+                      <BookOpen className="mr-2 h-4 w-4" /> {tk('readFullDetails')}
+                    </Button>
+                  </CardFooter>
+                </Card>
+              ))}
             </section>
           ) : (
             <section className="rounded-2xl border border-dashed p-12 text-center">
@@ -188,13 +243,17 @@ const SacredTexts = () => {
           <DialogContent className="max-h-[90vh] max-w-4xl overflow-y-auto p-0">
             {selected && selectedArticle && (
               <>
-                <div className={`bg-gradient-to-br p-7 text-white ${categoryStyle[selected.category]?.gradient || categoryStyle['Itihasa & Sacred Narratives'].gradient}`}>
-                  <DialogHeader>
-                    <Badge className="mb-3 w-fit border-white/30 bg-black/20 text-white hover:bg-black/20">{tk(sacredCategoryKey(selected.category))}</Badge>
-                    <DialogTitle className="text-left text-3xl text-white">{lc(selected.title)}</DialogTitle>
-                  </DialogHeader>
-                  <p className="mt-2 text-sm font-medium text-white/85">{lc(selected.tradition)}</p>
-                </div>
+                <SacredTextHero text={selected} tall>
+                  <div className="relative flex h-full min-h-[220px] flex-col justify-end p-7 text-white">
+                    <DialogHeader>
+                      <Badge className="mb-3 w-fit border-white/30 bg-black/30 text-white backdrop-blur-sm hover:bg-black/30">
+                        {tk(sacredCategoryKey(selected.category))}
+                      </Badge>
+                      <DialogTitle className="text-left text-3xl text-white drop-shadow-lg">{lc(selected.title)}</DialogTitle>
+                    </DialogHeader>
+                    <p className="mt-2 text-sm font-medium text-white/90">{lc(selected.tradition)}</p>
+                  </div>
+                </SacredTextHero>
 
                 <article className="space-y-8 p-7 md:p-9">
                   <section className="rounded-2xl border bg-card p-5 md:p-6">

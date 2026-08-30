@@ -12,7 +12,16 @@ const root = path.resolve(__dirname, "../..");
 const LOCALES = ["hi", "bn", "gu", "mr", "ta", "te", "ml", "kn", "or", "pa", "as"];
 const TRANSLATION_FILES = {
   hi: "content-translations-hi.json",
+  bn: "content-translations-bn.json",
+  gu: "content-translations-gu.json",
+  mr: "content-translations-mr.json",
+  ta: "content-translations-ta.json",
+  te: "content-translations-te.json",
+  ml: "content-translations-ml.json",
+  kn: "content-translations-kn.json",
   or: "content-translations-or.json",
+  pa: "content-translations-pa.json",
+  as: "content-translations-as.json",
 };
 
 /** Parse JSON objects that may contain duplicate keys (last wins). */

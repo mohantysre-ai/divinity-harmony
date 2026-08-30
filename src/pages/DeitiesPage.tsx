@@ -9,7 +9,7 @@ import { Badge } from '@/components/ui/badge';
 
 export default function DeitiesPage() {
   const { slug } = useParams();
-  const { tk, ui } = useLocale();
+  const { tk, lc } = useLocale();
   const deity = deities.find((item) => item.slug === slug);
 
   return (
@@ -33,9 +33,9 @@ export default function DeitiesPage() {
                 <div className={`absolute inset-0 bg-gradient-to-br ${deity.color} opacity-80 mix-blend-multiply`} />
                 <div className="relative p-8 text-white md:p-12">
                   <p className="text-5xl">{deity.sanskrit}</p>
-                  <h1 className="mt-5 text-4xl font-bold">{ui(deity.name)}</h1>
-                  <p className="mt-2 text-white/75">{ui(deity.tradition)}</p>
-                  <p className="mt-6 max-w-2xl text-lg leading-8 text-white/90">{ui(deity.summary)}</p>
+                  <h1 className="mt-5 text-4xl font-bold">{lc(deity.name)}</h1>
+                  <p className="mt-2 text-white/75">{lc(deity.tradition)}</p>
+                  <p className="mt-6 max-w-2xl text-lg leading-8 text-white/90">{lc(deity.summary)}</p>
                 </div>
               </section>
               <div className="mt-8 grid gap-6 md:grid-cols-2">
@@ -44,7 +44,7 @@ export default function DeitiesPage() {
                   <div className="mt-4 flex flex-wrap gap-2">
                     {deity.iconography.map((x) => (
                       <Badge key={x} variant="secondary">
-                        {ui(x)}
+                        {lc(x)}
                       </Badge>
                     ))}
                   </div>
@@ -53,7 +53,7 @@ export default function DeitiesPage() {
                   <h2 className="text-xl font-bold">{tk('sacredFestivalsHeading')}</h2>
                   <ul className="mt-4 space-y-2 text-muted-foreground">
                     {deity.festivals.map((x) => (
-                      <li key={x}>• {ui(x)}</li>
+                      <li key={x}>• {lc(x)}</li>
                     ))}
                   </ul>
                 </section>
@@ -95,8 +95,8 @@ export default function DeitiesPage() {
                     <div className={`absolute inset-0 bg-gradient-to-t ${item.color} via-black/50 to-black/20 opacity-90`} />
                     <div className="relative flex h-full flex-col justify-end p-7 text-white">
                       <p className="text-4xl drop-shadow">{item.sanskrit}</p>
-                      <h2 className="mt-3 text-2xl font-bold">{ui(item.name)}</h2>
-                      <p className="mt-2 line-clamp-2 text-sm text-white/85">{ui(item.summary)}</p>
+                      <h2 className="mt-3 text-2xl font-bold">{lc(item.name)}</h2>
+                      <p className="mt-2 line-clamp-2 text-sm text-white/85">{lc(item.summary)}</p>
                     </div>
                   </Link>
                 ))}

@@ -112,7 +112,7 @@ const reading = [
 ];
 
 export default function WisdomLivePage() {
-  const { tk, ui } = useLocale();
+  const { tk, lc } = useLocale();
   const [q, setQ] = useState("");
   const talks = useMemo(
     () =>
@@ -167,8 +167,8 @@ export default function WisdomLivePage() {
                     <ExternalLink className="h-4 w-4 text-muted-foreground" />
                   </div>
                   <h3 className="mt-4 text-lg font-bold">{x.name}</h3>
-                  <p className="mt-1 text-sm text-muted-foreground">{ui(x.language)}</p>
-                  <p className="mt-4 text-sm">{ui(x.topic)}</p>
+                  <p className="mt-1 text-sm text-muted-foreground">{lc(x.language)}</p>
+                  <p className="mt-4 text-sm">{lc(x.topic)}</p>
                   <Badge className="mt-4" variant="outline">
                     {tk("openScheduleLibrary")}
                   </Badge>
@@ -198,9 +198,9 @@ export default function WisdomLivePage() {
                   <div>
                     <h3 className="text-xl font-bold">{x.name}</h3>
                     <p className="mt-1 text-sm text-muted-foreground">
-                      {x.publisher} · {ui(x.cadence)}
+                      {x.publisher} · {lc(x.cadence)}
                     </p>
-                    <p className="mt-4 text-sm">{ui(x.topic)}</p>
+                    <p className="mt-4 text-sm">{lc(x.topic)}</p>
                   </div>
                   <ExternalLink className="h-4 w-4 shrink-0" />
                 </a>
