@@ -132,7 +132,7 @@ def list_priests() -> list[dict]:
             "services": row["services"].split(","),
             "google_maps_url": f"https://www.google.com/maps/search/?api=1&query={quote_plus(query)}",
             "google_search_url": f"https://www.google.com/search?q={quote_plus(query + ' contact phone')}",
-            "justdial_url": f"https://www.justdial.com/{city_path}/Pandits-For-Puja/nct-11242705",
+            "sulekha_url": f"https://www.sulekha.com/priests-purohits/{city_path.lower()}",
         })
     return items
 

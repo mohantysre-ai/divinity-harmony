@@ -28,6 +28,7 @@ from sacred_text_content import fetch_chapter, fetch_sacred_content
 from ai_explain import explain
 from db import get_profile, init_db, list_favorites, list_priests, save_japa, save_profile, set_favorite, subscribe_newsletter
 from panchang import daily_panchang
+from region import regional_preference
 
 
 SEARCH_QUERIES = (
@@ -375,6 +376,16 @@ class Handler(BaseHTTPRequestHandler):
             return
         if path == "/api/priests":
             self._json(200, {"items": list_priests()})
+            return
+        if path == "/api/location-preference":
+            try:
+                lat = float(query.get("lat", [""])[0])
+                lon = float(query.get("lon", [""])[0])
+                self._json(200, regional_preference(lat, lon))
+            except (ValueError, OverflowError):
+                self._json(400, {"error": "Valid coordinates are required."})
+            except Exception:
+                self._json(503, {"error": "Regional detection is temporarily unavailable."})
             return
         if path == "/api/mantra-recordings":
             title = query.get("title", [""])[0].strip()
