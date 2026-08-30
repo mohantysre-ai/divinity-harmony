@@ -205,6 +205,13 @@ def search_mantra_recordings(query: str) -> list[dict[str, Any]]:
     with urlopen(request, timeout=REQUEST_TIMEOUT_SECONDS) as response:
         page = response.read().decode("utf-8", errors="replace")
     items = parse_mantra_recordings(extract_initial_data(page))
+    ignored = {"mantra", "stotra", "stotram", "chalisa", "aarti", "the", "shri", "sri"}
+    keywords = {
+        word for word in re.sub(r"[^a-z0-9 ]", " ", normalized.casefold().replace("siva", "shiva")).split()
+        if len(word) >= 4 and word not in ignored
+    }
+    if keywords:
+        items = [item for item in items if any(word in item["title"].casefold().replace("siva", "shiva") for word in keywords)]
     with MANTRA_RECORDING_LOCK:
         MANTRA_RECORDING_CACHE[normalized.casefold()] = (now, items)
     return items

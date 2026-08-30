@@ -90,6 +90,15 @@ function mergeCatalog(remote: Mantra[]) {
     return true;
   });
 }
+function normalizeSearch(value: string) {
+  return value
+    .toLocaleLowerCase()
+    .replace(/\bsiva\b/g, "shiva")
+    .replace(/\bshiv\b/g, "shiva")
+    .replace(/\bganapathy\b/g, "ganapati")
+    .replace(/\bganeshji\b/g, "ganesha")
+    .trim();
+}
 function deityFor(mantra: Mantra) {
   const value = `${mantra.title} ${mantra.description}`.toLowerCase();
   if (/(ganesh|ganapati|vinayak)/.test(value)) return "Ganesha";
@@ -258,15 +267,24 @@ const MantrasPage = () => {
       catalog
         .map((mantra, index) => ({ mantra, index }))
         .filter(({ mantra }) => {
-          const haystack =
-            `${mantra.title} ${mantra.description} ${mantra.text}`.toLowerCase();
+          const haystack = normalizeSearch(
+            `${mantra.title} ${mantra.description} ${mantra.text}`,
+          );
           return (
             (deity === "All" || deityFor(mantra) === deity) &&
-            haystack.includes(query.trim().toLowerCase())
+            haystack.includes(normalizeSearch(query))
           );
         }),
     [catalog, deity, query],
   );
+
+  useEffect(() => {
+    if (!visibleMantras.length) return;
+    const currentIsVisible = visibleMantras.some(
+      ({ index }) => index === currentMantraIndex,
+    );
+    if (!currentIsVisible) setCurrentMantraIndex(visibleMantras[0].index);
+  }, [visibleMantras, currentMantraIndex]);
 
   const handleNext = () =>
     currentMantraIndex < catalog.length - 1
