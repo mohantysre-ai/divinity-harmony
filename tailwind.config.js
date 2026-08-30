@@ -19,7 +19,8 @@ module.exports = {
     extend: {
       fontFamily: {
         sans: ['Poppins', 'system-ui', 'sans-serif'],
-        sanskrit: ['Noto Sans Devanagari', 'sans-serif']
+        sanskrit: ['Noto Sans Devanagari', 'Poppins', 'sans-serif'],
+        mantra: ['Noto Sans Devanagari', 'sans-serif'],
       },
       colors: {
         border: "hsl(var(--border))",

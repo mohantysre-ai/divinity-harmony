@@ -7,7 +7,6 @@ import {
   type ReactNode,
 } from "react";
 import { useRegionalUi } from "@/hooks/use-regional-ui";
-import { regionalize } from "@/lib/regional-ui";
 
 export type AppLocale =
   | "en"
@@ -36,6 +35,37 @@ export const localeOptions: { id: AppLocale; label: string }[] = [
   { id: "pa", label: "ਪੰਜਾਬੀ" },
   { id: "as", label: "অসমীয়া" },
 ];
+
+export const profileLanguageToLocale: Record<string, AppLocale> = {
+  english: "en",
+  hindi: "hi",
+  bengali: "bn",
+  gujarati: "gu",
+  marathi: "mr",
+  tamil: "ta",
+  telugu: "te",
+  malayalam: "ml",
+  kannada: "kn",
+  odia: "or",
+  punjabi: "pa",
+  assamese: "as",
+  sanskrit: "en",
+};
+
+export const localeToProfileLanguage: Record<AppLocale, string> = {
+  en: "english",
+  hi: "hindi",
+  bn: "bengali",
+  gu: "gujarati",
+  mr: "marathi",
+  ta: "tamil",
+  te: "telugu",
+  ml: "malayalam",
+  kn: "kannada",
+  or: "odia",
+  pa: "punjabi",
+  as: "assamese",
+};
 const copy: Partial<Record<AppLocale, Record<string, string>>> & {
   en: Record<string, string>;
 } = {
@@ -59,6 +89,27 @@ const copy: Partial<Record<AppLocale, Record<string, string>>> & {
     explore:
       "Explore {count}+ prayers, Vedic hymns and stotras. Search by deity, text or intention.",
     notFound: "No mantra found. Try another spelling or deity.",
+  },
+  hi: {
+    home: "मुखपृष्ठ",
+    mantras: "मंत्र",
+    darshan: "लाइव दर्शन",
+    scriptures: "पवित्र ग्रंथ",
+    deities: "देवता",
+    temples: "मंदिर",
+    priests: "पुजारी",
+    settings: "सेटिंग्स",
+    login: "लॉग इन",
+    language: "भाषा",
+    library: "मंत्र पुस्तकालय",
+    matching: "मिलते-जुलते मंत्र",
+    search: "शिव, कृष्ण, शांति खोजें…",
+    all: "सभी",
+    sacred: "पवित्र मंत्र",
+    living: "एक जीवंत भक्ति पुस्तकालय",
+    explore:
+      "{count}+ प्रार्थनाएँ, वैदिक स्तोत्र और मंत्र खोजें। देवता, पाठ या उद्देश्य से खोजें।",
+    notFound: "कोई मंत्र नहीं मिला। दूसरे नाम या देवता से खोजें।",
   },
   kn: {
     home: "ಮುಖಪುಟ",
@@ -113,8 +164,7 @@ export function LocaleProvider({ children }: { children: ReactNode }) {
   };
   useEffect(() => {
     document.documentElement.lang = locale;
-    document.documentElement.dataset.appLocale = locale;
-    document.documentElement.classList.toggle("locale-kn", locale === "kn");
+    document.documentElement.setAttribute("data-app-locale", locale);
   }, [locale]);
   useEffect(() => {
     document.documentElement.classList.toggle("elder-mode", elderMode);
@@ -153,7 +203,7 @@ export function LocaleProvider({ children }: { children: ReactNode }) {
       t: (key: string, vars: Record<string, string | number> = {}) =>
         Object.entries(vars).reduce(
           (text, [name, value]) => text.replace(`{${name}}`, String(value)),
-          copy[locale]?.[key] || regionalize(copy.en[key] || key, locale),
+          copy[locale]?.[key] || copy.en[key] || key,
         ),
       detectedState,
       elderMode,

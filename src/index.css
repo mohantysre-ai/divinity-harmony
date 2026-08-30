@@ -1,14 +1,49 @@
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Noto+Sans+Kannada:wght@400;500;600;700&family=Noto+Sans+Tamil:wght@400;500;600;700&family=Noto+Sans+Telugu:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-html[data-app-locale]:not([data-app-locale="en"]) body {
-  font-family: "Noto Sans Devanagari", "Noto Sans Kannada", "Noto Sans Bengali",
-    "Noto Sans Gujarati", "Noto Sans Gurmukhi", "Noto Sans Oriya",
-    "Noto Sans Tamil", "Noto Sans Telugu", "Noto Sans Malayalam",
-    "Nirmala UI", system-ui, sans-serif;
+html[data-app-locale="en"] body {
+  font-family: "Poppins", system-ui, sans-serif;
+}
+
+html[data-app-locale="hi"] body,
+html[data-app-locale="mr"] body {
+  font-family: "Noto Sans Devanagari", "Nirmala UI", system-ui, sans-serif;
+}
+
+html[data-app-locale="kn"] body {
+  font-family: "Noto Sans Kannada", "Nirmala UI", system-ui, sans-serif;
+}
+
+html[data-app-locale="ta"] body {
+  font-family: "Noto Sans Tamil", "Nirmala UI", system-ui, sans-serif;
+}
+
+html[data-app-locale="te"] body {
+  font-family: "Noto Sans Telugu", "Nirmala UI", system-ui, sans-serif;
+}
+
+html[data-app-locale="bn"] body,
+html[data-app-locale="as"] body {
+  font-family: "Noto Sans Bengali", "Nirmala UI", system-ui, sans-serif;
+}
+
+html[data-app-locale="gu"] body {
+  font-family: "Noto Sans Gujarati", "Nirmala UI", system-ui, sans-serif;
+}
+
+html[data-app-locale="pa"] body {
+  font-family: "Noto Sans Gurmukhi", "Nirmala UI", system-ui, sans-serif;
+}
+
+html[data-app-locale="or"] body {
+  font-family: "Noto Sans Oriya", "Nirmala UI", system-ui, sans-serif;
+}
+
+html[data-app-locale="ml"] body {
+  font-family: "Noto Sans Malayalam", "Nirmala UI", system-ui, sans-serif;
 }
 
 .elder-mode body { font-size: 19px; line-height: 1.7; }
@@ -95,10 +130,10 @@ html[data-app-locale]:not([data-app-locale="en"]) body {
   }
 
   body {
-    @apply bg-background text-foreground font-sanskrit;
+    @apply bg-background text-foreground;
   }
 
-  /* Mantra text class - using sans font instead of non-existent mantra font */
+  /* Sanskrit / mantra lines keep Devanagari even in English UI */
   .mantra-text {
     @apply font-sanskrit leading-relaxed;
   }
