@@ -48,7 +48,7 @@ const read = <T,>(key: string, fallback: T): T => {
   }
 };
 export default function MyDharmaPage() {
-  const { tk } = useLocale();
+  const { tk, lc } = useLocale();
   const [profile, setProfile] = useState<Profile>(() =>
     read("my-dharma:profile", defaultProfile),
   );
@@ -211,7 +211,7 @@ export default function MyDharmaPage() {
           {pack && (
             <section className="mt-6 grid gap-4 md:grid-cols-3">
               <Info
-                title={tk("calendarNameTemplate", { name: pack.name })}
+                title={tk("calendarNameTemplate", { name: lc(pack.name) })}
                 values={[pack.calendar, pack.language, pack.script]}
               />
               <Info title={tk("signatureObservances")} values={pack.festivals} />
@@ -308,7 +308,7 @@ function PackSelect({
   value: string;
   onChange: (value: string) => void;
 }) {
-  const { tk } = useLocale();
+  const { tk, lc } = useLocale();
   return (
     <Select value={value} onValueChange={onChange}>
       <SelectTrigger>
@@ -317,7 +317,7 @@ function PackSelect({
       <SelectContent>
         {culturePacks.map((x) => (
           <SelectItem key={x.id} value={x.id}>
-            {x.name}
+            {lc(x.name)}
           </SelectItem>
         ))}
       </SelectContent>
@@ -325,13 +325,14 @@ function PackSelect({
   );
 }
 function Info({ title, values }: { title: string; values: string[] }) {
+  const { lc } = useLocale();
   return (
     <Card>
       <CardContent className="p-5">
         <h2 className="font-bold">{title}</h2>
         <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
-          {values.map((x) => (
-            <li key={x}>• {x}</li>
+          {values.map((x, i) => (
+            <li key={`${title}-${i}`}>• {lc(x)}</li>
           ))}
         </ul>
       </CardContent>

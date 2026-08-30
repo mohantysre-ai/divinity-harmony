@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button";
 
 export default function CultureIndiaPage() {
   const { id } = useParams();
-  const { tk, ui } = useLocale();
+  const { tk, lc, lcl } = useLocale();
   const [q, setQ] = useState("");
   const selected = culturePacks.find((pack) => pack.id === id);
 
@@ -38,18 +38,18 @@ export default function CultureIndiaPage() {
             </Button>
             <section className="rounded-[2rem] border bg-card p-8 shadow-sm">
               <p className="text-4xl">{selected.script}</p>
-              <h1 className="mt-3 text-4xl font-bold">{ui(selected.name)}</h1>
+              <h1 className="mt-3 text-4xl font-bold">{lc(selected.name)}</h1>
               <p className="mt-2 text-muted-foreground">
-                {ui(selected.language)} · {ui(selected.calendar)}
+                {lc(selected.language)} · {lc(selected.calendar)}
               </p>
               <h2 className="mt-8 flex items-center gap-2 text-lg font-bold">
                 <Sparkles className="h-5 w-5 text-orange-600" />
                 {tk("observances")}
               </h2>
               <div className="mt-3 flex flex-wrap gap-2">
-                {selected.festivals.map((x) => (
-                  <Badge key={x} variant="secondary">
-                    {ui(x)}
+                {lcl(selected.festivals).map((x, i) => (
+                  <Badge key={`${selected.id}-fest-${i}`} variant="secondary">
+                    {x}
                   </Badge>
                 ))}
               </div>
@@ -58,14 +58,14 @@ export default function CultureIndiaPage() {
                 {tk("livingTraditions")}
               </h2>
               <p className="mt-3 leading-7 text-muted-foreground">
-                {selected.traditions.map(ui).join(" · ")}
+                {lcl(selected.traditions).join(" · ")}
               </p>
               <h2 className="mt-8 flex items-center gap-2 text-lg font-bold">
                 <Landmark className="h-5 w-5 text-orange-600" />
                 {tk("templesLabelPrefix")}
               </h2>
               <p className="mt-3 leading-7 text-muted-foreground">
-                {selected.temples.map(ui).join(" · ")}
+                {lcl(selected.temples).join(" · ")}
               </p>
             </section>
           </main>
@@ -109,9 +109,9 @@ export default function CultureIndiaPage() {
                 <div className="flex items-start justify-between">
                   <div>
                     <p className="text-3xl">{pack.script}</p>
-                    <h2 className="mt-2 text-xl font-bold">{ui(pack.name)}</h2>
+                    <h2 className="mt-2 text-xl font-bold">{lc(pack.name)}</h2>
                     <p className="text-sm text-muted-foreground">
-                      {ui(pack.language)} · {ui(pack.calendar)}
+                      {lc(pack.language)} · {lc(pack.calendar)}
                     </p>
                   </div>
                   <Landmark className="h-6 w-6 text-orange-600" />
@@ -121,9 +121,9 @@ export default function CultureIndiaPage() {
                   {tk("observances")}
                 </h3>
                 <div className="mt-2 flex flex-wrap gap-2">
-                  {pack.festivals.slice(0, 3).map((x) => (
-                    <Badge key={x} variant="secondary">
-                      {ui(x)}
+                  {lcl(pack.festivals.slice(0, 3)).map((x, i) => (
+                    <Badge key={`${pack.id}-fest-${i}`} variant="secondary">
+                      {x}
                     </Badge>
                   ))}
                 </div>

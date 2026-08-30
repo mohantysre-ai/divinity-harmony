@@ -162,7 +162,7 @@ const pujas: Puja[] = [
 ];
 
 export default function PriestDirectoryPage() {
-  const { tk } = useLocale();
+  const { tk, lc, lcl } = useLocale();
   const [items, setItems] = useState<Priest[]>([]);
   const [q, setQ] = useState("");
   const [nearbyUrl, setNearbyUrl] = useState("");
@@ -355,20 +355,20 @@ export default function PriestDirectoryPage() {
                   >
                     <AccordionTrigger className="text-left hover:no-underline">
                       <div>
-                        <span className="text-lg font-bold">{p.name}</span>
+                        <span className="text-lg font-bold">{lc(p.name)}</span>
                         <span className="mt-1 block text-xs font-normal text-muted-foreground">
-                          {tk("typicalDurationTemplate", { duration: p.duration })}
+                          {tk("typicalDurationTemplate", { duration: lc(p.duration) })}
                         </span>
                       </div>
                     </AccordionTrigger>
                     <AccordionContent>
                       <p className="leading-6 text-muted-foreground">
-                        {p.purpose}
+                        {lc(p.purpose)}
                       </p>
                       <h3 className="mt-5 font-semibold">{tk("prepareLabel")}</h3>
                       <ul className="mt-2 space-y-2 text-sm text-muted-foreground">
-                        {p.materials.map((m) => (
-                          <li key={m} className="flex gap-2">
+                        {lcl(p.materials).map((m, i) => (
+                          <li key={`${p.name}-mat-${i}`} className="flex gap-2">
                             <span className="text-orange-600">◆</span>
                             {m}
                           </li>
@@ -378,8 +378,8 @@ export default function PriestDirectoryPage() {
                         {tk("traditionalSequence")}
                       </h3>
                       <ol className="mt-2 space-y-3 text-sm text-muted-foreground">
-                        {p.steps.map((s, i) => (
-                          <li key={s} className="flex gap-3">
+                        {lcl(p.steps).map((s, i) => (
+                          <li key={`${p.name}-step-${i}`} className="flex gap-3">
                             <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-orange-100 text-xs font-bold text-orange-700 dark:bg-orange-950/50">
                               {i + 1}
                             </span>
@@ -388,7 +388,7 @@ export default function PriestDirectoryPage() {
                         ))}
                       </ol>
                       <p className="mt-5 rounded-xl bg-amber-50 p-3 text-xs leading-5 text-amber-900 dark:bg-amber-950/30 dark:text-amber-200">
-                        {p.note}
+                        {lc(p.note)}
                       </p>
                     </AccordionContent>
                   </AccordionItem>

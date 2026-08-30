@@ -7,6 +7,7 @@ import {
   type ReactNode,
 } from "react";
 import { useRegionalUi } from "@/hooks/use-regional-ui";
+import { localizeContent, localizeContentList } from "@/lib/content-i18n";
 import { translateUiText } from "@/lib/ui-translations";
 import { translateKey, type UiKey } from "@/lib/locale-packs";
 
@@ -175,6 +176,8 @@ export function LocaleProvider({ children }: { children: ReactNode }) {
           translateKey(locale, key),
         ),
       ui: (text: string) => translateUiText(text, locale),
+      lc: (text: string) => localizeContent(text, locale),
+      lcl: (items: string[]) => localizeContentList(items, locale),
       detectedState,
       elderMode,
       setElderMode,

@@ -199,7 +199,7 @@ function scriptSourceLabel(
 }
 
 const MantrasPage = () => {
-  const { tk } = useLocale();
+  const { tk, lc } = useLocale();
   const { toast } = useToast();
   const readerRef = useRef<HTMLElement>(null);
   const [currentMantraIndex, setCurrentMantraIndex] = useState(0);
@@ -458,7 +458,7 @@ const MantrasPage = () => {
                 <div className="p-6">
                   <div className="flex items-start justify-between gap-4">
                     <h2 className="text-2xl font-bold">
-                      {currentMantra.title}
+                      {lc(currentMantra.title)}
                     </h2>
                     <Button
                       size="icon"
@@ -472,7 +472,7 @@ const MantrasPage = () => {
                     </Button>
                   </div>
                   <p className="mt-2 text-muted-foreground">
-                    {currentMantra.description}
+                    {lc(currentMantra.description)}
                   </p>
                   <div className="mx-auto mt-5 max-w-sm">
                     <Label className="mb-2 flex items-center justify-center text-xs font-semibold uppercase tracking-[.14em] text-muted-foreground">
@@ -518,7 +518,7 @@ const MantrasPage = () => {
                     {displayedText}
                   </blockquote>
                   <p className="text-sm text-muted-foreground">
-                    <strong>{tk("translationLabel")}</strong> {currentMantra.translation}
+                    <strong>{tk("translationLabel")}</strong> {lc(currentMantra.translation)}
                   </p>
                   <Button
                     className="mt-5"
@@ -603,7 +603,7 @@ const MantrasPage = () => {
                       />
                       <div className="min-w-0">
                         <CardTitle className="text-base">
-                          {mantra.title}
+                          {lc(mantra.title)}
                         </CardTitle>
                         <CardDescription className="mt-1 text-xs">
                           {labelDeity(deityFor(mantra), tk)}

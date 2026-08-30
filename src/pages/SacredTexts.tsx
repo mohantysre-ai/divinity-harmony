@@ -29,7 +29,7 @@ const categoryStyle: Record<string, { symbol: string; gradient: string }> = {
 const PAGE_SIZE = 60;
 
 const SacredTexts = () => {
-  const { tk } = useLocale();
+  const { tk, lc } = useLocale();
   const [query, setQuery] = useState('');
   const [category, setCategory] = useState('All');
   const [selected, setSelected] = useState<SacredText | null>(null);
@@ -147,11 +147,11 @@ const SacredTexts = () => {
                     </div>
                     <CardContent className="flex-1 p-6">
                       <Badge variant="outline" className="mb-3">{tk(sacredCategoryKey(text.category))}</Badge>
-                      <h2 className="text-xl font-bold leading-tight">{text.title}</h2>
-                      <p className="mt-2 text-xs font-medium text-hindu-red">{text.tradition}</p>
-                      <p className="mt-3 line-clamp-3 text-sm text-muted-foreground">{text.description}</p>
+                      <h2 className="text-xl font-bold leading-tight">{lc(text.title)}</h2>
+                      <p className="mt-2 text-xs font-medium text-hindu-red">{lc(text.tradition)}</p>
+                      <p className="mt-3 line-clamp-3 text-sm text-muted-foreground">{lc(text.description)}</p>
                       <div className="mt-4 flex flex-wrap gap-1.5">
-                        {text.topics.slice(0, 3).map((topic) => <Badge key={topic} variant="secondary" className="font-normal">{topic}</Badge>)}
+                        {text.topics.slice(0, 3).map((topic) => <Badge key={topic} variant="secondary" className="font-normal">{lc(topic)}</Badge>)}
                       </div>
                     </CardContent>
                     <CardFooter className="border-t p-4">
@@ -191,9 +191,9 @@ const SacredTexts = () => {
                 <div className={`bg-gradient-to-br p-7 text-white ${categoryStyle[selected.category]?.gradient || categoryStyle['Itihasa & Sacred Narratives'].gradient}`}>
                   <DialogHeader>
                     <Badge className="mb-3 w-fit border-white/30 bg-black/20 text-white hover:bg-black/20">{tk(sacredCategoryKey(selected.category))}</Badge>
-                    <DialogTitle className="text-left text-3xl text-white">{selected.title}</DialogTitle>
+                    <DialogTitle className="text-left text-3xl text-white">{lc(selected.title)}</DialogTitle>
                   </DialogHeader>
-                  <p className="mt-2 text-sm font-medium text-white/85">{selected.tradition}</p>
+                  <p className="mt-2 text-sm font-medium text-white/85">{lc(selected.tradition)}</p>
                 </div>
 
                 <article className="space-y-8 p-7 md:p-9">
@@ -203,7 +203,7 @@ const SacredTexts = () => {
                         <p className="text-xs font-semibold uppercase tracking-[0.18em] text-hindu-red">
                           {sourceContent?.sourceType === 'wikisource' ? tk('sourceTextLabel') : tk('detailedSourceArticle')}
                         </p>
-                        <h3 className="mt-2 text-2xl font-bold">{sourceContent?.title || selected.title}</h3>
+                        <h3 className="mt-2 text-2xl font-bold">{sourceContent?.title ? lc(sourceContent.title) : lc(selected.title)}</h3>
                       </div>
                       <div className="flex gap-2">
                         <Button size="sm" variant={sourceLanguage === 'en' ? 'default' : 'outline'} onClick={() => setSourceLanguage('en')}>{tk('english')}</Button>
@@ -296,7 +296,7 @@ const SacredTexts = () => {
                   <section>
                     <h3 className="mb-3 font-semibold">{tk('keyThemes')}</h3>
                     <div className="flex flex-wrap gap-2">
-                      {selected.topics.map((topic) => <Badge key={topic} variant="secondary">{topic}</Badge>)}
+                      {selected.topics.map((topic) => <Badge key={topic} variant="secondary">{lc(topic)}</Badge>)}
                     </div>
                   </section>
 
