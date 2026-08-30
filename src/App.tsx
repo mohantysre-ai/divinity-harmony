@@ -16,6 +16,10 @@ import PriestDirectoryPage from "./pages/PriestDirectoryPage";
 import { AuthProvider } from "./hooks/use-auth";
 import LegalPage from "./pages/LegalPage";
 import { LocaleProvider } from "./hooks/use-locale";
+import MyDharmaPage from "./pages/MyDharmaPage";
+import CultureIndiaPage from "./pages/CultureIndiaPage";
+import WisdomLivePage from "./pages/WisdomLivePage";
+import VedicAstrologyPage from "./pages/VedicAstrologyPage";
 
 const queryClient = new QueryClient();
 
@@ -38,6 +42,10 @@ const App = () => (
               <Route path="/temples" element={<TemplesPage />} />
               <Route path="/priests" element={<PriestDirectoryPage />} />
               <Route path="/settings" element={<UserSettings />} />
+              <Route path="/my-dharma" element={<MyDharmaPage />} />
+              <Route path="/culture" element={<CultureIndiaPage />} />
+              <Route path="/wisdom" element={<WisdomLivePage />} />
+              <Route path="/astrology" element={<VedicAstrologyPage />} />
               <Route path="/login" element={<SplashScreen />} />
               <Route path="/legal/:type" element={<LegalPage />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

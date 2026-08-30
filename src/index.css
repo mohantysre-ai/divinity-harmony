@@ -8,6 +8,11 @@
   font-family: "Noto Sans Kannada", "Tunga", "Nirmala UI", system-ui, sans-serif;
 }
 
+.elder-mode body { font-size: 19px; line-height: 1.7; }
+.elder-mode button, .elder-mode input, .elder-mode select, .elder-mode a { min-height: 46px; }
+.elder-mode .text-xs { font-size: .95rem; }
+.elder-mode .text-sm { font-size: 1.05rem; }
+
 @layer base {
   :root {
     --background: 35 100% 98%;

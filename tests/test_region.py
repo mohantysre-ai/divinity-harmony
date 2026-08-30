@@ -15,6 +15,7 @@ class RegionTests(unittest.TestCase):
         region._CACHE.clear()
         result=region.regional_preference(20.2961,85.8245)
         self.assertEqual(result["script"],"oriya")
+        self.assertEqual(result["locale"],"or")
         self.assertEqual(result["state"],"Odisha")
 
     def test_rejects_invalid_coordinates(self):

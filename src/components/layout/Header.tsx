@@ -19,6 +19,10 @@ import {
   MapPin,
   Users,
   Languages,
+  Accessibility,
+  Compass,
+  Sparkles,
+  Library,
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -31,7 +35,7 @@ import {
 import { useToast } from "@/components/ui/use-toast";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useAuth } from "@/hooks/use-auth";
-import { useLocale } from "@/hooks/use-locale";
+import { localeOptions, useLocale } from "@/hooks/use-locale";
 
 const Navigation = [
   { name: "Home", href: "/", icon: Home },
@@ -42,9 +46,16 @@ const Navigation = [
   { name: "Temples", href: "/temples", icon: MapPin },
   { name: "Priests", href: "/priests", icon: Users },
 ];
+const MoreNavigation = [
+  { name: "My Dharma", href: "/my-dharma", icon: Sparkles },
+  { name: "Culture of India", href: "/culture", icon: Landmark },
+  { name: "Pravachan & Reading", href: "/wisdom", icon: Library },
+  { name: "Vedic Astrology", href: "/astrology", icon: Compass },
+];
 
 const Header = () => {
-  const { locale, setLocale, t, detectedState } = useLocale();
+  const { locale, setLocale, t, detectedState, elderMode, setElderMode } =
+    useLocale();
   const { theme, setTheme } = useTheme();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { user, signOut } = useAuth();
@@ -113,6 +124,24 @@ const Header = () => {
               })}
             </div>
 
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="sm">
+                  Explore
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                {MoreNavigation.map((item) => (
+                  <DropdownMenuItem key={item.href} asChild>
+                    <Link to={item.href}>
+                      <item.icon className="mr-2 h-4 w-4" />
+                      {item.name}
+                    </Link>
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+
             {/* Notification icon */}
             <Button
               variant="ghost"
@@ -122,16 +151,41 @@ const Header = () => {
               <Bell className="h-5 w-5" />
             </Button>
 
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  title={
+                    detectedState ? `Detected: ${detectedState}` : t("language")
+                  }
+                >
+                  <Languages className="mr-1.5 h-4 w-4" />
+                  {localeOptions.find((x) => x.id === locale)?.label}
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent
+                align="end"
+                className="max-h-80 overflow-auto"
+              >
+                <DropdownMenuLabel>Application language</DropdownMenuLabel>
+                {localeOptions.map((item) => (
+                  <DropdownMenuItem
+                    key={item.id}
+                    onClick={() => setLocale(item.id)}
+                  >
+                    {item.label}
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
             <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setLocale(locale === "kn" ? "en" : "kn")}
-              title={
-                detectedState ? `Detected: ${detectedState}` : t("language")
-              }
+              variant={elderMode ? "default" : "ghost"}
+              size="icon"
+              onClick={() => setElderMode(!elderMode)}
+              title="Elder Mode"
             >
-              <Languages className="mr-1.5 h-4 w-4" />
-              {locale === "kn" ? "English" : "ಕನ್ನಡ"}
+              <Accessibility className="h-5 w-5" />
             </Button>
 
             {/* Theme toggle */}
@@ -208,11 +262,12 @@ const Header = () => {
           {/* Mobile menu button */}
           <div className="flex items-center gap-2 xl:hidden">
             <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setLocale(locale === "kn" ? "en" : "kn")}
+              variant={elderMode ? "default" : "ghost"}
+              size="icon"
+              onClick={() => setElderMode(!elderMode)}
+              aria-label="Elder Mode"
             >
-              {locale === "kn" ? "EN" : "ಕನ್ನಡ"}
+              <Accessibility className="h-5 w-5" />
             </Button>
             <Button
               variant="ghost"
@@ -288,6 +343,29 @@ const Header = () => {
                 </Link>
               );
             })}
+            {MoreNavigation.map((item) => (
+              <Link
+                key={item.href}
+                to={item.href}
+                className="flex items-center rounded-lg px-3 py-2.5 text-sm font-medium hover:bg-accent/50"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                <item.icon className="mr-3 h-5 w-5" />
+                {item.name}
+              </Link>
+            ))}
+            <div className="grid grid-cols-2 gap-2 border-y py-3">
+              {localeOptions.map((item) => (
+                <Button
+                  key={item.id}
+                  size="sm"
+                  variant={locale === item.id ? "default" : "outline"}
+                  onClick={() => setLocale(item.id)}
+                >
+                  {item.label}
+                </Button>
+              ))}
+            </div>
             <Link
               to="/settings"
               className="flex items-center px-3 py-2.5 text-sm font-medium rounded-lg hover:bg-accent/50 hover:text-accent-foreground"

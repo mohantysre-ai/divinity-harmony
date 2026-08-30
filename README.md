@@ -18,19 +18,28 @@ Production: [mantra.sigq.in](https://mantra.sigq.in)
 - **Installable PWA** — web manifest, service worker and offline shell caching.
 - **SEO-ready routes** — post-build static HTML entry points for primary public sections.
 - **Mobile wrapper** — Capacitor configuration for later Android/iOS packaging.
+- **My Dharma** — separate current location and home tradition, a daily-practice checklist and private family ritual reminders.
+- **Culture of India** — 36 state/union-territory packs covering language, calendar, signature observances, traditions and temples.
+- **Elder Mode** — persistent larger typography and touch targets across the application.
+- **Pravachan & Reading Room** — official-organization lecture sources and publisher-direct cultural reading links.
+- **Vedic Astrology Learning** — transparent Panchang/Jyotisha education and private birth-detail storage without fabricated charts.
 
 ## Application routes
 
-| Route | Module |
-| --- | --- |
-| `/` | Homepage and daily Panchang |
-| `/mantras` | Mantra Library and japa |
-| `/scriptures` | Sacred Texts reader |
-| `/darshan` | Live Temple Darshan |
-| `/deities` | Deity encyclopedia |
-| `/temples` | Temple map and directory |
-| `/priests` | Priest discovery and Puja Vidhi |
-| `/settings` | Profile and preferences |
+| Route         | Module                                                  |
+| ------------- | ------------------------------------------------------- |
+| `/`           | Homepage and daily Panchang                             |
+| `/mantras`    | Mantra Library and japa                                 |
+| `/scriptures` | Sacred Texts reader                                     |
+| `/darshan`    | Live Temple Darshan                                     |
+| `/deities`    | Deity encyclopedia                                      |
+| `/temples`    | Temple map and directory                                |
+| `/priests`    | Priest discovery and Puja Vidhi                         |
+| `/settings`   | Profile and preferences                                 |
+| `/my-dharma`  | Regional tradition, daily practice and family reminders |
+| `/culture`    | State and union-territory culture packs                 |
+| `/wisdom`     | Pravachan guide and cultural reading room               |
+| `/astrology`  | Vedic astrology learning centre                         |
 
 ## Architecture
 
@@ -92,15 +101,15 @@ Copy the example configuration:
 cp .env.example .env
 ```
 
-| Variable | Required | Purpose |
-| --- | --- | --- |
-| `DH_DB_PATH` | No | SQLite database location. Docker uses `/data/divinity-harmony.db`. |
-| `ANTHROPIC_API_KEY` | No | Enables enhanced server-side explanations. Never expose it as a `VITE_*` value. |
-| `VITE_MANTRA_CATALOG_URL` | No | Merges a hosted, validated mantra JSON catalog with bundled content. |
-| `VITE_LIVE_DARSHAN_FEED_URL` | No | Uses an alternative public Live Darshan feed. |
-| `VITE_SUPPORT_URL` | No | Displays an optional external donation/support destination. |
-| `VITE_SUPABASE_URL` | For accounts | Supabase project URL used by browser authentication. |
-| `VITE_SUPABASE_PUBLISHABLE_KEY` | For accounts | Supabase publishable key. The legacy anon key is also accepted. |
+| Variable                        | Required     | Purpose                                                                         |
+| ------------------------------- | ------------ | ------------------------------------------------------------------------------- |
+| `DH_DB_PATH`                    | No           | SQLite database location. Docker uses `/data/divinity-harmony.db`.              |
+| `ANTHROPIC_API_KEY`             | No           | Enables enhanced server-side explanations. Never expose it as a `VITE_*` value. |
+| `VITE_MANTRA_CATALOG_URL`       | No           | Merges a hosted, validated mantra JSON catalog with bundled content.            |
+| `VITE_LIVE_DARSHAN_FEED_URL`    | No           | Uses an alternative public Live Darshan feed.                                   |
+| `VITE_SUPPORT_URL`              | No           | Displays an optional external donation/support destination.                     |
+| `VITE_SUPABASE_URL`             | For accounts | Supabase project URL used by browser authentication.                            |
+| `VITE_SUPABASE_PUBLISHABLE_KEY` | For accounts | Supabase publishable key. The legacy anon key is also accepted.                 |
 
 Visitors do not need to provide an API key.
 

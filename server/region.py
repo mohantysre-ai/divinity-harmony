@@ -12,6 +12,7 @@ STATE_SCRIPTS = {
  "gujarat":("gujarati","Gujarati"),"punjab":("gurmukhi","Punjabi"),"karnataka":("kannada","Kannada"),
  "kerala":("malayalam","Malayalam"),"maharashtra":("devanagari","Marathi"),"goa":("devanagari","Konkani"),
 }
+STATE_LOCALES={"odisha":"or","telangana":"te","andhra pradesh":"te","tamil nadu":"ta","west bengal":"bn","tripura":"bn","gujarat":"gu","punjab":"pa","karnataka":"kn","kerala":"ml","maharashtra":"mr","goa":"mr","assam":"as","bihar":"hi","chhattisgarh":"hi","haryana":"hi","himachal pradesh":"hi","jharkhand":"hi","madhya pradesh":"hi","rajasthan":"hi","uttar pradesh":"hi","uttarakhand":"hi","delhi":"hi"}
 
 def regional_preference(lat: float, lon: float) -> dict:
  if not (-90<=lat<=90 and -180<=lon<=180): raise ValueError("Invalid coordinates")
@@ -24,6 +25,6 @@ def regional_preference(lat: float, lon: float) -> dict:
  with urlopen(req,timeout=8) as response: payload=json.loads(response.read().decode("utf-8"))
  address=payload.get("address",{});state=str(address.get("state","")).strip();country=str(address.get("country_code","")).lower()
  script,language=STATE_SCRIPTS.get(state.casefold(),("devanagari","Sanskrit / Hindi"))
- result={"script":script,"language":language,"state":state,"countryCode":country}
+ result={"script":script,"language":language,"locale":STATE_LOCALES.get(state.casefold(),"en"),"state":state,"countryCode":country}
  with _LOCK:_CACHE[key]=(now,result)
  return result

@@ -7,8 +7,36 @@ import {
   type ReactNode,
 } from "react";
 
-export type AppLocale = "en" | "kn";
-const copy: Record<AppLocale, Record<string, string>> = {
+export type AppLocale =
+  | "en"
+  | "hi"
+  | "bn"
+  | "gu"
+  | "mr"
+  | "ta"
+  | "te"
+  | "ml"
+  | "kn"
+  | "or"
+  | "pa"
+  | "as";
+export const localeOptions: { id: AppLocale; label: string }[] = [
+  { id: "en", label: "English" },
+  { id: "hi", label: "हिन्दी" },
+  { id: "bn", label: "বাংলা" },
+  { id: "gu", label: "ગુજરાતી" },
+  { id: "mr", label: "मराठी" },
+  { id: "ta", label: "தமிழ்" },
+  { id: "te", label: "తెలుగు" },
+  { id: "ml", label: "മലയാളം" },
+  { id: "kn", label: "ಕನ್ನಡ" },
+  { id: "or", label: "ଓଡ଼ିଆ" },
+  { id: "pa", label: "ਪੰਜਾਬੀ" },
+  { id: "as", label: "অসমীয়া" },
+];
+const copy: Partial<Record<AppLocale, Record<string, string>>> & {
+  en: Record<string, string>;
+} = {
   en: {
     home: "Home",
     mantras: "Mantras",
@@ -57,13 +85,24 @@ type LocaleValue = {
   setLocale: (value: AppLocale) => void;
   t: (key: string, vars?: Record<string, string | number>) => string;
   detectedState: string;
+  elderMode: boolean;
+  setElderMode: (value: boolean) => void;
 };
 const LocaleContext = createContext<LocaleValue | undefined>(undefined);
 export function LocaleProvider({ children }: { children: ReactNode }) {
-  const [locale, setLocaleState] = useState<AppLocale>(
-    () => (localStorage.getItem("app:locale") as AppLocale) || "en",
+  const [locale, setLocaleState] = useState<AppLocale>(() =>
+    localeOptions.some((x) => x.id === localStorage.getItem("app:locale"))
+      ? (localStorage.getItem("app:locale") as AppLocale)
+      : "en",
   );
   const [detectedState, setDetectedState] = useState("");
+  const [elderMode, setElderModeState] = useState(
+    () => localStorage.getItem("app:elder-mode") === "true",
+  );
+  const setElderMode = (value: boolean) => {
+    setElderModeState(value);
+    localStorage.setItem("app:elder-mode", String(value));
+  };
   const setLocale = (value: AppLocale) => {
     setLocaleState(value);
     localStorage.setItem("app:locale", value);
@@ -73,6 +112,9 @@ export function LocaleProvider({ children }: { children: ReactNode }) {
     document.documentElement.lang = locale;
     document.documentElement.classList.toggle("locale-kn", locale === "kn");
   }, [locale]);
+  useEffect(() => {
+    document.documentElement.classList.toggle("elder-mode", elderMode);
+  }, [elderMode]);
   useEffect(() => {
     if (
       localStorage.getItem("app:locale-manual") === "true" ||
@@ -90,8 +132,8 @@ export function LocaleProvider({ children }: { children: ReactNode }) {
           if (!response.ok) return;
           const data = await response.json();
           setDetectedState(data.state || "");
-          if (String(data.state).toLowerCase() === "karnataka")
-            setLocaleState("kn");
+          if (localeOptions.some((x) => x.id === data.locale))
+            setLocaleState(data.locale as AppLocale);
         } catch {
           /* English remains the safe fallback. */
         }
@@ -107,11 +149,13 @@ export function LocaleProvider({ children }: { children: ReactNode }) {
       t: (key: string, vars: Record<string, string | number> = {}) =>
         Object.entries(vars).reduce(
           (text, [name, value]) => text.replace(`{${name}}`, String(value)),
-          copy[locale][key] || copy.en[key] || key,
+          copy[locale]?.[key] || copy.en[key] || key,
         ),
       detectedState,
+      elderMode,
+      setElderMode,
     }),
-    [locale, detectedState],
+    [locale, detectedState, elderMode],
   );
   return (
     <LocaleContext.Provider value={value}>{children}</LocaleContext.Provider>
