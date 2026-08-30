@@ -67,14 +67,11 @@ if defined SKIP_GIT (
 REM ---------------------------------------------------------------------------
 echo.
 echo === [2/6] Docker daemon check ===
-docker info >nul 2>&1
+powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0scripts\ensure-docker.ps1"
 if errorlevel 1 (
-  echo ERROR: Docker Desktop is not running.
-  echo Start Docker Desktop from the Start menu, wait until it says "Engine running",
-  echo then run rebuild-and-push.bat again.
+  echo ERROR: Docker engine is not available.
   exit /b 1
 )
-echo Docker engine OK.
 
 echo.
 echo === [3/6] Docker Hub login ===
