@@ -40,10 +40,10 @@ exit /b 1
 REM ---------------------------------------------------------------------------
 if defined SKIP_GIT (
   echo.
-  echo === [1/5] Skipping Git commit/push ^(--skip-git^) ===
+  echo === [1/6] Skipping Git commit/push ^(--skip-git^) ===
 ) else (
   echo.
-  echo === [1/5] Committing changes to GitHub ===
+  echo === [1/6] Committing changes to GitHub ===
   git add -A
   set "GIT_DIRTY="
   for /f "delims=" %%i in ('git status --porcelain 2^>nul') do set "GIT_DIRTY=1"
@@ -66,7 +66,18 @@ if defined SKIP_GIT (
 
 REM ---------------------------------------------------------------------------
 echo.
-echo === [2/5] Docker Hub login ===
+echo === [2/6] Docker daemon check ===
+docker info >nul 2>&1
+if errorlevel 1 (
+  echo ERROR: Docker Desktop is not running.
+  echo Start Docker Desktop from the Start menu, wait until it says "Engine running",
+  echo then run rebuild-and-push.bat again.
+  exit /b 1
+)
+echo Docker engine OK.
+
+echo.
+echo === [3/6] Docker Hub login ===
 docker login
 if errorlevel 1 (
   echo WARN: docker login failed - will build and run locally without pushing to Hub.
@@ -75,7 +86,7 @@ if errorlevel 1 (
 
 REM ---------------------------------------------------------------------------
 echo.
-echo === [3/5] Building %IMAGE% %NO_CACHE% ===
+echo === [4/6] Building %IMAGE% %NO_CACHE% ===
 docker compose -f "%COMPOSE_FILE%" build %NO_CACHE% web
 if errorlevel 1 (
   echo ERROR: docker compose build failed.
@@ -107,7 +118,7 @@ if not defined SKIP_PUSH (
 
 REM ---------------------------------------------------------------------------
 echo.
-echo === [4/5] Redeploying local container ===
+echo === [5/6] Redeploying local container ===
 docker rm -f divinity-harmony >nul 2>&1
 docker compose -f "%COMPOSE_FILE%" up -d --force-recreate --remove-orphans web
 if errorlevel 1 (
@@ -117,7 +128,7 @@ if errorlevel 1 (
 
 REM ---------------------------------------------------------------------------
 echo.
-echo === [5/5] Smoke testing http://localhost:7800 ===
+echo === [6/6] Smoke testing http://localhost:7800 ===
 powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0scripts\smoke-test.ps1" -BaseUrl "http://localhost:7800"
 if errorlevel 1 (
   echo ERROR: smoke test failed. Container is up but checks did not pass.
