@@ -65,6 +65,19 @@ class LiveDarshanParserTests(unittest.TestCase):
         }
         self.assertEqual(api.parse_live_results(data)[0]["videoId"], "overlayLive1")
 
+    def test_parses_regular_mantra_recordings(self):
+        data = {"contents": [{"videoRenderer": {
+            "videoId": "hanuman123",
+            "title": {"simpleText": "Hanuman Chalisa devotional recording"},
+            "ownerText": {"runs": [{"text": "Bhakti Channel"}]},
+            "lengthText": {"simpleText": "9:42"},
+            "thumbnail": {"thumbnails": [{"url": "https://i.ytimg.com/hanuman.jpg"}]},
+        }}]}
+        results = api.parse_mantra_recordings(data)
+        self.assertEqual(results[0]["videoId"], "hanuman123")
+        self.assertEqual(results[0]["channelTitle"], "Bhakti Channel")
+        self.assertIn("youtube-nocookie.com/embed/hanuman123", results[0]["embedUrl"])
+
     def test_parses_live_darshan_hub_cards_and_deduplicates_buttons(self):
         page = '''
         <article class="ldh-ld-card">

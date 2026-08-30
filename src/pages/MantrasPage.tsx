@@ -2,13 +2,16 @@ import React, { useEffect, useMemo, useState } from 'react';
 import Layout from '@/components/layout/Layout';
 import { ThemeProvider } from '@/hooks/use-theme';
 import AudioPlayer from '@/components/player/AudioPlayer';
+import YouTubeMantraPlayer from '@/components/player/YouTubeMantraPlayer';
 import { Card, CardContent, CardTitle, CardDescription } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import bundledData from '@/data/mantras.json';
 import { useToast } from '@/hooks/use-toast';
 import { useSearchParams } from 'react-router-dom';
-import { devanagariToIast } from '@/lib/transliterate';
+import { mantraScripts, transliterateMantra, type MantraScript } from '@/lib/transliterate';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Label } from '@/components/ui/label';
 import JapaCounter from '@/components/mantras/JapaCounter';
 import { Languages, Sparkles } from 'lucide-react';
 import { Heart } from 'lucide-react';
@@ -28,7 +31,7 @@ const deityImages: Record<string, string> = {
   'Divine Mother': 'https://upload.wikimedia.org/wikipedia/commons/5/5f/Durga_Mahishasuramardini.jpg',
   Lakshmi: 'https://upload.wikimedia.org/wikipedia/commons/6/6d/Lakshmi.jpg',
   Saraswati: 'https://upload.wikimedia.org/wikipedia/commons/1/12/Saraswati.jpg',
-  Gayatri: 'https://upload.wikimedia.org/wikipedia/commons/b/b4/Gayatri1.jpg',
+  Gayatri: '/gayatri-savitri.svg',
   Hanuman: 'https://upload.wikimedia.org/wikipedia/commons/4/46/Hanuman.jpg',
   Murugan: 'https://upload.wikimedia.org/wikipedia/commons/3/3b/Kartikeya.jpg',
   'Vedic & planetary': 'https://upload.wikimedia.org/wikipedia/commons/9/9b/Surya_deva.jpg',
@@ -99,7 +102,10 @@ const MantrasPage = () => {
   const [remoteMantras, setRemoteMantras] = useState<Mantra[]>([]);
   const [catalogNotice, setCatalogNotice] = useState('');
   const [imageExpanded, setImageExpanded] = useState(false);
-  const [script, setScript] = useState<'devanagari' | 'iast'>('devanagari');
+  const [script, setScript] = useState<MantraScript>(() => {
+    const saved=localStorage.getItem('preference:mantra-script');
+    return mantraScripts.some(item=>item.id===saved) ? saved as MantraScript : 'devanagari';
+  });
   const [explanation, setExplanation] = useState('');
   const [explaining, setExplaining] = useState(false);
   const [favorites, setFavorites] = useState<Set<string>>(new Set());
@@ -143,7 +149,7 @@ const MantrasPage = () => {
 
   const catalog = useMemo(() => mergeCatalog(remoteMantras), [remoteMantras]);
   const currentMantra = catalog[Math.min(currentMantraIndex, catalog.length - 1)];
-  const displayedText = script === 'iast' ? devanagariToIast(currentMantra.text) : currentMantra.text;
+  const displayedText = transliterateMantra(currentMantra.text, script);
   const deities = useMemo(() => ['All', ...Array.from(new Set(catalog.map(deityFor))).sort()], [catalog]);
   const visibleMantras = useMemo(() => catalog.map((mantra, index) => ({ mantra, index }))
     .filter(({ mantra }) => {
@@ -205,13 +211,14 @@ const MantrasPage = () => {
         <span className="pointer-events-none absolute left-4 top-4 rounded-full bg-background/85 px-3 py-1 text-xs font-semibold backdrop-blur">{deityFor(currentMantra)}</span>
       </button>
       <div className="p-6"><div className="flex items-start justify-between gap-4"><h2 className="text-2xl font-bold">{currentMantra.title}</h2><Button size="icon" variant="outline" onClick={toggleFavorite} aria-label="Favorite mantra"><Heart className={`h-4 w-4 ${favorites.has(String(currentMantra.id))?'fill-red-600 text-red-600':''}`}/></Button></div><p className="mt-2 text-muted-foreground">{currentMantra.description}</p>
-        <div className="mt-5 flex justify-center gap-2"><Button size="sm" variant={script==='devanagari'?'default':'outline'} onClick={()=>setScript('devanagari')}><Languages className="mr-1 h-4 w-4"/>देवनागरी</Button><Button size="sm" variant={script==='iast'?'default':'outline'} onClick={()=>setScript('iast')}>IAST</Button></div>
+        <div className="mx-auto mt-5 max-w-sm"><Label className="mb-2 flex items-center justify-center text-xs font-semibold uppercase tracking-[.14em] text-muted-foreground"><Languages className="mr-2 h-4 w-4"/>Mantra script</Label><Select value={script} onValueChange={(value:MantraScript)=>{setScript(value);localStorage.setItem('preference:mantra-script',value);}}><SelectTrigger><SelectValue/></SelectTrigger><SelectContent>{mantraScripts.map(item=><SelectItem key={item.id} value={item.id}><span className="font-medium">{item.label}</span><span className="ml-2 text-xs text-muted-foreground">· {item.language}</span></SelectItem>)}</SelectContent></Select><p className="mt-2 text-center text-[11px] text-muted-foreground">This changes the writing script, not the sacred wording or meaning.</p></div>
         <blockquote className="mantra-text my-6 rounded-lg bg-muted/50 p-4 text-center text-lg">{displayedText}</blockquote>
         <p className="text-sm text-muted-foreground"><strong>Translation:</strong> {currentMantra.translation}</p>
         <Button className="mt-5" variant="outline" onClick={explainMantra} disabled={explaining}><Sparkles className="mr-2 h-4 w-4"/>{explaining?'Explaining…':'Explain this mantra'}</Button>
         {explanation&&<div className="mt-4 rounded-xl border bg-orange-50/60 p-4 text-sm leading-6 dark:bg-orange-950/20"><strong>Meaning and context:</strong> {explanation}</div>}
       </div></article>
-      <AudioPlayer text={currentMantra.text} title={currentMantra.title} onNext={handleNext} onPrevious={handlePrevious} hasNext={currentMantraIndex < catalog.length - 1} hasPrevious={currentMantraIndex > 0} />
+      <YouTubeMantraPlayer title={currentMantra.title}/>
+      <details className="mt-4 rounded-xl border bg-card p-4"><summary className="cursor-pointer text-sm font-semibold text-muted-foreground">Spoken-text fallback when a devotional recording is unavailable</summary><AudioPlayer text={currentMantra.text} title={currentMantra.title} onNext={handleNext} onPrevious={handlePrevious} hasNext={currentMantraIndex < catalog.length - 1} hasPrevious={currentMantraIndex > 0}/></details>
       <JapaCounter mantraId={currentMantra.id}/></section>
       <aside className="lg:col-span-1"><h3 className="text-xl font-bold">Mantra Library</h3><p className="mb-3 text-sm text-muted-foreground">{visibleMantras.length} matching prayers</p>
         <Input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search Shiva, Gayatri, peace…" aria-label="Search mantra library" />

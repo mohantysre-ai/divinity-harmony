@@ -150,6 +150,65 @@ def parse_live_results(data: dict[str, Any]) -> list[dict[str, Any]]:
     return results
 
 
+def parse_mantra_recordings(data: dict[str, Any], limit: int = 6) -> list[dict[str, Any]]:
+    """Return ordinary YouTube video results for an explicit devotional query."""
+    results: list[dict[str, Any]] = []
+    seen: set[str] = set()
+    for node in _walk(data):
+        renderer = node.get("videoRenderer")
+        if not isinstance(renderer, dict):
+            continue
+        video_id = renderer.get("videoId")
+        if not isinstance(video_id, str) or not video_id or video_id in seen:
+            continue
+        title = _text(renderer.get("title", {}))
+        if not title:
+            continue
+        seen.add(video_id)
+        thumbnails = renderer.get("thumbnail", {}).get("thumbnails", [])
+        thumbnail = html.unescape(str(thumbnails[-1].get("url", ""))) if isinstance(thumbnails, list) and thumbnails else ""
+        results.append({
+            "videoId": video_id,
+            "title": title,
+            "channelTitle": _text(renderer.get("ownerText", {})) or _text(renderer.get("longBylineText", {})) or "YouTube",
+            "duration": _text(renderer.get("lengthText", {})),
+            "thumbnailUrl": thumbnail,
+            "url": f"https://www.youtube.com/watch?v={video_id}",
+            "embedUrl": f"https://www.youtube-nocookie.com/embed/{video_id}?autoplay=0&rel=0",
+        })
+        if len(results) >= limit:
+            break
+    return results
+
+
+MANTRA_RECORDING_CACHE: dict[str, tuple[float, list[dict[str, Any]]]] = {}
+MANTRA_RECORDING_LOCK = threading.Lock()
+
+
+def search_mantra_recordings(query: str) -> list[dict[str, Any]]:
+    normalized = " ".join(query.split())[:120]
+    now = time.time()
+    with MANTRA_RECORDING_LOCK:
+        cached = MANTRA_RECORDING_CACHE.get(normalized.casefold())
+        if cached and now - cached[0] < 86400:
+            return cached[1]
+    params = urlencode({"search_query": f"{normalized} devotional mantra full", "hl": "en", "gl": "IN"})
+    request = Request(
+        f"{YOUTUBE_SEARCH_URL}?{params}",
+        headers={
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/131.0 Safari/537.36",
+            "Accept-Language": "en-IN,en;q=0.9,hi;q=0.8",
+            "Cookie": "CONSENT=YES+cb.20210328-17-p0.en+FX+410",
+        },
+    )
+    with urlopen(request, timeout=REQUEST_TIMEOUT_SECONDS) as response:
+        page = response.read().decode("utf-8", errors="replace")
+    items = parse_mantra_recordings(extract_initial_data(page))
+    with MANTRA_RECORDING_LOCK:
+        MANTRA_RECORDING_CACHE[normalized.casefold()] = (now, items)
+    return items
+
+
 def fetch_query(query: str) -> list[dict[str, Any]]:
     params = urlencode({"search_query": query, "sp": LIVE_FILTER, "hl": "en", "gl": "IN"})
     request = Request(
@@ -316,6 +375,16 @@ class Handler(BaseHTTPRequestHandler):
             return
         if path == "/api/priests":
             self._json(200, {"items": list_priests()})
+            return
+        if path == "/api/mantra-recordings":
+            title = query.get("title", [""])[0].strip()
+            if not title:
+                self._json(400, {"error": "A mantra title is required."})
+                return
+            try:
+                self._json(200, {"items": search_mantra_recordings(title)})
+            except Exception:
+                self._json(503, {"error": "YouTube recordings are temporarily unavailable.", "items": []})
             return
         if path == "/api/profile":
             device_id = self.headers.get("X-Device-ID", "")[:100]

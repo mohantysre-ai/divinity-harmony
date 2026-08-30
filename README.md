@@ -6,7 +6,7 @@ Production: [mantra.sigq.in](https://mantra.sigq.in)
 
 ## Features
 
-- **Sacred Mantras** — searchable mantra catalog, deity filters, Devanagari/IAST display, contextual explanations, favorites and a 108-count digital japa mala.
+- **Sacred Mantras** — searchable mantra catalog, deity filters, ten regional writing scripts, contextual explanations, dynamic devotional YouTube playback, favorites and a 108-count digital japa mala.
 - **Sacred Texts** — categorized Vedas, Upanishads, Itihasa, Puranas, Gita and devotional literature with full-content and chapter reading APIs.
 - **Live Temple Darshan** — automatically discovers currently live YouTube temple/darshan streams without asking visitors for an API key.
 - **Deity Encyclopedia** — deity profiles with iconography, festivals, associated mantras and related scriptures.
@@ -140,6 +140,15 @@ See:
 - [Example catalog](public/mantra-catalog.example.json)
 
 Only use recordings, translations and images that are public domain, openly licensed, owned by the project, or used with permission. The interface provides graceful media fallbacks when an external file becomes unavailable.
+
+Each mantra searches for a matching devotional recording through the same-origin
+API and plays it in YouTube's privacy-enhanced official player. The app does not
+download, extract or convert YouTube audio to MP3. Visitors can switch the sacred
+text between Devanagari, IAST, Odia, Telugu, Tamil, Bengali, Gujarati, Punjabi,
+Kannada and Malayalam; the selected script is remembered in that browser.
+
+See the [implementation gap analysis](docs/implementation-gap-analysis.md) for
+the verified status of every architecture requirement and the remaining work.
 
 ## Priest directory and Puja Vidhi
 
