@@ -4,8 +4,11 @@
 @tailwind components;
 @tailwind utilities;
 
-.locale-kn body {
-  font-family: "Noto Sans Kannada", "Tunga", "Nirmala UI", system-ui, sans-serif;
+html[data-app-locale]:not([data-app-locale="en"]) body {
+  font-family: "Noto Sans Devanagari", "Noto Sans Kannada", "Noto Sans Bengali",
+    "Noto Sans Gujarati", "Noto Sans Gurmukhi", "Noto Sans Oriya",
+    "Noto Sans Tamil", "Noto Sans Telugu", "Noto Sans Malayalam",
+    "Nirmala UI", system-ui, sans-serif;
 }
 
 .elder-mode body { font-size: 19px; line-height: 1.7; }

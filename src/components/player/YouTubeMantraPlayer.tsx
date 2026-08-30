@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { ExternalLink, Loader2, Music2, Play, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useLocale } from "@/hooks/use-locale";
 
 type Recording = {
   videoId: string;
@@ -12,6 +13,7 @@ type Recording = {
   embedUrl: string;
 };
 export default function YouTubeMantraPlayer({ title }: { title: string }) {
+  const { locale } = useLocale();
   const [items, setItems] = useState<Recording[]>([]),
     [selected, setSelected] = useState(0),
     [loading, setLoading] = useState(true),
@@ -52,7 +54,9 @@ export default function YouTubeMantraPlayer({ title }: { title: string }) {
         `https://www.youtube.com/results?search_query=${encodeURIComponent(`${title} devotional mantra full`)}`,
       [title],
     ),
-    playUrl = current?.embedUrl.replace("autoplay=0", "autoplay=1");
+    playUrl = current
+      ? `${current.embedUrl.replace("autoplay=0", "autoplay=1")}&hl=${locale}`
+      : undefined;
   return (
     <section className="mt-6 overflow-hidden rounded-2xl border bg-card shadow-sm">
       <div className="flex flex-col gap-4 p-5 sm:flex-row sm:items-center">

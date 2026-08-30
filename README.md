@@ -20,6 +20,7 @@ Production: [mantra.sigq.in](https://mantra.sigq.in)
 - **Mobile wrapper** — Capacitor configuration for later Android/iOS packaging.
 - **My Dharma** — separate current location and home tradition, a daily-practice checklist and private family ritual reminders.
 - **Culture of India** — 36 state/union-territory packs covering language, calendar, signature observances, traditions and temples.
+- **Strict regional-script UI** — state/browser language detection, a persistent manual switch and document-wide regional rendering so English does not leak into regional mode as pages update.
 - **Elder Mode** — persistent larger typography and touch targets across the application.
 - **Pravachan & Reading Room** — official-organization lecture sources and publisher-direct cultural reading links.
 - **Vedic Astrology Learning** — transparent Panchang/Jyotisha education and private birth-detail storage without fabricated charts.
@@ -155,6 +156,14 @@ API and plays it in YouTube's privacy-enhanced official player. The app does not
 download, extract or convert YouTube audio to MP3. Visitors can switch the sacred
 text between Devanagari, IAST, Odia, Telugu, Tamil, Bengali, Gujarati, Punjabi,
 Kannada and Malayalam; the selected script is remembered in that browser.
+
+The application interface supports Hindi, Bengali, Gujarati, Marathi, Tamil,
+Telugu, Malayalam, Kannada, Odia, Punjabi and Assamese alongside manually
+selected English. Kannada has reviewed core-interface translations. Until every
+long-form sentence in every regional language receives editorial review,
+remaining Latin text is rendered phonetically in the selected Indic script so
+regional mode never falls back to visible English. Content inside third-party
+iframes, such as YouTube's own controls, remains controlled by that provider.
 
 See the [implementation gap analysis](docs/implementation-gap-analysis.md) for
 the verified status of every architecture requirement and the remaining work.

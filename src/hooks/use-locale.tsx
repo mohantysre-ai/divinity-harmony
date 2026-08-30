@@ -6,6 +6,8 @@ import {
   useState,
   type ReactNode,
 } from "react";
+import { useRegionalUi } from "@/hooks/use-regional-ui";
+import { regionalize } from "@/lib/regional-ui";
 
 export type AppLocale =
   | "en"
@@ -96,6 +98,7 @@ export function LocaleProvider({ children }: { children: ReactNode }) {
       : "en",
   );
   const [detectedState, setDetectedState] = useState("");
+  useRegionalUi(locale);
   const [elderMode, setElderModeState] = useState(
     () => localStorage.getItem("app:elder-mode") === "true",
   );
@@ -110,6 +113,7 @@ export function LocaleProvider({ children }: { children: ReactNode }) {
   };
   useEffect(() => {
     document.documentElement.lang = locale;
+    document.documentElement.dataset.appLocale = locale;
     document.documentElement.classList.toggle("locale-kn", locale === "kn");
   }, [locale]);
   useEffect(() => {
@@ -149,7 +153,7 @@ export function LocaleProvider({ children }: { children: ReactNode }) {
       t: (key: string, vars: Record<string, string | number> = {}) =>
         Object.entries(vars).reduce(
           (text, [name, value]) => text.replace(`{${name}}`, String(value)),
-          copy[locale]?.[key] || copy.en[key] || key,
+          copy[locale]?.[key] || regionalize(copy.en[key] || key, locale),
         ),
       detectedState,
       elderMode,

@@ -5,10 +5,12 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Radio, RefreshCw, Youtube } from 'lucide-react';
 import { getLiveDarshans, type LiveDarshan as LiveDarshanItem } from '@/lib/live-darshan';
+import { useLocale } from '@/hooks/use-locale';
 
 const POLL_MS = 5 * 60 * 1000;
 
 const LiveDarshan = () => {
+  const { locale } = useLocale();
   const [darshans, setDarshans] = useState<LiveDarshanItem[]>([]);
   const [selected, setSelected] = useState<LiveDarshanItem | null>(null);
   const [message, setMessage] = useState('Searching live temple sources...');
@@ -73,7 +75,7 @@ const LiveDarshan = () => {
                 <div className="relative aspect-video">
                   <iframe
                     key={selected.videoId}
-                    src={selected.embedUrl || `https://www.youtube-nocookie.com/embed/${selected.videoId}?autoplay=1&rel=0`}
+                    src={`${selected.embedUrl || `https://www.youtube-nocookie.com/embed/${selected.videoId}?autoplay=1&rel=0`}${(selected.embedUrl || '').includes('?') ? '&' : selected.embedUrl ? '?' : '&'}hl=${locale}`}
                     title={selected.title}
                     allow="autoplay; encrypted-media; picture-in-picture"
                     allowFullScreen
