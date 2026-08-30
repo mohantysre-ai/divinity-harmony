@@ -17,7 +17,19 @@ const pravachans = [
     name: "Premanand Ji Maharaj",
     language: "Hindi",
     topic: "Bhakti · Krishna Katha · Vrindavan",
-    url: "https://www.youtube.com/@PremanandJiMaharaj",
+    url: "https://www.youtube.com/@BhajanMarg/streams",
+  },
+  {
+    name: "Aniruddhacharya Ji",
+    language: "Hindi",
+    topic: "Bhagavad Gita · Ram Katha · Bhakti",
+    url: "https://www.youtube.com/@Aniruddhacharyaji/streams",
+  },
+  {
+    name: "Sanatan Bhakti TV",
+    language: "Hindi",
+    topic: "Bhajan · Kirtan · Sanatana Dharma",
+    url: "https://www.youtube.com/@SanatanBhaktiTV",
   },
   {
     name: "Swami Mukundananda",
@@ -59,7 +71,7 @@ const pravachans = [
     name: "Sri Sri Ravi Shankar",
     language: "Hindi · English",
     topic: "Meditation · wisdom · cultural talks",
-    url: "https://www.youtube.com/@ArtOfLivingTV",
+    url: "https://www.youtube.com/@artofliving-official/streams",
   },
   {
     name: "Sadhguru",
