@@ -1,0 +1,33 @@
+{
+  "hi": {
+    "matchingPrayers": "मिलती-जुलती प्रार्थनाएँ",
+    "searchMantraPlaceholder": "Shiva, Krishna, शांति खोजें…",
+    "exploreMantrasTemplate": "{count}+ प्रार्थनाएँ, वैदिक स्तोत्र और स्तुति खोजें। देवता, पाठ या संकल्प से खोजें।",
+    "logout": "लॉग आउट"
+  },
+  "kn": {
+    "yourAccount": "ನಿಮ್ಮ ಖಾತೆ",
+    "userSettings": "ಬಳಕೆದಾರ ಸೆಟ್ಟಿಂಗ್‌ಗಳು",
+    "profile": "ಪ್ರೊಫೈಲ್",
+    "preferences": "ಆದ್ಯತೆಗಳು",
+    "account": "ಖಾತೆ",
+    "displayName": "ಪ್ರದರ್ಶಿಸುವ ಹೆಸರು",
+    "darkTheme": "ಗಾಢ ಥೀಮ್",
+    "loggedOut": "ಲಾಗ್ ಔಟ್ ಆಗಿದೆ",
+    "loggedOutSuccess": "ನೀವು ಯಶಸ್ವಿಯಾಗಿ ಲಾಗ್ ಔಟ್ ಆಗಿದ್ದೀರಿ.",
+    "threeLivingPaths": "ಮೂರು ಜೀವಂತ ಮಾರ್ಗಗಳು. ಒಂದು ಪವಿತ್ರ ಸ್ಥಳ.",
+    "yourSpiritualLibrary": "ನಿಮ್ಮ ಆಧ್ಯಾತ್ಮಿಕ ಗ್ರಂಥಾಲಯ",
+    "findWhatSpeaks": "ನಿಮ್ಮ ಹೃದಯಕ್ಕೆ ಮಾತನಾಡುವುದನ್ನು ಹುಡುಕಿ.",
+    "chooseTheMoment": "ನಿಮಗೆ ಬೇಕಾದ ಕ್ಷಣವನ್ನು ಆಯ್ಕೆಮಾಡಿ.",
+    "sacredRhythmEveryDay": "ಪ್ರತಿದಿನಕ್ಕೊಂದು ಪವಿತ್ರ ಲಯ",
+    "liveTempleDarshan": "ಲೈವ್ ದೇವಾಲಯ ದರ್ಶನ",
+    "welcomeBack": "ಮತ್ತೆ ಸ್ವಾಗತ",
+    "createAccount": "ಖಾತೆ ರಚಿಸಿ",
+    "signIn": "ಸೈನ್ ಇನ್",
+    "continueAsGuest": "ಅತಿಥಿಯಾಗಿ ಮುಂದುವರಿಸಿ",
+    "matchingPrayers": "ಹೊಂದಾಣಿಕೆಯ ಪ್ರಾರ್ಥನೆಗಳು",
+    "searchMantraPlaceholder": "Shiva, Krishna, ಶಾಂತಿ ಹುಡುಕಿ…",
+    "exploreMantrasTemplate": "{count}+ ಪ್ರಾರ್ಥನೆಗಳು, ವೇದ ಸ್ತೋತ್ರಗಳು ಮತ್ತು ಸ್ತುತಿಗಳನ್ನು ಅನ್ವೇಷಿಸಿ. ದೇವತೆ, ಪಾಠ ಅಥವಾ ಉದ್ದೇಶದಿಂದ ಹುಡುಕಿ.",
+    "logout": "ಲಾಗ್ ಔಟ್"
+  }
+}

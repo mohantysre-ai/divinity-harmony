@@ -8,6 +8,7 @@ import {
 } from "react";
 import { useRegionalUi } from "@/hooks/use-regional-ui";
 import { translateUiText } from "@/lib/ui-translations";
+import { translateKey, type UiKey } from "@/lib/locale-packs";
 
 export type AppLocale =
   | "en"
@@ -96,6 +97,7 @@ type LocaleValue = {
   locale: AppLocale;
   setLocale: (value: AppLocale) => void;
   t: (key: string, vars?: Record<string, string | number>) => string;
+  tk: (key: UiKey, vars?: Record<string, string | number>) => string;
   ui: (text: string) => string;
   detectedState: string;
   elderMode: boolean;
@@ -167,6 +169,11 @@ export function LocaleProvider({ children }: { children: ReactNode }) {
         );
         return translateUiText(english, locale);
       },
+      tk: (key: UiKey, vars: Record<string, string | number> = {}) =>
+        Object.entries(vars).reduce(
+          (text, [name, value]) => text.replace(`{${name}}`, String(value)),
+          translateKey(locale, key),
+        ),
       ui: (text: string) => translateUiText(text, locale),
       detectedState,
       elderMode,
