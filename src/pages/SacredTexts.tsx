@@ -11,6 +11,8 @@ import { sacredTextCategories, sacredTexts, type SacredText } from '@/data/sacre
 import { buildSacredTextArticle } from '@/lib/sacred-text-content';
 import { fetchSacredChapter, fetchSacredSourceContent, type SacredSourceContent } from '@/lib/sacred-source-content';
 import { useSearchParams } from 'react-router-dom';
+import { useLocale } from '@/hooks/use-locale';
+import { sacredCategoryKey } from '@/lib/sacred-category-i18n';
 
 const categoryStyle: Record<string, { symbol: string; gradient: string }> = {
   'Vedas & Vedangas': { symbol: 'ॐ', gradient: 'from-amber-700 via-orange-600 to-yellow-500' },
@@ -27,6 +29,7 @@ const categoryStyle: Record<string, { symbol: string; gradient: string }> = {
 const PAGE_SIZE = 60;
 
 const SacredTexts = () => {
+  const { tk } = useLocale();
   const [query, setQuery] = useState('');
   const [category, setCategory] = useState('All');
   const [selected, setSelected] = useState<SacredText | null>(null);
@@ -77,7 +80,7 @@ const SacredTexts = () => {
       const chapter = await fetchSacredChapter(sourceContent.host, page);
       setSourceContent({ ...sourceContent, ...chapter, chapters: sourceContent.chapters });
     } catch (error) {
-      setSourceError(error instanceof Error ? error.message : 'The selected chapter is unavailable.');
+      setSourceError(error instanceof Error ? error.message : tk('chapterUnavailable'));
     } finally {
       setSourceLoading(false);
     }
@@ -92,15 +95,14 @@ const SacredTexts = () => {
         <main className="container mx-auto px-4 py-10">
           <section className="relative mb-10 overflow-hidden rounded-3xl border bg-gradient-to-br from-hindu-red/10 via-background to-hindu-gold/15 px-6 py-10 text-center md:px-12">
             <Sparkles className="mx-auto mb-3 h-7 w-7 text-hindu-gold" />
-            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-hindu-red">Sanatana knowledge library</p>
-            <h1 className="mt-3 text-4xl font-bold md:text-5xl">Sacred Texts & Hindu Heritage</h1>
+            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-hindu-red">{tk('sanatanaKnowledgeLibrary')}</p>
+            <h1 className="mt-3 text-4xl font-bold md:text-5xl">{tk('sacredTextsHeritage')}</h1>
             <p className="mx-auto mt-4 max-w-3xl text-muted-foreground">
-              Explore a growing library covering Vedas, Upanishads, Puranas, Gitas, sacred narratives, philosophy,
-              Hindu deities, Vedic hymns, temples, teachers, family dharma and ancestral traditions.
+              {tk('sacredTextsLibraryDesc')}
             </p>
             <div className="mt-6 flex flex-wrap justify-center gap-3">
-              <Badge variant="secondary" className="px-4 py-2 text-sm"><Library className="mr-2 h-4 w-4" />{sacredTexts.length} resources</Badge>
-              <Badge variant="secondary" className="px-4 py-2 text-sm"><BookOpen className="mr-2 h-4 w-4" />9 knowledge paths</Badge>
+              <Badge variant="secondary" className="px-4 py-2 text-sm"><Library className="mr-2 h-4 w-4" />{tk('resourcesCountTemplate', { count: String(sacredTexts.length) })}</Badge>
+              <Badge variant="secondary" className="px-4 py-2 text-sm"><BookOpen className="mr-2 h-4 w-4" />{tk('knowledgePathsTemplate', { count: '9' })}</Badge>
             </div>
           </section>
 
@@ -110,7 +112,7 @@ const SacredTexts = () => {
               <Input
                 value={query}
                 onChange={(event) => setQuery(event.target.value)}
-                placeholder="Search Krishna, ancestors, Vedas, yoga, mantra..."
+                placeholder={tk('searchScripturesPlaceholder')}
                 className="h-12 rounded-full pl-12"
               />
             </div>
@@ -124,12 +126,12 @@ const SacredTexts = () => {
                   className="rounded-full"
                   onClick={() => setCategory(item)}
                 >
-                  {item}
+                  {tk(sacredCategoryKey(item))}
                 </Button>
               ))}
             </div>
             <p className="text-center text-sm text-muted-foreground">
-              Showing {filteredTexts.length} of {sacredTexts.length} resources
+              {tk('showingResourcesTemplate', { shown: String(filteredTexts.length), total: String(sacredTexts.length) })}
             </p>
           </section>
 
@@ -144,7 +146,7 @@ const SacredTexts = () => {
                       <Badge className="absolute left-4 top-4 border-white/30 bg-black/25 text-white hover:bg-black/25">#{text.id}</Badge>
                     </div>
                     <CardContent className="flex-1 p-6">
-                      <Badge variant="outline" className="mb-3">{text.category}</Badge>
+                      <Badge variant="outline" className="mb-3">{tk(sacredCategoryKey(text.category))}</Badge>
                       <h2 className="text-xl font-bold leading-tight">{text.title}</h2>
                       <p className="mt-2 text-xs font-medium text-hindu-red">{text.tradition}</p>
                       <p className="mt-3 line-clamp-3 text-sm text-muted-foreground">{text.description}</p>
@@ -154,7 +156,7 @@ const SacredTexts = () => {
                     </CardContent>
                     <CardFooter className="border-t p-4">
                       <Button className="w-full" onClick={() => openText(text)}>
-                        <BookOpen className="mr-2 h-4 w-4" /> Read full details
+                        <BookOpen className="mr-2 h-4 w-4" /> {tk('readFullDetails')}
                       </Button>
                     </CardFooter>
                   </Card>
@@ -164,23 +166,21 @@ const SacredTexts = () => {
           ) : (
             <section className="rounded-2xl border border-dashed p-12 text-center">
               <Search className="mx-auto h-8 w-8 text-muted-foreground" />
-              <h2 className="mt-3 text-lg font-semibold">No matching sacred resource</h2>
-              <p className="mt-1 text-sm text-muted-foreground">Try another keyword or choose All categories.</p>
+              <h2 className="mt-3 text-lg font-semibold">{tk('noMatchingSacredResource')}</h2>
+              <p className="mt-1 text-sm text-muted-foreground">{tk('tryAllCategories')}</p>
             </section>
           )}
 
           {visibleCount < filteredTexts.length && (
             <div className="mt-8 flex justify-center">
               <Button variant="outline" size="lg" onClick={() => setVisibleCount((count) => count + PAGE_SIZE)}>
-                Load {Math.min(PAGE_SIZE, filteredTexts.length - visibleCount)} more resources
+                {tk('loadMoreResourcesTemplate', { count: String(Math.min(PAGE_SIZE, filteredTexts.length - visibleCount)) })}
               </Button>
             </div>
           )}
 
           <section className="mt-10 rounded-2xl border bg-muted/30 p-5 text-sm text-muted-foreground">
-            <strong className="text-foreground">Respectful-use note:</strong> This library provides educational overviews,
-            not priestly or legal instruction. Ancestral rites, initiation practices and recitation rules vary by family,
-            region and sampradaya; follow qualified family or tradition-specific guidance for ritual performance.
+            <strong className="text-foreground">{tk('respectfulUseTitle')}:</strong> {tk('respectfulUseLibraryNote')}
           </section>
         </main>
 
@@ -190,7 +190,7 @@ const SacredTexts = () => {
               <>
                 <div className={`bg-gradient-to-br p-7 text-white ${categoryStyle[selected.category]?.gradient || categoryStyle['Itihasa & Sacred Narratives'].gradient}`}>
                   <DialogHeader>
-                    <Badge className="mb-3 w-fit border-white/30 bg-black/20 text-white hover:bg-black/20">{selected.category}</Badge>
+                    <Badge className="mb-3 w-fit border-white/30 bg-black/20 text-white hover:bg-black/20">{tk(sacredCategoryKey(selected.category))}</Badge>
                     <DialogTitle className="text-left text-3xl text-white">{selected.title}</DialogTitle>
                   </DialogHeader>
                   <p className="mt-2 text-sm font-medium text-white/85">{selected.tradition}</p>
@@ -201,25 +201,25 @@ const SacredTexts = () => {
                     <div className="flex flex-wrap items-start justify-between gap-4">
                       <div>
                         <p className="text-xs font-semibold uppercase tracking-[0.18em] text-hindu-red">
-                          {sourceContent?.sourceType === 'wikisource' ? 'Source text' : 'Detailed source article'}
+                          {sourceContent?.sourceType === 'wikisource' ? tk('sourceTextLabel') : tk('detailedSourceArticle')}
                         </p>
                         <h3 className="mt-2 text-2xl font-bold">{sourceContent?.title || selected.title}</h3>
                       </div>
                       <div className="flex gap-2">
-                        <Button size="sm" variant={sourceLanguage === 'en' ? 'default' : 'outline'} onClick={() => setSourceLanguage('en')}>English</Button>
+                        <Button size="sm" variant={sourceLanguage === 'en' ? 'default' : 'outline'} onClick={() => setSourceLanguage('en')}>{tk('english')}</Button>
                         <Button size="sm" variant={sourceLanguage === 'sa' ? 'default' : 'outline'} onClick={() => setSourceLanguage('sa')}>संस्कृत</Button>
                       </div>
                     </div>
 
                     {sourceLoading && !sourceContent && (
                       <div className="flex min-h-48 items-center justify-center gap-3 text-muted-foreground">
-                        <Loader2 className="h-5 w-5 animate-spin" /> Loading the source text…
+                        <Loader2 className="h-5 w-5 animate-spin" /> {tk('loadingSourceText')}
                       </div>
                     )}
 
                     {sourceError && !sourceContent && (
                       <div className="mt-5 rounded-xl border border-destructive/30 bg-destructive/5 p-4 text-sm text-destructive">
-                        {sourceError} Try English, or use the study companion below while the source is temporarily unavailable.
+                        {sourceError} {tk('sourceErrorHint')}
                       </div>
                     )}
 
@@ -228,13 +228,13 @@ const SacredTexts = () => {
                         <div className="mt-4 flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
                           <span>{sourceContent.source} · {sourceContent.language}</span>
                           <a className="inline-flex items-center text-muted-foreground hover:text-hindu-red hover:underline" href={sourceContent.url} target="_blank" rel="noreferrer">
-                            Source &amp; license <ExternalLink className="ml-1 h-3.5 w-3.5" />
+                            {tk('sourceAndLicense')} <ExternalLink className="ml-1 h-3.5 w-3.5" />
                           </a>
                         </div>
                         <p className="mt-2 text-xs text-muted-foreground">{sourceContent.license}</p>
                         {sourceContent.chapters.length > 0 && (
                           <label className="mt-5 block text-sm font-semibold">
-                            Choose chapter or section
+                            {tk('chooseChapterSection')}
                             <select
                               className="mt-2 h-11 w-full rounded-md border bg-background px-3 font-normal"
                               value={sourceContent.activeChapter || ''}
@@ -254,13 +254,13 @@ const SacredTexts = () => {
                   </section>
 
                   <section>
-                    <p className="text-xs font-semibold uppercase tracking-[0.18em] text-hindu-red">Study companion</p>
-                    <h3 className="mt-2 text-2xl font-bold">Background and meaning</h3>
+                    <p className="text-xs font-semibold uppercase tracking-[0.18em] text-hindu-red">{tk('studyCompanion')}</p>
+                    <h3 className="mt-2 text-2xl font-bold">{tk('backgroundAndMeaning')}</h3>
                     <p className="mt-3 text-base leading-8 text-muted-foreground">{selectedArticle.introduction}</p>
                   </section>
 
                   <section className="rounded-2xl border bg-muted/25 p-5">
-                    <h3 className="text-xl font-bold">What this resource teaches</h3>
+                    <h3 className="text-xl font-bold">{tk('whatResourceTeaches')}</h3>
                     <ul className="mt-4 space-y-3">
                       {selectedArticle.keyPoints.map((point) => (
                         <li key={point} className="flex gap-3 text-sm leading-6 text-muted-foreground">
@@ -272,12 +272,12 @@ const SacredTexts = () => {
                   </section>
 
                   <section>
-                    <h3 className="text-xl font-bold">Why it matters</h3>
+                    <h3 className="text-xl font-bold">{tk('whyItMatters')}</h3>
                     <p className="mt-3 leading-7 text-muted-foreground">{selectedArticle.significance}</p>
                   </section>
 
                   <section>
-                    <h3 className="text-xl font-bold">How to study it</h3>
+                    <h3 className="text-xl font-bold">{tk('howToStudyIt')}</h3>
                     <ol className="mt-4 space-y-3">
                       {selectedArticle.studyPath.map((step, index) => (
                         <li key={step} className="flex gap-3 text-sm leading-6 text-muted-foreground">
@@ -289,12 +289,12 @@ const SacredTexts = () => {
                   </section>
 
                   <section className="rounded-2xl bg-hindu-gold/10 p-5">
-                    <h3 className="font-bold">Tradition and interpretation</h3>
+                    <h3 className="font-bold">{tk('traditionAndInterpretation')}</h3>
                     <p className="mt-2 text-sm leading-6 text-muted-foreground">{selectedArticle.context}</p>
                   </section>
 
                   <section>
-                    <h3 className="mb-3 font-semibold">Key themes</h3>
+                    <h3 className="mb-3 font-semibold">{tk('keyThemes')}</h3>
                     <div className="flex flex-wrap gap-2">
                       {selected.topics.map((topic) => <Badge key={topic} variant="secondary">{topic}</Badge>)}
                     </div>
@@ -302,7 +302,7 @@ const SacredTexts = () => {
 
                   {selectedArticle.practiceNote && (
                     <div className="rounded-xl border border-hindu-red/20 bg-hindu-red/5 p-4 text-sm leading-6 text-muted-foreground">
-                      <strong className="text-foreground">Practice note:</strong> {selectedArticle.practiceNote}
+                      <strong className="text-foreground">{tk('practiceNoteLabel')}</strong> {selectedArticle.practiceNote}
                     </div>
                   )}
 

@@ -8,9 +8,23 @@ import {
 } from "lucide-react";
 import Layout from "@/components/layout/Layout";
 import { ThemeProvider } from "@/hooks/use-theme";
+import { useLocale } from "@/hooks/use-locale";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+
 const pravachans = [
+  {
+    name: "Premanand Ji Maharaj",
+    language: "Hindi",
+    topic: "Bhakti · Krishna Katha · Vrindavan",
+    url: "https://www.youtube.com/@PremanandJiMaharaj",
+  },
+  {
+    name: "Swami Mukundananda",
+    language: "Hindi · English",
+    topic: "Bhagavad Gita · Vedanta · practical spirituality",
+    url: "https://www.youtube.com/@SwamiMukundananda",
+  },
   {
     name: "Chinmaya Mission",
     language: "Multiple languages",
@@ -40,6 +54,18 @@ const pravachans = [
     language: "Multiple languages",
     topic: "Gita · Upanishads · practical Vedanta",
     url: "https://www.youtube.com/@ChinmayaChannel",
+  },
+  {
+    name: "Sri Sri Ravi Shankar",
+    language: "Hindi · English",
+    topic: "Meditation · wisdom · cultural talks",
+    url: "https://www.youtube.com/@ArtOfLivingTV",
+  },
+  {
+    name: "Sadhguru",
+    language: "English · Tamil · Hindi",
+    topic: "Yoga · inner engineering · cultural wisdom",
+    url: "https://www.youtube.com/@Sadhguru",
   },
 ];
 const reading = [
@@ -72,7 +98,9 @@ const reading = [
     url: "https://www.chinmayamission.com/global/Video",
   },
 ];
+
 export default function WisdomLivePage() {
+  const { tk, ui } = useLocale();
   const [q, setQ] = useState("");
   const talks = useMemo(
     () =>
@@ -89,22 +117,17 @@ export default function WisdomLivePage() {
         <main>
           <section className="rounded-[2rem] bg-gradient-to-br from-violet-950 via-red-950 to-orange-900 p-8 text-white">
             <p className="text-xs font-bold uppercase tracking-[.22em] text-amber-200">
-              Listen with context
+              {tk("listenWithContext")}
             </p>
-            <h1 className="mt-2 text-4xl font-bold">
-              Pravachan & Cultural Reading Room
-            </h1>
-            <p className="mt-3 max-w-3xl text-orange-100/75">
-              Official organizations, named speakers and original
-              publishers—never scraped articles presented as ours.
-            </p>
+            <h1 className="mt-2 text-4xl font-bold">{tk("pravachanCulturalReading")}</h1>
+            <p className="mt-3 max-w-3xl text-orange-100/75">{tk("publisherCopyrightNote")}</p>
             <div className="relative mt-6 max-w-xl">
               <Search className="absolute left-3 top-3 h-4 w-4 text-stone-500" />
               <Input
                 value={q}
                 onChange={(e) => setQ(e.target.value)}
                 className="border-white/20 bg-white pl-9 text-stone-900"
-                placeholder="Search Kannada, Gita, Bhagavatam, Vedanta…"
+                placeholder={tk("searchCulturePlaceholder")}
               />
             </div>
           </section>
@@ -113,9 +136,9 @@ export default function WisdomLivePage() {
               <Mic2 className="h-7 w-7 text-orange-600" />
               <div>
                 <p className="text-xs font-bold uppercase tracking-widest text-orange-700">
-                  Official sources
+                  {tk("officialSources")}
                 </p>
-                <h2 className="text-3xl font-bold">Pravachan guide</h2>
+                <h2 className="text-3xl font-bold">{tk("pravachanGuide")}</h2>
               </div>
             </div>
             <div className="mt-5 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
@@ -132,12 +155,10 @@ export default function WisdomLivePage() {
                     <ExternalLink className="h-4 w-4 text-muted-foreground" />
                   </div>
                   <h3 className="mt-4 text-lg font-bold">{x.name}</h3>
-                  <p className="mt-1 text-sm text-muted-foreground">
-                    {x.language}
-                  </p>
-                  <p className="mt-4 text-sm">{x.topic}</p>
+                  <p className="mt-1 text-sm text-muted-foreground">{ui(x.language)}</p>
+                  <p className="mt-4 text-sm">{ui(x.topic)}</p>
                   <Badge className="mt-4" variant="outline">
-                    Open current schedule/library
+                    {tk("openScheduleLibrary")}
                   </Badge>
                 </a>
               ))}
@@ -148,9 +169,9 @@ export default function WisdomLivePage() {
               <BookMarked className="h-7 w-7 text-orange-600" />
               <div>
                 <p className="text-xs font-bold uppercase tracking-widest text-orange-700">
-                  Publisher-direct
+                  {tk("publisherDirect")}
                 </p>
-                <h2 className="text-3xl font-bold">Dharmic reading room</h2>
+                <h2 className="text-3xl font-bold">{tk("dharmicReadingRoom")}</h2>
               </div>
             </div>
             <div className="mt-5 grid gap-4 md:grid-cols-2">
@@ -165,19 +186,15 @@ export default function WisdomLivePage() {
                   <div>
                     <h3 className="text-xl font-bold">{x.name}</h3>
                     <p className="mt-1 text-sm text-muted-foreground">
-                      {x.publisher} · {x.cadence}
+                      {x.publisher} · {ui(x.cadence)}
                     </p>
-                    <p className="mt-4 text-sm">{x.topic}</p>
+                    <p className="mt-4 text-sm">{ui(x.topic)}</p>
                   </div>
                   <ExternalLink className="h-4 w-4 shrink-0" />
                 </a>
               ))}
             </div>
-            <p className="mt-4 text-xs text-muted-foreground">
-              The app links to publishers and official organizations. Full
-              copyrighted issues are included only through permission or an
-              authorized feed.
-            </p>
+            <p className="mt-4 text-xs text-muted-foreground">{tk("publisherCopyrightNote")}</p>
           </section>
         </main>
       </Layout>

@@ -44,6 +44,7 @@ const App = () => (
               <Route path="/settings" element={<UserSettings />} />
               <Route path="/my-dharma" element={<MyDharmaPage />} />
               <Route path="/culture" element={<CultureIndiaPage />} />
+              <Route path="/culture/:id" element={<CultureIndiaPage />} />
               <Route path="/wisdom" element={<WisdomLivePage />} />
               <Route path="/astrology" element={<VedicAstrologyPage />} />
               <Route path="/login" element={<SplashScreen />} />

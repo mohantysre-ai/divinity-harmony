@@ -13,7 +13,7 @@ type Recording = {
   embedUrl: string;
 };
 export default function YouTubeMantraPlayer({ title }: { title: string }) {
-  const { locale } = useLocale();
+  const { locale, tk } = useLocale();
   const [items, setItems] = useState<Recording[]>([]),
     [selected, setSelected] = useState(0),
     [loading, setLoading] = useState(true),
@@ -29,21 +29,19 @@ export default function YouTubeMantraPlayer({ title }: { title: string }) {
     })
       .then((r) => r.json().then((data) => ({ ok: r.ok, data })))
       .then(({ ok, data }) => {
-        if (!ok) throw new Error(data.error || "Recording search failed");
+        if (!ok) throw new Error(data.error || tk("recordingsUnavailable"));
         setItems(data.items || []);
         setSelected(0);
         if (!(data.items || []).length)
-          setError("No matching devotional recording was found right now.");
+          setError(tk("noRecordingFound"));
       })
       .catch((e) => {
         if (e.name !== "AbortError")
-          setError(
-            e.message || "YouTube recordings are temporarily unavailable.",
-          );
+          setError(e.message || tk("recordingsUnavailable"));
       })
       .finally(() => setLoading(false));
     return controller;
-  }, [title]);
+  }, [title, tk]);
   useEffect(() => {
     const controller = load();
     return () => controller.abort();
@@ -65,7 +63,7 @@ export default function YouTubeMantraPlayer({ title }: { title: string }) {
         </div>
         <div className="min-w-0 flex-1">
           <p className="text-xs font-semibold uppercase tracking-[.18em] text-red-700">
-            Devotional audio
+            {tk("devotionalAudio")}
           </p>
           <h3 className="truncate text-lg font-bold">{title}</h3>
           {current && (
@@ -80,12 +78,12 @@ export default function YouTubeMantraPlayer({ title }: { title: string }) {
         ) : current ? (
           <Button onClick={() => setExpanded(true)} disabled={expanded}>
             <Play className="mr-2 h-4 w-4" />
-            {expanded ? "Playing below" : "Play recording"}
+            {expanded ? tk("playingBelow") : tk("playRecording")}
           </Button>
         ) : (
           <Button asChild>
             <a href={searchUrl} target="_blank" rel="noopener noreferrer">
-              Search YouTube
+              {tk("searchYouTube")}
               <ExternalLink className="ml-2 h-4 w-4" />
             </a>
           </Button>
@@ -95,7 +93,7 @@ export default function YouTubeMantraPlayer({ title }: { title: string }) {
           variant="ghost"
           onClick={() => load()}
           disabled={loading}
-          aria-label="Find another recording"
+          aria-label={tk("findAnotherRecording")}
         >
           <RefreshCw className="h-4 w-4" />
         </Button>
@@ -136,8 +134,7 @@ export default function YouTubeMantraPlayer({ title }: { title: string }) {
         </div>
       )}
       <p className="border-t px-5 py-2 text-[10px] text-muted-foreground">
-        Audio-style compact view. The official YouTube player appears only after
-        Play is pressed.
+        {tk("audioCompactViewNote")}
       </p>
     </section>
   );

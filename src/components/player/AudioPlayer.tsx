@@ -3,6 +3,7 @@ import { AlertCircle, Music, Pause, Play, SkipBack, SkipForward, Volume1, Volume
 import { Button } from '@/components/ui/button';
 import { Slider } from '@/components/ui/slider';
 import { formatTime } from '@/lib/utils';
+import { useLocale } from '@/hooks/use-locale';
 
 interface AudioPlayerProps {
   audioUrl?: string;
@@ -56,6 +57,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
   hasPrevious = false,
   autoplay = false,
 }) => {
+  const { tk } = useLocale();
   const audioRef = useRef<HTMLAudioElement>(null);
   const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -78,17 +80,17 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
 
   const speakText = useCallback(async () => {
     if (!text.trim()) {
-      setError('This mantra has no text to read aloud.');
+      setError(tk('noMantraText'));
       return;
     }
     if (!('speechSynthesis' in window)) {
-      setError('Voice playback is not supported in this browser.');
+      setError(tk('voiceUnsupported'));
       return;
     }
 
     stopVoice();
     setError('');
-    setNotice('Loading voice…');
+    setNotice(tk('loadingVoice'));
 
     const voices = await loadVoices();
     const utterance = new SpeechSynthesisUtterance(text);
@@ -102,7 +104,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
 
     utterance.onstart = () => {
       setIsSpeaking(true);
-      setNotice(voice ? `Playing with ${voice.name}.` : 'Playing with your device voice.');
+      setNotice(voice ? tk('playingWithVoiceTemplate', { name: voice.name }) : tk('playingWithDeviceVoice'));
     };
     utterance.onend = () => {
       utteranceRef.current = null;
@@ -113,7 +115,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
       utteranceRef.current = null;
       setIsSpeaking(false);
       setNotice('');
-      setError('Could not start voice playback. Tap Play again or try Chrome/Edge on desktop.');
+      setError(tk('voicePlaybackFailed'));
     };
 
     utteranceRef.current = utterance;
@@ -123,7 +125,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     window.setTimeout(() => {
       if (window.speechSynthesis.paused) window.speechSynthesis.resume();
     }, 250);
-  }, [muted, stopVoice, text, volume]);
+  }, [muted, stopVoice, text, volume, tk]);
 
   useEffect(() => {
     stopVoice();
@@ -191,7 +193,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
   const safeDuration = Number.isFinite(duration) ? duration : 0;
 
   return (
-    <section className="audio-player mt-6 rounded-xl border bg-card p-5 shadow-sm" aria-label="Audio player">
+    <section className="audio-player mt-6 rounded-xl border bg-card p-5 shadow-sm" aria-label={tk('audioPlayerLabel')}>
       {audioUrl && (
         <audio
           ref={audioRef}
@@ -219,8 +221,8 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
           <p className="text-xs text-muted-foreground">
             {usesVoice
               ? isSpeaking
-                ? 'Device voice'
-                : 'Tap Play to hear this mantra'
+                ? tk('deviceVoice')
+                : tk('tapPlayToHear')
               : `${formatTime(currentTime)} / ${formatTime(safeDuration)}`}
           </p>
         </div>
@@ -250,28 +252,28 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
               setCurrentTime(time);
             }
           }}
-          aria-label="Seek audio"
+          aria-label={tk('seekAudio')}
         />
       )}
       <div className={`flex items-center justify-between ${usesVoice ? 'mt-2' : 'mt-4'}`}>
         <div className="flex items-center gap-1">
           <Button variant="ghost" size="icon" disabled={!hasPrevious} onClick={onPrevious}>
             <SkipBack />
-            <span className="sr-only">Previous</span>
+            <span className="sr-only">{tk('previousTrack')}</span>
           </Button>
           <Button variant="outline" size="icon" className="h-12 w-12 rounded-full" onClick={togglePlay}>
             {isPlaying || isSpeaking ? <Pause /> : <Play className="ml-0.5" />}
-            <span className="sr-only">{isPlaying || isSpeaking ? 'Pause' : 'Play'}</span>
+            <span className="sr-only">{isPlaying || isSpeaking ? tk('pauseLabel') : tk('playLabel')}</span>
           </Button>
           <Button variant="ghost" size="icon" disabled={!hasNext} onClick={onNext}>
             <SkipForward />
-            <span className="sr-only">Next</span>
+            <span className="sr-only">{tk('nextTrack')}</span>
           </Button>
         </div>
         <div className="flex w-1/3 items-center gap-2">
           <Button variant="ghost" size="icon" onClick={() => setMuted(!muted)}>
             {muted || volume === 0 ? <VolumeX /> : volume < 0.5 ? <Volume1 /> : <Volume2 />}
-            <span className="sr-only">{muted ? 'Unmute' : 'Mute'}</span>
+            <span className="sr-only">{muted ? tk('unmute') : tk('mute')}</span>
           </Button>
           <Slider
             value={[muted ? 0 : volume]}
@@ -282,7 +284,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
               setVolume(next);
               setMuted(next === 0);
             }}
-            aria-label="Volume"
+            aria-label={tk('volumeLabel')}
           />
         </div>
       </div>

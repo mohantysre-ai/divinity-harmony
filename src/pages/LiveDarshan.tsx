@@ -10,10 +10,10 @@ import { useLocale } from '@/hooks/use-locale';
 const POLL_MS = 5 * 60 * 1000;
 
 const LiveDarshan = () => {
-  const { locale } = useLocale();
+  const { locale, tk } = useLocale();
   const [darshans, setDarshans] = useState<LiveDarshanItem[]>([]);
   const [selected, setSelected] = useState<LiveDarshanItem | null>(null);
-  const [message, setMessage] = useState('Searching live temple sources...');
+  const [message, setMessage] = useState(tk('searchingLiveSources'));
   const [loading, setLoading] = useState(true);
 
   const refresh = useCallback(async () => {
@@ -50,17 +50,14 @@ const LiveDarshan = () => {
           <div className="mb-8 text-center">
             <div className="mb-2 flex justify-center gap-2 text-sm font-semibold text-red-600">
               <Radio className="h-4 w-4 animate-pulse" />
-              LIVE NOW <span aria-hidden="true">•</span> MULTI-SOURCE DISCOVERY
+              {tk('liveNowMultiSource')}
             </div>
-            <h1 className="text-3xl font-bold md:text-4xl">Live Temple Darshan</h1>
-            <p className="mx-auto mt-3 max-w-2xl text-muted-foreground">
-              Current streams are discovered from YouTube live search and the LiveDarshanHub temple directory. There
-              is no visitor API key, duplicate streams are removed, and results refresh every five minutes.
-            </p>
+            <h1 className="text-3xl font-bold md:text-4xl">{tk('liveTempleDarshan')}</h1>
+            <p className="mx-auto mt-3 max-w-2xl text-muted-foreground">{tk('liveDarshanIntro')}</p>
             <div className="mt-4 flex justify-center">
               <Button variant="outline" onClick={() => void refresh()} disabled={loading}>
                 <RefreshCw className={`mr-2 h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
-                Refresh live status
+                {tk('refreshLiveStatus')}
               </Button>
             </div>
           </div>
@@ -97,7 +94,7 @@ const LiveDarshan = () => {
               </section>
 
               <aside className="lg:col-span-1">
-                <h2 className="mb-4 text-xl font-bold">Live now ({darshans.length})</h2>
+                <h2 className="mb-4 text-xl font-bold">{tk('liveNowCountTemplate', { count: String(darshans.length) })}</h2>
                 <div className="max-h-[680px] space-y-3 overflow-auto pr-2">
                   {darshans.map((item) => (
                     <Card

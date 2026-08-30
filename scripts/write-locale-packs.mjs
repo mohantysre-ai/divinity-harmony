@@ -41,6 +41,12 @@ const tailSupplement = JSON.parse(
 const astrologySupplement = JSON.parse(
   fs.readFileSync(path.join(__dirname, "packs/astrology-supplement.json"), "utf8"),
 );
+const pagesSupplement = JSON.parse(
+  fs.readFileSync(path.join(__dirname, "packs/pages-supplement.json"), "utf8"),
+);
+const chromeSupplement = JSON.parse(
+  fs.readFileSync(path.join(__dirname, "packs/chrome-supplement.json"), "utf8"),
+);
 
 function parseDictBlock(block) {
   const dict = {};
@@ -111,6 +117,18 @@ for (const [locale, pack] of Object.entries(packs)) {
   const astro = astrologySupplement[locale];
   if (!astro) continue;
   Object.assign(pack, astro);
+}
+
+for (const [locale, pack] of Object.entries(packs)) {
+  const pages = pagesSupplement[locale];
+  if (!pages) continue;
+  Object.assign(pack, pages);
+}
+
+for (const [locale, pack] of Object.entries(packs)) {
+  const chrome = chromeSupplement[locale];
+  if (!chrome) continue;
+  Object.assign(pack, chrome);
 }
 
 for (const [locale, pack] of Object.entries(packs)) {

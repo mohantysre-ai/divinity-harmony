@@ -26,7 +26,7 @@ def daily_panchang(day: str, lat: float = 20.5937, lon: float = 78.9629) -> dict
         "date": day, "tithi": TITHIS[tithi_index], "nakshatra": NAKSHATRAS[nakshatra_index],
         "yoga": YOGAS[yoga_index], "karana": ["Bava","Balava","Kaulava","Taitila","Garaja","Vanija","Vishti"][tithi_index % 7],
         "sunrise": fmt(sunrise_hour), "sunset": fmt(sunset_hour), "latitude": lat, "longitude": lon,
-        "tithi_index": tithi_index, "nakshatra_index": nakshatra_index,
+        "tithi_index": tithi_index, "nakshatra_index": nakshatra_index, "yoga_index": yoga_index,
         "paksha": "Shukla Paksha" if tithi_index < 15 else "Krishna Paksha",
         "moon_phase": "Purnima" if tithi_index == 14 else "Amavasya" if tithi_index == 29 else "Waxing" if tithi_index < 14 else "Waning",
         "weekday": current.strftime("%A"),

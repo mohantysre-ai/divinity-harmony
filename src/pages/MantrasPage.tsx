@@ -34,6 +34,7 @@ import { Heart } from "lucide-react";
 import { deviceHeaders } from "@/lib/device";
 import { detectRegionalScript, scriptFromBrowser } from "@/lib/regional-script";
 import { useLocale } from "@/hooks/use-locale";
+import { deityUiKey } from "@/lib/deity-i18n";
 
 type Mantra = (typeof bundledData.mantras)[number];
 
@@ -177,8 +178,28 @@ function applyDeityFallback(
   image.src = labelImage(deityFor(mantra));
 }
 
+function labelDeity(deity: string, tk: ReturnType<typeof useLocale>["tk"]) {
+  if (deity === "All") return tk("all");
+  const key = deityUiKey(deity);
+  return key ? tk(key) : deity;
+}
+
+function scriptSourceLabel(
+  source: string,
+  tk: ReturnType<typeof useLocale>["tk"],
+) {
+  if (source === "Manual selection") return tk("manualSelection");
+  if (source === "Browser language") return tk("browserLanguage");
+  if (source.startsWith("Detected from ")) {
+    return tk("detectedFromTemplate", {
+      label: source.replace("Detected from ", ""),
+    });
+  }
+  return source;
+}
+
 const MantrasPage = () => {
-  const { t } = useLocale();
+  const { tk } = useLocale();
   const { toast } = useToast();
   const readerRef = useRef<HTMLElement>(null);
   const [currentMantraIndex, setCurrentMantraIndex] = useState(0);
@@ -240,14 +261,12 @@ const MantrasPage = () => {
         setRemoteMantras(validEntries);
         setCatalogNotice(
           validEntries.length
-            ? `Added ${validEntries.length} verified catalog entries.`
+            ? tk("catalogAddedTemplate", { count: String(validEntries.length) })
             : "",
         );
       })
       .catch(() =>
-        setCatalogNotice(
-          "Using the built-in library while the optional catalog is unavailable.",
-        ),
+        setCatalogNotice(tk("catalogFallbackNotice")),
       );
     return () => controller.abort();
   }, []);
@@ -310,15 +329,15 @@ const MantrasPage = () => {
     currentMantraIndex < catalog.length - 1
       ? setCurrentMantraIndex(currentMantraIndex + 1)
       : toast({
-          title: "End of library",
-          description: "You have reached the final mantra.",
+          title: tk("endOfLibrary"),
+          description: tk("endOfLibraryDesc"),
         });
   const handlePrevious = () =>
     currentMantraIndex > 0
       ? setCurrentMantraIndex(currentMantraIndex - 1)
       : toast({
-          title: "Start of library",
-          description: "You are at the first mantra.",
+          title: tk("startOfLibrary"),
+          description: tk("startOfLibraryDesc"),
         });
   const explainMantra = async () => {
     setExplaining(true);
@@ -331,10 +350,10 @@ const MantrasPage = () => {
       });
       const data = await response.json();
       setExplanation(
-        data.explanation || data.error || "Explanation unavailable.",
+        data.explanation || data.error || tk("explanationUnavailable"),
       );
     } catch {
-      setExplanation("Explanation is temporarily unavailable.");
+      setExplanation(tk("explanationTempUnavailable"));
     } finally {
       setExplaining(false);
     }
@@ -359,7 +378,7 @@ const MantrasPage = () => {
       setScriptSource(`Detected from ${detected.label}`);
       localStorage.removeItem("preference:mantra-script");
       toast({
-        title: "Regional script applied",
+        title: tk("regionalScriptApplied"),
         description: `${detected.label}: ${mantraScripts.find((item) => item.id === detected.script)?.language}`,
       });
     } catch {
@@ -367,8 +386,8 @@ const MantrasPage = () => {
       setScript(fallback);
       setScriptSource("Browser language");
       toast({
-        title: "Location unavailable",
-        description: "Used your browser language instead.",
+        title: tk("locationUnavailableShort"),
+        description: tk("usedBrowserLanguageDesc"),
       });
     }
   };
@@ -385,13 +404,13 @@ const MantrasPage = () => {
         <main className="container mx-auto py-8">
           <div className="mb-8 text-center">
             <p className="text-sm font-medium uppercase tracking-[0.24em] text-primary">
-              {t("sacred")}
+              {tk("sacredMantras")}
             </p>
             <h1 className="mt-2 text-3xl font-bold md:text-4xl">
-              {t("living")}
+              {tk("livingDevotionalLibrary")}
             </h1>
             <p className="mx-auto mt-3 max-w-2xl text-muted-foreground">
-              {t("explore", { count: catalog.length })}
+              {tk("exploreMantrasTemplate", { count: String(catalog.length) })}
             </p>
             {catalogNotice && (
               <p className="mt-2 text-sm text-muted-foreground">
@@ -403,7 +422,7 @@ const MantrasPage = () => {
             <button
               type="button"
               className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-4"
-              aria-label="Close full image"
+              aria-label={tk("closeFullImage")}
               onClick={() => setImageExpanded(false)}
             >
               <img
@@ -433,7 +452,7 @@ const MantrasPage = () => {
                     }
                   />
                   <span className="pointer-events-none absolute left-4 top-4 rounded-full bg-background/85 px-3 py-1 text-xs font-semibold backdrop-blur">
-                    {deityFor(currentMantra)}
+                    {labelDeity(deityFor(currentMantra), tk)}
                   </span>
                 </button>
                 <div className="p-6">
@@ -445,7 +464,7 @@ const MantrasPage = () => {
                       size="icon"
                       variant="outline"
                       onClick={toggleFavorite}
-                      aria-label="Favorite mantra"
+                      aria-label={tk("favoriteMantra")}
                     >
                       <Heart
                         className={`h-4 w-4 ${favorites.has(String(currentMantra.id)) ? "fill-red-600 text-red-600" : ""}`}
@@ -458,7 +477,7 @@ const MantrasPage = () => {
                   <div className="mx-auto mt-5 max-w-sm">
                     <Label className="mb-2 flex items-center justify-center text-xs font-semibold uppercase tracking-[.14em] text-muted-foreground">
                       <Languages className="mr-2 h-4 w-4" />
-                      Mantra script
+                      {tk("mantraScript")}
                     </Label>
                     <Select
                       value={script}
@@ -489,18 +508,17 @@ const MantrasPage = () => {
                       className="mt-2 w-full"
                       onClick={useRegionalScript}
                     >
-                      Use my regional script
+                      {tk("useRegionalScript")}
                     </Button>
                     <p className="text-center text-[11px] text-muted-foreground">
-                      {scriptSource}. This changes writing script, not the
-                      sacred wording.
+                      {scriptSourceLabel(scriptSource, tk)}. {tk("scriptChangesNote")}
                     </p>
                   </div>
                   <blockquote className="mantra-text my-6 rounded-lg bg-muted/50 p-4 text-center text-lg">
                     {displayedText}
                   </blockquote>
                   <p className="text-sm text-muted-foreground">
-                    <strong>Translation:</strong> {currentMantra.translation}
+                    <strong>{tk("translationLabel")}</strong> {currentMantra.translation}
                   </p>
                   <Button
                     className="mt-5"
@@ -509,11 +527,11 @@ const MantrasPage = () => {
                     disabled={explaining}
                   >
                     <Sparkles className="mr-2 h-4 w-4" />
-                    {explaining ? "Explaining…" : "Explain this mantra"}
+                    {explaining ? tk("explaining") : tk("explainThisMantra")}
                   </Button>
                   {explanation && (
                     <div className="mt-4 rounded-xl border bg-orange-50/60 p-4 text-sm leading-6 dark:bg-orange-950/20">
-                      <strong>Meaning and context:</strong> {explanation}
+                      <strong>{tk("meaningAndContext")}</strong> {explanation}
                     </div>
                   )}
                 </div>
@@ -521,8 +539,7 @@ const MantrasPage = () => {
               <YouTubeMantraPlayer title={currentMantra.title} />
               <details className="mt-4 rounded-xl border bg-card p-4">
                 <summary className="cursor-pointer text-sm font-semibold text-muted-foreground">
-                  Spoken-text fallback when a devotional recording is
-                  unavailable
+                  {tk("spokenTextFallback")}
                 </summary>
                 <AudioPlayer
                   text={currentMantra.text}
@@ -536,9 +553,9 @@ const MantrasPage = () => {
               <JapaCounter mantraId={currentMantra.id} />
             </section>
             <aside className="lg:col-span-1">
-              <h3 className="text-xl font-bold">{t("library")}</h3>
+              <h3 className="text-xl font-bold">{tk("library")}</h3>
               <p className="mb-3 text-sm text-muted-foreground">
-                {visibleMantras.length} {t("matching")}
+                {visibleMantras.length} {tk("matchingPrayers")}
               </p>
               <Input
                 value={query}
@@ -546,8 +563,8 @@ const MantrasPage = () => {
                   setQuery(event.target.value);
                   if (event.target.value.trim()) setDeity("All");
                 }}
-                placeholder={t("search")}
-                aria-label="Search mantra library"
+                placeholder={tk("searchMantraPlaceholder")}
+                aria-label={tk("searchMantraLibrary")}
               />
               <div className="my-3 flex flex-wrap gap-2">
                 {deities.map((item) => (
@@ -560,7 +577,7 @@ const MantrasPage = () => {
                       setQuery("");
                     }}
                   >
-                    {item === "All" ? t("all") : item}
+                    {labelDeity(item, tk)}
                   </Button>
                 ))}
               </div>
@@ -589,7 +606,7 @@ const MantrasPage = () => {
                           {mantra.title}
                         </CardTitle>
                         <CardDescription className="mt-1 text-xs">
-                          {deityFor(mantra)}
+                          {labelDeity(deityFor(mantra), tk)}
                         </CardDescription>
                       </div>
                     </CardContent>
@@ -597,16 +614,15 @@ const MantrasPage = () => {
                 ))}
                 {visibleMantras.length === 0 && (
                   <p className="rounded-lg border border-dashed p-5 text-sm text-muted-foreground">
-                    {t("notFound")}
+                    {tk("noMantraFound")}
                   </p>
                 )}
               </div>
               {visibleRequestedSources.length > 0 && (
                 <section className="mt-5 rounded-2xl border bg-card p-4">
-                  <h4 className="font-bold">Requested devotional collection</h4>
+                  <h4 className="font-bold">{tk("requestedDevotionalCollection")}</h4>
                   <p className="mt-1 text-xs text-muted-foreground">
-                    Additional supplied titles with their original reading
-                    source.
+                    {tk("requestedDevotionalDesc")}
                   </p>
                   <div className="mt-3 space-y-2">
                     {visibleRequestedSources.map((item) => (

@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { CalendarDays, CloudSun, Compass, Loader2, MapPin, MoonStar, Sparkles, Sunrise, Sunset } from 'lucide-react';
 import { useLocale } from '@/hooks/use-locale';
+import { formatPanchangDate, localizePanchang } from '@/lib/panchang-i18n';
 
 type Panchang = {
   date: string;
@@ -16,12 +17,13 @@ type Panchang = {
   weekday: string;
   nakshatra_index: number;
   tithi_index: number;
+  yoga_index: number;
 };
 
 const glyphs = ['♈', '♉', '✦', '☾', '♊', '💧', '🏹', '✿', '🐍', '♌', '🛏', '☀', '✋', '◆', '🌿', '⚖', '🏺', '☂', '🌱', '🌊', '🐘', '👂', '🥁', '◯', '⚔', '♓', '🐟'];
 
 export default function PanchangWidget() {
-  const { tk } = useLocale();
+  const { tk, locale } = useLocale();
   const [data, setData] = useState<Panchang | null>(null);
   const [locationUsed, setLocationUsed] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -64,32 +66,37 @@ export default function PanchangWidget() {
 
   const symbol = useMemo(() => glyphs[data?.nakshatra_index ?? 0] || '✦', [data]);
 
-  const cards = data
+  const localized = useMemo(
+    () => (data ? localizePanchang(locale, data) : null),
+    [data, locale],
+  );
+
+  const cards = data && localized
     ? [
         {
           label: tk('nakshatra'),
-          value: data.nakshatra,
+          value: localized.nakshatra,
           detail: tk('starOf27', { n: String(data.nakshatra_index + 1) }),
           icon: <span className="text-3xl">{symbol}</span>,
           color: 'from-violet-500/20 to-indigo-500/5',
         },
         {
           label: tk('tithi'),
-          value: data.tithi,
-          detail: data.paksha,
+          value: localized.tithi,
+          detail: localized.paksha,
           icon: <MoonStar className="h-7 w-7" />,
           color: 'from-amber-500/20 to-orange-500/5',
         },
         {
           label: tk('yoga'),
-          value: data.yoga,
+          value: localized.yoga,
           detail: tk('sunMoonCombination'),
           icon: <Sparkles className="h-7 w-7" />,
           color: 'from-rose-500/20 to-pink-500/5',
         },
         {
           label: tk('karana'),
-          value: data.karana,
+          value: localized.karana,
           detail: tk('halfTithiDivision'),
           icon: <Compass className="h-7 w-7" />,
           color: 'from-emerald-500/20 to-teal-500/5',
@@ -110,15 +117,9 @@ export default function PanchangWidget() {
                 <CalendarDays className="h-4 w-4" />
                 {tk('todaysPanchang')}
               </p>
-              <h2 className="mt-2 text-3xl font-bold">{data?.weekday || tk('dailyCalendar')}</h2>
+              <h2 className="mt-2 text-3xl font-bold">{localized?.weekday || data?.weekday || tk('dailyCalendar')}</h2>
               <p className="mt-1 text-sm text-orange-100/80">
-                {data
-                  ? new Date(`${data.date}T12:00:00`).toLocaleDateString(undefined, {
-                      day: 'numeric',
-                      month: 'long',
-                      year: 'numeric',
-                    })
-                  : tk('loadingTodayDetails')}
+                {data ? formatPanchangDate(locale, data.date) : tk('loadingTodayDetails')}
               </p>
               <button
                 onClick={localize}
@@ -169,12 +170,16 @@ export default function PanchangWidget() {
                     <CloudSun className="h-4 w-4" />
                     {tk('moon')}
                   </span>
-                  <strong className="mt-1 block text-xl">{data.moon_phase}</strong>
+                  <strong className="mt-1 block text-xl">{localized?.moon_phase ?? data.moon_phase}</strong>
                 </div>
               </div>
             )}
             {locationError && <p className="mt-3 text-xs text-amber-800 dark:text-amber-200">{locationError}</p>}
-            {data && <p className="mt-4 text-[11px] leading-5 text-muted-foreground dark:text-orange-100/55">{data.precision}</p>}
+            {data && (
+              <p className="mt-4 text-[11px] leading-5 text-muted-foreground dark:text-orange-100/55">
+                {tk('panchangDisclaimer')}
+              </p>
+            )}
           </div>
         </div>
       </div>

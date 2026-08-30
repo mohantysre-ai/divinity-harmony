@@ -36,25 +36,26 @@ import { useToast } from "@/components/ui/use-toast";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useAuth } from "@/hooks/use-auth";
 import { localeOptions, useLocale } from "@/hooks/use-locale";
+import type { UiKey } from "@/lib/ui-keys";
 
-const Navigation = [
-  { name: "Home", href: "/", icon: Home },
-  { name: "Mantras", href: "/mantras", icon: BookOpen },
-  { name: "Live Darshan", href: "/darshan", icon: Video },
-  { name: "Scriptures", href: "/scriptures", icon: FileText },
-  { name: "Deities", href: "/deities", icon: Landmark },
-  { name: "Temples", href: "/temples", icon: MapPin },
-  { name: "Priests", href: "/priests", icon: Users },
+const Navigation: { key: UiKey; href: string; icon: typeof Home }[] = [
+  { key: "home", href: "/", icon: Home },
+  { key: "mantras", href: "/mantras", icon: BookOpen },
+  { key: "liveDarshan", href: "/darshan", icon: Video },
+  { key: "scriptures", href: "/scriptures", icon: FileText },
+  { key: "deities", href: "/deities", icon: Landmark },
+  { key: "temples", href: "/temples", icon: MapPin },
+  { key: "priests", href: "/priests", icon: Users },
 ];
-const MoreNavigation = [
-  { name: "My Dharma", href: "/my-dharma", icon: Sparkles },
-  { name: "Culture of India", href: "/culture", icon: Landmark },
-  { name: "Pravachan & Reading", href: "/wisdom", icon: Library },
-  { name: "Vedic Astrology", href: "/astrology", icon: Compass },
+const MoreNavigation: { key: UiKey; href: string; icon: typeof Sparkles }[] = [
+  { key: "myDharma", href: "/my-dharma", icon: Sparkles },
+  { key: "cultureOfIndia", href: "/culture", icon: Landmark },
+  { key: "pravachanReading", href: "/wisdom", icon: Library },
+  { key: "vedicAstrology", href: "/astrology", icon: Compass },
 ];
 
 const Header = () => {
-  const { locale, setLocale, t, ui, detectedState, elderMode, setElderMode } =
+  const { locale, setLocale, tk, detectedState, elderMode, setElderMode } =
     useLocale();
   const { theme, setTheme } = useTheme();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -66,7 +67,7 @@ const Header = () => {
   const displayName = String(
     user?.user_metadata?.display_name ||
       user?.email?.split("@")[0] ||
-      "Devotee",
+      tk("devotee"),
   );
   const avatarUrl = String(user?.user_metadata?.avatar_url || "");
   const initials = displayName.slice(0, 2).toUpperCase();
@@ -78,8 +79,8 @@ const Header = () => {
   const handleLogout = async () => {
     await signOut();
     toast({
-      title: ui("Logged Out"),
-      description: ui("You have been successfully logged out."),
+      title: tk("loggedOut"),
+      description: tk("loggedOutSuccess"),
     });
   };
 
@@ -93,7 +94,7 @@ const Header = () => {
                 <span className="text-white text-xl font-bold">ॐ</span>
               </div>
               <span className="text-xl md:text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-hindu-red to-hindu-gold">
-                {ui("Divinity Harmony")}
+                {tk("divinityHarmony")}
               </span>
             </Link>
           </div>
@@ -105,7 +106,7 @@ const Header = () => {
                 const isActive = location.pathname === item.href;
                 return (
                   <Link
-                    key={item.name}
+                    key={item.key}
                     to={item.href}
                     className={`flex items-center gap-1.5 px-4 py-2 text-sm font-medium rounded-full transition-all duration-200 ${
                       isActive
@@ -114,11 +115,7 @@ const Header = () => {
                     }`}
                   >
                     <item.icon className="h-4 w-4" />
-                    {t(
-                      item.name === "Live Darshan"
-                        ? "darshan"
-                        : item.name.toLowerCase(),
-                    )}
+                    {tk(item.key)}
                   </Link>
                 );
               })}
@@ -127,7 +124,7 @@ const Header = () => {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="sm">
-                  {ui("Explore")}
+                  {tk("explore")}
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
@@ -135,7 +132,7 @@ const Header = () => {
                   <DropdownMenuItem key={item.href} asChild>
                     <Link to={item.href}>
                       <item.icon className="mr-2 h-4 w-4" />
-                      {ui(item.name)}
+                      {tk(item.key)}
                     </Link>
                   </DropdownMenuItem>
                 ))}
@@ -157,7 +154,9 @@ const Header = () => {
                   variant="outline"
                   size="sm"
                   title={
-                    detectedState ? `Detected: ${detectedState}` : t("language")
+                    detectedState
+                      ? tk("detectedStateTemplate", { state: detectedState })
+                      : tk("language")
                   }
                 >
                   <Languages className="mr-1.5 h-4 w-4" />
@@ -168,7 +167,7 @@ const Header = () => {
                 align="end"
                 className="max-h-80 overflow-auto"
               >
-                <DropdownMenuLabel>{ui("Application language")}</DropdownMenuLabel>
+                <DropdownMenuLabel>{tk("applicationLanguage")}</DropdownMenuLabel>
                 {localeOptions.map((item) => (
                   <DropdownMenuItem
                     key={item.id}
@@ -183,7 +182,7 @@ const Header = () => {
               variant={elderMode ? "default" : "ghost"}
               size="icon"
               onClick={() => setElderMode(!elderMode)}
-              title={ui("Elder Mode")}
+              title={tk("elderMode")}
             >
               <Accessibility className="h-5 w-5" />
             </Button>
@@ -200,7 +199,7 @@ const Header = () => {
               ) : (
                 <Moon className="h-5 w-5" />
               )}
-              <span className="sr-only">Toggle theme</span>
+              <span className="sr-only">{tk("toggleTheme")}</span>
             </Button>
 
             {/* User account menu */}
@@ -220,12 +219,12 @@ const Header = () => {
                       <span className="max-w-24 truncate font-medium">
                         {displayName}
                       </span>
-                      <span className="text-muted-foreground">Signed in</span>
+                      <span className="text-muted-foreground">{tk("signedIn")}</span>
                     </div>
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-56">
-                  <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                  <DropdownMenuLabel>{tk("myAccount")}</DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem asChild>
                     <Link
@@ -233,7 +232,7 @@ const Header = () => {
                       className="flex items-center cursor-pointer"
                     >
                       <Settings className="mr-2 h-4 w-4" />
-                      <span>{ui("Settings")}</span>
+                      <span>{tk("settings")}</span>
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
@@ -242,7 +241,7 @@ const Header = () => {
                     className="text-destructive focus:text-destructive"
                   >
                     <LogOut className="mr-2 h-4 w-4" />
-                    <span>{ui("Logout")}</span>
+                    <span>{tk("logout")}</span>
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
@@ -254,7 +253,7 @@ const Header = () => {
                 className="flex items-center gap-1 bg-gradient-to-r from-hindu-red to-hindu-orange hover:brightness-110"
               >
                 <LogIn className="h-4 w-4" />
-                <span>{t("login")}</span>
+                <span>{tk("login")}</span>
               </Button>
             )}
           </div>
@@ -265,7 +264,7 @@ const Header = () => {
               variant={elderMode ? "default" : "ghost"}
               size="icon"
               onClick={() => setElderMode(!elderMode)}
-              aria-label="Elder Mode"
+              aria-label={tk("elderMode")}
             >
               <Accessibility className="h-5 w-5" />
             </Button>
@@ -297,7 +296,7 @@ const Header = () => {
                 className="bg-gradient-to-r from-hindu-red to-hindu-orange"
               >
                 <LogIn className="h-4 w-4 mr-1" />
-                Login
+                {tk("login")}
               </Button>
             )}
 
@@ -325,7 +324,7 @@ const Header = () => {
               const isActive = location.pathname === item.href;
               return (
                 <Link
-                  key={item.name}
+                  key={item.key}
                   to={item.href}
                   className={`flex items-center px-3 py-2.5 text-sm font-medium rounded-lg ${
                     isActive
@@ -335,11 +334,7 @@ const Header = () => {
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   <item.icon className="h-5 w-5 mr-3" />
-                  {t(
-                    item.name === "Live Darshan"
-                      ? "darshan"
-                      : item.name.toLowerCase(),
-                  )}
+                  {tk(item.key)}
                 </Link>
               );
             })}
@@ -351,7 +346,7 @@ const Header = () => {
                 onClick={() => setMobileMenuOpen(false)}
               >
                 <item.icon className="mr-3 h-5 w-5" />
-                {ui(item.name)}
+                {tk(item.key)}
               </Link>
             ))}
             <div className="grid grid-cols-2 gap-2 border-y py-3">
@@ -372,7 +367,7 @@ const Header = () => {
               onClick={() => setMobileMenuOpen(false)}
             >
               <Settings className="h-5 w-5 mr-3" />
-              {t("settings")}
+              {tk("settings")}
             </Link>
             {user && (
               <Button
@@ -384,7 +379,7 @@ const Header = () => {
                 }}
               >
                 <LogOut className="h-5 w-5 mr-3" />
-                {ui("Logout")}
+                {tk("logout")}
               </Button>
             )}
           </div>

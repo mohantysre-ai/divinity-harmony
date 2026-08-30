@@ -23,6 +23,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
+import { useLocale } from "@/hooks/use-locale";
+import { ROUTINE_ITEMS } from "@/lib/routine-i18n";
 type Profile = {
   currentState: string;
   homeTradition: string;
@@ -46,6 +48,7 @@ const read = <T,>(key: string, fallback: T): T => {
   }
 };
 export default function MyDharmaPage() {
+  const { tk } = useLocale();
   const [profile, setProfile] = useState<Profile>(() =>
     read("my-dharma:profile", defaultProfile),
   );
@@ -91,26 +94,18 @@ export default function MyDharmaPage() {
     setReminders(next);
     localStorage.setItem("my-dharma:reminders", JSON.stringify(next));
   };
-  const routine = [
-    "Light the lamp",
-    "Ganesha invocation",
-    "Ishta-devata mantra",
-    "One scripture verse",
-    "Japa practice",
-    "Aarti and closing prayer",
-  ];
+  const routine = ROUTINE_ITEMS.map((item) => item.id);
   return (
     <ThemeProvider>
       <Layout>
         <main>
           <section className="rounded-[2rem] bg-gradient-to-br from-orange-800 to-red-900 p-8 text-white shadow-xl">
             <p className="text-xs font-bold uppercase tracking-[.22em] text-amber-200">
-              Personal spiritual home
+              {tk("personalSpiritualHome")}
             </p>
-            <h1 className="mt-2 text-4xl font-bold">My Dharma</h1>
+            <h1 className="mt-2 text-4xl font-bold">{tk("myDharma")}</h1>
             <p className="mt-3 max-w-3xl text-orange-100/80">
-              Keep current location, home culture and family practice separate.
-              Your traditions stay with you even when you move.
+              {tk("myDharmaHeroDesc")}
             </p>
           </section>
           <div className="mt-8 grid gap-6 xl:grid-cols-[1.05fr_.95fr]">
@@ -118,11 +113,11 @@ export default function MyDharmaPage() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Heart className="text-red-600" />
-                  My tradition profile
+                  {tk("myTraditionProfile")}
                 </CardTitle>
               </CardHeader>
               <CardContent className="grid gap-5 sm:grid-cols-2">
-                <Field label="Current state">
+                <Field label={tk("currentState")}>
                   <PackSelect
                     value={profile.currentState}
                     onChange={(value) =>
@@ -130,7 +125,7 @@ export default function MyDharmaPage() {
                     }
                   />
                 </Field>
-                <Field label="Home state / cultural tradition">
+                <Field label={tk("homeStateTradition")}>
                   <PackSelect
                     value={profile.homeTradition}
                     onChange={(value) =>
@@ -138,7 +133,7 @@ export default function MyDharmaPage() {
                     }
                   />
                 </Field>
-                <Field label="Preferred language">
+                <Field label={tk("preferredLanguage")}>
                   <Input
                     value={profile.language}
                     onChange={(e) =>
@@ -146,7 +141,7 @@ export default function MyDharmaPage() {
                     }
                   />
                 </Field>
-                <Field label="Ishta or Kula Devata (optional)">
+                <Field label={tk("ishtaKulaDevata")}>
                   <Input
                     value={profile.ishta}
                     onChange={(e) =>
@@ -154,21 +149,21 @@ export default function MyDharmaPage() {
                     }
                   />
                 </Field>
-                <Field label="Calendar tradition">
+                <Field label={tk("calendarTradition")}>
                   <Input
                     value={profile.calendar}
                     onChange={(e) =>
                       setProfile({ ...profile, calendar: e.target.value })
                     }
                     placeholder={
-                      pack?.calendar || "Choose your family calendar"
+                      pack?.calendar || tk("chooseFamilyCalendar")
                     }
                   />
                 </Field>
                 <div className="flex items-end">
                   <Button className="w-full" onClick={save}>
                     <Save className="mr-2 h-4 w-4" />
-                    Save My Dharma
+                    {tk("saveMyDharma")}
                   </Button>
                 </div>
               </CardContent>
@@ -177,36 +172,38 @@ export default function MyDharmaPage() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Sparkles className="text-orange-600" />
-                  Today’s practice
+                  {tk("todaysPractice")}
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
-                {routine.map((item) => (
+                {ROUTINE_ITEMS.map((entry) => (
                   <label
-                    key={item}
+                    key={entry.id}
                     className="flex cursor-pointer items-center gap-3 rounded-xl border p-3"
                   >
                     <Checkbox
-                      checked={practice.includes(item)}
-                      onCheckedChange={() => toggle(item)}
+                      checked={practice.includes(entry.id)}
+                      onCheckedChange={() => toggle(entry.id)}
                     />
                     <span
                       className={
-                        practice.includes(item)
+                        practice.includes(entry.id)
                           ? "text-muted-foreground line-through"
                           : ""
                       }
                     >
-                      {item}
-                      {item === "Ishta-devata mantra" && profile.ishta
+                      {tk(entry.key)}
+                      {entry.id === "Ishta-devata mantra" && profile.ishta
                         ? ` · ${profile.ishta}`
                         : ""}
                     </span>
                   </label>
                 ))}
                 <p className="pt-2 text-sm text-muted-foreground">
-                  {practice.length} of {routine.length} completed on this
-                  device.
+                  {tk("practiceCompletedTemplate", {
+                    done: String(practice.length),
+                    total: String(routine.length),
+                  })}
                 </p>
               </CardContent>
             </Card>
@@ -214,12 +211,12 @@ export default function MyDharmaPage() {
           {pack && (
             <section className="mt-6 grid gap-4 md:grid-cols-3">
               <Info
-                title={`${pack.name} calendar`}
+                title={tk("calendarNameTemplate", { name: pack.name })}
                 values={[pack.calendar, pack.language, pack.script]}
               />
-              <Info title="Signature observances" values={pack.festivals} />
+              <Info title={tk("signatureObservances")} values={pack.festivals} />
               <Info
-                title="Traditions & temples"
+                title={tk("traditionsAndTemples")}
                 values={[...pack.traditions, ...pack.temples]}
               />
             </section>
@@ -228,7 +225,7 @@ export default function MyDharmaPage() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <CalendarDays className="text-orange-600" />
-                Family ritual reminders
+                {tk("familyRitualReminders")}
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -236,7 +233,7 @@ export default function MyDharmaPage() {
                 <Input
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  placeholder="Shraddha, nakshatra birthday, vrata…"
+                  placeholder={tk("reminderNamePlaceholder")}
                 />
                 <Input
                   type="date"
@@ -246,11 +243,11 @@ export default function MyDharmaPage() {
                 <Input
                   value={note}
                   onChange={(e) => setNote(e.target.value)}
-                  placeholder="Private family note"
+                  placeholder={tk("reminderNotePlaceholder")}
                 />
                 <Button onClick={add}>
                   <Plus className="mr-2 h-4 w-4" />
-                  Add
+                  {tk("add")}
                 </Button>
               </div>
               <div className="mt-5 space-y-2">
@@ -271,7 +268,7 @@ export default function MyDharmaPage() {
                       size="icon"
                       variant="ghost"
                       onClick={() => remove(item.id)}
-                      aria-label="Delete reminder"
+                      aria-label={tk("deleteReminder")}
                     >
                       <Trash2 className="h-4 w-4" />
                     </Button>
@@ -279,7 +276,7 @@ export default function MyDharmaPage() {
                 ))}
                 {!reminders.length && (
                   <p className="text-sm text-muted-foreground">
-                    No family dates saved yet. Data remains in this browser.
+                    {tk("noFamilyDatesSaved")}
                   </p>
                 )}
               </div>
@@ -311,10 +308,11 @@ function PackSelect({
   value: string;
   onChange: (value: string) => void;
 }) {
+  const { tk } = useLocale();
   return (
     <Select value={value} onValueChange={onChange}>
       <SelectTrigger>
-        <SelectValue placeholder="Select state or UT" />
+        <SelectValue placeholder={tk("selectStateOrUt")} />
       </SelectTrigger>
       <SelectContent>
         {culturePacks.map((x) => (

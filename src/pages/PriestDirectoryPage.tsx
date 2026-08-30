@@ -21,6 +21,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
+import { useLocale } from "@/hooks/use-locale";
 
 type Priest = {
   id: number;
@@ -161,6 +162,7 @@ const pujas: Puja[] = [
 ];
 
 export default function PriestDirectoryPage() {
+  const { tk } = useLocale();
   const [items, setItems] = useState<Priest[]>([]);
   const [q, setQ] = useState("");
   const [nearbyUrl, setNearbyUrl] = useState("");
@@ -186,7 +188,7 @@ export default function PriestDirectoryPage() {
   const locate = () => {
     setLocationError("");
     if (!navigator.geolocation) {
-      setLocationError("Location is unavailable in this browser.");
+      setLocationError(tk("locationUnavailableBrowser"));
       return;
     }
     navigator.geolocation.getCurrentPosition(
@@ -198,7 +200,7 @@ export default function PriestDirectoryPage() {
           `https://www.google.com/maps/search/?api=1&query=${query}`,
         );
       },
-      () => setLocationError("Allow location access to search near you."),
+      () => setLocationError(tk("allowLocationPriests")),
       { enableHighAccuracy: false, timeout: 8000, maximumAge: 3600000 },
     );
   };
@@ -209,15 +211,13 @@ export default function PriestDirectoryPage() {
           <section className="border-b bg-gradient-to-br from-orange-50 via-amber-50 to-rose-50 py-14 dark:from-orange-950/30 dark:via-background dark:to-rose-950/20">
             <div className="container mx-auto px-4">
               <p className="text-sm font-semibold uppercase tracking-[.2em] text-orange-700">
-                Regional ritual guidance
+                {tk("regionalRitualGuidance")}
               </p>
               <h1 className="mt-2 max-w-3xl text-4xl font-bold md:text-5xl">
-                Find a priest and understand the puja before you book
+                {tk("priestHeroTitle")}
               </h1>
               <p className="mt-4 max-w-3xl leading-7 text-muted-foreground">
-                Search live local directories for current phone numbers, reviews
-                and availability. Divinity Harmony does not copy unverified
-                personal numbers.
+                {tk("priestHeroDesc")}
               </p>
               <div className="mt-7 flex max-w-2xl flex-col gap-3 sm:flex-row">
                 <div className="relative flex-1">
@@ -226,12 +226,12 @@ export default function PriestDirectoryPage() {
                     className="h-11 bg-background pl-9"
                     value={q}
                     onChange={(e) => setQ(e.target.value)}
-                    placeholder="Search city, language, or puja"
+                    placeholder={tk("searchPujaPlaceholder")}
                   />
                 </div>
                 <Button onClick={locate}>
                   <LocateFixed className="mr-2 h-4 w-4" />
-                  Find near me
+                  {tk("findNearMe")}
                 </Button>
               </div>
               {nearbyUrl && (
@@ -241,7 +241,7 @@ export default function PriestDirectoryPage() {
                   rel="noopener noreferrer"
                   className="mt-3 inline-flex text-sm font-semibold text-orange-700 hover:underline"
                 >
-                  Open priests near my current location
+                  {tk("openPriestsNearMe")}
                   <ExternalLink className="ml-1 h-4 w-4" />
                 </a>
               )}
@@ -253,8 +253,7 @@ export default function PriestDirectoryPage() {
           <div className="container mx-auto px-4 py-10">
             <div className="mb-6 flex items-center gap-2 text-sm text-muted-foreground">
               <ShieldCheck className="h-4 w-4 text-emerald-600" />
-              Links open live Google Maps or Sulekha results so you can verify
-              reviews and contact details.
+              {tk("verifyDirectoryLinks")}
             </div>
             <section className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
               {shown.map((x, i) => (
@@ -269,11 +268,11 @@ export default function PriestDirectoryPage() {
                     </div>
                     <span className="inline-flex items-center gap-1 text-xs font-medium text-emerald-700">
                       <CheckCircle2 className="h-3.5 w-3.5" />
-                      Public directory
+                      {tk("publicDirectory")}
                     </span>
                   </div>
                   <h2 className="mt-4 text-xl font-bold">
-                    {x.city} Priest Search
+                    {tk("cityPriestSearchTemplate", { city: x.city })}
                   </h2>
                   <p className="mt-1 text-sm text-muted-foreground">
                     {x.state}
@@ -297,7 +296,7 @@ export default function PriestDirectoryPage() {
                       className="inline-flex items-center justify-center rounded-xl bg-orange-600 px-3 py-2.5 text-sm font-semibold text-white hover:bg-orange-700"
                     >
                       <Map className="mr-2 h-4 w-4" />
-                      Google Maps
+                      {tk("googleMaps")}
                     </a>
                     <a
                       href={x.sulekha_url}
@@ -315,7 +314,7 @@ export default function PriestDirectoryPage() {
                     rel="noopener noreferrer"
                     className="mt-3 inline-flex text-xs font-medium text-orange-700 hover:underline"
                   >
-                    Search current contact details
+                    {tk("searchContactDetails")}
                     <ExternalLink className="ml-1 h-3 w-3" />
                   </a>
                 </article>
@@ -323,8 +322,7 @@ export default function PriestDirectoryPage() {
             </section>
             {!shown.length && (
               <div className="rounded-3xl border border-dashed p-10 text-center text-muted-foreground">
-                No directory matches that search. Try a nearby city or puja
-                name.
+                {tk("noDirectoryMatches")}
               </div>
             )}
             <section className="mt-16">
@@ -334,17 +332,15 @@ export default function PriestDirectoryPage() {
                 </div>
                 <div>
                   <p className="text-xs font-semibold uppercase tracking-[.18em] text-orange-700">
-                    Puja Vidhi Library
+                    {tk("pujaVidhiLibrary")}
                   </p>
                   <h2 className="text-3xl font-bold">
-                    Materials, steps and completion
+                    {tk("materialsStepsCompletion")}
                   </h2>
                 </div>
               </div>
               <p className="mt-3 max-w-3xl text-muted-foreground">
-                Prepare properly and ask the right questions. Fire rites,
-                samskaras, muhurta and lineage-specific procedures still require
-                a qualified priest.
+                {tk("pujaPrepareIntro")}
               </p>
               <Accordion
                 type="single"
@@ -361,7 +357,7 @@ export default function PriestDirectoryPage() {
                       <div>
                         <span className="text-lg font-bold">{p.name}</span>
                         <span className="mt-1 block text-xs font-normal text-muted-foreground">
-                          Typical duration: {p.duration}
+                          {tk("typicalDurationTemplate", { duration: p.duration })}
                         </span>
                       </div>
                     </AccordionTrigger>
@@ -369,7 +365,7 @@ export default function PriestDirectoryPage() {
                       <p className="leading-6 text-muted-foreground">
                         {p.purpose}
                       </p>
-                      <h3 className="mt-5 font-semibold">Prepare</h3>
+                      <h3 className="mt-5 font-semibold">{tk("prepareLabel")}</h3>
                       <ul className="mt-2 space-y-2 text-sm text-muted-foreground">
                         {p.materials.map((m) => (
                           <li key={m} className="flex gap-2">
@@ -379,7 +375,7 @@ export default function PriestDirectoryPage() {
                         ))}
                       </ul>
                       <h3 className="mt-5 font-semibold">
-                        Traditional sequence
+                        {tk("traditionalSequence")}
                       </h3>
                       <ol className="mt-2 space-y-3 text-sm text-muted-foreground">
                         {p.steps.map((s, i) => (
