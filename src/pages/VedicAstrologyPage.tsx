@@ -1,44 +1,158 @@
-import { useState } from "react";
-import { BookOpen, Compass, Info, Moon, Orbit, Save, Sun } from "lucide-react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import {
+  BookOpen,
+  Compass,
+  Info,
+  LocateFixed,
+  Moon,
+  Orbit,
+  Save,
+  Sun,
+} from "lucide-react";
 import Layout from "@/components/layout/Layout";
 import { ThemeProvider } from "@/hooks/use-theme";
+import { useLocale } from "@/hooks/use-locale";
+import type { UiKey } from "@/lib/ui-keys";
 import PanchangWidget from "@/components/home/PanchangWidget";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-const grahas = [
-  "Surya · vitality",
-  "Chandra · mind",
-  "Mangala · action",
-  "Budha · intellect",
-  "Guru · wisdom",
-  "Shukra · harmony",
-  "Shani · discipline",
-  "Rahu · amplification",
-  "Ketu · release",
-];
-const concepts = [
-  ["Rashi", "The zodiac sign occupied by a graha."],
-  ["Lagna", "The ascendant calculated from exact birth time and place."],
-  ["Nakshatra", "One of 27 lunar mansions used in Panchang and Jyotisha."],
-  ["Dasha", "A time-period framework; Vimshottari is one widely used system."],
-  ["Gochara", "Current planetary transits relative to a natal reference."],
-  [
-    "Ayanamsha",
-    "The chosen sidereal offset; calculation settings must name it.",
-  ],
-];
+import { useToast } from "@/hooks/use-toast";
+
+type BirthDetails = {
+  date?: string;
+  time?: string;
+  place?: string;
+};
+
+type DharmaProfile = {
+  currentState?: string;
+  homeTradition?: string;
+};
+
+const STORAGE_KEY = "vedic:birth-profile";
+const DHARMA_KEY = "my-dharma:profile";
+
+function readJson<T>(key: string, fallback: T): T {
+  try {
+    return JSON.parse(localStorage.getItem(key) || "") as T;
+  } catch {
+    return fallback;
+  }
+}
+
+const conceptKeys = [
+  ["conceptRashi", "conceptRashiDesc"],
+  ["conceptLagna", "conceptLagnaDesc"],
+  ["conceptNakshatraJyotisha", "conceptNakshatraJyotishaDesc"],
+  ["conceptDasha", "conceptDashaDesc"],
+  ["conceptGochara", "conceptGocharaDesc"],
+  ["conceptAyanamsha", "conceptAyanamshaDesc"],
+] as const satisfies readonly (readonly [UiKey, UiKey])[];
+
+const grahaKeys = [
+  "grahaSuryaVitality",
+  "grahaChandraMind",
+  "grahaMangalaAction",
+  "grahaBudhaIntellect",
+  "grahaGuruWisdom",
+  "grahaShukraHarmony",
+  "grahaShaniDiscipline",
+  "grahaRahuAmplification",
+  "grahaKetuRelease",
+] as const satisfies readonly UiKey[];
+
 export default function VedicAstrologyPage() {
-  const [details, setDetails] = useState(() => {
+  const { tk, detectedState } = useLocale();
+  const { toast } = useToast();
+  const [details, setDetails] = useState<BirthDetails>(() =>
+    readJson(STORAGE_KEY, {}),
+  );
+  const [locating, setLocating] = useState(false);
+
+  const concepts = useMemo(
+    () =>
+      conceptKeys.map(([nameKey, descKey]) => ({
+        nameKey,
+        descKey,
+      })),
+    [],
+  );
+
+  const save = useCallback(() => {
     try {
-      return JSON.parse(localStorage.getItem("vedic:birth-profile") || "{}");
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(details));
+      toast({
+        title: tk("birthDetailsSaved"),
+        description: tk("birthDetailsSavedDesc"),
+      });
     } catch {
-      return {};
+      toast({
+        title: tk("pleaseTryAgain"),
+        variant: "destructive",
+      });
     }
-  });
-  const save = () =>
-    localStorage.setItem("vedic:birth-profile", JSON.stringify(details));
+  }, [details, toast, tk]);
+
+  const fillPlaceFromLocation = useCallback(
+    (showToast: boolean) => {
+      if (!navigator.geolocation) return;
+      setLocating(true);
+      navigator.geolocation.getCurrentPosition(
+        async (pos) => {
+          try {
+            const res = await fetch(
+              `/api/location-preference?lat=${pos.coords.latitude}&lon=${pos.coords.longitude}`,
+            );
+            if (!res.ok) return;
+            const data = (await res.json()) as {
+              place?: string;
+              state?: string;
+            };
+            const suggested =
+              data.place?.trim() || data.state?.trim() || "";
+            if (!suggested) return;
+            setDetails((prev) => {
+              if (prev.place?.trim()) return prev;
+              return { ...prev, place: suggested };
+            });
+            if (showToast) {
+              toast({ description: tk("birthDetailsAutoFilled") });
+            }
+          } catch {
+            /* ignore */
+          } finally {
+            setLocating(false);
+          }
+        },
+        () => setLocating(false),
+        { timeout: 12000, maximumAge: 300000 },
+      );
+    },
+    [toast, tk],
+  );
+
+  useEffect(() => {
+    const saved = readJson<BirthDetails>(STORAGE_KEY, {});
+    const dharma = readJson<DharmaProfile>(DHARMA_KEY, {});
+    const profilePlace =
+      dharma.currentState?.trim() || dharma.homeTradition?.trim() || "";
+    const regionPlace = detectedState?.trim() || "";
+
+    setDetails((prev) => {
+      const next = { ...prev, ...saved };
+      if (!next.place?.trim()) {
+        next.place = profilePlace || regionPlace;
+      }
+      return next;
+    });
+
+    if (!saved.place?.trim()) {
+      fillPlaceFromLocation(false);
+    }
+  }, [detectedState, fillPlaceFromLocation]);
+
   return (
     <ThemeProvider>
       <Layout>
@@ -46,12 +160,10 @@ export default function VedicAstrologyPage() {
           <section className="rounded-[2rem] bg-gradient-to-br from-slate-950 via-indigo-950 to-violet-950 p-8 text-white">
             <Orbit className="h-10 w-10 text-amber-300" />
             <h1 className="mt-3 text-4xl font-bold">
-              Vedic Astrology Learning Centre
+              {tk("vedicAstrologyCentre")}
             </h1>
             <p className="mt-3 max-w-3xl text-indigo-100/75">
-              Astronomical calculations and traditional interpretations must be
-              distinguished. This area teaches the system without fear-based
-              predictions or automatic sales remedies.
+              {tk("astrologyIntro")}
             </p>
           </section>
           <div className="mt-8">
@@ -62,11 +174,11 @@ export default function VedicAstrologyPage() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Compass className="text-indigo-600" />
-                  Private birth details
+                  {tk("privateBirthDetails")}
                 </CardTitle>
               </CardHeader>
               <CardContent className="grid gap-4">
-                <Field label="Date of birth">
+                <Field label={tk("dateOfBirth")}>
                   <Input
                     type="date"
                     value={details.date || ""}
@@ -75,7 +187,7 @@ export default function VedicAstrologyPage() {
                     }
                   />
                 </Field>
-                <Field label="Exact birth time">
+                <Field label={tk("exactBirthTime")}>
                   <Input
                     type="time"
                     step="1"
@@ -85,23 +197,33 @@ export default function VedicAstrologyPage() {
                     }
                   />
                 </Field>
-                <Field label="Birth place">
+                <Field label={tk("birthPlace")}>
                   <Input
                     value={details.place || ""}
                     onChange={(e) =>
                       setDetails({ ...details, place: e.target.value })
                     }
-                    placeholder="City, state, country"
+                    placeholder={tk("birthPlacePlaceholder")}
                   />
                 </Field>
-                <Button onClick={save}>
-                  <Save className="mr-2 h-4 w-4" />
-                  Save privately on this device
-                </Button>
+                <div className="grid gap-2 sm:grid-cols-2">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    disabled={locating}
+                    onClick={() => fillPlaceFromLocation(true)}
+                  >
+                    <LocateFixed className="mr-2 h-4 w-4" />
+                    {tk("useMyLocationBirth")}
+                  </Button>
+                  <Button type="button" onClick={save}>
+                    <Save className="mr-2 h-4 w-4" />
+                    {tk("savePrivatelyOnDevice")}
+                  </Button>
+                </div>
                 <p className="flex gap-2 text-xs text-muted-foreground">
-                  <Info className="h-4 w-4 shrink-0" />A natal chart is not
-                  generated until an ephemeris-grade backend and place/time-zone
-                  resolver are enabled. The app will not fabricate one.
+                  <Info className="h-4 w-4 shrink-0" />
+                  {tk("natalChartDisclaimer")}
                 </p>
               </CardContent>
             </Card>
@@ -109,15 +231,15 @@ export default function VedicAstrologyPage() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <BookOpen className="text-indigo-600" />
-                  Core calculation vocabulary
+                  {tk("coreCalculationVocabulary")}
                 </CardTitle>
               </CardHeader>
               <CardContent className="grid gap-3 sm:grid-cols-2">
-                {concepts.map(([name, text]) => (
-                  <div key={name} className="rounded-2xl border p-4">
-                    <strong>{name}</strong>
+                {concepts.map(({ nameKey, descKey }) => (
+                  <div key={nameKey} className="rounded-2xl border p-4">
+                    <strong>{tk(nameKey)}</strong>
                     <p className="mt-1 text-sm leading-6 text-muted-foreground">
-                      {text}
+                      {tk(descKey)}
                     </p>
                   </div>
                 ))}
@@ -125,11 +247,11 @@ export default function VedicAstrologyPage() {
             </Card>
           </div>
           <section className="mt-8">
-            <h2 className="text-2xl font-bold">Navagraha study map</h2>
+            <h2 className="text-2xl font-bold">{tk("navagrahaStudyMap")}</h2>
             <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-              {grahas.map((x, i) => (
+              {grahaKeys.map((key, i) => (
                 <div
-                  key={x}
+                  key={key}
                   className="flex items-center gap-3 rounded-2xl border bg-card p-4"
                 >
                   {i === 0 ? (
@@ -139,7 +261,7 @@ export default function VedicAstrologyPage() {
                   ) : (
                     <Orbit className="text-violet-500" />
                   )}
-                  <span>{x}</span>
+                  <span>{tk(key)}</span>
                 </div>
               ))}
             </div>
@@ -149,6 +271,7 @@ export default function VedicAstrologyPage() {
     </ThemeProvider>
   );
 }
+
 function Field({
   label,
   children,

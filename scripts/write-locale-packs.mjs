@@ -38,6 +38,9 @@ const hiKnExtended = JSON.parse(
 const tailSupplement = JSON.parse(
   fs.readFileSync(path.join(__dirname, "packs/tail-supplement.json"), "utf8"),
 );
+const astrologySupplement = JSON.parse(
+  fs.readFileSync(path.join(__dirname, "packs/astrology-supplement.json"), "utf8"),
+);
 
 function parseDictBlock(block) {
   const dict = {};
@@ -102,6 +105,12 @@ for (const [locale, pack] of Object.entries(packs)) {
   for (const [key, value] of Object.entries(tail)) {
     if (!(key in pack)) pack[key] = value;
   }
+}
+
+for (const [locale, pack] of Object.entries(packs)) {
+  const astro = astrologySupplement[locale];
+  if (!astro) continue;
+  Object.assign(pack, astro);
 }
 
 for (const [locale, pack] of Object.entries(packs)) {
