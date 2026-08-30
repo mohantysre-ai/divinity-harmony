@@ -1,4 +1,5 @@
 import type { AppLocale } from "@/hooks/use-locale";
+import { regionalUiDicts } from "@/lib/regional-ui-dicts";
 
 /** Real UI copy — not transliteration. Keys are exact English source strings. */
 export const uiTranslations: Partial<Record<AppLocale, Record<string, string>>> = {
@@ -97,6 +98,11 @@ export const uiTranslations: Partial<Record<AppLocale, Record<string, string>>> 
     "Create account": "खाता बनाएँ",
     "Sign in": "साइन इन",
     "Continue as guest": "अतिथि के रूप में जारी रखें",
+    "matching prayers": "मिलते-जुलते मंत्र",
+    "Search Shiva, Krishna, peace…": "शिव, कृष्ण, शांति खोजें…",
+    "Explore {count}+ prayers, Vedic hymns and stotras. Search by deity, text or intention.":
+      "{count}+ प्रार्थनाएँ, वैदिक स्तोत्र और मंत्र खोजें। देवता, पाठ या उद्देश्य से खोजें।",
+    Logout: "लॉग आउट",
   },
   kn: {
     "Divinity Harmony": "ದಿವ್ಯ ಸಾಮರಸ್ಯ",
@@ -174,7 +180,35 @@ export const uiTranslations: Partial<Record<AppLocale, Record<string, string>>> 
     "Trust & support": "ವಿಶ್ವಾಸ ಮತ್ತು ಸಹಾಯ",
     Practice: "ಸಾಧನೆ",
     Discover: "ಅನ್ವೇಷಣೆ",
+    "Your account": "ನಿಮ್ಮ ಖಾತೆ",
+    "User Settings": "ಬಳಕೆದಾರ ಸೆಟ್ಟಿಂಗ್‌ಗಳು",
+    Profile: "ಪ್ರೊಫೈಲ್",
+    Preferences: "ಆದ್ಯತೆಗಳು",
+    Account: "ಖಾತೆ",
+    "Display name": "ಪ್ರದರ್ಶಿತ ಹೆಸರು",
+    "Dark theme": "ಡಾರ್ಕ್ ಥೀಮ್",
+    "Logged Out": "ಲಾಗ್ ಔಟ್ ಆಗಿದೆ",
+    "You have been successfully logged out.":
+      "ನೀವು ಯಶಸ್ವಿಯಾಗಿ ಲಾಗ್ ಔಟ್ ಆಗಿದ್ದೀರಿ.",
+    "Three living paths. One sacred space.":
+      "ಮೂರು ಜೀವಂತ ಮಾರ್ಗಗಳು. ಒಂದು ಪವಿತ್ರ ಸ್ಥಳ.",
+    "Your spiritual library": "ನಿಮ್ಮ ಆಧ್ಯಾತ್ಮಿಕ ಗ್ರಂಥಾಲಯ",
+    "Find what speaks to your heart.":
+      "ನಿಮ್ಮ ಹೃದಯಕ್ಕೆ ಮಾತನಾಡುವುದನ್ನು ಹುಡುಕಿ.",
+    "Choose the moment you need.": "ನಿಮಗೆ ಬೇಕಾದ ಕ್ಷಣವನ್ನು ಆರಿಸಿ.",
+    "A sacred rhythm for every day": "ಪ್ರತಿದಿನಕ್ಕೆ ಪವಿತ್ರ ಲಯ",
+    "Live Temple Darshan": "ಲೈವ್ ದೇವಾಲಯ ದರ್ಶನ",
+    "Welcome back": "ಮತ್ತೆ ಸ್ವಾಗತ",
+    "Create account": "ಖಾತೆ ರಚಿಸಿ",
+    "Sign in": "ಸೈನ್ ಇನ್",
+    "Continue as guest": "ಅತಿಥಿಯಾಗಿ ಮುಂದುವರಿಸಿ",
+    "matching prayers": "ಹೊಂದುವ ಪ್ರಾರ್ಥನೆಗಳು",
+    "Search Shiva, Krishna, peace…": "ಶಿವ, ಕೃಷ್ಣ ಅಥವಾ ಶಾಂತಿ ಹುಡುಕಿ…",
+    "Explore {count}+ prayers, Vedic hymns and stotras. Search by deity, text or intention.":
+      "{count}+ ಪ್ರಾರ್ಥನೆಗಳು, ವೇದ ಸ್ತೋತ್ರಗಳು ಮತ್ತು ಮಂತ್ರಗಳನ್ನು ಅನ್ವೇಷಿಸಿ.",
+    Logout: "ಲಾಗ್ ಔಟ್",
   },
+  ...regionalUiDicts,
 };
 
 export function translateUiText(text: string, locale: AppLocale): string {

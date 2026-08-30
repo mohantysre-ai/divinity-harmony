@@ -54,7 +54,7 @@ const MoreNavigation = [
 ];
 
 const Header = () => {
-  const { locale, setLocale, t, detectedState, elderMode, setElderMode } =
+  const { locale, setLocale, t, ui, detectedState, elderMode, setElderMode } =
     useLocale();
   const { theme, setTheme } = useTheme();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -78,8 +78,8 @@ const Header = () => {
   const handleLogout = async () => {
     await signOut();
     toast({
-      title: "Logged Out",
-      description: "You have been successfully logged out.",
+      title: ui("Logged Out"),
+      description: ui("You have been successfully logged out."),
     });
   };
 
@@ -93,7 +93,7 @@ const Header = () => {
                 <span className="text-white text-xl font-bold">ॐ</span>
               </div>
               <span className="text-xl md:text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-hindu-red to-hindu-gold">
-                Divinity Harmony
+                {ui("Divinity Harmony")}
               </span>
             </Link>
           </div>
@@ -127,7 +127,7 @@ const Header = () => {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="sm">
-                  Explore
+                  {ui("Explore")}
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
@@ -135,7 +135,7 @@ const Header = () => {
                   <DropdownMenuItem key={item.href} asChild>
                     <Link to={item.href}>
                       <item.icon className="mr-2 h-4 w-4" />
-                      {item.name}
+                      {ui(item.name)}
                     </Link>
                   </DropdownMenuItem>
                 ))}
@@ -168,7 +168,7 @@ const Header = () => {
                 align="end"
                 className="max-h-80 overflow-auto"
               >
-                <DropdownMenuLabel>Application language</DropdownMenuLabel>
+                <DropdownMenuLabel>{ui("Application language")}</DropdownMenuLabel>
                 {localeOptions.map((item) => (
                   <DropdownMenuItem
                     key={item.id}
@@ -183,7 +183,7 @@ const Header = () => {
               variant={elderMode ? "default" : "ghost"}
               size="icon"
               onClick={() => setElderMode(!elderMode)}
-              title="Elder Mode"
+              title={ui("Elder Mode")}
             >
               <Accessibility className="h-5 w-5" />
             </Button>
@@ -233,7 +233,7 @@ const Header = () => {
                       className="flex items-center cursor-pointer"
                     >
                       <Settings className="mr-2 h-4 w-4" />
-                      <span>Settings</span>
+                      <span>{ui("Settings")}</span>
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
@@ -242,7 +242,7 @@ const Header = () => {
                     className="text-destructive focus:text-destructive"
                   >
                     <LogOut className="mr-2 h-4 w-4" />
-                    <span>Log out</span>
+                    <span>{ui("Logout")}</span>
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
@@ -351,7 +351,7 @@ const Header = () => {
                 onClick={() => setMobileMenuOpen(false)}
               >
                 <item.icon className="mr-3 h-5 w-5" />
-                {item.name}
+                {ui(item.name)}
               </Link>
             ))}
             <div className="grid grid-cols-2 gap-2 border-y py-3">
@@ -384,7 +384,7 @@ const Header = () => {
                 }}
               >
                 <LogOut className="h-5 w-5 mr-3" />
-                Logout
+                {ui("Logout")}
               </Button>
             )}
           </div>

@@ -7,6 +7,7 @@ import {
   type ReactNode,
 } from "react";
 import { useRegionalUi } from "@/hooks/use-regional-ui";
+import { translateUiText } from "@/lib/ui-translations";
 
 export type AppLocale =
   | "en"
@@ -90,53 +91,12 @@ const copy: Partial<Record<AppLocale, Record<string, string>>> & {
       "Explore {count}+ prayers, Vedic hymns and stotras. Search by deity, text or intention.",
     notFound: "No mantra found. Try another spelling or deity.",
   },
-  hi: {
-    home: "मुखपृष्ठ",
-    mantras: "मंत्र",
-    darshan: "लाइव दर्शन",
-    scriptures: "पवित्र ग्रंथ",
-    deities: "देवता",
-    temples: "मंदिर",
-    priests: "पुजारी",
-    settings: "सेटिंग्स",
-    login: "लॉग इन",
-    language: "भाषा",
-    library: "मंत्र पुस्तकालय",
-    matching: "मिलते-जुलते मंत्र",
-    search: "शिव, कृष्ण, शांति खोजें…",
-    all: "सभी",
-    sacred: "पवित्र मंत्र",
-    living: "एक जीवंत भक्ति पुस्तकालय",
-    explore:
-      "{count}+ प्रार्थनाएँ, वैदिक स्तोत्र और मंत्र खोजें। देवता, पाठ या उद्देश्य से खोजें।",
-    notFound: "कोई मंत्र नहीं मिला। दूसरे नाम या देवता से खोजें।",
-  },
-  kn: {
-    home: "ಮುಖಪುಟ",
-    mantras: "ಮಂತ್ರಗಳು",
-    darshan: "ನೇರ ದರ್ಶನ",
-    scriptures: "ಪವಿತ್ರ ಗ್ರಂಥಗಳು",
-    deities: "ದೇವತೆಗಳು",
-    temples: "ದೇವಾಲಯಗಳು",
-    priests: "ಪುರೋಹಿತರು",
-    settings: "ಸೆಟ್ಟಿಂಗ್‌ಗಳು",
-    login: "ಲಾಗಿನ್",
-    language: "ಭಾಷೆ",
-    library: "ಮಂತ್ರ ಗ್ರಂಥಾಲಯ",
-    matching: "ಹೊಂದುವ ಪ್ರಾರ್ಥನೆಗಳು",
-    search: "ಶಿವ, ಕೃಷ್ಣ ಅಥವಾ ಉದ್ದೇಶ ಹುಡುಕಿ…",
-    all: "ಎಲ್ಲಾ",
-    sacred: "ಪವಿತ್ರ ಮಂತ್ರಗಳು",
-    living: "ಜೀವಂತ ಭಕ್ತಿ ಗ್ರಂಥಾಲಯ",
-    explore:
-      "{count}+ ಪ್ರಾರ್ಥನೆಗಳು, ವೇದ ಸ್ತೋತ್ರಗಳು ಮತ್ತು ಮಂತ್ರಗಳನ್ನು ಅನ್ವೇಷಿಸಿ.",
-    notFound: "ಮಂತ್ರ ಕಂಡುಬಂದಿಲ್ಲ. ಬೇರೆ ಹೆಸರು ಅಥವಾ ದೇವತೆಯನ್ನು ಪ್ರಯತ್ನಿಸಿ.",
-  },
 };
 type LocaleValue = {
   locale: AppLocale;
   setLocale: (value: AppLocale) => void;
   t: (key: string, vars?: Record<string, string | number>) => string;
+  ui: (text: string) => string;
   detectedState: string;
   elderMode: boolean;
   setElderMode: (value: boolean) => void;
@@ -200,11 +160,14 @@ export function LocaleProvider({ children }: { children: ReactNode }) {
     () => ({
       locale,
       setLocale,
-      t: (key: string, vars: Record<string, string | number> = {}) =>
-        Object.entries(vars).reduce(
+      t: (key: string, vars: Record<string, string | number> = {}) => {
+        const english = Object.entries(vars).reduce(
           (text, [name, value]) => text.replace(`{${name}}`, String(value)),
-          copy[locale]?.[key] || copy.en[key] || key,
-        ),
+          copy.en[key] || key,
+        );
+        return translateUiText(english, locale);
+      },
+      ui: (text: string) => translateUiText(text, locale),
       detectedState,
       elderMode,
       setElderMode,
