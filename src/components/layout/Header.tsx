@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { useTheme } from '@/hooks/theme-context';
-import { Button } from '@/components/ui/button';
-import { 
-  Menu, 
-  X, 
-  Moon, 
+import React, { useState } from "react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import { useTheme } from "@/hooks/theme-context";
+import { Button } from "@/components/ui/button";
+import {
+  Menu,
+  X,
+  Moon,
   Sun,
   Home,
   BookOpen,
@@ -17,8 +17,9 @@ import {
   Bell,
   Landmark,
   MapPin,
-  Users
-} from 'lucide-react';
+  Users,
+  Languages,
+} from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -27,36 +28,42 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useToast } from '@/components/ui/use-toast';
+import { useToast } from "@/components/ui/use-toast";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { useAuth } from '@/hooks/use-auth';
+import { useAuth } from "@/hooks/use-auth";
+import { useLocale } from "@/hooks/use-locale";
 
 const Navigation = [
-  { name: 'Home', href: '/', icon: Home },
-  { name: 'Mantras', href: '/mantras', icon: BookOpen },
-  { name: 'Live Darshan', href: '/darshan', icon: Video },
-  { name: 'Scriptures', href: '/scriptures', icon: FileText },
-  { name: 'Deities', href: '/deities', icon: Landmark },
-  { name: 'Temples', href: '/temples', icon: MapPin },
-  { name: 'Priests', href: '/priests', icon: Users },
+  { name: "Home", href: "/", icon: Home },
+  { name: "Mantras", href: "/mantras", icon: BookOpen },
+  { name: "Live Darshan", href: "/darshan", icon: Video },
+  { name: "Scriptures", href: "/scriptures", icon: FileText },
+  { name: "Deities", href: "/deities", icon: Landmark },
+  { name: "Temples", href: "/temples", icon: MapPin },
+  { name: "Priests", href: "/priests", icon: Users },
 ];
 
 const Header = () => {
+  const { locale, setLocale, t, detectedState } = useLocale();
   const { theme, setTheme } = useTheme();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
   const location = useLocation();
-  
-  const displayName=String(user?.user_metadata?.display_name||user?.email?.split('@')[0]||'Devotee');
-  const avatarUrl=String(user?.user_metadata?.avatar_url||'');
-  const initials=displayName.slice(0,2).toUpperCase();
-  
+
+  const displayName = String(
+    user?.user_metadata?.display_name ||
+      user?.email?.split("@")[0] ||
+      "Devotee",
+  );
+  const avatarUrl = String(user?.user_metadata?.avatar_url || "");
+  const initials = displayName.slice(0, 2).toUpperCase();
+
   const handleLogin = () => {
-    navigate('/login');
+    navigate("/login");
   };
-  
+
   const handleLogout = async () => {
     await signOut();
     toast({
@@ -90,45 +97,75 @@ const Header = () => {
                     key={item.name}
                     to={item.href}
                     className={`flex items-center gap-1.5 px-4 py-2 text-sm font-medium rounded-full transition-all duration-200 ${
-                      isActive 
-                        ? 'bg-background text-primary shadow-sm'
-                        : 'text-foreground/70 hover:text-primary hover:bg-background/50'
+                      isActive
+                        ? "bg-background text-primary shadow-sm"
+                        : "text-foreground/70 hover:text-primary hover:bg-background/50"
                     }`}
                   >
                     <item.icon className="h-4 w-4" />
-                    {item.name}
+                    {t(
+                      item.name === "Live Darshan"
+                        ? "darshan"
+                        : item.name.toLowerCase(),
+                    )}
                   </Link>
                 );
               })}
             </div>
-            
+
             {/* Notification icon */}
-            <Button variant="ghost" size="icon" className="mr-1 text-foreground/70 hover:text-primary">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="mr-1 text-foreground/70 hover:text-primary"
+            >
               <Bell className="h-5 w-5" />
+            </Button>
+
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setLocale(locale === "kn" ? "en" : "kn")}
+              title={
+                detectedState ? `Detected: ${detectedState}` : t("language")
+              }
+            >
+              <Languages className="mr-1.5 h-4 w-4" />
+              {locale === "kn" ? "English" : "ಕನ್ನಡ"}
             </Button>
 
             {/* Theme toggle */}
             <Button
               variant="ghost"
               size="icon"
-              onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+              onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
               className="mr-2 text-foreground/70 hover:text-primary"
             >
-              {theme === 'dark' ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+              {theme === "dark" ? (
+                <Sun className="h-5 w-5" />
+              ) : (
+                <Moon className="h-5 w-5" />
+              )}
               <span className="sr-only">Toggle theme</span>
             </Button>
-          
+
             {/* User account menu */}
             {user ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="sm" className="flex items-center gap-2 px-2 hover:bg-background/80">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="flex items-center gap-2 px-2 hover:bg-background/80"
+                  >
                     <Avatar className="h-8 w-8">
                       <AvatarImage src={avatarUrl} alt={displayName} />
                       <AvatarFallback>{initials}</AvatarFallback>
                     </Avatar>
                     <div className="flex flex-col items-start text-xs">
-                      <span className="max-w-24 truncate font-medium">{displayName}</span>
+                      <span className="max-w-24 truncate font-medium">
+                        {displayName}
+                      </span>
                       <span className="text-muted-foreground">Signed in</span>
                     </div>
                   </Button>
@@ -137,27 +174,33 @@ const Header = () => {
                   <DropdownMenuLabel>My Account</DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem asChild>
-                    <Link to="/settings" className="flex items-center cursor-pointer">
+                    <Link
+                      to="/settings"
+                      className="flex items-center cursor-pointer"
+                    >
                       <Settings className="mr-2 h-4 w-4" />
                       <span>Settings</span>
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={handleLogout} className="text-destructive focus:text-destructive">
+                  <DropdownMenuItem
+                    onClick={handleLogout}
+                    className="text-destructive focus:text-destructive"
+                  >
                     <LogOut className="mr-2 h-4 w-4" />
                     <span>Log out</span>
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             ) : (
-              <Button 
-                variant="default" 
-                size="sm" 
+              <Button
+                variant="default"
+                size="sm"
                 onClick={handleLogin}
                 className="flex items-center gap-1 bg-gradient-to-r from-hindu-red to-hindu-orange hover:brightness-110"
               >
                 <LogIn className="h-4 w-4" />
-                <span>Login</span>
+                <span>{t("login")}</span>
               </Button>
             )}
           </div>
@@ -165,16 +208,32 @@ const Header = () => {
           {/* Mobile menu button */}
           <div className="flex items-center gap-2 xl:hidden">
             <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setLocale(locale === "kn" ? "en" : "kn")}
+            >
+              {locale === "kn" ? "EN" : "ಕನ್ನಡ"}
+            </Button>
+            <Button
               variant="ghost"
               size="icon"
-              onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+              onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
               className="text-foreground/70"
             >
-              {theme === 'dark' ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+              {theme === "dark" ? (
+                <Sun className="h-5 w-5" />
+              ) : (
+                <Moon className="h-5 w-5" />
+              )}
             </Button>
-            
+
             {user ? (
-              <Link to="/settings"><Avatar className="h-8 w-8"><AvatarImage src={avatarUrl} alt={displayName}/><AvatarFallback>{initials}</AvatarFallback></Avatar></Link>
+              <Link to="/settings">
+                <Avatar className="h-8 w-8">
+                  <AvatarImage src={avatarUrl} alt={displayName} />
+                  <AvatarFallback>{initials}</AvatarFallback>
+                </Avatar>
+              </Link>
             ) : (
               <Button
                 variant="default"
@@ -186,14 +245,18 @@ const Header = () => {
                 Login
               </Button>
             )}
-            
+
             <Button
               variant="ghost"
               size="icon"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className="text-foreground/70"
             >
-              {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+              {mobileMenuOpen ? (
+                <X className="h-5 w-5" />
+              ) : (
+                <Menu className="h-5 w-5" />
+              )}
             </Button>
           </div>
         </nav>
@@ -210,14 +273,18 @@ const Header = () => {
                   key={item.name}
                   to={item.href}
                   className={`flex items-center px-3 py-2.5 text-sm font-medium rounded-lg ${
-                    isActive 
-                      ? 'bg-accent text-accent-foreground'
-                      : 'hover:bg-accent/50 hover:text-accent-foreground'
+                    isActive
+                      ? "bg-accent text-accent-foreground"
+                      : "hover:bg-accent/50 hover:text-accent-foreground"
                   }`}
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   <item.icon className="h-5 w-5 mr-3" />
-                  {item.name}
+                  {t(
+                    item.name === "Live Darshan"
+                      ? "darshan"
+                      : item.name.toLowerCase(),
+                  )}
                 </Link>
               );
             })}
@@ -227,11 +294,11 @@ const Header = () => {
               onClick={() => setMobileMenuOpen(false)}
             >
               <Settings className="h-5 w-5 mr-3" />
-              Settings
+              {t("settings")}
             </Link>
             {user && (
-              <Button 
-                variant="ghost" 
+              <Button
+                variant="ghost"
                 className="w-full justify-start px-3 py-2.5 text-sm font-medium rounded-lg text-destructive hover:bg-destructive/10 hover:text-destructive"
                 onClick={() => {
                   handleLogout();

@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import Layout from "@/components/layout/Layout";
 import { ThemeProvider } from "@/hooks/use-theme";
 import AudioPlayer from "@/components/player/AudioPlayer";
@@ -12,6 +12,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import bundledData from "@/data/mantras.json";
+import requestedSources from "@/data/requested-mantra-sources.json";
 import { useToast } from "@/hooks/use-toast";
 import { useSearchParams } from "react-router-dom";
 import {
@@ -28,10 +29,11 @@ import {
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import JapaCounter from "@/components/mantras/JapaCounter";
-import { Languages, Sparkles } from "lucide-react";
+import { ExternalLink, Languages, Sparkles } from "lucide-react";
 import { Heart } from "lucide-react";
 import { deviceHeaders } from "@/lib/device";
 import { detectRegionalScript, scriptFromBrowser } from "@/lib/regional-script";
+import { useLocale } from "@/hooks/use-locale";
 
 type Mantra = (typeof bundledData.mantras)[number];
 
@@ -97,6 +99,13 @@ function normalizeSearch(value: string) {
     .replace(/\bshiv\b/g, "shiva")
     .replace(/\bganapathy\b/g, "ganapati")
     .replace(/\bganeshji\b/g, "ganesha")
+    .replace(/ಶಿವ/g, "shiva")
+    .replace(/ಕೃಷ್ಣ/g, "krishna")
+    .replace(/ಗಣೇಶ/g, "ganesha")
+    .replace(/ಹನುಮಂತ/g, "hanuman")
+    .replace(/ಲಕ್ಷ್ಮಿ/g, "lakshmi")
+    .replace(/ಸರಸ್ವತಿ/g, "saraswati")
+    .replace(/ದುರ್ಗ/g, "durga")
     .trim();
 }
 function deityFor(mantra: Mantra) {
@@ -169,7 +178,9 @@ function applyDeityFallback(
 }
 
 const MantrasPage = () => {
+  const { t } = useLocale();
   const { toast } = useToast();
+  const readerRef = useRef<HTMLElement>(null);
   const [currentMantraIndex, setCurrentMantraIndex] = useState(0);
   const [query, setQuery] = useState("");
   const [deity, setDeity] = useState("All");
@@ -277,6 +288,15 @@ const MantrasPage = () => {
         }),
     [catalog, deity, query],
   );
+  const visibleRequestedSources = useMemo(() => {
+    const needle = normalizeSearch(query);
+    if (!needle) return [];
+    return requestedSources
+      .filter((item) =>
+        normalizeSearch(`${item.title} ${item.category}`).includes(needle),
+      )
+      .slice(0, 12);
+  }, [query]);
 
   useEffect(() => {
     if (!visibleMantras.length) return;
@@ -352,6 +372,12 @@ const MantrasPage = () => {
       });
     }
   };
+  const chooseMantra = (index: number) => {
+    setCurrentMantraIndex(index);
+    requestAnimationFrame(() =>
+      readerRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }),
+    );
+  };
 
   return (
     <ThemeProvider>
@@ -359,14 +385,13 @@ const MantrasPage = () => {
         <main className="container mx-auto py-8">
           <div className="mb-8 text-center">
             <p className="text-sm font-medium uppercase tracking-[0.24em] text-primary">
-              Sacred Mantras
+              {t("sacred")}
             </p>
             <h1 className="mt-2 text-3xl font-bold md:text-4xl">
-              A living devotional library
+              {t("living")}
             </h1>
             <p className="mx-auto mt-3 max-w-2xl text-muted-foreground">
-              Explore {catalog.length}+ prayers, Vedic hymns and stotras. Search
-              by deity, text or intention.
+              {t("explore", { count: catalog.length })}
             </p>
             {catalogNotice && (
               <p className="mt-2 text-sm text-muted-foreground">
@@ -390,7 +415,7 @@ const MantrasPage = () => {
             </button>
           )}
           <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
-            <section className="lg:col-span-2">
+            <section ref={readerRef} className="scroll-mt-24 lg:col-span-2">
               <article className="overflow-hidden rounded-xl bg-card shadow-lg">
                 <button
                   type="button"
@@ -511,14 +536,17 @@ const MantrasPage = () => {
               <JapaCounter mantraId={currentMantra.id} />
             </section>
             <aside className="lg:col-span-1">
-              <h3 className="text-xl font-bold">Mantra Library</h3>
+              <h3 className="text-xl font-bold">{t("library")}</h3>
               <p className="mb-3 text-sm text-muted-foreground">
-                {visibleMantras.length} matching prayers
+                {visibleMantras.length} {t("matching")}
               </p>
               <Input
                 value={query}
-                onChange={(event) => setQuery(event.target.value)}
-                placeholder="Search Shiva, Gayatri, peace…"
+                onChange={(event) => {
+                  setQuery(event.target.value);
+                  if (event.target.value.trim()) setDeity("All");
+                }}
+                placeholder={t("search")}
                 aria-label="Search mantra library"
               />
               <div className="my-3 flex flex-wrap gap-2">
@@ -527,9 +555,12 @@ const MantrasPage = () => {
                     key={item}
                     size="sm"
                     variant={deity === item ? "default" : "outline"}
-                    onClick={() => setDeity(item)}
+                    onClick={() => {
+                      setDeity(item);
+                      setQuery("");
+                    }}
                   >
-                    {item}
+                    {item === "All" ? t("all") : item}
                   </Button>
                 ))}
               </div>
@@ -540,9 +571,9 @@ const MantrasPage = () => {
                     role="button"
                     tabIndex={0}
                     className={`cursor-pointer transition-all hover:border-primary/60 ${index === currentMantraIndex ? "border-primary ring-1 ring-primary" : ""}`}
-                    onClick={() => setCurrentMantraIndex(index)}
+                    onClick={() => chooseMantra(index)}
                     onKeyDown={(event) =>
-                      event.key === "Enter" && setCurrentMantraIndex(index)
+                      event.key === "Enter" && chooseMantra(index)
                     }
                   >
                     <CardContent className="flex gap-3 p-3">
@@ -566,10 +597,38 @@ const MantrasPage = () => {
                 ))}
                 {visibleMantras.length === 0 && (
                   <p className="rounded-lg border border-dashed p-5 text-sm text-muted-foreground">
-                    No mantra found. Try another spelling or deity.
+                    {t("notFound")}
                   </p>
                 )}
               </div>
+              {visibleRequestedSources.length > 0 && (
+                <section className="mt-5 rounded-2xl border bg-card p-4">
+                  <h4 className="font-bold">Requested devotional collection</h4>
+                  <p className="mt-1 text-xs text-muted-foreground">
+                    Additional supplied titles with their original reading
+                    source.
+                  </p>
+                  <div className="mt-3 space-y-2">
+                    {visibleRequestedSources.map((item) => (
+                      <a
+                        key={`${item.title}-${item.sourceUrl}`}
+                        href={item.sourceUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center justify-between rounded-xl border p-3 text-sm font-medium transition hover:border-orange-400 hover:bg-orange-50 dark:hover:bg-orange-950/20"
+                      >
+                        <span>
+                          {item.title}
+                          <small className="mt-0.5 block font-normal text-muted-foreground">
+                            {item.category}
+                          </small>
+                        </span>
+                        <ExternalLink className="h-4 w-4 shrink-0" />
+                      </a>
+                    ))}
+                  </div>
+                </section>
+              )}
             </aside>
           </div>
         </main>

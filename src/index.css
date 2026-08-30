@@ -4,6 +4,10 @@
 @tailwind components;
 @tailwind utilities;
 
+.locale-kn body {
+  font-family: "Noto Sans Kannada", "Tunga", "Nirmala UI", system-ui, sans-serif;
+}
+
 @layer base {
   :root {
     --background: 35 100% 98%;
