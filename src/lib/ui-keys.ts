@@ -264,6 +264,13 @@ export const UI_KEYS = {
     "Enter birth date and time, then save or generate to see your personalized kundli.",
   birthChartEphemerisNote:
     "Swiss Ephemeris sidereal chart (Lahiri ayanamsha). Whole-sign houses; standard Panchang methodology.",
+  kundliResultsTitle: "Your kundli",
+  kundliEmptyState:
+    "Enter birth date, exact time and birth place, then tap Generate to see lagna, moon sign, nakshatra and all nine grahas.",
+  kundliSummarySection: "Birth summary",
+  kundliDashaSection: "Vimshottari dasha",
+  kundliPlaceRequired: "Add a birth city or use my location so coordinates resolve correctly.",
+  grahaColumn: "Graha",
   planetPositionsTable: "Navagraha positions",
   houseColumn: "House",
   retrogradeLabel: "Retrograde",

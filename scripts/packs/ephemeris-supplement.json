@@ -12,7 +12,13 @@
     "mahadashaAtBirth": "जन्मकालीन महादशा",
     "currentMahadasha": "वर्तमान महादशा",
     "yearsRemaining": "शेष वर्ष",
-    "dashaBalanceAtBirth": "जन्म पर शेष"
+    "dashaBalanceAtBirth": "जन्म पर शेष",
+    "kundliResultsTitle": "आपकी कुंडली",
+    "kundliEmptyState": "जन्म तिथि, सटीक समय और जन्म स्थान भरें, फिर जन्म लग्न, चandra रashi, नक्षत्र और नौ ग्रह देखने के लिए Generate दबाएं।",
+    "kundliSummarySection": "जन्म सारांश",
+    "kundliDashaSection": "विम्शोत्तरी दशा",
+    "kundliPlaceRequired": "सही गणना के लिए जन्म शहर लिखें या मेरा स्थान उपयोग करें।",
+    "grahaColumn": "ग्रह"
   },
   "or": {
     "natalChartDisclaimer": "ଚାର୍ଟ Swiss Ephemeris (ଲାହିରି ଅୟନାଂଶ) ଦ୍ୱାରା ଆପଣଙ୍କ ଜନ୍ମ ତାରିଖ, ସମୟ ଓ ସ୍ଥାନରୁ ଗଣନା ହୁଏ। ଗୁରୁତ୍ୱପୂର୍ଣ୍ଣ ନିଷ୍ପତ୍ତି ପାଇଁ ଯୋଗ୍ୟ ଜ୍ୟୋତିଷୀଙ୍କ ସହ ନିଶ୍ଚିତ କରନ୍ତୁ।",
@@ -27,7 +33,13 @@
     "mahadashaAtBirth": "ଜନ୍ମକାଳୀନ ମହାଦଶା",
     "currentMahadasha": "ବର୍ତ୍ତମାନ ମହାଦଶା",
     "yearsRemaining": "ବାକି ବର୍ଷ",
-    "dashaBalanceAtBirth": "ଜନ୍ମରେ ବାକି"
+    "dashaBalanceAtBirth": "ଜନ୍ମରେ ବାକି",
+    "kundliResultsTitle": "ଆପଣଙ୍କ କୁଣ୍ଡଳୀ",
+    "kundliEmptyState": "ଜନ୍ମ ତାରିଖ, ସଠିକ୍ ସମୟ ଓ ଜନ୍ମ ସ୍ଥାନ ପ୍ରବେଶ କର, ତାପରେ ଲଗ୍ନ, ଚନ୍ଦ୍ର ରାଶି, ନକ୍ଷତ୍ର ଓ ୯ଟି ଗ୍ରହ ଦେଖିବା ପାଇଁ Generate ବ୍ୟବହାର କର।",
+    "kundliSummarySection": "ଜନ୍ମ ସାରାଂଶ",
+    "kundliDashaSection": "ବିଂଶୋତ୍ତରୀ ଦଶା",
+    "kundliPlaceRequired": "ସଠିକ୍ ଗଣନା ପାଇଁ ଜନ୍ମ ସହର ଲେଖନ୍ତୁ କିମ୍ବା ମୋର ଅବସ୍ଥାନ ବ୍ୟବହାର କରନ୍ତୁ।",
+    "grahaColumn": "ଗ୍ରହ"
   },
   "te": {
     "natalChartDisclaimer": "చార్ట్‌లు Swiss Ephemeris (లాహిరి అయనాంశ)తో మీ జన్మ తేదీ, సమయం, ప్రదేశం నుండి లెక్కించబడతాయి. ముఖ్యమైన నిర్ణయాలకు అర్హజ్యోతిష్కుడిని సంప్రదించండి.",
@@ -42,7 +54,13 @@
     "mahadashaAtBirth": "జన్మ మహాదశ",
     "currentMahadasha": "ప్రస్తుత మహాదశ",
     "yearsRemaining": "మిగిలిన సంవత్సరాలు",
-    "dashaBalanceAtBirth": "జన్మ సమయంలో మిగిలినది"
+    "dashaBalanceAtBirth": "జన్మ సమయంలో మిగిలినది",
+    "kundliResultsTitle": "మీ కుండలి",
+    "kundliEmptyState": "పుట్టిన తేదీ, ఖచ్చితమైన సమయం, జన్మ స్థలం నమోదు చేసి Generate నొక్కండి.",
+    "kundliSummarySection": "జన్మ సారాంశం",
+    "kundliDashaSection": "వింశోత్తరి దశ",
+    "kundliPlaceRequired": "ఖచ్చితమైన లెక్క కోసం జన్మ నగరం లేదా నా స్థానం ఉపయోగించండి.",
+    "grahaColumn": "గ్రహ"
   },
   "ta": {
     "natalChartDisclaimer": "Swiss Ephemeris (லாகிரி அயனாம்சம்) மூலம் உங்கள் பிறந்த தேதி, நேரம், இடத்திலிருந்து சக்கரம் கணக்கிடப்படும். முக்கியமான முடிவுகளுக்கு தகுதியான ஜோதிடரை அணுகவும்.",
@@ -57,7 +75,13 @@
     "mahadashaAtBirth": "பிறப்பு மகாதசை",
     "currentMahadasha": "தற்போதைய மகாதசை",
     "yearsRemaining": "மீதமுள்ள ஆண்டுகள்",
-    "dashaBalanceAtBirth": "பிறப்பில் மீதம்"
+    "dashaBalanceAtBirth": "பிறப்பில் மீதம்",
+    "kundliResultsTitle": "உங்கள் ஜாதகம்",
+    "kundliEmptyState": "பிறந்த தேதி, точное நேரம், பிறப்பிடம் உள்ளிட்டு Generate அழுத்தவும்.",
+    "kundliSummarySection": "பிறப்பு சுருக்கம்",
+    "kundliDashaSection": "விம்சோத்தரி தசா",
+    "kundliPlaceRequired": "த точной கணக்கிற்கு பிறப்பிடம் அல்லது என் இருப்பிடத்தைப் பயன்படுத்தவும்.",
+    "grahaColumn": "கிரகம்"
   },
   "kn": {
     "natalChartDisclaimer": "ಚಾರ್ಟ್‌ಗಳನ್ನು Swiss Ephemeris (ಲಾಹಿರಿ ಅಯನಾಂಶ) ಬಳಸಿ ನಿಮ್ಮ ಜನ್ಮ ದಿನಾಂಕ, ಸಮಯ, ಸ್ಥಳದಿಂದ ಲೆಕ್ಕ ಹಾಕಲಾಗುತ್ತದೆ.",
@@ -72,7 +96,13 @@
     "mahadashaAtBirth": "ಜನ್ಮ ಮಹಾದಶೆ",
     "currentMahadasha": "ಪ್ರಸ್ತುತ ಮಹಾದಶೆ",
     "yearsRemaining": "ಉಳಿದ ವರ್ಷಗಳು",
-    "dashaBalanceAtBirth": "ಜನ್ಮದಲ್ಲಿ ಉಳಿದದ್ದು"
+    "dashaBalanceAtBirth": "ಜನ್ಮದಲ್ಲಿ ಉಳಿದದ್ದು",
+    "kundliResultsTitle": "ನಿಮ್ಮ ಕುಂಡಲಿ",
+    "kundliEmptyState": "ಜನ್ಮ ದಿನಾಂಕ, ನಿಖರ ಸಮಯ, ಜನ್ಮ ಸ್ಥಳ ನಮೂದಿಸಿ Generate ಒತ್ತಿ.",
+    "kundliSummarySection": "ಜನ್ಮ ಸಾರಾಂಶ",
+    "kundliDashaSection": "ವಿಂಶೋತ್ತರಿ ದಶೆ",
+    "kundliPlaceRequired": "ನಿಖರ ಲೆಕ್ಕಕ್ಕೆ ಜನ್ಮ ನಗರ ಅಥವಾ ನನ್ನ ಸ್ಥಳ ಬಳಸಿ.",
+    "grahaColumn": "ಗ್ರಹ"
   },
   "ml": {
     "natalChartDisclaimer": "Swiss Ephemeris (ലാഹിരി അയനാംശ) ഉപയോഗിച്ച് ജനന തീയതി, സമയം, സ്ഥലം കൊണ്ട് ചാർട്ട് കണക്കാക്കുന്നു.",
@@ -87,7 +117,13 @@
     "mahadashaAtBirth": "ജനന മഹാദശ",
     "currentMahadasha": "നിലവിലെ മഹാദശ",
     "yearsRemaining": "ബാക്കിയുള്ള വർഷങ്ങൾ",
-    "dashaBalanceAtBirth": "ജനനത്തിൽ ബാക്കി"
+    "dashaBalanceAtBirth": "ജനനത്തിൽ ബാക്കി",
+    "kundliResultsTitle": "നിങ്ങളുടെ ജാതകം",
+    "kundliEmptyState": "ജനന തീയതി, കൃത്യമായ സമയം, സ്ഥലം നൽകി Generate അമർത്തുക.",
+    "kundliSummarySection": "ജനന സംഗ്രഹം",
+    "kundliDashaSection": "വിംശോത്തരി ദശ",
+    "kundliPlaceRequired": "കൃത്യമായ കണക്കിന് ജനന സ്ഥലം അല്ലെങ്കിൽ എന്റെ സ്ഥലം ഉപയോഗിക്കുക.",
+    "grahaColumn": "ഗ്രഹം"
   },
   "bn": {
     "natalChartDisclaimer": "Swiss Ephemeris (লাহিরি অয়নাংশ) দিয়ে জন্ম তারিখ, সময় ও স্থান থেকে চার্ট গণনা হয়।",
@@ -102,7 +138,13 @@
     "mahadashaAtBirth": "জন্মকালীন মহাদশা",
     "currentMahadasha": "বর্তমান মহাদশা",
     "yearsRemaining": "অবশিষ্ট বছর",
-    "dashaBalanceAtBirth": "জন্মে অবশিষ্ট"
+    "dashaBalanceAtBirth": "জন্মে অবশিষ্ট",
+    "kundliResultsTitle": "আপনার কুণ্ডলী",
+    "kundliEmptyState": "জন্ম তারিখ, exact সময়, জন্মস্থান দিন, Generate চাপুন.",
+    "kundliSummarySection": "জন্ম সারাংশ",
+    "kundliDashaSection": "বিংশোত্তরী দশা",
+    "kundliPlaceRequired": "সঠিক হিসাবের জন্য জন্মস্থান বা আমার অবস্থান ব্যবহার করুন.",
+    "grahaColumn": "গ্রহ"
   },
   "gu": {
     "natalChartDisclaimer": "ચાર્ટ Swiss Ephemeris (લાહિરી અયનાંશ) થી જન્મ તારીખ, સમય અને સ્થળથી ગણવામાં આવે છે.",
@@ -117,7 +159,13 @@
     "mahadashaAtBirth": "જન્મ મહાદશા",
     "currentMahadasha": "વર્તમાન મહાદશા",
     "yearsRemaining": "બાકી વર્ષ",
-    "dashaBalanceAtBirth": "જન્મે બાકી"
+    "dashaBalanceAtBirth": "જન્મે બાકી",
+    "kundliResultsTitle": "તમારી કુંડળી",
+    "kundliEmptyState": "જન્મ તારીખ, exact સમય, સ્થળ ભરી Generate દબાવો.",
+    "kundliSummarySection": "જન્મ સારાંશ",
+    "kundliDashaSection": "વિંશોત્તરી દશા",
+    "kundliPlaceRequired": "ચોક્કસ ગણતરી માટે જન્મ સ્થળ અથવા મારું સ્થાન વાપરો.",
+    "grahaColumn": "ગ્રહ"
   },
   "mr": {
     "natalChartDisclaimer": "चार्ट Swiss Ephemeris (लाहिरी अयनांश) वरून जन्मतारीख, वेळ आणि ठिकाणावरून मोजले जातात.",
@@ -132,7 +180,13 @@
     "mahadashaAtBirth": "जन्म महादशा",
     "currentMahadasha": "सध्याची महादशा",
     "yearsRemaining": "उरलेली वर्षे",
-    "dashaBalanceAtBirth": "जन्मावेळी उरले"
+    "dashaBalanceAtBirth": "जन्मावेळी उरले",
+    "kundliResultsTitle": "तुमची कुंडली",
+    "kundliEmptyState": "जन्मतारीख, अचूक वेळ, जन्मस्थान भरा आणि Generate दाबा.",
+    "kundliSummarySection": "जन्म सारांश",
+    "kundliDashaSection": "विंशोत्तरी दशा",
+    "kundliPlaceRequired": "अचूक गणनेसाठी जन्मस्थान किंवा माझे स्थान वापरा.",
+    "grahaColumn": "ग्रह"
   },
   "pa": {
     "natalChartDisclaimer": "ਚਾਰਟ Swiss Ephemeris (ਲਾਹਿਰੀ ਅਯਨਾਂਸ਼) ਨਾਲ ਜਨਮ ਮਿਤੀ, ਸਮੇਂ ਅਤੇ ਸਥਾਨ ਤੋਂ ਗਣਨਾ ਹੁੰਦੀ ਹੈ.",
@@ -147,7 +201,13 @@
     "mahadashaAtBirth": "ਜਨਮ ਮਹਾਦਸ਼ਾ",
     "currentMahadasha": "ਮੌਜੂਦਾ ਮਹਾਦਸ਼ਾ",
     "yearsRemaining": "ਬਾਕੀ ਸਾਲ",
-    "dashaBalanceAtBirth": "ਜਨਮ 'ਤੇ ਬਾਕੀ"
+    "dashaBalanceAtBirth": "ਜਨਮ 'ਤੇ ਬਾਕੀ",
+    "kundliResultsTitle": "ਤੁਹਾਡੀ ਕੁੰਡਲੀ",
+    "kundliEmptyState": "ਜਨਮ ਮਿਤੀ, exact ਸਮਾਂ, ਸਥਾਨ ਭਰੋ ਅਤੇ Generate ਦਬਾਓ.",
+    "kundliSummarySection": "ਜਨਮ ਸਾਰ",
+    "kundliDashaSection": "ਵਿੰਸ਼ੋਤਤਰੀ ਦਸ਼ਾ",
+    "kundliPlaceRequired": "ਸਹੀ ਗਣਨਾ ਲਈ ਜਨਮ ਸਥਾਨ ਜਾਂ ਮੇਰਾ ਸਥਾਨ ਵਰਤੋ.",
+    "grahaColumn": "ਗ੍ਰਹਿ"
   },
   "as": {
     "natalChartDisclaimer": "Swiss Ephemeris (লাহিৰি অয়নাংশ) ৰ দ্বাৰা জন্ম তাৰিখ, সময় আৰু স্থানৰ পৰা চাৰ্ট গণনা হয়.",
@@ -162,6 +222,12 @@
     "mahadashaAtBirth": "জন্ম মহাদশা",
     "currentMahadasha": "বৰ্তমান মহাদশা",
     "yearsRemaining": "বাকী বছৰ",
-    "dashaBalanceAtBirth": "জন্মত বাকী"
+    "dashaBalanceAtBirth": "জন্মত বাকী",
+    "kundliResultsTitle": "আপোনাৰ কুণ্ডলী",
+    "kundliEmptyState": "জন্ম তাৰিখ, সঠিক সময়, স্থান দি Generate টিপক।",
+    "kundliSummarySection": "জন্ম সাৰাংশ",
+    "kundliDashaSection": "বিংশোত্তৰী দশা",
+    "kundliPlaceRequired": "শুদ্ধ গণনাৰ বাবে জন্মস্থান বা মোৰ অৱস্থান ব্যৱহাৰ কৰক.",
+    "grahaColumn": "গ্ৰহ"
   }
 }

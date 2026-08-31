@@ -1,21 +1,23 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
-  BookOpen,
   Compass,
   Info,
   Loader2,
   LocateFixed,
-  Moon,
-  Orbit,
   Save,
   Sparkles,
-  Sun,
 } from "lucide-react";
 import Layout from "@/components/layout/Layout";
 import { ThemeProvider } from "@/hooks/use-theme";
 import { useLocale } from "@/hooks/use-locale";
 import type { UiKey } from "@/lib/ui-keys";
 import PanchangWidget from "@/components/home/PanchangWidget";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -64,6 +66,9 @@ type BirthChart = {
   precision: string;
   engine?: string;
   timezone?: string;
+  ayanamsha?: string;
+  latitude?: number;
+  longitude?: number;
   planets?: PlanetRow[];
   dasha_at_birth?: {
     mahadasha: string;
@@ -79,23 +84,6 @@ type BirthChart = {
 const STORAGE_KEY = "vedic:birth-profile";
 const DHARMA_KEY = "my-dharma:profile";
 
-function readJson<T>(key: string, fallback: T): T {
-  try {
-    return JSON.parse(localStorage.getItem(key) || "") as T;
-  } catch {
-    return fallback;
-  }
-}
-
-const conceptKeys = [
-  ["conceptRashi", "conceptRashiDesc"],
-  ["conceptLagna", "conceptLagnaDesc"],
-  ["conceptNakshatraJyotisha", "conceptNakshatraJyotishaDesc"],
-  ["conceptDasha", "conceptDashaDesc"],
-  ["conceptGochara", "conceptGocharaDesc"],
-  ["conceptAyanamsha", "conceptAyanamshaDesc"],
-] as const satisfies readonly (readonly [UiKey, UiKey])[];
-
 const GRAHA_LABEL_KEYS: Partial<Record<string, UiKey>> = {
   Sun: "grahaSuryaVitality",
   Moon: "grahaChandraMind",
@@ -108,22 +96,36 @@ const GRAHA_LABEL_KEYS: Partial<Record<string, UiKey>> = {
   Ketu: "grahaKetuRelease",
 };
 
-const grahaKeys = [
-  "grahaSuryaVitality",
-  "grahaChandraMind",
-  "grahaMangalaAction",
-  "grahaBudhaIntellect",
-  "grahaGuruWisdom",
-  "grahaShukraHarmony",
-  "grahaShaniDiscipline",
-  "grahaRahuAmplification",
-  "grahaKetuRelease",
-] as const satisfies readonly UiKey[];
+function readJson<T>(key: string, fallback: T): T {
+  try {
+    return JSON.parse(localStorage.getItem(key) || "") as T;
+  } catch {
+    return fallback;
+  }
+}
 
 function grahaLabel(name: string, tk: (key: UiKey) => string): string {
   const key = GRAHA_LABEL_KEYS[name];
   if (!key) return name;
   return tk(key).split(" · ")[0] ?? name;
+}
+
+function chartParams(
+  details: BirthDetails,
+  coords: { lat: number; lon: number },
+): URLSearchParams | null {
+  if (!details.date?.trim()) return null;
+  const time = details.time?.trim() || "12:00";
+  const params = new URLSearchParams({
+    date: details.date,
+    time: time.length === 5 ? `${time}:00` : time,
+    lat: String(coords.lat),
+    lon: String(coords.lon),
+  });
+  if (details.place?.trim()) {
+    params.set("place", details.place.trim());
+  }
+  return params;
 }
 
 export default function VedicAstrologyPage() {
@@ -135,16 +137,11 @@ export default function VedicAstrologyPage() {
   const [locating, setLocating] = useState(false);
   const [chartLoading, setChartLoading] = useState(false);
   const [chart, setChart] = useState<BirthChart | null>(null);
+  const [chartError, setChartError] = useState<string | null>(null);
   const [coords, setCoords] = useState({ lat: 20.5937, lon: 78.9629 });
-
-  const concepts = useMemo(
-    () =>
-      conceptKeys.map(([nameKey, descKey]) => ({
-        nameKey,
-        descKey,
-      })),
-    [],
-  );
+  const [geoReady, setGeoReady] = useState(false);
+  const autoFetchedRef = useRef(false);
+  const coordsRef = useRef(coords);
 
   const localizedChart = useMemo(
     () => (chart ? localizeBirthChart(locale, chart) : null),
@@ -159,34 +156,47 @@ export default function VedicAstrologyPage() {
     [chart, locale],
   );
 
-  const fetchChart = useCallback(async () => {
-    if (!details.date?.trim()) {
-      toast({ description: tk("birthChartNeedsDateTime") });
-      return;
-    }
-    const time = details.time?.trim() || "12:00";
-    setChartLoading(true);
-    try {
-      const params = new URLSearchParams({
-        date: details.date,
-        time: time.length === 5 ? `${time}:00` : time,
-        lat: String(coords.lat),
-        lon: String(coords.lon),
-      });
-      if (details.place?.trim()) {
-        params.set("place", details.place.trim());
+  const fetchChart = useCallback(
+    async (opts?: { silent?: boolean }) => {
+      if (!details.date?.trim()) {
+        if (!opts?.silent) {
+          toast({ description: tk("birthChartNeedsDateTime") });
+        }
+        return;
       }
-      const res = await fetch(`/api/birth-chart?${params}`);
-      if (!res.ok) throw new Error();
-      const data = (await res.json()) as BirthChart;
-      setChart(data);
-    } catch {
-      toast({ title: tk("pleaseTryAgain"), variant: "destructive" });
-      setChart(null);
-    } finally {
-      setChartLoading(false);
-    }
-  }, [coords.lat, coords.lon, details.date, details.place, details.time, toast, tk]);
+      if (!details.place?.trim()) {
+        if (!opts?.silent) {
+          toast({ description: tk("kundliPlaceRequired") });
+        }
+        return;
+      }
+
+      const params = chartParams(details, coords);
+      if (!params) return;
+
+      setChartLoading(true);
+      setChartError(null);
+      try {
+        const res = await fetch(`/api/birth-chart?${params}`);
+        const data = (await res.json()) as BirthChart & { error?: string };
+        if (!res.ok) {
+          throw new Error(data.error || tk("pleaseTryAgain"));
+        }
+        setChart(data);
+      } catch (err) {
+        const message =
+          err instanceof Error ? err.message : tk("pleaseTryAgain");
+        setChart(null);
+        setChartError(message);
+        if (!opts?.silent) {
+          toast({ title: message, variant: "destructive" });
+        }
+      } finally {
+        setChartLoading(false);
+      }
+    },
+    [coords, details, toast, tk],
+  );
 
   const save = useCallback(() => {
     try {
@@ -206,7 +216,10 @@ export default function VedicAstrologyPage() {
 
   const fillPlaceFromLocation = useCallback(
     (showToast: boolean) => {
-      if (!navigator.geolocation) return;
+      if (!navigator.geolocation) {
+        setGeoReady(true);
+        return;
+      }
       setLocating(true);
       navigator.geolocation.getCurrentPosition(
         async (pos) => {
@@ -237,9 +250,13 @@ export default function VedicAstrologyPage() {
             /* ignore */
           } finally {
             setLocating(false);
+            setGeoReady(true);
           }
         },
-        () => setLocating(false),
+        () => {
+          setLocating(false);
+          setGeoReady(true);
+        },
         { timeout: 12000, maximumAge: 300000 },
       );
     },
@@ -263,31 +280,34 @@ export default function VedicAstrologyPage() {
 
     if (!saved.place?.trim()) {
       fillPlaceFromLocation(false);
+    } else {
+      setGeoReady(true);
     }
-    if (saved.date?.trim()) {
-      const time = saved.time?.trim() || "12:00";
-      const params = new URLSearchParams({
-        date: saved.date,
-        time: time.length === 5 ? `${time}:00` : time,
-        lat: String(coords.lat),
-        lon: String(coords.lon),
-      });
-      if (saved.place?.trim()) {
-        params.set("place", saved.place.trim());
-      }
-      void fetch(`/api/birth-chart?${params}`)
-        .then((r) => (r.ok ? r.json() : null))
-        .then((data) => data && setChart(data as BirthChart))
-        .catch(() => undefined);
+  }, [detectedState, fillPlaceFromLocation]);
+
+  useEffect(() => {
+    if (!geoReady || autoFetchedRef.current) return;
+    if (!details.date?.trim() || !details.place?.trim()) return;
+    autoFetchedRef.current = true;
+    void fetchChart({ silent: true });
+  }, [details.date, details.place, fetchChart, geoReady]);
+
+  useEffect(() => {
+    if (!geoReady || !details.date?.trim() || !details.place?.trim()) return;
+    const prev = coordsRef.current;
+    if (prev.lat === coords.lat && prev.lon === coords.lon) return;
+    coordsRef.current = coords;
+    if (autoFetchedRef.current) {
+      void fetchChart({ silent: true });
     }
-  }, [detectedState, fillPlaceFromLocation, coords.lat, coords.lon]);
+  }, [coords.lat, coords.lon, details.date, details.place, fetchChart, geoReady]);
 
   return (
     <ThemeProvider>
       <Layout>
         <main>
           <section className="rounded-[2rem] bg-gradient-to-br from-slate-950 via-indigo-950 to-violet-950 p-8 text-white">
-            <Orbit className="h-10 w-10 text-amber-300" />
+            <Sparkles className="h-10 w-10 text-amber-300" />
             <h1 className="mt-3 text-4xl font-bold">
               {tk("vedicAstrologyCentre")}
             </h1>
@@ -295,88 +315,8 @@ export default function VedicAstrologyPage() {
               {tk("astrologyIntro")}
             </p>
           </section>
-          <div className="mt-8">
-            <PanchangWidget />
-          </div>
-          {localizedChart && (
-            <Card className="mt-8 border-indigo-200/60 bg-gradient-to-br from-indigo-50/80 to-violet-50/50 dark:from-indigo-950/40 dark:to-violet-950/30">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Sparkles className="text-indigo-600" />
-                  {tk("personalBirthSnapshot")}
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-                <Snapshot label={tk("moonSignAtBirth")} value={localizedChart.rashi} />
-                {chart?.sun_rashi_index != null && (
-                  <Snapshot
-                    label={tk("sunSignAtBirth")}
-                    value={localizedChart.sun_rashi ?? chart.sun_rashi ?? ""}
-                  />
-                )}
-                <Snapshot label={tk("conceptNakshatraJyotisha")} value={
-                  chart?.nakshatra_pada
-                    ? `${localizedChart.nakshatra} · ${chart.nakshatra_pada}`
-                    : localizedChart.nakshatra
-                } />
-                <Snapshot label={tk("lagnaAtBirth")} value={localizedChart.lagna} />
-                <Snapshot label={tk("birthTithiAtBirth")} value={`${localizedChart.tithi} · ${localizedChart.paksha}`} />
-                {localizedChart.yoga && (
-                  <Snapshot label={tk("birthYogaAtBirth")} value={localizedChart.yoga} />
-                )}
-                {chart?.dasha_at_birth && (
-                  <Snapshot
-                    label={tk("mahadashaAtBirth")}
-                    value={`${grahaLabel(chart.dasha_at_birth.mahadasha, tk)} · ${chart.dasha_at_birth.balance_years.toFixed(2)}y`}
-                  />
-                )}
-                {chart?.dasha_current && (
-                  <Snapshot
-                    label={tk("currentMahadasha")}
-                    value={`${grahaLabel(chart.dasha_current.current_mahadasha, tk)} · ${chart.dasha_current.years_remaining.toFixed(2)}y ${tk("yearsRemaining").toLowerCase()}`}
-                  />
-                )}
-              </CardContent>
-              {localizedPlanets && localizedPlanets.length > 0 && (
-                <CardContent className="overflow-x-auto pt-0">
-                  <h3 className="mb-3 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
-                    {tk("planetPositionsTable")}
-                  </h3>
-                  <table className="w-full min-w-[520px] text-sm">
-                    <thead>
-                      <tr className="border-b text-left text-muted-foreground">
-                        <th className="py-2 pr-3">Graha</th>
-                        <th className="py-2 pr-3">{tk("conceptRashi")}</th>
-                        <th className="py-2 pr-3">{tk("conceptNakshatraJyotisha")}</th>
-                        <th className="py-2 pr-3">{tk("houseColumn")}</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {localizedPlanets.map((row) => (
-                        <tr key={row.name} className="border-b border-border/50">
-                          <td className="py-2 pr-3 font-medium">
-                            {grahaLabel(row.name, tk)}
-                            {row.retrograde ? (
-                              <span className="ml-1 text-xs text-amber-600">(R)</span>
-                            ) : null}
-                          </td>
-                          <td className="py-2 pr-3">{row.rashi}</td>
-                          <td className="py-2 pr-3">{row.nakshatra} · {row.pada}</td>
-                          <td className="py-2 pr-3">{row.house}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </CardContent>
-              )}
-              <p className="px-6 pb-6 text-xs text-muted-foreground">
-                {chart?.engine === "swisseph"
-                  ? tk("birthChartEphemerisNote")
-                  : chart?.precision ?? tk("birthChartEphemerisNote")}
-              </p>
-            </Card>
-          )}
-          <div className="mt-8 grid gap-6 lg:grid-cols-[.9fr_1.1fr]">
+
+          <div className="mt-8 grid gap-6 lg:grid-cols-[minmax(0,.95fr)_minmax(0,1.05fr)]">
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
@@ -430,7 +370,7 @@ export default function VedicAstrologyPage() {
                 </div>
                 <Button
                   type="button"
-                  variant="secondary"
+                  size="lg"
                   disabled={chartLoading}
                   onClick={() => void fetchChart()}
                 >
@@ -447,48 +387,215 @@ export default function VedicAstrologyPage() {
                 </p>
               </CardContent>
             </Card>
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <BookOpen className="text-indigo-600" />
-                  {tk("coreCalculationVocabulary")}
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="grid gap-3 sm:grid-cols-2">
-                {concepts.map(({ nameKey, descKey }) => (
-                  <div key={nameKey} className="rounded-2xl border p-4">
-                    <strong>{tk(nameKey)}</strong>
-                    <p className="mt-1 text-sm leading-6 text-muted-foreground">
-                      {tk(descKey)}
-                    </p>
-                  </div>
-                ))}
-              </CardContent>
-            </Card>
+
+            <KundliResultsPanel
+              chart={chart}
+              chartError={chartError}
+              chartLoading={chartLoading}
+              localizedChart={localizedChart}
+              localizedPlanets={localizedPlanets}
+              tk={tk}
+            />
           </div>
-          <section className="mt-8">
-            <h2 className="text-2xl font-bold">{tk("navagrahaStudyMap")}</h2>
-            <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-              {grahaKeys.map((key, i) => (
-                <div
-                  key={key}
-                  className="flex items-center gap-3 rounded-2xl border bg-card p-4"
-                >
-                  {i === 0 ? (
-                    <Sun className="text-orange-500" />
-                  ) : i === 1 ? (
-                    <Moon className="text-indigo-500" />
-                  ) : (
-                    <Orbit className="text-violet-500" />
-                  )}
-                  <span>{tk(key)}</span>
-                </div>
-              ))}
-            </div>
-          </section>
+
+          <div className="mt-8">
+            <PanchangWidget />
+          </div>
         </main>
       </Layout>
     </ThemeProvider>
+  );
+}
+
+function KundliResultsPanel({
+  chart,
+  chartError,
+  chartLoading,
+  localizedChart,
+  localizedPlanets,
+  tk,
+}: {
+  chart: BirthChart | null;
+  chartError: string | null;
+  chartLoading: boolean;
+  localizedChart: ReturnType<typeof localizeBirthChart> | null;
+  localizedPlanets: ReturnType<typeof localizePlanetTable> | null;
+  tk: (key: UiKey) => string;
+}) {
+  if (chartLoading) {
+    return (
+      <Card className="flex min-h-[420px] items-center justify-center border-indigo-200/60">
+        <div className="flex flex-col items-center gap-3 p-8 text-center">
+          <Loader2 className="h-10 w-10 animate-spin text-indigo-600" />
+          <p className="text-sm text-muted-foreground">
+            {tk("generatePersonalChart")}…
+          </p>
+        </div>
+      </Card>
+    );
+  }
+
+  if (!chart || !localizedChart) {
+    return (
+      <Card className="flex min-h-[420px] items-center justify-center border-dashed">
+        <div className="max-w-sm p-8 text-center">
+          <Sparkles className="mx-auto h-10 w-10 text-indigo-400" />
+          <h2 className="mt-4 text-xl font-bold">{tk("kundliResultsTitle")}</h2>
+          <p className="mt-2 text-sm leading-6 text-muted-foreground">
+            {chartError ?? tk("kundliEmptyState")}
+          </p>
+        </div>
+      </Card>
+    );
+  }
+
+  return (
+    <Card className="border-indigo-200/60 bg-gradient-to-br from-indigo-50/80 to-violet-50/50 dark:from-indigo-950/40 dark:to-violet-950/30">
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2">
+          <Sparkles className="text-indigo-600" />
+          {tk("kundliResultsTitle")}
+        </CardTitle>
+        {chart.timezone && (
+          <p className="text-xs text-muted-foreground">
+            {chart.timezone}
+            {chart.ayanamsha ? ` · ${chart.ayanamsha}` : ""}
+          </p>
+        )}
+      </CardHeader>
+      <CardContent>
+        <Accordion
+          type="multiple"
+          defaultValue={["summary", "planets", "dasha"]}
+          className="w-full"
+        >
+          <AccordionItem value="summary">
+            <AccordionTrigger>{tk("kundliSummarySection")}</AccordionTrigger>
+            <AccordionContent>
+              <div className="grid gap-3 sm:grid-cols-2">
+                <Snapshot label={tk("lagnaAtBirth")} value={localizedChart.lagna} />
+                <Snapshot
+                  label={tk("moonSignAtBirth")}
+                  value={localizedChart.rashi}
+                />
+                {localizedChart.sun_rashi && (
+                  <Snapshot
+                    label={tk("sunSignAtBirth")}
+                    value={localizedChart.sun_rashi}
+                  />
+                )}
+                <Snapshot
+                  label={tk("conceptNakshatraJyotisha")}
+                  value={
+                    chart.nakshatra_pada
+                      ? `${localizedChart.nakshatra} · ${chart.nakshatra_pada}`
+                      : localizedChart.nakshatra
+                  }
+                />
+                <Snapshot
+                  label={tk("birthTithiAtBirth")}
+                  value={`${localizedChart.tithi} · ${localizedChart.paksha}`}
+                />
+                {localizedChart.yoga && (
+                  <Snapshot
+                    label={tk("birthYogaAtBirth")}
+                    value={localizedChart.yoga}
+                  />
+                )}
+              </div>
+            </AccordionContent>
+          </AccordionItem>
+
+          {localizedPlanets && localizedPlanets.length > 0 && (
+            <AccordionItem value="planets">
+              <AccordionTrigger>{tk("planetPositionsTable")}</AccordionTrigger>
+              <AccordionContent className="overflow-x-auto">
+                <table className="w-full min-w-[480px] text-sm">
+                  <thead>
+                    <tr className="border-b text-left text-muted-foreground">
+                      <th className="py-2 pr-3">{tk("grahaColumn")}</th>
+                      <th className="py-2 pr-3">{tk("conceptRashi")}</th>
+                      <th className="py-2 pr-3">
+                        {tk("conceptNakshatraJyotisha")}
+                      </th>
+                      <th className="py-2 pr-3">{tk("houseColumn")}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {localizedPlanets.map((row) => (
+                      <tr
+                        key={row.name}
+                        className="border-b border-border/50"
+                      >
+                        <td className="py-2 pr-3 font-medium">
+                          {grahaLabel(row.name, tk)}
+                          {row.retrograde ? (
+                            <span className="ml-1 text-xs text-amber-600">
+                              ({tk("retrogradeLabel").charAt(0)})
+                            </span>
+                          ) : null}
+                        </td>
+                        <td className="py-2 pr-3">{row.rashi}</td>
+                        <td className="py-2 pr-3">
+                          {row.nakshatra} · {row.pada}
+                        </td>
+                        <td className="py-2 pr-3">{row.house}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </AccordionContent>
+            </AccordionItem>
+          )}
+
+          {(chart.dasha_at_birth || chart.dasha_current) && (
+            <AccordionItem value="dasha">
+              <AccordionTrigger>{tk("kundliDashaSection")}</AccordionTrigger>
+              <AccordionContent>
+                <div className="grid gap-3 sm:grid-cols-2">
+                  {chart.dasha_at_birth && (
+                    <>
+                      <Snapshot
+                        label={tk("mahadashaAtBirth")}
+                        value={grahaLabel(
+                          chart.dasha_at_birth.mahadasha,
+                          tk,
+                        )}
+                      />
+                      <Snapshot
+                        label={tk("dashaBalanceAtBirth")}
+                        value={`${chart.dasha_at_birth.balance_years.toFixed(2)} ${tk("yearsRemaining").toLowerCase()}`}
+                      />
+                    </>
+                  )}
+                  {chart.dasha_current && (
+                    <>
+                      <Snapshot
+                        label={tk("currentMahadasha")}
+                        value={grahaLabel(
+                          chart.dasha_current.current_mahadasha,
+                          tk,
+                        )}
+                      />
+                      <Snapshot
+                        label={tk("yearsRemaining")}
+                        value={chart.dasha_current.years_remaining.toFixed(2)}
+                      />
+                    </>
+                  )}
+                </div>
+              </AccordionContent>
+            </AccordionItem>
+          )}
+        </Accordion>
+
+        <p className="mt-4 text-xs text-muted-foreground">
+          {chart.engine === "swisseph"
+            ? tk("birthChartEphemerisNote")
+            : chart.precision}
+        </p>
+      </CardContent>
+    </Card>
   );
 }
 
