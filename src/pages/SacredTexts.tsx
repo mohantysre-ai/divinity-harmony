@@ -10,7 +10,8 @@ import { BookOpen, CircleCheck, ExternalLink, Flame, Landmark, Library, Loader2,
 import { sacredTextCategories, sacredTexts, type SacredText } from '@/data/sacred-texts';
 import { buildSacredTextArticle } from '@/lib/sacred-text-content';
 import { fetchSacredChapter, fetchSacredSourceContent, type SacredSourceContent } from '@/lib/sacred-source-content';
-import { sacredTextGradient, sacredTextImagePosition, sacredTextImageUrl } from '@/lib/sacred-text-art';
+import { sacredTextGradient, sacredTextImageCandidates, sacredTextImagePosition, sacredTextImageSearchQuery } from '@/lib/sacred-text-art';
+import ResilientCoverImage from '@/components/ResilientCoverImage';
 import { useSearchParams } from 'react-router-dom';
 import { useLocale } from '@/hooks/use-locale';
 import { sacredCategoryKey } from '@/lib/sacred-category-i18n';
@@ -39,27 +40,20 @@ function SacredTextHero({
   children?: ReactNode;
 }) {
   const style = categoryStyle[text.category] || categoryStyle['Itihasa & Sacred Narratives'];
-  const [imageFailed, setImageFailed] = useState(false);
-  const imageUrl = sacredTextImageUrl(text.title, text.category, text.id);
+  const imageSources = sacredTextImageCandidates(text.title, text.category, text.id);
   const imagePosition = sacredTextImagePosition(text.category, text.id);
+  const imageSearch = sacredTextImageSearchQuery(text.title, text.category);
   const overlay = sacredTextGradient(text.category);
   const CategoryIcon = style.Icon;
 
   return (
-    <div className={`relative overflow-hidden bg-muted ${tall ? 'min-h-[220px]' : 'aspect-[2/1] min-h-[13rem]'}`}>
-      {!imageFailed && (
-        <img
-          src={imageUrl}
-          alt=""
-          loading="lazy"
-          decoding="async"
-          className="absolute inset-0 h-full w-full object-cover transition duration-700 ease-out group-hover:scale-[1.03]"
-          style={{ objectPosition: imagePosition }}
-          referrerPolicy="no-referrer"
-          crossOrigin="anonymous"
-          onError={() => setImageFailed(true)}
-        />
-      )}
+    <div className={`relative w-full overflow-hidden bg-muted ${tall ? 'aspect-[2/1] min-h-[220px]' : 'aspect-[2/1]'}`}>
+      <ResilientCoverImage
+        sources={imageSources}
+        searchQuery={imageSearch}
+        objectPosition={imagePosition}
+        className="absolute inset-0 h-full w-full object-cover transition duration-700 ease-out group-hover:scale-[1.03]"
+      />
       <div className={`absolute inset-0 bg-gradient-to-t ${overlay} via-black/35 to-transparent`} />
       <div className={`absolute inset-0 bg-gradient-to-br ${style.accent} opacity-45`} />
       <div className="pointer-events-none absolute -right-6 -top-6 h-40 w-40 rounded-full bg-hindu-gold/15 blur-3xl transition duration-700 group-hover:scale-125" />

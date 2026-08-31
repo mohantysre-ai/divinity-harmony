@@ -131,6 +131,26 @@ function extractPriestCatalog() {
   return strings;
 }
 
+function extractWisdom() {
+  const text = fs.readFileSync(
+    path.join(root, "src/pages/WisdomLivePage.tsx"),
+    "utf8",
+  );
+  const strings = new Set();
+  const re = /(?:name|language|topic|publisher|cadence): "([^"]+)"/g;
+  let m;
+  while ((m = re.exec(text))) {
+    strings.add(m[1]);
+    for (const segment of m[1].split("·")) {
+      for (const part of segment.split(",")) {
+        const piece = part.trim();
+        if (piece) strings.add(piece);
+      }
+    }
+  }
+  return strings;
+}
+
 const sacred = extractSacredTexts();
 const mantras = extractMantras();
 const culture = extractCulturePacks();
@@ -138,6 +158,7 @@ const pujas = extractPujas();
 const deityCatalog = extractDeities();
 const templeCatalog = extractTemples();
 const priestCatalog = extractPriestCatalog();
+const wisdomCatalog = extractWisdom();
 
 const all = new Set([
   ...sacred,
@@ -147,6 +168,7 @@ const all = new Set([
   ...deityCatalog,
   ...templeCatalog,
   ...priestCatalog,
+  ...wisdomCatalog,
 ]);
 const sorted = [...all].sort();
 
@@ -161,6 +183,7 @@ console.log(JSON.stringify({
   deities: deityCatalog.size,
   temples: templeCatalog.size,
   priests: priestCatalog.size,
+  wisdom: wisdomCatalog.size,
   totalUnique: all.size,
   outPath,
 }, null, 2));

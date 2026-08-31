@@ -11,6 +11,12 @@ import { ThemeProvider } from "@/hooks/use-theme";
 import { useLocale } from "@/hooks/use-locale";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import ResilientCoverImage from "@/components/ResilientCoverImage";
+import {
+  localizeComposite,
+  wisdomImageCandidates,
+  wisdomImageSearchQuery,
+} from "@/lib/wisdom-art";
 
 const pravachans = [
   {
@@ -116,12 +122,19 @@ export default function WisdomLivePage() {
   const [q, setQ] = useState("");
   const talks = useMemo(
     () =>
-      pravachans.filter((x) =>
-        `${x.name} ${x.language} ${x.topic}`
-          .toLowerCase()
-          .includes(q.toLowerCase()),
-      ),
-    [q],
+      pravachans.filter((x) => {
+        const haystack = [
+          x.name,
+          localizeComposite(x.language, lc),
+          localizeComposite(x.topic, lc),
+          x.language,
+          x.topic,
+        ]
+          .join(" ")
+          .toLowerCase();
+        return haystack.includes(q.toLowerCase());
+      }),
+    [q, lc],
   );
   return (
     <ThemeProvider>
@@ -160,18 +173,29 @@ export default function WisdomLivePage() {
                   href={x.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group rounded-3xl border bg-card p-6 shadow-sm transition hover:-translate-y-1 hover:border-orange-300 hover:shadow-xl"
+                  className="group flex flex-col overflow-hidden rounded-3xl border bg-card shadow-sm transition hover:-translate-y-1 hover:border-orange-300 hover:shadow-xl"
                 >
-                  <div className="flex justify-between">
-                    <CalendarClock className="h-6 w-6 text-orange-600" />
-                    <ExternalLink className="h-4 w-4 text-muted-foreground" />
+                  <div className="relative aspect-[16/9] w-full overflow-hidden bg-muted">
+                    <ResilientCoverImage
+                      sources={wisdomImageCandidates(x.name, x.topic)}
+                      searchQuery={wisdomImageSearchQuery(x.name, x.topic)}
+                      objectPosition="50% 35%"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+                    <ExternalLink className="absolute right-3 top-3 h-4 w-4 text-white/80" />
                   </div>
-                  <h3 className="mt-4 text-lg font-bold">{x.name}</h3>
-                  <p className="mt-1 text-sm text-muted-foreground">{lc(x.language)}</p>
-                  <p className="mt-4 text-sm">{lc(x.topic)}</p>
-                  <Badge className="mt-4" variant="outline">
-                    {tk("openScheduleLibrary")}
-                  </Badge>
+                  <div className="flex flex-1 flex-col p-5">
+                    <h3 className="text-lg font-bold leading-snug">{lc(x.name)}</h3>
+                    <p className="mt-1 text-sm text-muted-foreground">
+                      {localizeComposite(x.language, lc)}
+                    </p>
+                    <p className="mt-3 flex-1 text-sm leading-relaxed">
+                      {localizeComposite(x.topic, lc)}
+                    </p>
+                    <Badge className="mt-4 self-start" variant="outline">
+                      {tk("openScheduleLibrary")}
+                    </Badge>
+                  </div>
                 </a>
               ))}
             </div>
@@ -193,16 +217,25 @@ export default function WisdomLivePage() {
                   href={x.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-start justify-between rounded-3xl border bg-card p-6 transition hover:border-orange-300 hover:shadow-lg"
+                  className="group flex overflow-hidden rounded-3xl border bg-card transition hover:border-orange-300 hover:shadow-lg"
                 >
-                  <div>
-                    <h3 className="text-xl font-bold">{x.name}</h3>
-                    <p className="mt-1 text-sm text-muted-foreground">
-                      {x.publisher} · {lc(x.cadence)}
-                    </p>
-                    <p className="mt-4 text-sm">{lc(x.topic)}</p>
+                  <div className="relative hidden w-28 shrink-0 overflow-hidden bg-muted sm:block">
+                    <ResilientCoverImage
+                      sources={wisdomImageCandidates(x.name, x.topic)}
+                      searchQuery={wisdomImageSearchQuery(x.name, x.topic)}
+                      objectPosition="50% 40%"
+                    />
                   </div>
-                  <ExternalLink className="h-4 w-4 shrink-0" />
+                  <div className="flex flex-1 items-start justify-between p-6">
+                    <div>
+                      <h3 className="text-xl font-bold">{lc(x.name)}</h3>
+                      <p className="mt-1 text-sm text-muted-foreground">
+                        {lc(x.publisher)} · {lc(x.cadence)}
+                      </p>
+                      <p className="mt-4 text-sm">{localizeComposite(x.topic, lc)}</p>
+                    </div>
+                    <ExternalLink className="ml-3 h-4 w-4 shrink-0 text-muted-foreground" />
+                  </div>
                 </a>
               ))}
             </div>

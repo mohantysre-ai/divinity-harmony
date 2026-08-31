@@ -69,6 +69,30 @@ export function sacredTextImageUrl(title: string, category: string, id = 0): str
   return titleArt[title] ?? ART_POOL[poolIndex(id, category, title)];
 }
 
+/** Ordered candidates — primary first, then alternates from the art pool. */
+export function sacredTextImageCandidates(
+  title: string,
+  category: string,
+  id = 0,
+): string[] {
+  const primary = sacredTextImageUrl(title, category, id);
+  const cat = CATEGORY_INDEX[category] ?? 0;
+  const altIndices = [
+    poolIndex(id, category, title),
+    poolIndex(id + 1, category, title),
+    poolIndex(id + 2, category, title),
+    (id * 13 + cat * 7) % ART_POOL.length,
+    (id * 29 + cat * 11 + 3) % ART_POOL.length,
+    (id * 41 + cat * 17 + 5) % ART_POOL.length,
+  ];
+  return [...new Set([primary, ...altIndices.map((i) => ART_POOL[i])])];
+}
+
+export function sacredTextImageSearchQuery(title: string, category: string): string {
+  const topic = title.split(/[,:]/)[0]?.trim() || title;
+  return `Hindu ${topic} ${category} India manuscript temple`;
+}
+
 export function sacredTextImagePosition(category: string, id: number): string {
   const positions = ["50% 45%", "50% 22%", "50% 35%", "50% 68%", "50% 15%"];
   return positions[(id + (CATEGORY_INDEX[category] ?? 0) * 3) % positions.length];
