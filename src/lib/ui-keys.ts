@@ -251,7 +251,17 @@ export const UI_KEYS = {
     "Astronomical calculations and traditional interpretations must be distinguished. This area teaches the system without fear-based predictions or automatic sales remedies.",
   birthPlacePlaceholder: "City, state, country",
   natalChartDisclaimer:
-    "A natal chart is not generated until an ephemeris-grade backend and place/time-zone resolver are enabled. The app will not fabricate one.",
+    "Charts use an educational sidereal approximation from your saved birth details. Confirm important decisions with a qualified jyotishi.",
+  personalBirthSnapshot: "Your birth snapshot",
+  moonSignAtBirth: "Moon sign (Rashi)",
+  lagnaAtBirth: "Ascendant (Lagna)",
+  birthTithiAtBirth: "Birth tithi",
+  generatePersonalChart: "Generate personal chart",
+  birthChartNeedsDateTime:
+    "Enter birth date and time, then save or generate to see your personalized snapshot.",
+  birthChartApproxNote:
+    "Educational sidereal approximation from date, time and place — not ephemeris-grade muhurta software.",
+  mapOfTempleTemplate: "Map of {name}",
   birthDetailsSaved: "Birth details saved",
   birthDetailsSavedDesc: "Your birth date, time and place stay privately on this device.",
   birthDetailsAutoFilled: "Birth place suggested from your location.",

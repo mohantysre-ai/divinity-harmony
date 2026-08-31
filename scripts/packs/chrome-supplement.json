@@ -146,7 +146,15 @@
     "prepareLabel": "ପ୍ରସ୍ତୁତି",
     "traditionalSequence": "ପାରମ୍ପରିକ କ୍ରମ",
     "typicalDurationTemplate": "ସାଧାରଣ ଅବଧି: {duration}",
-    "noDirectoryMatches": "କୌଣସି ନିର୍ଦେଶିକା ମେଳ ନାହିଁ। ନିକଟ ସହର କିମ୍ବା ପୂଜା ନାମ ଚେଷ୍ଟା କରନ୍ତୁ।"
+    "noDirectoryMatches": "କୌଣସି ନିର୍ଦେଶିକା ମେଳ ନାହିଁ। ନିକଟ ସହର କିମ୍ବା ପୂଜା ନାମ ଚେଷ୍ଟା କରନ୍ତୁ।",
+    "personalBirthSnapshot": "ତୁମର ଜନ୍ମ ସ୍ନାପସଟ୍ |",
+    "moonSignAtBirth": "ଚନ୍ଦ୍ର ଚିହ୍ନ (ରାଶି)",
+    "lagnaAtBirth": "ଆରୋହଣ (ଲାଗନା)",
+    "birthTithiAtBirth": "ଜନ୍ମ ତିଥି",
+    "generatePersonalChart": "ବ୍ୟକ୍ତିଗତ ଚାର୍ଟ ସୃଷ୍ଟି କରନ୍ତୁ |",
+    "birthChartNeedsDateTime": "ଜନ୍ମ ତାରିଖ ଏବଂ ସମୟ ପ୍ରବେଶ କର, ତାପରେ ତୁମର ବ୍ୟକ୍ତିଗତ ସ୍ନାପସଟ୍ ଦେଖିବା ପାଇଁ ସଞ୍ଚୟ କିମ୍ବା ସୃଷ୍ଟି କର |",
+    "birthChartApproxNote": "ତାରିଖ, ସମୟ ଏବଂ ସ୍ଥାନରୁ ଶିକ୍ଷାଗତ ସାଇଡେରାଲ୍ ଆନୁମାନିକତା - ଏଫେମେରିସ୍-ଗ୍ରେଡ୍ ମୁହୁରଟା ସଫ୍ଟୱେର୍ ନୁହେଁ |",
+    "mapOfTempleTemplate": "{ନାମର ମାନଚିତ୍ର"
   },
   "hi": {
     "detectedStateTemplate": "पहचान: {state}",
@@ -295,7 +303,15 @@
     "prepareLabel": "तैयारी",
     "traditionalSequence": "पारंपरिक क्रम",
     "typicalDurationTemplate": "सामान्य अवधि: {duration}",
-    "noDirectoryMatches": "कोई निर्देशिका मेल नहीं। निकट शहर या पूजा नाम आज़माएँ।"
+    "noDirectoryMatches": "कोई निर्देशिका मेल नहीं। निकट शहर या पूजा नाम आज़माएँ।",
+    "personalBirthSnapshot": "आपका जन्म स्नैपशॉट",
+    "moonSignAtBirth": "चंद्र राशि (राशि)",
+    "lagnaAtBirth": "लग्न (लग्न)",
+    "birthTithiAtBirth": "जन्म तिथि",
+    "generatePersonalChart": "व्यक्तिगत चार्ट तैयार करें",
+    "birthChartNeedsDateTime": "जन्मतिथि और समय दर्ज करें, फिर अपना वैयक्तिकृत स्नैपशॉट देखने के लिए सहेजें या जेनरेट करें।",
+    "birthChartApproxNote": "तिथि, समय और स्थान से शैक्षिक नाक्षत्र अनुमान - पंचांग-ग्रेड मुहूर्त सॉफ्टवेयर नहीं।",
+    "mapOfTempleTemplate": "{नाम} का मानचित्र"
   },
   "bn": {
     "detectedStateTemplate": "সনাক্ত করা হয়েছে: {state}",
@@ -444,7 +460,15 @@
     "prepareLabel": "প্রস্তুত করুন",
     "traditionalSequence": "ঐতিহ্যগত ক্রম",
     "typicalDurationTemplate": "সাধারণ সময়কাল: {duration}",
-    "noDirectoryMatches": "কোনো ডিরেক্টরি সেই অনুসন্ধানের সাথে মেলে না। কাছাকাছি একটি শহর বা পূজা নাম চেষ্টা করুন."
+    "noDirectoryMatches": "কোনো ডিরেক্টরি সেই অনুসন্ধানের সাথে মেলে না। কাছাকাছি একটি শহর বা পূজা নাম চেষ্টা করুন.",
+    "personalBirthSnapshot": "আপনার জন্ম স্ন্যাপশট",
+    "moonSignAtBirth": "চন্দ্র রাশি (রাশি)",
+    "lagnaAtBirth": "আরোহী (লগ্না)",
+    "birthTithiAtBirth": "জন্ম তিথি",
+    "generatePersonalChart": "ব্যক্তিগত চার্ট তৈরি করুন",
+    "birthChartNeedsDateTime": "জন্ম তারিখ এবং সময় লিখুন, তারপর আপনার ব্যক্তিগতকৃত স্ন্যাপশট দেখতে সংরক্ষণ করুন বা জেনারেট করুন।",
+    "birthChartApproxNote": "তারিখ, সময় এবং স্থান থেকে শিক্ষাগত দিকনির্দেশনা - ক্ষণস্থায়ী-গ্রেড মুহুর্তা সফ্টওয়্যার নয়।",
+    "mapOfTempleTemplate": "{name} এর মানচিত্র"
   },
   "gu": {
     "detectedStateTemplate": "શોધાયેલ: {state}",
@@ -593,7 +617,15 @@
     "prepareLabel": "તૈયાર કરો",
     "traditionalSequence": "પરંપરાગત ક્રમ",
     "typicalDurationTemplate": "લાક્ષણિક અવધિ: {duration}",
-    "noDirectoryMatches": "કોઈ ડિરેક્ટરી તે શોધ સાથે મેળ ખાતી નથી. નજીકના શહેર અથવા પૂજા નામનો પ્રયાસ કરો."
+    "noDirectoryMatches": "કોઈ ડિરેક્ટરી તે શોધ સાથે મેળ ખાતી નથી. નજીકના શહેર અથવા પૂજા નામનો પ્રયાસ કરો.",
+    "personalBirthSnapshot": "તમારો જન્મ સ્નેપશોટ",
+    "moonSignAtBirth": "ચંદ્ર ચિહ્ન (રાશિ)",
+    "lagnaAtBirth": "ચડતી (લગ્ન)",
+    "birthTithiAtBirth": "જન્મ તિથિ",
+    "generatePersonalChart": "વ્યક્તિગત ચાર્ટ બનાવો",
+    "birthChartNeedsDateTime": "જન્મ તારીખ અને સમય દાખલ કરો, પછી તમારો વ્યક્તિગત સ્નેપશોટ જોવા માટે સાચવો અથવા જનરેટ કરો.",
+    "birthChartApproxNote": "તારીખ, સમય અને સ્થળ પરથી શૈક્ષણિક સાઈડરીયલ અંદાજ — ક્ષણિક-ગ્રેડ મુહૂર્ત સોફ્ટવેર નહીં.",
+    "mapOfTempleTemplate": "{name} નો નકશો"
   },
   "mr": {
     "detectedStateTemplate": "आढळले: {state}",
@@ -742,7 +774,15 @@
     "prepareLabel": "तयार करा",
     "traditionalSequence": "पारंपारिक क्रम",
     "typicalDurationTemplate": "ठराविक कालावधी: {duration}",
-    "noDirectoryMatches": "कोणतीही निर्देशिका त्या शोधाशी जुळत नाही. जवळपासचे शहर किंवा पूजा नाव वापरून पहा."
+    "noDirectoryMatches": "कोणतीही निर्देशिका त्या शोधाशी जुळत नाही. जवळपासचे शहर किंवा पूजा नाव वापरून पहा.",
+    "personalBirthSnapshot": "तुमचा जन्म स्नॅपशॉट",
+    "moonSignAtBirth": "चंद्र राशी (राशी)",
+    "lagnaAtBirth": "चढता (लग्न)",
+    "birthTithiAtBirth": "जन्मतिथी",
+    "generatePersonalChart": "वैयक्तिक चार्ट तयार करा",
+    "birthChartNeedsDateTime": "जन्मतारीख आणि वेळ प्रविष्ट करा, नंतर तुमचा वैयक्तिकृत स्नॅपशॉट पाहण्यासाठी जतन करा किंवा जनरेट करा.",
+    "birthChartApproxNote": "तारीख, वेळ आणि ठिकाणावरून शैक्षणिक साईडरियल अंदाजे — इफेमेरिस-ग्रेड मुहूर्त सॉफ्टवेअर नाही.",
+    "mapOfTempleTemplate": "{name} चा नकाशा"
   },
   "ta": {
     "detectedStateTemplate": "கண்டறியப்பட்டது: {state}",
@@ -891,7 +931,15 @@
     "prepareLabel": "தயார் செய்",
     "traditionalSequence": "பாரம்பரிய வரிசை",
     "typicalDurationTemplate": "வழக்கமான காலம்: {duration}",
-    "noDirectoryMatches": "அந்தத் தேடலுக்கு எந்த அடைவும் பொருந்தவில்லை. அருகிலுள்ள நகரம் அல்லது பூஜை பெயரை முயற்சிக்கவும்."
+    "noDirectoryMatches": "அந்தத் தேடலுக்கு எந்த அடைவும் பொருந்தவில்லை. அருகிலுள்ள நகரம் அல்லது பூஜை பெயரை முயற்சிக்கவும்.",
+    "personalBirthSnapshot": "உங்கள் பிறப்பு ஸ்னாப்ஷாட்",
+    "moonSignAtBirth": "சந்திரன் அடையாளம் (ராசி)",
+    "lagnaAtBirth": "ஏற்றம் (லக்னம்)",
+    "birthTithiAtBirth": "பிறப்பு திதி",
+    "generatePersonalChart": "தனிப்பட்ட விளக்கப்படத்தை உருவாக்கவும்",
+    "birthChartNeedsDateTime": "பிறந்த தேதி மற்றும் நேரத்தை உள்ளிட்டு, உங்கள் தனிப்பயனாக்கப்பட்ட ஸ்னாப்ஷாட்டைப் பார்க்க, சேமிக்கவும் அல்லது உருவாக்கவும்.",
+    "birthChartApproxNote": "தேதி, நேரம் மற்றும் இடத்திலிருந்து கல்வி சார்ந்த தோராயமான தோராயம் — எபிமெரிஸ் தர முஹூர்தா மென்பொருள் அல்ல.",
+    "mapOfTempleTemplate": "{name} இன் வரைபடம்"
   },
   "te": {
     "detectedStateTemplate": "గుర్తించబడింది: {state}",
@@ -1040,7 +1088,15 @@
     "prepareLabel": "సిద్ధం",
     "traditionalSequence": "సాంప్రదాయ క్రమం",
     "typicalDurationTemplate": "సాధారణ వ్యవధి: {duration}",
-    "noDirectoryMatches": "శోధనకు ఏ డైరెక్టరీ సరిపోలలేదు. సమీపంలోని నగరం లేదా పూజ పేరును ప్రయత్నించండి."
+    "noDirectoryMatches": "శోధనకు ఏ డైరెక్టరీ సరిపోలలేదు. సమీపంలోని నగరం లేదా పూజ పేరును ప్రయత్నించండి.",
+    "personalBirthSnapshot": "మీ బర్త్ స్నాప్‌షాట్",
+    "moonSignAtBirth": "చంద్ర రాశి (రాశి)",
+    "lagnaAtBirth": "ఆరోహణ (లగ్న)",
+    "birthTithiAtBirth": "జన్మ తిథి",
+    "generatePersonalChart": "వ్యక్తిగత చార్ట్‌ను రూపొందించండి",
+    "birthChartNeedsDateTime": "పుట్టిన తేదీ మరియు సమయాన్ని నమోదు చేయండి, ఆపై మీ వ్యక్తిగతీకరించిన స్నాప్‌షాట్‌ను చూడటానికి సేవ్ చేయండి లేదా రూపొందించండి.",
+    "birthChartApproxNote": "తేదీ, సమయం మరియు ప్రదేశం నుండి ఎడ్యుకేషనల్ సైడ్రియల్ ఉజ్జాయింపు — ఎఫెమెరిస్-గ్రేడ్ ముహూర్త సాఫ్ట్‌వేర్ కాదు.",
+    "mapOfTempleTemplate": "{name} యొక్క మ్యాప్"
   },
   "ml": {
     "detectedStateTemplate": "കണ്ടെത്തി: {state}",
@@ -1189,7 +1245,15 @@
     "prepareLabel": "തയ്യാറാക്കുക",
     "traditionalSequence": "പരമ്പരാഗത ക്രമം",
     "typicalDurationTemplate": "സാധാരണ ദൈർഘ്യം: {duration}",
-    "noDirectoryMatches": "തിരയലുമായി ഒരു ഡയറക്ടറിയും പൊരുത്തപ്പെടുന്നില്ല. അടുത്തുള്ള നഗരമോ പൂജയുടെ പേരോ പരീക്ഷിക്കുക."
+    "noDirectoryMatches": "തിരയലുമായി ഒരു ഡയറക്ടറിയും പൊരുത്തപ്പെടുന്നില്ല. അടുത്തുള്ള നഗരമോ പൂജയുടെ പേരോ പരീക്ഷിക്കുക.",
+    "personalBirthSnapshot": "നിങ്ങളുടെ ജനന സ്നാപ്പ്ഷോട്ട്",
+    "moonSignAtBirth": "ചന്ദ്ര രാശി (രാശി)",
+    "lagnaAtBirth": "ആരോഹണം (ലഗ്നം)",
+    "birthTithiAtBirth": "ജന്മ തിഥി",
+    "generatePersonalChart": "വ്യക്തിഗത ചാർട്ട് സൃഷ്ടിക്കുക",
+    "birthChartNeedsDateTime": "ജനനത്തീയതിയും സമയവും നൽകുക, തുടർന്ന് നിങ്ങളുടെ വ്യക്തിഗതമാക്കിയ സ്നാപ്പ്ഷോട്ട് കാണാൻ സംരക്ഷിക്കുക അല്ലെങ്കിൽ സൃഷ്ടിക്കുക.",
+    "birthChartApproxNote": "തീയതി, സമയം, സ്ഥലം എന്നിവയിൽ നിന്നുള്ള വിദ്യാഭ്യാസപരമായ ഏകദേശ കണക്ക് - എഫെമെറിസ് ഗ്രേഡ് മുഹൂർത്ത സോഫ്റ്റ്‌വെയർ അല്ല.",
+    "mapOfTempleTemplate": "{name} എന്നതിൻ്റെ മാപ്പ്"
   },
   "kn": {
     "detectedStateTemplate": "ಪತ್ತೆಹಚ್ಚಲಾಗಿದೆ: {state}",
@@ -1338,7 +1402,15 @@
     "prepareLabel": "ತಯಾರು",
     "traditionalSequence": "ಸಾಂಪ್ರದಾಯಿಕ ಅನುಕ್ರಮ",
     "typicalDurationTemplate": "ವಿಶಿಷ್ಟ ಅವಧಿ: {duration}",
-    "noDirectoryMatches": "ಆ ಹುಡುಕಾಟಕ್ಕೆ ಯಾವುದೇ ಡೈರೆಕ್ಟರಿ ಹೊಂದಿಕೆಯಾಗುವುದಿಲ್ಲ. ಹತ್ತಿರದ ನಗರ ಅಥವಾ ಪೂಜೆಯ ಹೆಸರನ್ನು ಪ್ರಯತ್ನಿಸಿ."
+    "noDirectoryMatches": "ಆ ಹುಡುಕಾಟಕ್ಕೆ ಯಾವುದೇ ಡೈರೆಕ್ಟರಿ ಹೊಂದಿಕೆಯಾಗುವುದಿಲ್ಲ. ಹತ್ತಿರದ ನಗರ ಅಥವಾ ಪೂಜೆಯ ಹೆಸರನ್ನು ಪ್ರಯತ್ನಿಸಿ.",
+    "personalBirthSnapshot": "ನಿಮ್ಮ ಜನ್ಮ ಸ್ನ್ಯಾಪ್‌ಶಾಟ್",
+    "moonSignAtBirth": "ಚಂದ್ರನ ಚಿಹ್ನೆ (ರಾಶಿ)",
+    "lagnaAtBirth": "ಆರೋಹಣ (ಲಗ್ನ)",
+    "birthTithiAtBirth": "ಜನ್ಮ ತಿಥಿ",
+    "generatePersonalChart": "ವೈಯಕ್ತಿಕ ಚಾರ್ಟ್ ಅನ್ನು ರಚಿಸಿ",
+    "birthChartNeedsDateTime": "ಜನ್ಮ ದಿನಾಂಕ ಮತ್ತು ಸಮಯವನ್ನು ನಮೂದಿಸಿ, ನಂತರ ನಿಮ್ಮ ವೈಯಕ್ತಿಕಗೊಳಿಸಿದ ಸ್ನ್ಯಾಪ್‌ಶಾಟ್ ನೋಡಲು ಉಳಿಸಿ ಅಥವಾ ರಚಿಸಿ.",
+    "birthChartApproxNote": "ದಿನಾಂಕ, ಸಮಯ ಮತ್ತು ಸ್ಥಳದಿಂದ ಶೈಕ್ಷಣಿಕ ಸೈಡ್ರಿಯಲ್ ಅಂದಾಜು — ಎಫೆಮೆರಿಸ್-ಗ್ರೇಡ್ ಮುಹೂರ್ತ ಸಾಫ್ಟ್‌ವೇರ್ ಅಲ್ಲ.",
+    "mapOfTempleTemplate": "{name} ನ ನಕ್ಷೆ"
   },
   "pa": {
     "detectedStateTemplate": "ਖੋਜਿਆ ਗਿਆ: {state}",
@@ -1487,7 +1559,15 @@
     "prepareLabel": "ਤਿਆਰ ਕਰੋ",
     "traditionalSequence": "ਰਵਾਇਤੀ ਕ੍ਰਮ",
     "typicalDurationTemplate": "ਆਮ ਮਿਆਦ: {duration}",
-    "noDirectoryMatches": "ਕੋਈ ਡਾਇਰੈਕਟਰੀ ਉਸ ਖੋਜ ਨਾਲ ਮੇਲ ਨਹੀਂ ਖਾਂਦੀ। ਕਿਸੇ ਨੇੜਲੇ ਸ਼ਹਿਰ ਜਾਂ ਪੂਜਾ ਦਾ ਨਾਮ ਅਜ਼ਮਾਓ।"
+    "noDirectoryMatches": "ਕੋਈ ਡਾਇਰੈਕਟਰੀ ਉਸ ਖੋਜ ਨਾਲ ਮੇਲ ਨਹੀਂ ਖਾਂਦੀ। ਕਿਸੇ ਨੇੜਲੇ ਸ਼ਹਿਰ ਜਾਂ ਪੂਜਾ ਦਾ ਨਾਮ ਅਜ਼ਮਾਓ।",
+    "personalBirthSnapshot": "ਤੁਹਾਡੇ ਜਨਮ ਦਾ ਸਨੈਪਸ਼ਾਟ",
+    "moonSignAtBirth": "ਚੰਦਰਮਾ ਦਾ ਚਿੰਨ੍ਹ (ਰਾਸ਼ੀ)",
+    "lagnaAtBirth": "ਚੜ੍ਹਾਈ (ਲਗਨਾ)",
+    "birthTithiAtBirth": "ਜਨਮ ਤਿਥੀ",
+    "generatePersonalChart": "ਨਿੱਜੀ ਚਾਰਟ ਬਣਾਓ",
+    "birthChartNeedsDateTime": "ਜਨਮ ਮਿਤੀ ਅਤੇ ਸਮਾਂ ਦਾਖਲ ਕਰੋ, ਫਿਰ ਆਪਣੇ ਵਿਅਕਤੀਗਤ ਬਣਾਏ ਸਨੈਪਸ਼ਾਟ ਨੂੰ ਦੇਖਣ ਲਈ ਸੇਵ ਕਰੋ ਜਾਂ ਜਨਰੇਟ ਕਰੋ।",
+    "birthChartApproxNote": "ਮਿਤੀ, ਸਮੇਂ ਅਤੇ ਸਥਾਨ ਤੋਂ ਵਿਦਿਅਕ ਸਾਈਡਰੀਅਲ ਅਨੁਮਾਨ — ਨਾ ਕਿ ਇਫੇਮੇਰਿਸ-ਗ੍ਰੇਡ ਮੁਹੂਰਤਾ ਸੌਫਟਵੇਅਰ।",
+    "mapOfTempleTemplate": "{name} ਦਾ ਨਕਸ਼ਾ"
   },
   "as": {
     "detectedStateTemplate": "ধৰা পৰিছে: {state}",
@@ -1636,6 +1716,14 @@
     "prepareLabel": "প্ৰস্তুত হোৱা",
     "traditionalSequence": "পৰম্পৰাগত ক্ৰম",
     "typicalDurationTemplate": "সাধাৰণ সময়সীমা: {duration}",
-    "noDirectoryMatches": "কোনো ডাইৰেকটৰি সেই সন্ধানৰ সৈতে মিল নাথাকে। ওচৰৰ চহৰ বা পূজাৰ নাম এটা চেষ্টা কৰক।"
+    "noDirectoryMatches": "কোনো ডাইৰেকটৰি সেই সন্ধানৰ সৈতে মিল নাথাকে। ওচৰৰ চহৰ বা পূজাৰ নাম এটা চেষ্টা কৰক।",
+    "personalBirthSnapshot": "আপোনাৰ জন্মৰ স্নেপশ্বট",
+    "moonSignAtBirth": "চন্দ্ৰ ৰাশি (ৰাশি)",
+    "lagnaAtBirth": "আৰোহী (লগনা)",
+    "birthTithiAtBirth": "জন্ম তিথি",
+    "generatePersonalChart": "ব্যক্তিগত চাৰ্ট সৃষ্টি কৰক",
+    "birthChartNeedsDateTime": "জন্ম তাৰিখ আৰু সময় সুমুৱাওক, তাৰ পিছত আপোনাৰ ব্যক্তিগতকৃত স্নেপশ্বট চাবলৈ সংৰক্ষণ বা সৃষ্টি কৰক।",
+    "birthChartApproxNote": "তাৰিখ, সময় আৰু স্থানৰ পৰা শিক্ষামূলক চিডাৰিয়েল আনুমানিকতা — এফেমেৰিছ-গ্ৰেড মুহুৰ্টা চফট্ ৱেৰ নহয়।",
+    "mapOfTempleTemplate": "{name} ৰ মানচিত্ৰ"
   }
 }

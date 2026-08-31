@@ -6,7 +6,6 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import { useRegionalUi } from "@/hooks/use-regional-ui";
 import { localizeContent, localizeContentList } from "@/lib/content-i18n";
 import { translateUiText } from "@/lib/ui-translations";
 import { translateKey, type UiKey } from "@/lib/locale-packs";
@@ -112,7 +111,6 @@ export function LocaleProvider({ children }: { children: ReactNode }) {
       : "en",
   );
   const [detectedState, setDetectedState] = useState("");
-  useRegionalUi(locale);
   const [elderMode, setElderModeState] = useState(
     () => localStorage.getItem("app:elder-mode") === "true",
   );

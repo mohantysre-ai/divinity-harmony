@@ -10,7 +10,7 @@ import { BookOpen, CircleCheck, ExternalLink, Flame, Landmark, Library, Loader2,
 import { sacredTextCategories, sacredTexts, type SacredText } from '@/data/sacred-texts';
 import { buildSacredTextArticle } from '@/lib/sacred-text-content';
 import { fetchSacredChapter, fetchSacredSourceContent, type SacredSourceContent } from '@/lib/sacred-source-content';
-import { sacredTextGradient, sacredTextImageFit, sacredTextImageUrl } from '@/lib/sacred-text-art';
+import { sacredTextGradient, sacredTextImagePosition, sacredTextImageUrl } from '@/lib/sacred-text-art';
 import { useSearchParams } from 'react-router-dom';
 import { useLocale } from '@/hooks/use-locale';
 import { sacredCategoryKey } from '@/lib/sacred-category-i18n';
@@ -41,25 +41,27 @@ function SacredTextHero({
   const style = categoryStyle[text.category] || categoryStyle['Itihasa & Sacred Narratives'];
   const [imageFailed, setImageFailed] = useState(false);
   const imageUrl = sacredTextImageUrl(text.title, text.category, text.id);
-  const imageFit = sacredTextImageFit(text.category, text.id);
+  const imagePosition = sacredTextImagePosition(text.category, text.id);
   const overlay = sacredTextGradient(text.category);
   const CategoryIcon = style.Icon;
 
   return (
-    <div className={`relative overflow-hidden ${tall ? 'min-h-[220px]' : 'h-52'}`}>
-      <div className={`absolute inset-0 bg-gradient-to-br ${overlay}`} />
+    <div className={`relative overflow-hidden bg-muted ${tall ? 'min-h-[220px]' : 'aspect-[2/1] min-h-[13rem]'}`}>
       {!imageFailed && (
         <img
           src={imageUrl}
           alt=""
           loading="lazy"
           decoding="async"
-          className={`absolute inset-0 h-full w-full object-cover ${imageFit} scale-105 transition duration-700 ease-out group-hover:scale-110`}
+          className="absolute inset-0 h-full w-full object-cover transition duration-700 ease-out group-hover:scale-[1.03]"
+          style={{ objectPosition: imagePosition }}
+          referrerPolicy="no-referrer"
+          crossOrigin="anonymous"
           onError={() => setImageFailed(true)}
         />
       )}
-      <div className={`absolute inset-0 bg-gradient-to-t ${overlay} via-black/45 to-black/15`} />
-      <div className={`absolute inset-0 bg-gradient-to-br ${style.accent}`} />
+      <div className={`absolute inset-0 bg-gradient-to-t ${overlay} via-black/35 to-transparent`} />
+      <div className={`absolute inset-0 bg-gradient-to-br ${style.accent} opacity-45`} />
       <div className="pointer-events-none absolute -right-6 -top-6 h-40 w-40 rounded-full bg-hindu-gold/15 blur-3xl transition duration-700 group-hover:scale-125" />
       <CategoryIcon
         className="pointer-events-none absolute bottom-3 right-4 h-14 w-14 text-white/20 md:h-16 md:w-16"
@@ -315,7 +317,7 @@ const SacredTexts = () => {
                   <section>
                     <p className="text-xs font-semibold uppercase tracking-[0.18em] text-hindu-red">{tk('studyCompanion')}</p>
                     <h3 className="mt-2 text-2xl font-bold">{tk('backgroundAndMeaning')}</h3>
-                    <p className="mt-3 text-base leading-8 text-muted-foreground">{selectedArticle.introduction}</p>
+                    <p className="mt-3 text-base leading-8 text-muted-foreground">{lc(selectedArticle.introduction)}</p>
                   </section>
 
                   <section className="rounded-2xl border bg-muted/25 p-5">
@@ -324,7 +326,7 @@ const SacredTexts = () => {
                       {selectedArticle.keyPoints.map((point) => (
                         <li key={point} className="flex gap-3 text-sm leading-6 text-muted-foreground">
                           <CircleCheck className="mt-0.5 h-5 w-5 flex-none text-hindu-red" />
-                          <span>{point}</span>
+                          <span>{lc(point)}</span>
                         </li>
                       ))}
                     </ul>
@@ -332,7 +334,7 @@ const SacredTexts = () => {
 
                   <section>
                     <h3 className="text-xl font-bold">{tk('whyItMatters')}</h3>
-                    <p className="mt-3 leading-7 text-muted-foreground">{selectedArticle.significance}</p>
+                    <p className="mt-3 leading-7 text-muted-foreground">{lc(selectedArticle.significance)}</p>
                   </section>
 
                   <section>
@@ -341,7 +343,7 @@ const SacredTexts = () => {
                       {selectedArticle.studyPath.map((step, index) => (
                         <li key={step} className="flex gap-3 text-sm leading-6 text-muted-foreground">
                           <span className="flex h-6 w-6 flex-none items-center justify-center rounded-full bg-primary text-xs font-bold text-primary-foreground">{index + 1}</span>
-                          <span>{step}</span>
+                          <span>{lc(step)}</span>
                         </li>
                       ))}
                     </ol>
@@ -349,7 +351,7 @@ const SacredTexts = () => {
 
                   <section className="rounded-2xl bg-hindu-gold/10 p-5">
                     <h3 className="font-bold">{tk('traditionAndInterpretation')}</h3>
-                    <p className="mt-2 text-sm leading-6 text-muted-foreground">{selectedArticle.context}</p>
+                    <p className="mt-2 text-sm leading-6 text-muted-foreground">{lc(selectedArticle.context)}</p>
                   </section>
 
                   <section>
@@ -361,7 +363,7 @@ const SacredTexts = () => {
 
                   {selectedArticle.practiceNote && (
                     <div className="rounded-xl border border-hindu-red/20 bg-hindu-red/5 p-4 text-sm leading-6 text-muted-foreground">
-                      <strong className="text-foreground">{tk('practiceNoteLabel')}</strong> {selectedArticle.practiceNote}
+                      <strong className="text-foreground">{tk('practiceNoteLabel')}</strong> {lc(selectedArticle.practiceNote)}
                     </div>
                   )}
 

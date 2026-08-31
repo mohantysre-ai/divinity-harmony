@@ -27,7 +27,7 @@ from urllib.request import Request, urlopen
 from sacred_text_content import fetch_chapter, fetch_sacred_content
 from ai_explain import explain
 from db import get_profile, init_db, list_favorites, list_priests, save_japa, save_profile, set_favorite, subscribe_newsletter
-from panchang import daily_panchang
+from panchang import daily_panchang, birth_chart
 from region import regional_preference
 
 
@@ -380,6 +380,19 @@ class Handler(BaseHTTPRequestHandler):
                 self._json(200, daily_panchang(day, lat, lon))
             except (ValueError, OverflowError):
                 self._json(400, {"error": "A valid date and coordinates are required."})
+            return
+        if path == "/api/birth-chart":
+            birth_date = query.get("date", [""])[0][:10]
+            birth_time = query.get("time", ["12:00"])[0][:8]
+            try:
+                lat = float(query.get("lat", ["20.5937"])[0])
+                lon = float(query.get("lon", ["78.9629"])[0])
+                if not birth_date or len(birth_date) < 10:
+                    self._json(400, {"error": "Birth date is required (YYYY-MM-DD)."})
+                    return
+                self._json(200, birth_chart(birth_date, birth_time, lat, lon))
+            except (ValueError, OverflowError):
+                self._json(400, {"error": "Valid birth date, time and coordinates are required."})
             return
         if path == "/api/priests":
             self._json(200, {"items": list_priests()})

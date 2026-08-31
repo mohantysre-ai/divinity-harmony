@@ -6,11 +6,15 @@ import { useLocale } from '@/hooks/use-locale';
 import { deities } from '@/data/deities';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { scriptForAppLocale } from '@/lib/locale-script';
+import { transliterateMantra } from '@/lib/transliterate';
 
 export default function DeitiesPage() {
   const { slug } = useParams();
-  const { tk, lc } = useLocale();
+  const { tk, lc, locale } = useLocale();
+  const script = scriptForAppLocale(locale);
   const deity = deities.find((item) => item.slug === slug);
+  const regionalName = (sanskrit: string) => transliterateMantra(sanskrit, script);
 
   return (
     <ThemeProvider>
@@ -27,12 +31,12 @@ export default function DeitiesPage() {
               <section className="relative overflow-hidden rounded-3xl shadow-xl">
                 <img
                   src={deity.imageUrl}
-                  alt={deity.name}
+                  alt={lc(deity.name)}
                   className="absolute inset-0 h-full w-full object-cover"
                 />
                 <div className={`absolute inset-0 bg-gradient-to-br ${deity.color} opacity-80 mix-blend-multiply`} />
                 <div className="relative p-8 text-white md:p-12">
-                  <p className="text-5xl">{deity.sanskrit}</p>
+                  <p className="text-5xl">{regionalName(deity.sanskrit)}</p>
                   <h1 className="mt-5 text-4xl font-bold">{lc(deity.name)}</h1>
                   <p className="mt-2 text-white/75">{lc(deity.tradition)}</p>
                   <p className="mt-6 max-w-2xl text-lg leading-8 text-white/90">{lc(deity.summary)}</p>
@@ -66,7 +70,7 @@ export default function DeitiesPage() {
                   </Link>
                 </Button>
                 <Button asChild variant="outline">
-                  <Link to={`/scriptures?search=${deity.name}`}>
+                  <Link to={`/scriptures?search=${encodeURIComponent(lc(deity.name))}`}>
                     <BookOpen className="mr-2 h-4 w-4" />
                     {tk('readSacredLoreBtn')}
                   </Link>
@@ -94,7 +98,7 @@ export default function DeitiesPage() {
                     />
                     <div className={`absolute inset-0 bg-gradient-to-t ${item.color} via-black/50 to-black/20 opacity-90`} />
                     <div className="relative flex h-full flex-col justify-end p-7 text-white">
-                      <p className="text-4xl drop-shadow">{item.sanskrit}</p>
+                      <p className="text-4xl drop-shadow">{regionalName(item.sanskrit)}</p>
                       <h2 className="mt-3 text-2xl font-bold">{lc(item.name)}</h2>
                       <p className="mt-2 line-clamp-2 text-sm text-white/85">{lc(item.summary)}</p>
                     </div>

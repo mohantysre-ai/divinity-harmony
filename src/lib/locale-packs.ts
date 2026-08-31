@@ -8,7 +8,8 @@ const localePacks = packs as Record<UiLocale, Record<UiKey, string>>;
 
 export function translateKey(locale: AppLocale, key: UiKey): string {
   if (locale === "en") return UI_KEYS[key];
-  return localePacks[locale][key];
+  // Never fall back to another locale (e.g. Hindi) — English is the safe default.
+  return localePacks[locale]?.[key] ?? UI_KEYS[key];
 }
 
 export function buildUiDict(locale: AppLocale): Record<string, string> {

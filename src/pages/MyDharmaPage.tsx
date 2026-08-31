@@ -23,7 +23,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
-import { useLocale } from "@/hooks/use-locale";
+import { useLocale, localeOptions, localeToProfileLanguage } from "@/hooks/use-locale";
 import { ROUTINE_ITEMS } from "@/lib/routine-i18n";
 type Profile = {
   currentState: string;
@@ -33,13 +33,13 @@ type Profile = {
   calendar: string;
 };
 type Reminder = { id: string; name: string; date: string; note: string };
-const defaultProfile: Profile = {
+const defaultProfile = (language = "english"): Profile => ({
   currentState: "",
   homeTradition: "",
-  language: "English",
+  language,
   ishta: "",
   calendar: "",
-};
+});
 const read = <T,>(key: string, fallback: T): T => {
   try {
     return JSON.parse(localStorage.getItem(key) || "") as T;
@@ -48,10 +48,15 @@ const read = <T,>(key: string, fallback: T): T => {
   }
 };
 export default function MyDharmaPage() {
-  const { tk, lc } = useLocale();
-  const [profile, setProfile] = useState<Profile>(() =>
-    read("my-dharma:profile", defaultProfile),
-  );
+  const { tk, lc, locale } = useLocale();
+  const defaultLang = localeToProfileLanguage[locale];
+  const [profile, setProfile] = useState<Profile>(() => {
+    const saved = read("my-dharma:profile", defaultProfile(defaultLang));
+    if (!saved.language?.trim()) {
+      saved.language = defaultLang;
+    }
+    return saved;
+  });
   const [reminders, setReminders] = useState<Reminder[]>(() =>
     read("my-dharma:reminders", []),
   );
@@ -134,12 +139,23 @@ export default function MyDharmaPage() {
                   />
                 </Field>
                 <Field label={tk("preferredLanguage")}>
-                  <Input
+                  <Select
                     value={profile.language}
-                    onChange={(e) =>
-                      setProfile({ ...profile, language: e.target.value })
+                    onValueChange={(value) =>
+                      setProfile({ ...profile, language: value })
                     }
-                  />
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {localeOptions.map((opt) => (
+                        <SelectItem key={opt.id} value={localeToProfileLanguage[opt.id]}>
+                          {opt.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </Field>
                 <Field label={tk("ishtaKulaDevata")}>
                   <Input

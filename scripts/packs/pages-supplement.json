@@ -43,7 +43,15 @@
     "verifyDirectoryLinks": "ଲିଙ୍କ Google Maps କିମ୍ବା Sulekha ଫଳାଫଳ ଖୋଲେ—ସମୀକ୍ଷା ଓ ଯୋଗାଯୋଗ ନିଜେ ଯାଞ୍ଚ କରନ୍ତୁ।",
     "backToCulturePacks": "ସମସ୍ତ ସଂସ୍କୃତି ପ୍ୟାକ",
     "viewCultureDetails": "ସଂସ୍କୃତି ବିବରଣୀ ଦେଖନ୍ତୁ",
-    "openExternalPravachan": "ବାହ୍ୟ ପ୍ରବଚନ ଖୋଲନ୍ତୁ"
+    "openExternalPravachan": "ବାହ୍ୟ ପ୍ରବଚନ ଖୋଲନ୍ତୁ",
+    "personalBirthSnapshot": "ତୁମର ଜନ୍ମ ସ୍ନାପସଟ୍ |",
+    "moonSignAtBirth": "ଚନ୍ଦ୍ର ଚିହ୍ନ (ରାଶି)",
+    "lagnaAtBirth": "ଆରୋହଣ (ଲାଗନା)",
+    "birthTithiAtBirth": "ଜନ୍ମ ତିଥି",
+    "generatePersonalChart": "ବ୍ୟକ୍ତିଗତ ଚାର୍ଟ ସୃଷ୍ଟି କରନ୍ତୁ |",
+    "birthChartNeedsDateTime": "ଜନ୍ମ ତାରିଖ ଏବଂ ସମୟ ପ୍ରବେଶ କର, ତାପରେ ତୁମର ବ୍ୟକ୍ତିଗତ ସ୍ନାପସଟ୍ ଦେଖିବା ପାଇଁ ସଞ୍ଚୟ କିମ୍ବା ସୃଷ୍ଟି କର |",
+    "birthChartApproxNote": "ତାରିଖ, ସମୟ ଏବଂ ସ୍ଥାନରୁ ଶିକ୍ଷାଗତ ସାଇଡେରାଲ୍ ଆନୁମାନିକତା - ଏଫେମେରିସ୍-ଗ୍ରେଡ୍ ମୁହୁରଟା ସଫ୍ଟୱେର୍ ନୁହେଁ |",
+    "mapOfTempleTemplate": "{ନାମର ମାନଚିତ୍ର"
   },
   "hi": {
     "panchangDisclaimer": "तिथि और स्थान पर आधारित दैनिक आध्यात्मिक अवलोकन। सटीक मुहूर्त और सीमा समय के लिए क्षेत्रीय पंचांग से पुष्टि करें।",
@@ -89,7 +97,15 @@
     "verifyDirectoryLinks": "लिंक Google Maps या Sulekha परिणाम खोलते हैं—समीक्षा और संपर्क स्वयं जाँचें।",
     "backToCulturePacks": "सभी संस्कृति पैक",
     "viewCultureDetails": "संस्कृति विवरण देखें",
-    "openExternalPravachan": "बाह्य प्रवचन खोलें"
+    "openExternalPravachan": "बाह्य प्रवचन खोलें",
+    "personalBirthSnapshot": "आपका जन्म स्नैपशॉट",
+    "moonSignAtBirth": "चंद्र राशि (राशि)",
+    "lagnaAtBirth": "लग्न (लग्न)",
+    "birthTithiAtBirth": "जन्म तिथि",
+    "generatePersonalChart": "व्यक्तिगत चार्ट तैयार करें",
+    "birthChartNeedsDateTime": "जन्मतिथि और समय दर्ज करें, फिर अपना वैयक्तिकृत स्नैपशॉट देखने के लिए सहेजें या जेनरेट करें।",
+    "birthChartApproxNote": "तिथि, समय और स्थान से शैक्षिक नाक्षत्र अनुमान - पंचांग-ग्रेड मुहूर्त सॉफ्टवेयर नहीं।",
+    "mapOfTempleTemplate": "{नाम} का मानचित्र"
   },
   "bn": {
     "panchangDisclaimer": "তারিখ এবং অবস্থানের উপর ভিত্তি করে দৈনিক আধ্যাত্মিক ওভারভিউ। একটি আঞ্চলিক পঞ্চং দিয়ে সঠিক মুহুর্তা এবং সীমানা বার নিশ্চিত করুন।",
@@ -135,7 +151,15 @@
     "verifyDirectoryLinks": "লিঙ্কগুলি লাইভ Google Maps বা Sulekha ফলাফল খুলবে যাতে আপনি পর্যালোচনা এবং যোগাযোগের বিবরণ যাচাই করতে পারেন৷",
     "backToCulturePacks": "সমস্ত সংস্কৃতি প্যাক",
     "viewCultureDetails": "সংস্কৃতির বিবরণ দেখুন",
-    "openExternalPravachan": "বাহ্যিক প্রবচন খুলুন"
+    "openExternalPravachan": "বাহ্যিক প্রবচন খুলুন",
+    "personalBirthSnapshot": "আপনার জন্ম স্ন্যাপশট",
+    "moonSignAtBirth": "চন্দ্র রাশি (রাশি)",
+    "lagnaAtBirth": "আরোহী (লগ্না)",
+    "birthTithiAtBirth": "জন্ম তিথি",
+    "generatePersonalChart": "ব্যক্তিগত চার্ট তৈরি করুন",
+    "birthChartNeedsDateTime": "জন্ম তারিখ এবং সময় লিখুন, তারপর আপনার ব্যক্তিগতকৃত স্ন্যাপশট দেখতে সংরক্ষণ করুন বা জেনারেট করুন।",
+    "birthChartApproxNote": "তারিখ, সময় এবং স্থান থেকে শিক্ষাগত দিকনির্দেশনা - ক্ষণস্থায়ী-গ্রেড মুহুর্তা সফ্টওয়্যার নয়।",
+    "mapOfTempleTemplate": "{name} এর মানচিত্র"
   },
   "gu": {
     "panchangDisclaimer": "તારીખ અને સ્થાનના આધારે દૈનિક આધ્યાત્મિક ઝાંખી. પ્રાદેશિક પંચાંગ સાથે ચોક્કસ મુહૂર્ત અને સીમાના સમયની પુષ્ટિ કરો.",
@@ -181,7 +205,15 @@
     "verifyDirectoryLinks": "લિંક્સ લાઇવ Google Maps અથવા Sulekha પરિણામો ખોલે છે જેથી તમે સમીક્ષાઓ અને સંપર્ક વિગતો ચકાસી શકો.",
     "backToCulturePacks": "બધા સંસ્કૃતિ પેક",
     "viewCultureDetails": "સંસ્કૃતિ વિગતો જુઓ",
-    "openExternalPravachan": "બાહ્ય પ્રવચન ખોલો"
+    "openExternalPravachan": "બાહ્ય પ્રવચન ખોલો",
+    "personalBirthSnapshot": "તમારો જન્મ સ્નેપશોટ",
+    "moonSignAtBirth": "ચંદ્ર ચિહ્ન (રાશિ)",
+    "lagnaAtBirth": "ચડતી (લગ્ન)",
+    "birthTithiAtBirth": "જન્મ તિથિ",
+    "generatePersonalChart": "વ્યક્તિગત ચાર્ટ બનાવો",
+    "birthChartNeedsDateTime": "જન્મ તારીખ અને સમય દાખલ કરો, પછી તમારો વ્યક્તિગત સ્નેપશોટ જોવા માટે સાચવો અથવા જનરેટ કરો.",
+    "birthChartApproxNote": "તારીખ, સમય અને સ્થળ પરથી શૈક્ષણિક સાઈડરીયલ અંદાજ — ક્ષણિક-ગ્રેડ મુહૂર્ત સોફ્ટવેર નહીં.",
+    "mapOfTempleTemplate": "{name} નો નકશો"
   },
   "mr": {
     "panchangDisclaimer": "तारीख आणि स्थानावर आधारित दैनिक आध्यात्मिक विहंगावलोकन. प्रादेशिक पंचांग सह अचूक मुहूर्त आणि सीमा वेळा निश्चित करा.",
@@ -227,7 +259,15 @@
     "verifyDirectoryLinks": "लिंक लाइव्ह Google Maps किंवा Sulekha परिणाम उघडतात जेणेकरून तुम्ही पुनरावलोकने आणि संपर्क तपशील सत्यापित करू शकता.",
     "backToCulturePacks": "सर्व संस्कृती पॅक",
     "viewCultureDetails": "संस्कृती तपशील पहा",
-    "openExternalPravachan": "उघडे बाह्य प्रवचन"
+    "openExternalPravachan": "उघडे बाह्य प्रवचन",
+    "personalBirthSnapshot": "तुमचा जन्म स्नॅपशॉट",
+    "moonSignAtBirth": "चंद्र राशी (राशी)",
+    "lagnaAtBirth": "चढता (लग्न)",
+    "birthTithiAtBirth": "जन्मतिथी",
+    "generatePersonalChart": "वैयक्तिक चार्ट तयार करा",
+    "birthChartNeedsDateTime": "जन्मतारीख आणि वेळ प्रविष्ट करा, नंतर तुमचा वैयक्तिकृत स्नॅपशॉट पाहण्यासाठी जतन करा किंवा जनरेट करा.",
+    "birthChartApproxNote": "तारीख, वेळ आणि ठिकाणावरून शैक्षणिक साईडरियल अंदाजे — इफेमेरिस-ग्रेड मुहूर्त सॉफ्टवेअर नाही.",
+    "mapOfTempleTemplate": "{name} चा नकाशा"
   },
   "ta": {
     "panchangDisclaimer": "தேதி மற்றும் இருப்பிடத்தின் அடிப்படையில் தினசரி ஆன்மீக கண்ணோட்டம். பிராந்திய பஞ்சாங்கம் மூலம் சரியான முஹூர்த்தம் மற்றும் எல்லை நேரங்களை உறுதிப்படுத்தவும்.",
@@ -273,7 +313,15 @@
     "verifyDirectoryLinks": "இணைப்புகள் நேரடி Google Maps அல்லது Sulekha முடிவுகளைத் திறக்கும், எனவே நீங்கள் மதிப்புரைகளையும் தொடர்பு விவரங்களையும் சரிபார்க்கலாம்.",
     "backToCulturePacks": "அனைத்து கலாச்சார தொகுப்புகள்",
     "viewCultureDetails": "கலாச்சார விவரங்களைக் காண்க",
-    "openExternalPravachan": "திறந்த வெளி பிரவச்சன்"
+    "openExternalPravachan": "திறந்த வெளி பிரவச்சன்",
+    "personalBirthSnapshot": "உங்கள் பிறப்பு ஸ்னாப்ஷாட்",
+    "moonSignAtBirth": "சந்திரன் அடையாளம் (ராசி)",
+    "lagnaAtBirth": "ஏற்றம் (லக்னம்)",
+    "birthTithiAtBirth": "பிறப்பு திதி",
+    "generatePersonalChart": "தனிப்பட்ட விளக்கப்படத்தை உருவாக்கவும்",
+    "birthChartNeedsDateTime": "பிறந்த தேதி மற்றும் நேரத்தை உள்ளிட்டு, உங்கள் தனிப்பயனாக்கப்பட்ட ஸ்னாப்ஷாட்டைப் பார்க்க, சேமிக்கவும் அல்லது உருவாக்கவும்.",
+    "birthChartApproxNote": "தேதி, நேரம் மற்றும் இடத்திலிருந்து கல்வி சார்ந்த தோராயமான தோராயம் — எபிமெரிஸ் தர முஹூர்தா மென்பொருள் அல்ல.",
+    "mapOfTempleTemplate": "{name} இன் வரைபடம்"
   },
   "te": {
     "panchangDisclaimer": "తేదీ మరియు స్థానం ఆధారంగా రోజువారీ ఆధ్యాత్మిక అవలోకనం. ప్రాంతీయ పంచాంగ్‌తో ఖచ్చితమైన ముహూర్తం మరియు సరిహద్దు సమయాలను నిర్ధారించండి.",
@@ -319,7 +367,15 @@
     "verifyDirectoryLinks": "లింక్‌లు లైవ్ Google Maps లేదా Sulekha ఫలితాలను తెరిచి ఉంటాయి కాబట్టి మీరు సమీక్షలు మరియు సంప్రదింపు వివరాలను ధృవీకరించవచ్చు.",
     "backToCulturePacks": "అన్ని సంస్కృతి ప్యాక్‌లు",
     "viewCultureDetails": "సంస్కృతి వివరాలను వీక్షించండి",
-    "openExternalPravachan": "బాహ్య ప్రవచనాన్ని తెరవండి"
+    "openExternalPravachan": "బాహ్య ప్రవచనాన్ని తెరవండి",
+    "personalBirthSnapshot": "మీ బర్త్ స్నాప్‌షాట్",
+    "moonSignAtBirth": "చంద్ర రాశి (రాశి)",
+    "lagnaAtBirth": "ఆరోహణ (లగ్న)",
+    "birthTithiAtBirth": "జన్మ తిథి",
+    "generatePersonalChart": "వ్యక్తిగత చార్ట్‌ను రూపొందించండి",
+    "birthChartNeedsDateTime": "పుట్టిన తేదీ మరియు సమయాన్ని నమోదు చేయండి, ఆపై మీ వ్యక్తిగతీకరించిన స్నాప్‌షాట్‌ను చూడటానికి సేవ్ చేయండి లేదా రూపొందించండి.",
+    "birthChartApproxNote": "తేదీ, సమయం మరియు ప్రదేశం నుండి ఎడ్యుకేషనల్ సైడ్రియల్ ఉజ్జాయింపు — ఎఫెమెరిస్-గ్రేడ్ ముహూర్త సాఫ్ట్‌వేర్ కాదు.",
+    "mapOfTempleTemplate": "{name} యొక్క మ్యాప్"
   },
   "ml": {
     "panchangDisclaimer": "തീയതിയും സ്ഥലവും അടിസ്ഥാനമാക്കിയുള്ള ദൈനംദിന ആത്മീയ അവലോകനം. ഒരു പ്രാദേശിക പഞ്ചാംഗം ഉപയോഗിച്ച് കൃത്യമായ മുഹൂർത്തവും അതിർത്തി സമയവും സ്ഥിരീകരിക്കുക.",
@@ -365,7 +421,15 @@
     "verifyDirectoryLinks": "ലിങ്കുകൾ തത്സമയ Google Maps അല്ലെങ്കിൽ Sulekha ഫലങ്ങൾ തുറക്കുന്നതിനാൽ നിങ്ങൾക്ക് അവലോകനങ്ങളും ബന്ധപ്പെടാനുള്ള വിശദാംശങ്ങളും പരിശോധിക്കാനാകും.",
     "backToCulturePacks": "എല്ലാ സംസ്കാര പായ്ക്കുകളും",
     "viewCultureDetails": "സംസ്കാരത്തിൻ്റെ വിശദാംശങ്ങൾ കാണുക",
-    "openExternalPravachan": "ബാഹ്യ പ്രവചനം തുറക്കുക"
+    "openExternalPravachan": "ബാഹ്യ പ്രവചനം തുറക്കുക",
+    "personalBirthSnapshot": "നിങ്ങളുടെ ജനന സ്നാപ്പ്ഷോട്ട്",
+    "moonSignAtBirth": "ചന്ദ്ര രാശി (രാശി)",
+    "lagnaAtBirth": "ആരോഹണം (ലഗ്നം)",
+    "birthTithiAtBirth": "ജന്മ തിഥി",
+    "generatePersonalChart": "വ്യക്തിഗത ചാർട്ട് സൃഷ്ടിക്കുക",
+    "birthChartNeedsDateTime": "ജനനത്തീയതിയും സമയവും നൽകുക, തുടർന്ന് നിങ്ങളുടെ വ്യക്തിഗതമാക്കിയ സ്നാപ്പ്ഷോട്ട് കാണാൻ സംരക്ഷിക്കുക അല്ലെങ്കിൽ സൃഷ്ടിക്കുക.",
+    "birthChartApproxNote": "തീയതി, സമയം, സ്ഥലം എന്നിവയിൽ നിന്നുള്ള വിദ്യാഭ്യാസപരമായ ഏകദേശ കണക്ക് - എഫെമെറിസ് ഗ്രേഡ് മുഹൂർത്ത സോഫ്റ്റ്‌വെയർ അല്ല.",
+    "mapOfTempleTemplate": "{name} എന്നതിൻ്റെ മാപ്പ്"
   },
   "kn": {
     "panchangDisclaimer": "ದಿನಾಂಕ ಮತ್ತು ಸ್ಥಳದ ಆಧಾರದ ಮೇಲೆ ದೈನಂದಿನ ಆಧ್ಯಾತ್ಮಿಕ ಅವಲೋಕನ. ಪ್ರಾದೇಶಿಕ ಪಂಚಾಂಗದೊಂದಿಗೆ ನಿಖರವಾದ ಮುಹೂರ್ತ ಮತ್ತು ಗಡಿ ಸಮಯವನ್ನು ದೃಢೀಕರಿಸಿ.",
@@ -411,7 +475,15 @@
     "verifyDirectoryLinks": "ಲಿಂಕ್‌ಗಳು ಲೈವ್ Google Maps ಅಥವಾ Sulekha ಫಲಿತಾಂಶಗಳನ್ನು ತೆರೆಯುತ್ತವೆ ಆದ್ದರಿಂದ ನೀವು ವಿಮರ್ಶೆಗಳು ಮತ್ತು ಸಂಪರ್ಕ ವಿವರಗಳನ್ನು ಪರಿಶೀಲಿಸಬಹುದು.",
     "backToCulturePacks": "ಎಲ್ಲಾ ಸಂಸ್ಕೃತಿ ಪ್ಯಾಕ್ಗಳು",
     "viewCultureDetails": "ಸಂಸ್ಕೃತಿಯ ವಿವರಗಳನ್ನು ವೀಕ್ಷಿಸಿ",
-    "openExternalPravachan": "ಬಾಹ್ಯ ಪ್ರವಚನವನ್ನು ತೆರೆಯಿರಿ"
+    "openExternalPravachan": "ಬಾಹ್ಯ ಪ್ರವಚನವನ್ನು ತೆರೆಯಿರಿ",
+    "personalBirthSnapshot": "ನಿಮ್ಮ ಜನ್ಮ ಸ್ನ್ಯಾಪ್‌ಶಾಟ್",
+    "moonSignAtBirth": "ಚಂದ್ರನ ಚಿಹ್ನೆ (ರಾಶಿ)",
+    "lagnaAtBirth": "ಆರೋಹಣ (ಲಗ್ನ)",
+    "birthTithiAtBirth": "ಜನ್ಮ ತಿಥಿ",
+    "generatePersonalChart": "ವೈಯಕ್ತಿಕ ಚಾರ್ಟ್ ಅನ್ನು ರಚಿಸಿ",
+    "birthChartNeedsDateTime": "ಜನ್ಮ ದಿನಾಂಕ ಮತ್ತು ಸಮಯವನ್ನು ನಮೂದಿಸಿ, ನಂತರ ನಿಮ್ಮ ವೈಯಕ್ತಿಕಗೊಳಿಸಿದ ಸ್ನ್ಯಾಪ್‌ಶಾಟ್ ನೋಡಲು ಉಳಿಸಿ ಅಥವಾ ರಚಿಸಿ.",
+    "birthChartApproxNote": "ದಿನಾಂಕ, ಸಮಯ ಮತ್ತು ಸ್ಥಳದಿಂದ ಶೈಕ್ಷಣಿಕ ಸೈಡ್ರಿಯಲ್ ಅಂದಾಜು — ಎಫೆಮೆರಿಸ್-ಗ್ರೇಡ್ ಮುಹೂರ್ತ ಸಾಫ್ಟ್‌ವೇರ್ ಅಲ್ಲ.",
+    "mapOfTempleTemplate": "{name} ನ ನಕ್ಷೆ"
   },
   "pa": {
     "panchangDisclaimer": "ਮਿਤੀ ਅਤੇ ਸਥਾਨ ਦੇ ਅਧਾਰ ਤੇ ਰੋਜ਼ਾਨਾ ਅਧਿਆਤਮਿਕ ਸੰਖੇਪ ਜਾਣਕਾਰੀ। ਇੱਕ ਖੇਤਰੀ ਪੰਚਾਂਗ ਨਾਲ ਸਹੀ ਮੁਹੂਰਤ ਅਤੇ ਸੀਮਾ ਦੇ ਸਮੇਂ ਦੀ ਪੁਸ਼ਟੀ ਕਰੋ।",
@@ -457,7 +529,15 @@
     "verifyDirectoryLinks": "ਲਿੰਕ ਲਾਈਵ Google Maps ਜਾਂ Sulekha ਨਤੀਜੇ ਖੋਲ੍ਹਦੇ ਹਨ ਤਾਂ ਜੋ ਤੁਸੀਂ ਸਮੀਖਿਆਵਾਂ ਅਤੇ ਸੰਪਰਕ ਵੇਰਵਿਆਂ ਦੀ ਪੁਸ਼ਟੀ ਕਰ ਸਕੋ।",
     "backToCulturePacks": "ਸਾਰੇ ਸਭਿਆਚਾਰ ਪੈਕ",
     "viewCultureDetails": "ਸੱਭਿਆਚਾਰ ਦੇ ਵੇਰਵੇ ਵੇਖੋ",
-    "openExternalPravachan": "ਬਾਹਰੀ ਪ੍ਰਵਚਨ ਖੋਲ੍ਹੋ"
+    "openExternalPravachan": "ਬਾਹਰੀ ਪ੍ਰਵਚਨ ਖੋਲ੍ਹੋ",
+    "personalBirthSnapshot": "ਤੁਹਾਡੇ ਜਨਮ ਦਾ ਸਨੈਪਸ਼ਾਟ",
+    "moonSignAtBirth": "ਚੰਦਰਮਾ ਦਾ ਚਿੰਨ੍ਹ (ਰਾਸ਼ੀ)",
+    "lagnaAtBirth": "ਚੜ੍ਹਾਈ (ਲਗਨਾ)",
+    "birthTithiAtBirth": "ਜਨਮ ਤਿਥੀ",
+    "generatePersonalChart": "ਨਿੱਜੀ ਚਾਰਟ ਬਣਾਓ",
+    "birthChartNeedsDateTime": "ਜਨਮ ਮਿਤੀ ਅਤੇ ਸਮਾਂ ਦਾਖਲ ਕਰੋ, ਫਿਰ ਆਪਣੇ ਵਿਅਕਤੀਗਤ ਬਣਾਏ ਸਨੈਪਸ਼ਾਟ ਨੂੰ ਦੇਖਣ ਲਈ ਸੇਵ ਕਰੋ ਜਾਂ ਜਨਰੇਟ ਕਰੋ।",
+    "birthChartApproxNote": "ਮਿਤੀ, ਸਮੇਂ ਅਤੇ ਸਥਾਨ ਤੋਂ ਵਿਦਿਅਕ ਸਾਈਡਰੀਅਲ ਅਨੁਮਾਨ — ਨਾ ਕਿ ਇਫੇਮੇਰਿਸ-ਗ੍ਰੇਡ ਮੁਹੂਰਤਾ ਸੌਫਟਵੇਅਰ।",
+    "mapOfTempleTemplate": "{name} ਦਾ ਨਕਸ਼ਾ"
   },
   "as": {
     "panchangDisclaimer": "তাৰিখ আৰু স্থানৰ ওপৰত ভিত্তি কৰি দৈনিক আধ্যাত্মিক আভাস। এটা আঞ্চলিক পাঞ্চাঙৰ সৈতে সঠিক মুহুৰ্তা আৰু সীমাৰ সময় নিশ্চিত কৰক।",
@@ -503,6 +583,14 @@
     "verifyDirectoryLinks": "লিংকসমূহে লাইভ Google Maps বা Sulekha ফলাফল খোলে যাতে আপুনি পৰ্যালোচনা আৰু যোগাযোগৰ বিৱৰণ পৰীক্ষা কৰিব পাৰে।",
     "backToCulturePacks": "সকলো কালচাৰ পেক",
     "viewCultureDetails": "সংস্কৃতিৰ বিৱৰণ চাওক",
-    "openExternalPravachan": "বাহ্যিক প্ৰভাচন মুকলি"
+    "openExternalPravachan": "বাহ্যিক প্ৰভাচন মুকলি",
+    "personalBirthSnapshot": "আপোনাৰ জন্মৰ স্নেপশ্বট",
+    "moonSignAtBirth": "চন্দ্ৰ ৰাশি (ৰাশি)",
+    "lagnaAtBirth": "আৰোহী (লগনা)",
+    "birthTithiAtBirth": "জন্ম তিথি",
+    "generatePersonalChart": "ব্যক্তিগত চাৰ্ট সৃষ্টি কৰক",
+    "birthChartNeedsDateTime": "জন্ম তাৰিখ আৰু সময় সুমুৱাওক, তাৰ পিছত আপোনাৰ ব্যক্তিগতকৃত স্নেপশ্বট চাবলৈ সংৰক্ষণ বা সৃষ্টি কৰক।",
+    "birthChartApproxNote": "তাৰিখ, সময় আৰু স্থানৰ পৰা শিক্ষামূলক চিডাৰিয়েল আনুমানিকতা — এফেমেৰিছ-গ্ৰেড মুহুৰ্টা চফট্ ৱেৰ নহয়।",
+    "mapOfTempleTemplate": "{name} ৰ মানচিত্ৰ"
   }
 }

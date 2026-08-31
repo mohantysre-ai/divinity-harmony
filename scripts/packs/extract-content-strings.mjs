@@ -90,12 +90,64 @@ function extractPujas() {
   return strings;
 }
 
+function extractDeities() {
+  const text = fs.readFileSync(path.join(root, "src/data/deities.ts"), "utf8");
+  const strings = new Set();
+  const re = /(?:name|tradition|summary):['"]([^'"]+)['"]/g;
+  let m;
+  while ((m = re.exec(text))) strings.add(m[1]);
+  const iconRe = /iconography:\[([^\]]+)\]/g;
+  while ((m = iconRe.exec(text))) {
+    const items = m[1].match(/'([^']+)'/g);
+    if (items) items.forEach((i) => strings.add(i.slice(1, -1)));
+  }
+  const festRe = /festivals:\[([^\]]+)\]/g;
+  while ((m = festRe.exec(text))) {
+    const items = m[1].match(/'([^']+)'/g);
+    if (items) items.forEach((i) => strings.add(i.slice(1, -1)));
+  }
+  return strings;
+}
+
+function extractTemples() {
+  const text = fs.readFileSync(path.join(root, "src/data/temples.ts"), "utf8");
+  const strings = new Set();
+  const re = /(?:name|deity|city|state|type|timings):['"]([^'"]+)['"]/g;
+  let m;
+  while ((m = re.exec(text))) strings.add(m[1]);
+  return strings;
+}
+
+function extractPriestCatalog() {
+  const text = fs.readFileSync(path.join(root, "server/db.py"), "utf8");
+  const strings = new Set();
+  const rowRe = /\(\d+,\s*"[^"]+",\s*"[^"]+",\s*"([^"]+)",\s*"([^"]+)",\s*"([^"]+)"/g;
+  let m;
+  while ((m = rowRe.exec(text))) {
+    strings.add(m[1]);
+    m[2].split(",").forEach((lang) => strings.add(lang.trim()));
+    m[3].split(",").forEach((svc) => strings.add(svc.trim()));
+  }
+  return strings;
+}
+
 const sacred = extractSacredTexts();
 const mantras = extractMantras();
 const culture = extractCulturePacks();
 const pujas = extractPujas();
+const deityCatalog = extractDeities();
+const templeCatalog = extractTemples();
+const priestCatalog = extractPriestCatalog();
 
-const all = new Set([...sacred, ...mantras, ...culture, ...pujas]);
+const all = new Set([
+  ...sacred,
+  ...mantras,
+  ...culture,
+  ...pujas,
+  ...deityCatalog,
+  ...templeCatalog,
+  ...priestCatalog,
+]);
 const sorted = [...all].sort();
 
 const outPath = path.join(__dirname, "content-strings-en.json");
@@ -106,6 +158,9 @@ console.log(JSON.stringify({
   mantras: mantras.size,
   culture: culture.size,
   pujas: pujas.size,
+  deities: deityCatalog.size,
+  temples: templeCatalog.size,
+  priests: priestCatalog.size,
   totalUnique: all.size,
   outPath,
 }, null, 2));

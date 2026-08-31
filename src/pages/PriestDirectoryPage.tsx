@@ -275,16 +275,16 @@ export default function PriestDirectoryPage() {
                     {tk("cityPriestSearchTemplate", { city: x.city })}
                   </h2>
                   <p className="mt-1 text-sm text-muted-foreground">
-                    {x.state}
+                    {lc(x.state)}
                   </p>
                   <p className="mt-3 flex items-start text-sm text-muted-foreground">
                     <Languages className="mr-2 mt-0.5 h-4 w-4 shrink-0" />
-                    {x.languages.join(", ")}
+                    {x.languages.map((lang) => lc(lang.trim())).join(", ")}
                   </p>
                   <div className="mt-4 flex flex-wrap gap-2">
                     {x.services.map((s) => (
                       <Badge key={s} variant="secondary">
-                        {s}
+                        {lc(s)}
                       </Badge>
                     ))}
                   </div>

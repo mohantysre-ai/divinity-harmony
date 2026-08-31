@@ -35,11 +35,21 @@ export default function TemplesPage() {
             ? distance(position.lat, position.lon, temple.lat, temple.lon)
             : null,
         }))
-        .filter((temple) =>
-          `${temple.name} ${temple.deity} ${temple.city} ${temple.state}`
-            .toLowerCase()
-            .includes(query.toLowerCase()),
-        )
+        .filter((temple) => {
+          const haystack = [
+            lc(temple.name),
+            lc(temple.deity),
+            lc(temple.city),
+            lc(temple.state),
+            temple.name,
+            temple.deity,
+            temple.city,
+            temple.state,
+          ]
+            .join(' ')
+            .toLowerCase();
+          return haystack.includes(query.toLowerCase());
+        })
         .sort((a, b) => (a.distance ?? 99999) - (b.distance ?? 99999)),
     [query, position],
   );
@@ -75,7 +85,7 @@ export default function TemplesPage() {
           </div>
           <section className="mt-8 overflow-hidden rounded-2xl border bg-card">
             <iframe
-              title={`Map of ${selected.name}`}
+              title={tk('mapOfTempleTemplate', { name: lc(selected.name) })}
               src={mapUrl(selected)}
               className="h-[360px] w-full border-0"
               loading="lazy"
@@ -83,7 +93,7 @@ export default function TemplesPage() {
             <div className="p-4">
               <strong>{lc(selected.name)}</strong>
               <span className="ml-2 text-sm text-muted-foreground">
-                {selected.city}, {selected.state}
+                {lc(selected.city)}, {lc(selected.state)}
               </span>
             </div>
           </section>
@@ -105,10 +115,10 @@ export default function TemplesPage() {
                 <p className="mt-2 text-sm text-orange-700">{lc(temple.deity)}</p>
                 <p className="mt-3 flex items-center text-sm text-muted-foreground">
                   <MapPin className="mr-2 h-4 w-4" />
-                  {temple.city}, {temple.state}
+                  {lc(temple.city)}, {lc(temple.state)}
                 </p>
                 <p className="mt-2 text-sm text-muted-foreground">
-                  {tk('typicalHoursLabel')}: {temple.timings}
+                  {tk('typicalHoursLabel')}: {lc(temple.timings)}
                 </p>
               </button>
             ))}

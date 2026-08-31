@@ -3,10 +3,12 @@ import {
   BookOpen,
   Compass,
   Info,
+  Loader2,
   LocateFixed,
   Moon,
   Orbit,
   Save,
+  Sparkles,
   Sun,
 } from "lucide-react";
 import Layout from "@/components/layout/Layout";
@@ -19,6 +21,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
+import { localizeBirthChart } from "@/lib/panchang-i18n";
 
 type BirthDetails = {
   date?: string;
@@ -29,6 +32,19 @@ type BirthDetails = {
 type DharmaProfile = {
   currentState?: string;
   homeTradition?: string;
+};
+
+type BirthChart = {
+  nakshatra_index: number;
+  nakshatra: string;
+  rashi_index: number;
+  rashi: string;
+  lagna_index: number;
+  lagna: string;
+  tithi_index: number;
+  tithi: string;
+  paksha: string;
+  precision: string;
 };
 
 const STORAGE_KEY = "vedic:birth-profile";
@@ -64,12 +80,15 @@ const grahaKeys = [
 ] as const satisfies readonly UiKey[];
 
 export default function VedicAstrologyPage() {
-  const { tk, detectedState } = useLocale();
+  const { tk, locale, detectedState } = useLocale();
   const { toast } = useToast();
   const [details, setDetails] = useState<BirthDetails>(() =>
     readJson(STORAGE_KEY, {}),
   );
   const [locating, setLocating] = useState(false);
+  const [chartLoading, setChartLoading] = useState(false);
+  const [chart, setChart] = useState<BirthChart | null>(null);
+  const [coords, setCoords] = useState({ lat: 20.5937, lon: 78.9629 });
 
   const concepts = useMemo(
     () =>
@@ -80,6 +99,37 @@ export default function VedicAstrologyPage() {
     [],
   );
 
+  const localizedChart = useMemo(
+    () => (chart ? localizeBirthChart(locale, chart) : null),
+    [chart, locale],
+  );
+
+  const fetchChart = useCallback(async () => {
+    if (!details.date?.trim()) {
+      toast({ description: tk("birthChartNeedsDateTime") });
+      return;
+    }
+    const time = details.time?.trim() || "12:00";
+    setChartLoading(true);
+    try {
+      const params = new URLSearchParams({
+        date: details.date,
+        time: time.length === 5 ? `${time}:00` : time,
+        lat: String(coords.lat),
+        lon: String(coords.lon),
+      });
+      const res = await fetch(`/api/birth-chart?${params}`);
+      if (!res.ok) throw new Error();
+      const data = (await res.json()) as BirthChart;
+      setChart(data);
+    } catch {
+      toast({ title: tk("pleaseTryAgain"), variant: "destructive" });
+      setChart(null);
+    } finally {
+      setChartLoading(false);
+    }
+  }, [coords.lat, coords.lon, details.date, details.time, toast, tk]);
+
   const save = useCallback(() => {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(details));
@@ -87,13 +137,14 @@ export default function VedicAstrologyPage() {
         title: tk("birthDetailsSaved"),
         description: tk("birthDetailsSavedDesc"),
       });
+      void fetchChart();
     } catch {
       toast({
         title: tk("pleaseTryAgain"),
         variant: "destructive",
       });
     }
-  }, [details, toast, tk]);
+  }, [details, fetchChart, toast, tk]);
 
   const fillPlaceFromLocation = useCallback(
     (showToast: boolean) => {
@@ -102,6 +153,10 @@ export default function VedicAstrologyPage() {
       navigator.geolocation.getCurrentPosition(
         async (pos) => {
           try {
+            setCoords({
+              lat: pos.coords.latitude,
+              lon: pos.coords.longitude,
+            });
             const res = await fetch(
               `/api/location-preference?lat=${pos.coords.latitude}&lon=${pos.coords.longitude}`,
             );
@@ -151,7 +206,20 @@ export default function VedicAstrologyPage() {
     if (!saved.place?.trim()) {
       fillPlaceFromLocation(false);
     }
-  }, [detectedState, fillPlaceFromLocation]);
+    if (saved.date?.trim()) {
+      const time = saved.time?.trim() || "12:00";
+      const params = new URLSearchParams({
+        date: saved.date,
+        time: time.length === 5 ? `${time}:00` : time,
+        lat: String(coords.lat),
+        lon: String(coords.lon),
+      });
+      void fetch(`/api/birth-chart?${params}`)
+        .then((r) => (r.ok ? r.json() : null))
+        .then((data) => data && setChart(data as BirthChart))
+        .catch(() => undefined);
+    }
+  }, [detectedState, fillPlaceFromLocation, coords.lat, coords.lon]);
 
   return (
     <ThemeProvider>
@@ -169,6 +237,25 @@ export default function VedicAstrologyPage() {
           <div className="mt-8">
             <PanchangWidget />
           </div>
+          {localizedChart && (
+            <Card className="mt-8 border-indigo-200/60 bg-gradient-to-br from-indigo-50/80 to-violet-50/50 dark:from-indigo-950/40 dark:to-violet-950/30">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Sparkles className="text-indigo-600" />
+                  {tk("personalBirthSnapshot")}
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                <Snapshot label={tk("moonSignAtBirth")} value={localizedChart.rashi} />
+                <Snapshot label={tk("conceptNakshatraJyotisha")} value={localizedChart.nakshatra} />
+                <Snapshot label={tk("lagnaAtBirth")} value={localizedChart.lagna} />
+                <Snapshot label={tk("birthTithiAtBirth")} value={`${localizedChart.tithi} · ${localizedChart.paksha}`} />
+              </CardContent>
+              <p className="px-6 pb-6 text-xs text-muted-foreground">
+                {tk("birthChartApproxNote")}
+              </p>
+            </Card>
+          )}
           <div className="mt-8 grid gap-6 lg:grid-cols-[.9fr_1.1fr]">
             <Card>
               <CardHeader>
@@ -221,6 +308,19 @@ export default function VedicAstrologyPage() {
                     {tk("savePrivatelyOnDevice")}
                   </Button>
                 </div>
+                <Button
+                  type="button"
+                  variant="secondary"
+                  disabled={chartLoading}
+                  onClick={() => void fetchChart()}
+                >
+                  {chartLoading ? (
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  ) : (
+                    <Sparkles className="mr-2 h-4 w-4" />
+                  )}
+                  {tk("generatePersonalChart")}
+                </Button>
                 <p className="flex gap-2 text-xs text-muted-foreground">
                   <Info className="h-4 w-4 shrink-0" />
                   {tk("natalChartDisclaimer")}
@@ -269,6 +369,17 @@ export default function VedicAstrologyPage() {
         </main>
       </Layout>
     </ThemeProvider>
+  );
+}
+
+function Snapshot({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="rounded-2xl border bg-card/80 p-4 shadow-sm">
+      <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+        {label}
+      </p>
+      <p className="mt-2 text-lg font-bold">{value}</p>
+    </div>
   );
 }
 

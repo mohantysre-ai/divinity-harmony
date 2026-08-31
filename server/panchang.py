@@ -7,6 +7,7 @@ import math
 TITHIS = ["Shukla Pratipada","Shukla Dwitiya","Shukla Tritiya","Shukla Chaturthi","Shukla Panchami","Shukla Shashthi","Shukla Saptami","Shukla Ashtami","Shukla Navami","Shukla Dashami","Shukla Ekadashi","Shukla Dwadashi","Shukla Trayodashi","Shukla Chaturdashi","Purnima","Krishna Pratipada","Krishna Dwitiya","Krishna Tritiya","Krishna Chaturthi","Krishna Panchami","Krishna Shashthi","Krishna Saptami","Krishna Ashtami","Krishna Navami","Krishna Dashami","Krishna Ekadashi","Krishna Dwadashi","Krishna Trayodashi","Krishna Chaturdashi","Amavasya"]
 NAKSHATRAS = ["Ashwini","Bharani","Krittika","Rohini","Mrigashira","Ardra","Punarvasu","Pushya","Ashlesha","Magha","Purva Phalguni","Uttara Phalguni","Hasta","Chitra","Swati","Vishakha","Anuradha","Jyeshtha","Mula","Purva Ashadha","Uttara Ashadha","Shravana","Dhanishtha","Shatabhisha","Purva Bhadrapada","Uttara Bhadrapada","Revati"]
 YOGAS = ["Vishkambha","Priti","Ayushman","Saubhagya","Shobhana","Atiganda","Sukarma","Dhriti","Shula","Ganda","Vriddhi","Dhruva","Vyaghata","Harshana","Vajra","Siddhi","Vyatipata","Variyana","Parigha","Shiva","Siddha","Sadhya","Shubha","Shukla","Brahma","Indra","Vaidhriti"]
+RASHIS = ["Mesha","Vrishabha","Mithuna","Karka","Simha","Kanya","Tula","Vrishchika","Dhanu","Makara","Kumbha","Meena"]
 
 
 def daily_panchang(day: str, lat: float = 20.5937, lon: float = 78.9629) -> dict:
@@ -31,4 +32,41 @@ def daily_panchang(day: str, lat: float = 20.5937, lon: float = 78.9629) -> dict
         "moon_phase": "Purnima" if tithi_index == 14 else "Amavasya" if tithi_index == 29 else "Waxing" if tithi_index < 14 else "Waning",
         "weekday": current.strftime("%A"),
         "precision": "Daily spiritual overview based on date and location. Confirm exact muhurta and boundary times with a regional Panchang.",
+    }
+
+
+def _days_since_epoch(day: date, hour: float, lon: float) -> float:
+    epoch = date(2000, 1, 6)
+    return (day - epoch).days + hour / 24.0 - lon / 360.0
+
+
+def birth_chart(birth_date: str, birth_time: str, lat: float = 20.5937, lon: float = 78.9629) -> dict:
+    """Educational sidereal snapshot from birth date, time and place (not ephemeris-grade)."""
+    current = datetime.strptime(birth_date, "%Y-%m-%d").date()
+    parts = birth_time.split(":")
+    hour = int(parts[0]) + int(parts[1]) / 60.0 + (int(parts[2]) / 3600.0 if len(parts) > 2 else 0.0)
+    days = _days_since_epoch(current, hour, lon)
+    moon_cycle = (days / 27.321661) % 1
+    nakshatra_index = int(moon_cycle * 27) % 27
+    moon_long = nakshatra_index * (360.0 / 27.0)
+    rashi_index = int(moon_long / 30.0) % 12
+    lst_hours = (hour + lon / 15.0) % 24.0
+    lagna_index = int(lst_hours / 2.0) % 12
+    lunation = (days / 29.530588853) % 1
+    tithi_index = int(lunation * 30) % 30
+    return {
+        "birth_date": birth_date,
+        "birth_time": birth_time,
+        "latitude": lat,
+        "longitude": lon,
+        "nakshatra": NAKSHATRAS[nakshatra_index],
+        "nakshatra_index": nakshatra_index,
+        "rashi": RASHIS[rashi_index],
+        "rashi_index": rashi_index,
+        "lagna": RASHIS[lagna_index],
+        "lagna_index": lagna_index,
+        "tithi": TITHIS[tithi_index],
+        "tithi_index": tithi_index,
+        "paksha": "Shukla Paksha" if tithi_index < 15 else "Krishna Paksha",
+        "precision": "Educational sidereal approximation from birth date, time and coordinates. Confirm with a qualified jyotishi for authoritative charting.",
     }
