@@ -47,6 +47,9 @@ const pagesSupplement = JSON.parse(
 const chromeSupplement = JSON.parse(
   fs.readFileSync(path.join(__dirname, "packs/chrome-supplement.json"), "utf8"),
 );
+const ephemerisSupplement = JSON.parse(
+  fs.readFileSync(path.join(__dirname, "packs/ephemeris-supplement.json"), "utf8"),
+);
 
 function parseDictBlock(block) {
   const dict = {};
@@ -129,6 +132,12 @@ for (const [locale, pack] of Object.entries(packs)) {
   const chrome = chromeSupplement[locale];
   if (!chrome) continue;
   Object.assign(pack, chrome);
+}
+
+for (const [locale, pack] of Object.entries(packs)) {
+  const ephemeris = ephemerisSupplement[locale];
+  if (!ephemeris) continue;
+  Object.assign(pack, ephemeris);
 }
 
 for (const [locale, pack] of Object.entries(packs)) {

@@ -234,11 +234,15 @@ type BirthChartData = {
   nakshatra: string;
   rashi_index: number;
   rashi: string;
+  sun_rashi_index?: number;
+  sun_rashi?: string;
   lagna_index: number;
   lagna: string;
   tithi_index: number;
   tithi: string;
   paksha: string;
+  yoga?: string;
+  yoga_index?: number;
 };
 
 export function localizeBirthChart(locale: AppLocale, data: BirthChartData) {
@@ -247,7 +251,8 @@ export function localizeBirthChart(locale: AppLocale, data: BirthChartData) {
     nakshatra_index: data.nakshatra_index,
     tithi: data.tithi,
     nakshatra: data.nakshatra,
-    yoga: "",
+    yoga: data.yoga ?? "",
+    yoga_index: data.yoga_index,
     karana: "",
     moon_phase: "",
     paksha: data.paksha,
@@ -257,7 +262,32 @@ export function localizeBirthChart(locale: AppLocale, data: BirthChartData) {
     nakshatra: panchang.nakshatra,
     tithi: panchang.tithi,
     paksha: panchang.paksha,
+    yoga: data.yoga_index != null ? panchang.yoga : undefined,
     rashi: localizeRashi(locale, data.rashi_index, data.rashi),
+    sun_rashi:
+      data.sun_rashi_index != null
+        ? localizeRashi(locale, data.sun_rashi_index, data.sun_rashi ?? "")
+        : undefined,
     lagna: localizeRashi(locale, data.lagna_index, data.lagna),
   };
+}
+
+type PlanetRowData = {
+  name: string;
+  rashi: string;
+  rashi_index: number;
+  nakshatra: string;
+  nakshatra_index: number;
+  pada: number;
+  house: number;
+  retrograde: boolean;
+};
+
+export function localizePlanetTable(locale: AppLocale, planets: PlanetRowData[]) {
+  return planets.map((planet) => ({
+    ...planet,
+    rashi: localizeRashi(locale, planet.rashi_index, planet.rashi),
+    nakshatra:
+      packFor(locale).nakshatras[planet.nakshatra_index] ?? planet.nakshatra,
+  }));
 }

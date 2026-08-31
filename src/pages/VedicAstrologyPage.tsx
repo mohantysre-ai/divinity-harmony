@@ -21,7 +21,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
-import { localizeBirthChart } from "@/lib/panchang-i18n";
+import { localizeBirthChart, localizePlanetTable } from "@/lib/panchang-i18n";
 
 type BirthDetails = {
   date?: string;
@@ -34,17 +34,46 @@ type DharmaProfile = {
   homeTradition?: string;
 };
 
+type PlanetRow = {
+  name: string;
+  rashi: string;
+  rashi_index: number;
+  nakshatra: string;
+  nakshatra_index: number;
+  pada: number;
+  house: number;
+  retrograde: boolean;
+};
+
 type BirthChart = {
   nakshatra_index: number;
   nakshatra: string;
+  nakshatra_pada?: number;
   rashi_index: number;
   rashi: string;
+  sun_rashi?: string;
+  sun_rashi_index?: number;
   lagna_index: number;
   lagna: string;
   tithi_index: number;
   tithi: string;
+  yoga?: string;
+  yoga_index?: number;
+  karana?: string;
   paksha: string;
   precision: string;
+  engine?: string;
+  timezone?: string;
+  planets?: PlanetRow[];
+  dasha_at_birth?: {
+    mahadasha: string;
+    balance_years: number;
+    balance_days: number;
+  };
+  dasha_current?: {
+    current_mahadasha: string;
+    years_remaining: number;
+  };
 };
 
 const STORAGE_KEY = "vedic:birth-profile";
@@ -67,6 +96,18 @@ const conceptKeys = [
   ["conceptAyanamsha", "conceptAyanamshaDesc"],
 ] as const satisfies readonly (readonly [UiKey, UiKey])[];
 
+const GRAHA_LABEL_KEYS: Partial<Record<string, UiKey>> = {
+  Sun: "grahaSuryaVitality",
+  Moon: "grahaChandraMind",
+  Mars: "grahaMangalaAction",
+  Mercury: "grahaBudhaIntellect",
+  Jupiter: "grahaGuruWisdom",
+  Venus: "grahaShukraHarmony",
+  Saturn: "grahaShaniDiscipline",
+  Rahu: "grahaRahuAmplification",
+  Ketu: "grahaKetuRelease",
+};
+
 const grahaKeys = [
   "grahaSuryaVitality",
   "grahaChandraMind",
@@ -78,6 +119,12 @@ const grahaKeys = [
   "grahaRahuAmplification",
   "grahaKetuRelease",
 ] as const satisfies readonly UiKey[];
+
+function grahaLabel(name: string, tk: (key: UiKey) => string): string {
+  const key = GRAHA_LABEL_KEYS[name];
+  if (!key) return name;
+  return tk(key).split(" · ")[0] ?? name;
+}
 
 export default function VedicAstrologyPage() {
   const { tk, locale, detectedState } = useLocale();
@@ -104,6 +151,14 @@ export default function VedicAstrologyPage() {
     [chart, locale],
   );
 
+  const localizedPlanets = useMemo(
+    () =>
+      chart?.planets?.length
+        ? localizePlanetTable(locale, chart.planets)
+        : null,
+    [chart, locale],
+  );
+
   const fetchChart = useCallback(async () => {
     if (!details.date?.trim()) {
       toast({ description: tk("birthChartNeedsDateTime") });
@@ -118,6 +173,9 @@ export default function VedicAstrologyPage() {
         lat: String(coords.lat),
         lon: String(coords.lon),
       });
+      if (details.place?.trim()) {
+        params.set("place", details.place.trim());
+      }
       const res = await fetch(`/api/birth-chart?${params}`);
       if (!res.ok) throw new Error();
       const data = (await res.json()) as BirthChart;
@@ -128,7 +186,7 @@ export default function VedicAstrologyPage() {
     } finally {
       setChartLoading(false);
     }
-  }, [coords.lat, coords.lon, details.date, details.time, toast, tk]);
+  }, [coords.lat, coords.lon, details.date, details.place, details.time, toast, tk]);
 
   const save = useCallback(() => {
     try {
@@ -214,6 +272,9 @@ export default function VedicAstrologyPage() {
         lat: String(coords.lat),
         lon: String(coords.lon),
       });
+      if (saved.place?.trim()) {
+        params.set("place", saved.place.trim());
+      }
       void fetch(`/api/birth-chart?${params}`)
         .then((r) => (r.ok ? r.json() : null))
         .then((data) => data && setChart(data as BirthChart))
@@ -247,12 +308,71 @@ export default function VedicAstrologyPage() {
               </CardHeader>
               <CardContent className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
                 <Snapshot label={tk("moonSignAtBirth")} value={localizedChart.rashi} />
-                <Snapshot label={tk("conceptNakshatraJyotisha")} value={localizedChart.nakshatra} />
+                {chart?.sun_rashi_index != null && (
+                  <Snapshot
+                    label={tk("sunSignAtBirth")}
+                    value={localizedChart.sun_rashi ?? chart.sun_rashi ?? ""}
+                  />
+                )}
+                <Snapshot label={tk("conceptNakshatraJyotisha")} value={
+                  chart?.nakshatra_pada
+                    ? `${localizedChart.nakshatra} · ${chart.nakshatra_pada}`
+                    : localizedChart.nakshatra
+                } />
                 <Snapshot label={tk("lagnaAtBirth")} value={localizedChart.lagna} />
                 <Snapshot label={tk("birthTithiAtBirth")} value={`${localizedChart.tithi} · ${localizedChart.paksha}`} />
+                {localizedChart.yoga && (
+                  <Snapshot label={tk("birthYogaAtBirth")} value={localizedChart.yoga} />
+                )}
+                {chart?.dasha_at_birth && (
+                  <Snapshot
+                    label={tk("mahadashaAtBirth")}
+                    value={`${grahaLabel(chart.dasha_at_birth.mahadasha, tk)} · ${chart.dasha_at_birth.balance_years.toFixed(2)}y`}
+                  />
+                )}
+                {chart?.dasha_current && (
+                  <Snapshot
+                    label={tk("currentMahadasha")}
+                    value={`${grahaLabel(chart.dasha_current.current_mahadasha, tk)} · ${chart.dasha_current.years_remaining.toFixed(2)}y ${tk("yearsRemaining").toLowerCase()}`}
+                  />
+                )}
               </CardContent>
+              {localizedPlanets && localizedPlanets.length > 0 && (
+                <CardContent className="overflow-x-auto pt-0">
+                  <h3 className="mb-3 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+                    {tk("planetPositionsTable")}
+                  </h3>
+                  <table className="w-full min-w-[520px] text-sm">
+                    <thead>
+                      <tr className="border-b text-left text-muted-foreground">
+                        <th className="py-2 pr-3">Graha</th>
+                        <th className="py-2 pr-3">{tk("conceptRashi")}</th>
+                        <th className="py-2 pr-3">{tk("conceptNakshatraJyotisha")}</th>
+                        <th className="py-2 pr-3">{tk("houseColumn")}</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {localizedPlanets.map((row) => (
+                        <tr key={row.name} className="border-b border-border/50">
+                          <td className="py-2 pr-3 font-medium">
+                            {grahaLabel(row.name, tk)}
+                            {row.retrograde ? (
+                              <span className="ml-1 text-xs text-amber-600">(R)</span>
+                            ) : null}
+                          </td>
+                          <td className="py-2 pr-3">{row.rashi}</td>
+                          <td className="py-2 pr-3">{row.nakshatra} · {row.pada}</td>
+                          <td className="py-2 pr-3">{row.house}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </CardContent>
+              )}
               <p className="px-6 pb-6 text-xs text-muted-foreground">
-                {tk("birthChartApproxNote")}
+                {chart?.engine === "swisseph"
+                  ? tk("birthChartEphemerisNote")
+                  : chart?.precision ?? tk("birthChartEphemerisNote")}
               </p>
             </Card>
           )}

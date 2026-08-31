@@ -21,7 +21,9 @@ ENV VITE_SUPABASE_URL=$VITE_SUPABASE_URL \
 RUN npm run build
 
 FROM nginx:alpine
-RUN apk add --no-cache python3 ca-certificates
+RUN apk add --no-cache python3 py3-pip ca-certificates gcc g++ musl-dev python3-dev build-base
+COPY server/requirements.txt /tmp/requirements.txt
+RUN pip3 install --no-cache-dir -r /tmp/requirements.txt --break-system-packages
 COPY --from=builder /app/dist /usr/share/nginx/html
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 COPY server /app/server

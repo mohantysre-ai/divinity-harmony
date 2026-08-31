@@ -27,8 +27,14 @@ from urllib.request import Request, urlopen
 from sacred_text_content import fetch_chapter, fetch_sacred_content
 from ai_explain import explain
 from db import get_profile, init_db, list_favorites, list_priests, save_japa, save_profile, set_favorite, subscribe_newsletter
-from panchang import daily_panchang, birth_chart
-from region import regional_preference
+from panchang import daily_panchang, birth_chart as approx_birth_chart
+from region import geocode_place, regional_preference
+
+try:
+    from vedic_chart import EPHEMERIS_AVAILABLE, birth_chart
+except ImportError:
+    EPHEMERIS_AVAILABLE = False
+    birth_chart = approx_birth_chart  # type: ignore[assignment]
 
 
 SEARCH_QUERIES = (
@@ -384,15 +390,30 @@ class Handler(BaseHTTPRequestHandler):
         if path == "/api/birth-chart":
             birth_date = query.get("date", [""])[0][:10]
             birth_time = query.get("time", ["12:00"])[0][:8]
+            place = query.get("place", [""])[0].strip()
             try:
                 lat = float(query.get("lat", ["20.5937"])[0])
                 lon = float(query.get("lon", ["78.9629"])[0])
                 if not birth_date or len(birth_date) < 10:
                     self._json(400, {"error": "Birth date is required (YYYY-MM-DD)."})
                     return
-                self._json(200, birth_chart(birth_date, birth_time, lat, lon))
+                if place:
+                    try:
+                        geo = geocode_place(place)
+                        lat = geo["lat"]
+                        lon = geo["lon"]
+                    except ValueError:
+                        self._json(400, {"error": "Birth place could not be geocoded."})
+                        return
+                    except Exception:
+                        self._json(503, {"error": "Place lookup is temporarily unavailable."})
+                        return
+                chart_fn = birth_chart if EPHEMERIS_AVAILABLE else approx_birth_chart
+                self._json(200, chart_fn(birth_date, birth_time, lat, lon))
             except (ValueError, OverflowError):
                 self._json(400, {"error": "Valid birth date, time and coordinates are required."})
+            except RuntimeError as exc:
+                self._json(503, {"error": str(exc)})
             return
         if path == "/api/priests":
             self._json(200, {"items": list_priests()})

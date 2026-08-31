@@ -14,6 +14,30 @@ STATE_SCRIPTS = {
 }
 STATE_LOCALES={"odisha":"or","telangana":"te","andhra pradesh":"te","tamil nadu":"ta","west bengal":"bn","tripura":"bn","gujarat":"gu","punjab":"pa","karnataka":"kn","kerala":"ml","maharashtra":"mr","goa":"mr","assam":"as","bihar":"hi","chhattisgarh":"hi","haryana":"hi","himachal pradesh":"hi","jharkhand":"hi","madhya pradesh":"hi","rajasthan":"hi","uttar pradesh":"hi","uttarakhand":"hi","delhi":"hi"}
 
+def geocode_place(place: str) -> dict:
+    query = place.strip()
+    if not query:
+        raise ValueError("Place name is required.")
+    params = urlencode({"format": "jsonv2", "q": query, "limit": 1})
+    req = Request(
+        f"https://nominatim.openstreetmap.org/search?{params}",
+        headers={
+            "User-Agent": "DivinityHarmony/1.0 (https://mantra.sigq.in)",
+            "Accept-Language": "en",
+        },
+    )
+    with urlopen(req, timeout=10) as response:
+        payload = json.loads(response.read().decode("utf-8"))
+    if not payload:
+        raise ValueError("Place not found.")
+    hit = payload[0]
+    return {
+        "lat": float(hit["lat"]),
+        "lon": float(hit["lon"]),
+        "place": hit.get("display_name", query),
+    }
+
+
 def regional_preference(lat: float, lon: float) -> dict:
  if not (-90<=lat<=90 and -180<=lon<=180): raise ValueError("Invalid coordinates")
  key=f"{lat:.2f},{lon:.2f}"; now=time.time()
