@@ -1,6 +1,6 @@
 import type { AppLocale } from "@/hooks/use-locale";
+import { localizeContent } from "@/lib/content-i18n";
 import { buildUiDict } from "@/lib/locale-packs";
-import { regionalScriptFallback } from "@/lib/regional-fallback";
 
 /** Real UI copy — keys are exact English source strings in the app. */
 export const uiTranslations: Partial<Record<AppLocale, Record<string, string>>> =
@@ -23,7 +23,9 @@ export function translateUiText(text: string, locale: AppLocale): string {
   if (locale === "en") return text;
 
   const dict = uiTranslations[locale];
-  if (!dict) return regionalScriptFallback(text, locale);
+  if (!dict) return localizeContent(text, locale);
 
-  return dict[text] ?? regionalScriptFallback(text, locale);
+  // The DOM observer sees both interface labels and catalog/article copy.
+  // Consult the semantic content pack before using its phonetic fallback.
+  return dict[text] ?? localizeContent(text, locale);
 }
