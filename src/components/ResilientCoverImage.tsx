@@ -16,18 +16,21 @@ export default function ResilientCoverImage({
   className = "absolute inset-0 h-full w-full object-cover",
   objectPosition = "50% 45%",
 }: ResilientCoverImageProps) {
+  const sourceKey = sources.filter(Boolean).join("\n");
   const initial = useMemo(
-    () => [...new Set(sources.filter(Boolean))],
-    [sources],
+    () => [...new Set(sourceKey ? sourceKey.split("\n") : [])],
+    [sourceKey],
   );
   const [urls, setUrls] = useState(initial);
   const [index, setIndex] = useState(0);
   const [searching, setSearching] = useState(false);
+  const [searched, setSearched] = useState(false);
 
   useEffect(() => {
     setUrls(initial);
     setIndex(0);
     setSearching(false);
+    setSearched(false);
   }, [initial]);
 
   const current = urls[index];
@@ -37,8 +40,9 @@ export default function ResilientCoverImage({
       setIndex((i) => i + 1);
       return;
     }
-    if (searching || !searchQuery.trim()) return;
+    if (searching || searched || !searchQuery.trim()) return;
     setSearching(true);
+    setSearched(true);
     const found = await searchWikimediaImage(searchQuery);
     setSearching(false);
     if (found && !urls.includes(found)) {
@@ -48,7 +52,11 @@ export default function ResilientCoverImage({
         return next;
       });
     }
-  }, [index, urls, searchQuery, searching]);
+  }, [index, urls, searchQuery, searching, searched]);
+
+  useEffect(() => {
+    if (!current && !searched) void advance();
+  }, [advance, current, searched]);
 
   if (!current) {
     return (

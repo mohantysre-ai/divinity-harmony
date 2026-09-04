@@ -10,16 +10,16 @@ Production: [mantra.sigq.in](https://mantra.sigq.in)
 - **Sacred Texts** — categorized Vedas, Upanishads, Itihasa, Puranas, Gita and devotional literature with full-content and chapter reading APIs.
 - **Live Temple Darshan** — automatically discovers currently live YouTube temple/darshan streams without asking visitors for an API key.
 - **Deity Encyclopedia** — deity profiles with iconography, festivals, associated mantras and related scriptures.
-- **Temple Directory** — searchable temple cards, OpenStreetMap display, browser geolocation and distance sorting.
-- **Priest & Puja Directory** — 12 regional searches with Google Maps, Google contact search and Justdial links.
-- **Puja Vidhi Library** — materials and step-by-step preparation for common pujas, homas, ancestral rites and wedding rituals.
+- **Worldwide Temple Guide** — curated India and international pilgrimage guides, live OpenStreetMap discovery for any temple/village, geolocation, travel planning, current hotel/flight/package searches and visitor checklists.
+- **Priest & Puja Directory** — locality-driven Google Maps/contact/Justdial discovery for cities, districts and villages, backed by regional starter cards rather than limited by them.
+- **Interactive Puja Vidhi Library** — 24 searchable household, festival, vrata and samskara guides with material checklists, guided steps, progress animation, flower completion and explicit priest-led safety boundaries.
 - **Dynamic Panchang** — date/location-driven tithi, paksha, nakshatra, yoga, karana, moon phase, sunrise and sunset with animated cards.
 - **Personal Practice** — anonymous device profile, favorites and daily japa progress stored in SQLite.
 - **Installable PWA** — web manifest, service worker and offline shell caching.
 - **SEO-ready routes** — post-build static HTML entry points for primary public sections.
 - **Mobile wrapper** — Capacitor configuration for later Android/iOS packaging.
 - **My Dharma** — separate current location and home tradition, a daily-practice checklist and private family ritual reminders.
-- **Culture of India** — 36 state/union-territory packs covering language, calendar, signature observances, traditions and temples.
+- **Culture of India** — 36 state/union-territory packs with animated detail views for calendars, observances, home traditions and sacred journeys, plus a district/village/community explorer.
 - **Strict regional-script UI** — state/browser language detection, a persistent manual switch and document-wide regional rendering so English does not leak into regional mode as pages update.
 - **Elder Mode** — persistent larger typography and touch targets across the application.
 - **Pravachan & Reading Room** — official-organization lecture sources and publisher-direct cultural reading links.
@@ -168,11 +168,26 @@ iframes, such as YouTube's own controls, remains controlled by that provider.
 See the [implementation gap analysis](docs/implementation-gap-analysis.md) for
 the verified status of every architecture requirement and the remaining work.
 
-## Priest directory and Puja Vidhi
+## Worldwide temple, priest and Puja Vidhi discovery
 
-The directory does not copy unverified personal phone numbers. Each city card opens current public search results on Google Maps, Google Search or Justdial, where visitors can check ratings, phone details and availability.
+Temple search combines detailed curated guides with query-driven OpenStreetMap
+results, so an Indonesian temple or small village temple does not require a new
+frontend release before it can be found. Curated guides include current search
+actions for directions, transport, stays, flights and pilgrimage packages; the
+app does not invent package prices or availability.
 
-Puja Vidhi articles are educational preparation guides. Exact mantras, muhurta, homa procedures, samskaras and lineage-specific ancestral rites should be confirmed with a qualified priest.
+Priest discovery accepts any locality, including a district or village such as
+Jajpur, and builds live Google Maps, general contact/review and Justdial-result
+searches for that place. The directory does not scrape or republish unverified
+personal phone numbers; visitors confirm the latest public contact, reviews and
+availability at the source.
+
+The guided Puja Vidhi experience separates safe household guidance from rites
+that require a priest. Fire rites, initiations, samskaras and lineage-specific
+ancestral procedures are preparation/progress guides, not self-initiation.
+
+See [Temple, priest, ritual and culture phases](docs/temple-ritual-platform-phases.md)
+for the complete data model, delivered scope and production roadmap.
 
 ## Panchang accuracy
 

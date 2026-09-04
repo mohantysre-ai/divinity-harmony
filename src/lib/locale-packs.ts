@@ -1,6 +1,7 @@
 import type { AppLocale } from "@/hooks/use-locale";
 import { UI_KEYS, type UiKey, type UiLocale } from "@/lib/ui-keys";
 import packs from "@/lib/locale-packs.json";
+import { regionalScriptFallback } from "@/lib/regional-fallback";
 
 export type { UiKey };
 
@@ -8,8 +9,10 @@ const localePacks = packs as Record<UiLocale, Record<UiKey, string>>;
 
 export function translateKey(locale: AppLocale, key: UiKey): string {
   if (locale === "en") return UI_KEYS[key];
-  // Never fall back to another locale (e.g. Hindi) — English is the safe default.
-  return localePacks[locale]?.[key] ?? UI_KEYS[key];
+  return (
+    localePacks[locale]?.[key] ??
+    regionalScriptFallback(UI_KEYS[key], locale)
+  );
 }
 
 export function buildUiDict(locale: AppLocale): Record<string, string> {

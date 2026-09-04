@@ -9,6 +9,7 @@ import {
 import { localizeContent, localizeContentList } from "@/lib/content-i18n";
 import { translateUiText } from "@/lib/ui-translations";
 import { translateKey, type UiKey } from "@/lib/locale-packs";
+import { useRegionalUi } from "@/hooks/use-regional-ui";
 
 export type AppLocale =
   | "en"
@@ -99,6 +100,8 @@ type LocaleValue = {
   t: (key: string, vars?: Record<string, string | number>) => string;
   tk: (key: UiKey, vars?: Record<string, string | number>) => string;
   ui: (text: string) => string;
+  lc: (text: string) => string;
+  lcl: (items: string[]) => string[];
   detectedState: string;
   elderMode: boolean;
   setElderMode: (value: boolean) => void;
@@ -114,6 +117,7 @@ export function LocaleProvider({ children }: { children: ReactNode }) {
   const [elderMode, setElderModeState] = useState(
     () => localStorage.getItem("app:elder-mode") === "true",
   );
+  useRegionalUi(locale);
   const setElderMode = (value: boolean) => {
     setElderModeState(value);
     localStorage.setItem("app:elder-mode", String(value));

@@ -4,6 +4,7 @@ const localeScripts: Record<string, MantraScript> = {
   te: "telugu",
   ta: "tamil",
   bn: "bengali",
+  as: "bengali",
   gu: "gujarati",
   pa: "gurmukhi",
   kn: "kannada",

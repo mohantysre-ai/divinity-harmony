@@ -237,12 +237,22 @@ function sleep(ms) {
 }
 
 async function buildLocale(locale, glossary, outFile) {
-  const result = {};
+  const outPath = path.join(__dirname, outFile);
+  let result = {};
+  if (fs.existsSync(outPath) && process.env.FORCE_CONTENT !== "1") {
+    try {
+      result = JSON.parse(fs.readFileSync(outPath, "utf8"));
+    } catch {
+      result = {};
+    }
+  }
+  const missing = englishStrings.filter((text) => !Object.hasOwn(result, text));
+  if (!missing.length) return { path: outPath, count: Object.keys(result).length, skipped: true };
   const batchSize = 40;
   let done = 0;
 
-  for (let i = 0; i < englishStrings.length; i += batchSize) {
-    const batch = englishStrings.slice(i, i + batchSize);
+  for (let i = 0; i < missing.length; i += batchSize) {
+    const batch = missing.slice(i, i + batchSize);
     const translated = await translateBatch(batch, locale);
     for (let j = 0; j < batch.length; j++) {
       const en = batch[j];
@@ -252,12 +262,11 @@ async function buildLocale(locale, glossary, outFile) {
       result[en] = val;
     }
     done += batch.length;
-    process.stdout.write(`\r${locale}: ${done}/${englishStrings.length}`);
+    process.stdout.write(`\r${locale}: ${done}/${missing.length} missing strings`);
     await sleep(300);
   }
   console.log();
 
-  const outPath = path.join(__dirname, outFile);
   fs.writeFileSync(outPath, JSON.stringify(result, null, 2), "utf8");
   return { path: outPath, count: Object.keys(result).length };
 }
@@ -280,7 +289,7 @@ const argLocales = process.argv.slice(2).filter((x) => x in LOCALE_CONFIG);
 const toBuild =
   argLocales.length > 0
     ? argLocales
-    : ["ta", "te", "ml", "kn", "bn", "gu", "mr", "pa", "as"];
+    : Object.keys(LOCALE_CONFIG);
 
 console.log(`Translating ${englishStrings.length} strings for: ${toBuild.join(", ")}`);
 const results = {};
@@ -288,18 +297,6 @@ const results = {};
 for (const locale of toBuild) {
   const cfg = LOCALE_CONFIG[locale];
   const outPath = path.join(__dirname, cfg.file);
-  if (fs.existsSync(outPath) && process.env.FORCE_CONTENT !== "1") {
-    try {
-      const existing = JSON.parse(fs.readFileSync(outPath, "utf8"));
-      if (Object.keys(existing).length >= englishStrings.length * 0.95) {
-        console.log(`Skip ${locale} — ${Object.keys(existing).length} keys exist`);
-        results[locale] = { path: outPath, count: Object.keys(existing).length, skipped: true };
-        continue;
-      }
-    } catch {
-      /* rebuild */
-    }
-  }
   results[locale] = await buildLocale(locale, cfg.glossary, cfg.file);
 }
 

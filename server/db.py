@@ -3,7 +3,7 @@ from __future__ import annotations
 
 import os
 import sqlite3
-from urllib.parse import quote, quote_plus
+from urllib.parse import quote_plus
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -125,14 +125,13 @@ def list_priests() -> list[dict]:
     items = []
     for row in rows:
         query = f"pandit priest puja services {row['city']} {row['state']}"
-        city_path = quote(row["city"].replace(" ", "-"), safe="-")
         items.append({
             **dict(row),
             "languages": row["languages"].split(","),
             "services": row["services"].split(","),
             "google_maps_url": f"https://www.google.com/maps/search/?api=1&query={quote_plus(query)}",
             "google_search_url": f"https://www.google.com/search?q={quote_plus(query + ' contact phone')}",
-            "sulekha_url": f"https://www.sulekha.com/priests-purohits/{city_path.lower()}",
+            "sulekha_url": f"https://www.google.com/search?q={quote_plus('site:sulekha.com priests purohits ' + row['city'] + ' ' + row['state'])}",
         })
     return items
 

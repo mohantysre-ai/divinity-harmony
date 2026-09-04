@@ -29,6 +29,7 @@ from ai_explain import explain
 from db import get_profile, init_db, list_favorites, list_priests, save_japa, save_profile, set_favorite, subscribe_newsletter
 from panchang import daily_panchang, birth_chart as approx_birth_chart
 from region import geocode_place, regional_preference
+from temple_search import nearby_temples, search_temples
 
 try:
     from vedic_chart import EPHEMERIS_AVAILABLE, birth_chart
@@ -417,6 +418,26 @@ class Handler(BaseHTTPRequestHandler):
             return
         if path == "/api/priests":
             self._json(200, {"items": list_priests()})
+            return
+        if path == "/api/temples/search":
+            term = query.get("q", [""])[0].strip()
+            if len(term) < 2:
+                self._json(200, {"items": []})
+                return
+            try:
+                self._json(200, {"items": search_temples(term)})
+            except Exception:
+                self._json(503, {"error": "Temple search is temporarily unavailable.", "items": []})
+            return
+        if path == "/api/temples/nearby":
+            try:
+                lat = float(query.get("lat", [""])[0])
+                lon = float(query.get("lon", [""])[0])
+                self._json(200, {"items": nearby_temples(lat, lon)})
+            except (ValueError, OverflowError):
+                self._json(400, {"error": "Valid coordinates are required.", "items": []})
+            except Exception:
+                self._json(503, {"error": "Nearby temple search is temporarily unavailable.", "items": []})
             return
         if path == "/api/location-preference":
             try:

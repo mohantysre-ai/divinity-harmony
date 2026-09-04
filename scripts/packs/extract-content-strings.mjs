@@ -112,9 +112,36 @@ function extractDeities() {
 function extractTemples() {
   const text = fs.readFileSync(path.join(root, "src/data/temples.ts"), "utf8");
   const strings = new Set();
-  const re = /(?:name|deity|city|state|type|timings):['"]([^'"]+)['"]/g;
+  const re = /(?:name|deity|city|state|country|type|timings|summary|bestSeason|nearestAirport|railOrRoad|imageQuery):\s*["']([^"']+)["']/g;
   let m;
   while ((m = re.exec(text))) strings.add(m[1]);
+  const arrayRe = /etiquette:\s*\[([^\]]+)\]/g;
+  while ((m = arrayRe.exec(text))) {
+    const items = m[1].match(/["']([^"']+)["']/g);
+    if (items) items.forEach((item) => strings.add(item.slice(1, -1)));
+  }
+  return strings;
+}
+
+function extractLocalizedPageCopy() {
+  const strings = new Set();
+  const files = [
+    "src/pages/TemplesPage.tsx",
+    "src/pages/PriestDirectoryPage.tsx",
+    "src/pages/CultureIndiaPage.tsx",
+  ];
+  for (const file of files) {
+    const text = fs.readFileSync(path.join(root, file), "utf8");
+    const re = /\blc\(\s*"((?:\\.|[^"\\])*)"\s*\)/g;
+    let m;
+    while ((m = re.exec(text))) {
+      try {
+        strings.add(JSON.parse(`"${m[1]}"`));
+      } catch {
+        /* Ignore malformed source; TypeScript will report it during the build. */
+      }
+    }
+  }
   return strings;
 }
 
@@ -159,6 +186,7 @@ const deityCatalog = extractDeities();
 const templeCatalog = extractTemples();
 const priestCatalog = extractPriestCatalog();
 const wisdomCatalog = extractWisdom();
+const localizedPageCopy = extractLocalizedPageCopy();
 
 const all = new Set([
   ...sacred,
@@ -169,6 +197,7 @@ const all = new Set([
   ...templeCatalog,
   ...priestCatalog,
   ...wisdomCatalog,
+  ...localizedPageCopy,
 ]);
 const sorted = [...all].sort();
 
@@ -184,6 +213,7 @@ console.log(JSON.stringify({
   temples: templeCatalog.size,
   priests: priestCatalog.size,
   wisdom: wisdomCatalog.size,
+  pageCopy: localizedPageCopy.size,
   totalUnique: all.size,
   outPath,
 }, null, 2));

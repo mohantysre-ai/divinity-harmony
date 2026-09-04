@@ -10,6 +10,21 @@ class Response:
     def read(self): return json.dumps({"address":{"state":"Odisha","country_code":"in"}}).encode()
 
 class RegionTests(unittest.TestCase):
+    def test_every_indian_state_and_union_territory_has_a_regional_default(self):
+        expected = {
+            "andhra pradesh", "arunachal pradesh", "assam", "bihar",
+            "chhattisgarh", "goa", "gujarat", "haryana", "himachal pradesh",
+            "jharkhand", "karnataka", "kerala", "madhya pradesh",
+            "maharashtra", "manipur", "meghalaya", "mizoram", "nagaland",
+            "odisha", "punjab", "rajasthan", "sikkim", "tamil nadu",
+            "telangana", "tripura", "uttar pradesh", "uttarakhand",
+            "west bengal", "andaman and nicobar islands", "chandigarh",
+            "dadra and nagar haveli and daman and diu", "delhi",
+            "jammu and kashmir", "ladakh", "lakshadweep", "puducherry",
+        }
+        self.assertFalse(expected - set(region.STATE_LOCALES))
+        self.assertNotIn("en", {region.STATE_LOCALES[state] for state in expected})
+
     @patch("region.urlopen", return_value=Response())
     def test_odisha_selects_odia_script(self, _):
         region._CACHE.clear()

@@ -11,6 +11,7 @@ export function scriptForAppLocale(locale: AppLocale): MantraScript {
     case "ta":
       return "tamil";
     case "bn":
+    case "as":
       return "bengali";
     case "gu":
       return "gujarati";
@@ -24,7 +25,6 @@ export function scriptForAppLocale(locale: AppLocale): MantraScript {
     case "mr":
       return "devanagari";
     case "en":
-    case "as":
       return "devanagari";
     default: {
       const _exhaustive: never = locale;

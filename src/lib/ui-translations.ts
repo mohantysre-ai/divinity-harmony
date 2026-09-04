@@ -1,5 +1,6 @@
 import type { AppLocale } from "@/hooks/use-locale";
 import { buildUiDict } from "@/lib/locale-packs";
+import { regionalScriptFallback } from "@/lib/regional-fallback";
 
 /** Real UI copy — keys are exact English source strings in the app. */
 export const uiTranslations: Partial<Record<AppLocale, Record<string, string>>> =
@@ -22,7 +23,7 @@ export function translateUiText(text: string, locale: AppLocale): string {
   if (locale === "en") return text;
 
   const dict = uiTranslations[locale];
-  if (!dict) return text;
+  if (!dict) return regionalScriptFallback(text, locale);
 
-  return dict[text] ?? text;
+  return dict[text] ?? regionalScriptFallback(text, locale);
 }

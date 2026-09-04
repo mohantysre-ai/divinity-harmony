@@ -296,7 +296,7 @@ export default function VedicAstrologyPage() {
     if (!geoReady || !details.date?.trim() || !details.place?.trim()) return;
     const prev = coordsRef.current;
     if (prev.lat === coords.lat && prev.lon === coords.lon) return;
-    coordsRef.current = coords;
+    coordsRef.current = { lat: coords.lat, lon: coords.lon };
     if (autoFetchedRef.current) {
       void fetchChart({ silent: true });
     }

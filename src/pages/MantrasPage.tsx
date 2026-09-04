@@ -29,7 +29,7 @@ import {
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import JapaCounter from "@/components/mantras/JapaCounter";
-import { ExternalLink, Languages, Sparkles } from "lucide-react";
+import { Headphones, Languages, Sparkles } from "lucide-react";
 import { Heart } from "lucide-react";
 import { deviceHeaders } from "@/lib/device";
 import { detectRegionalScript, scriptFromBrowser } from "@/lib/regional-script";
@@ -202,6 +202,7 @@ const MantrasPage = () => {
   const { tk, lc } = useLocale();
   const { toast } = useToast();
   const readerRef = useRef<HTMLElement>(null);
+  const audioRef = useRef<HTMLElement>(null);
   const [currentMantraIndex, setCurrentMantraIndex] = useState(0);
   const [query, setQuery] = useState("");
   const [deity, setDeity] = useState("All");
@@ -221,6 +222,7 @@ const MantrasPage = () => {
   );
   const [explanation, setExplanation] = useState("");
   const [explaining, setExplaining] = useState(false);
+  const [audioTitle, setAudioTitle] = useState("");
   const [favorites, setFavorites] = useState<Set<string>>(new Set());
   const [searchParams] = useSearchParams();
 
@@ -269,7 +271,7 @@ const MantrasPage = () => {
         setCatalogNotice(tk("catalogFallbackNotice")),
       );
     return () => controller.abort();
-  }, []);
+  }, [tk]);
 
   useEffect(() => {
     setImageExpanded(false);
@@ -324,6 +326,10 @@ const MantrasPage = () => {
     );
     if (!currentIsVisible) setCurrentMantraIndex(visibleMantras[0].index);
   }, [visibleMantras, currentMantraIndex]);
+
+  useEffect(() => {
+    setAudioTitle(currentMantra.title);
+  }, [currentMantra.id, currentMantra.title]);
 
   const handleNext = () =>
     currentMantraIndex < catalog.length - 1
@@ -395,6 +401,12 @@ const MantrasPage = () => {
     setCurrentMantraIndex(index);
     requestAnimationFrame(() =>
       readerRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }),
+    );
+  };
+  const playRequestedRecording = (title: string) => {
+    setAudioTitle(title);
+    requestAnimationFrame(() =>
+      audioRef.current?.scrollIntoView({ behavior: "smooth", block: "center" }),
     );
   };
 
@@ -536,7 +548,9 @@ const MantrasPage = () => {
                   )}
                 </div>
               </article>
-              <YouTubeMantraPlayer title={currentMantra.title} />
+              <section ref={audioRef} className="scroll-mt-24">
+                <YouTubeMantraPlayer title={audioTitle || currentMantra.title} />
+              </section>
               <details className="mt-4 rounded-xl border bg-card p-4">
                 <summary className="cursor-pointer text-sm font-semibold text-muted-foreground">
                   {tk("spokenTextFallback")}
@@ -626,21 +640,20 @@ const MantrasPage = () => {
                   </p>
                   <div className="mt-3 space-y-2">
                     {visibleRequestedSources.map((item) => (
-                      <a
-                        key={`${item.title}-${item.sourceUrl}`}
-                        href={item.sourceUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
+                      <button
+                        type="button"
+                        key={item.title}
+                        onClick={() => playRequestedRecording(item.title)}
                         className="flex items-center justify-between rounded-xl border p-3 text-sm font-medium transition hover:border-orange-400 hover:bg-orange-50 dark:hover:bg-orange-950/20"
                       >
-                        <span>
-                          {item.title}
+                        <span className="text-left">
+                          {lc(item.title)}
                           <small className="mt-0.5 block font-normal text-muted-foreground">
-                            {item.category}
+                            {lc(item.category)}
                           </small>
                         </span>
-                        <ExternalLink className="h-4 w-4 shrink-0" />
-                      </a>
+                        <Headphones className="h-4 w-4 shrink-0" />
+                      </button>
                     ))}
                   </div>
                 </section>

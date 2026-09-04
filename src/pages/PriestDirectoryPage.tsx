@@ -1,14 +1,21 @@
 import { useEffect, useMemo, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import {
   BookOpen,
+  Check,
   CheckCircle2,
+  ChevronLeft,
+  ChevronRight,
   ExternalLink,
+  Flame,
+  Flower2,
   Languages,
   LocateFixed,
   Map,
   MapPin,
   Search,
   ShieldCheck,
+  X,
 } from "lucide-react";
 import Layout from "@/components/layout/Layout";
 import { ThemeProvider } from "@/hooks/use-theme";
@@ -35,6 +42,8 @@ type Priest = {
 };
 type Puja = {
   name: string;
+  region?: string;
+  priestRequired?: boolean;
   purpose: string;
   duration: string;
   materials: string[];
@@ -44,6 +53,7 @@ type Puja = {
 const pujas: Puja[] = [
   {
     name: "Griha Pravesh & Vastu Shanti",
+    priestRequired: true,
     purpose: "Purification and auspicious entry into a new home.",
     duration: "2–4 hours",
     materials: [
@@ -83,6 +93,7 @@ const pujas: Puja[] = [
   },
   {
     name: "Navagraha Homa",
+    priestRequired: true,
     purpose:
       "Traditional worship of the nine grahas through mantra and fire offerings.",
     duration: "3–5 hours",
@@ -103,6 +114,7 @@ const pujas: Puja[] = [
   },
   {
     name: "Shraddha & Pitru Tarpana",
+    priestRequired: true,
     purpose: "Ancestral remembrance according to family and regional custom.",
     duration: "1–3 hours",
     materials: [
@@ -141,6 +153,7 @@ const pujas: Puja[] = [
   },
   {
     name: "Wedding Rituals",
+    priestRequired: true,
     purpose:
       "Vivaha samskara joining the couple through sacred vows and tradition.",
     duration: "3–6 hours",
@@ -159,14 +172,192 @@ const pujas: Puja[] = [
     ],
     note: "Procedures vary significantly; coordinate both families and the officiating priest.",
   },
+  {
+    name: "Daily Shiva Puja",
+    region: "Pan-Indian household practice",
+    purpose: "A simple daily offering to Shiva without formal consecration or fire rites.",
+    duration: "15–30 minutes",
+    materials: ["Shiva image or household linga", "Clean water, lamp and incense", "Bilva leaves or available flowers and fruit"],
+    steps: ["Bathe or wash hands and prepare a clean, quiet altar.", "Light the lamp and remember Ganesha and the family deity.", "Offer clean water gently, followed by sandal paste, flowers or bilva.", "Chant Om Namah Shivaya with attention.", "Offer fruit, perform a short aarti and sit silently before closing."],
+    note: "Do not perform elaborate abhisheka on an antique or temple murti. Follow household and lineage custom.",
+  },
+  {
+    name: "Lakshmi Friday Puja",
+    region: "South and West Indian household traditions",
+    purpose: "A household prayer for gratitude, wellbeing and ethical prosperity.",
+    duration: "30–60 minutes",
+    materials: ["Lakshmi image, lamp and rangoli", "Flowers, turmeric, kumkum and rice", "Fruit, milk sweet or regional naivedya"],
+    steps: ["Clean the entrance and altar and draw a simple rangoli if customary.", "Light the lamp and make a clear sankalpa for family wellbeing.", "Offer turmeric, kumkum, flowers and akshata.", "Recite Lakshmi Ashtottara, Sri Sukta or a familiar Lakshmi prayer.", "Offer naivedya, perform aarti and share prasada respectfully."],
+    note: "Use the prayer and offering tradition taught in your home; there is no need to imitate a different sampradaya.",
+  },
+  {
+    name: "Durga Household Puja",
+    region: "Pan-Indian Shakta household practice",
+    purpose: "Devotional worship of the Divine Mother for courage, protection and gratitude.",
+    duration: "30–75 minutes",
+    materials: ["Durga image", "Red or seasonal flowers, lamp and incense", "Fruit, sweets and clean water"],
+    steps: ["Prepare the altar and begin with purification and Ganesha remembrance.", "State the sankalpa without fear-based promises.", "Offer water, sandal paste, flowers, incense and lamp.", "Recite a familiar Devi stotra, names or simple mantra.", "Offer naivedya, aarti and prayers for the wellbeing of all."],
+    note: "Tantric nyasa, bali and esoteric mantra practice require initiation and are not part of this household guide.",
+  },
+  {
+    name: "Saraswati Puja",
+    region: "Pan-Indian; Basant Panchami and regional forms",
+    purpose: "Worship for learning, arts, wisdom and disciplined study.",
+    duration: "30–60 minutes",
+    materials: ["Saraswati image", "Books or instruments, lamp and flowers", "Fruit or simple naivedya"],
+    steps: ["Clean the study space and place books or instruments respectfully.", "Light the lamp and invoke Ganesha.", "Offer water, flowers, incense and light to Saraswati.", "Recite Saraswati prayers and spend a few minutes in study or music.", "Offer naivedya and conclude with gratitude to teachers."],
+    note: "Festival customs differ in Bengal, Odisha, Punjab and South India; use the local calendar and family practice.",
+  },
+  {
+    name: "Hanuman Tuesday or Saturday Puja",
+    region: "North, West and Central Indian household traditions",
+    purpose: "Devotion focused on strength, service, courage and self-discipline.",
+    duration: "20–45 minutes",
+    materials: ["Hanuman image", "Lamp, flowers and fruit", "Sindoor only where household custom permits"],
+    steps: ["Prepare a clean altar and remember Rama.", "Light the lamp and offer flowers and fruit.", "Recite Hanuman Chalisa, Bajrang Baan only if customary, or Rama nama.", "Reflect on one act of service or courage to practise today.", "Perform aarti and share prasada."],
+    note: "Avoid applying substances to a murti unless the material and local temple custom permit it.",
+  },
+  {
+    name: "Janmashtami Household Puja",
+    region: "Pan-Indian Vaishnava traditions",
+    purpose: "Celebration of Krishna's birth through fasting, kirtan and midnight worship.",
+    duration: "60–120 minutes",
+    materials: ["Krishna or Laddu Gopal image", "Tulasi, flowers and pancha-amrita", "Fruit, butter or regional fasting food"],
+    steps: ["Confirm the local ashtami and Rohini observance time.", "Prepare the altar, lamp and Krishna cradle if customary.", "Sing Krishna nama, read the birth narrative and offer flowers.", "At the observed time, perform a gentle household abhisheka if appropriate.", "Dress the image, offer naivedya, aarti and break the fast as customary."],
+    note: "Temple midnight schedules and household fasting rules differ by sampradaya and health needs.",
+  },
+  {
+    name: "Varamahalakshmi Vrata",
+    region: "Karnataka, Andhra Pradesh, Telangana and Tamil Nadu",
+    purpose: "A regional vrata honouring Lakshmi for family welfare and gratitude.",
+    duration: "60–120 minutes",
+    materials: ["Decorated kalasha and coconut", "Turmeric, kumkum, flowers and sacred thread", "Regional naivedya and tambula"],
+    steps: ["Confirm the vrata date in the local Panchanga and prepare the mantapa.", "Install the kalasha according to family custom.", "Invoke Ganesha, then Lakshmi with flowers and names.", "Tie the vrata thread and hear or read the traditional vrata katha.", "Offer regional naivedya, aarti, tambula and blessings."],
+    note: "Kalasha decoration, toram count and katha differ by language region; follow the family's established method.",
+  },
+  {
+    name: "Bengali Lakshmi Puja",
+    region: "West Bengal and Bengali households",
+    purpose: "Kojagari worship of Lakshmi according to Bengali household custom.",
+    duration: "60–120 minutes",
+    materials: ["Lakshmi image or pata", "Alpana materials, paddy and flowers", "Fruit, sweets and Bengali naivedya"],
+    steps: ["Confirm Kojagari Purnima and clean the worship space.", "Draw alpana and arrange paddy and household symbols.", "Install the image and begin with purification and sankalpa.", "Offer flowers, incense, lamp, naivedya and read the local vrata katha.", "Perform aarti and distribute prasada."],
+    note: "This guide is for the common household form; family paddhati and priest-led forms may be more detailed.",
+  },
+  {
+    name: "Ayudha Puja",
+    region: "Karnataka, Tamil Nadu, Andhra Pradesh, Telangana and Kerala",
+    purpose: "Gratitude for tools, vehicles, books and instruments used in honest work.",
+    duration: "30–60 minutes",
+    materials: ["Cleaned tools, books or vehicle", "Lamp, sandal paste, kumkum and flowers", "Fruit and regional naivedya"],
+    steps: ["Clean and safely arrange the objects without blocking exits or machinery.", "Switch off and secure powered equipment.", "Light the lamp and remember Ganesha and the chosen deity.", "Apply only material-safe marks and offer flowers.", "Offer naivedya, aarti and recommit to careful, ethical work."],
+    note: "Never place flame near fuel, batteries, machinery or combustible decorations.",
+  },
+  {
+    name: "Tulsi Vivah",
+    region: "North, West and Central Indian Vaishnava traditions",
+    purpose: "Ceremonial union of Tulsi and Vishnu forms marking the seasonal wedding period.",
+    duration: "45–90 minutes",
+    materials: ["Healthy Tulsi plant and Vishnu or Shaligrama representation", "Cloth, flowers, lamp and sugarcane where customary", "Fruit and sweets"],
+    steps: ["Confirm the local observance date and clean the Tulsi area.", "Decorate Tulsi and the Vishnu representation respectfully.", "Perform Ganesha remembrance and sankalpa.", "Offer flowers and conduct the simple symbolic wedding sequence used by the family.", "Perform aarti, circumambulation and share prasada."],
+    note: "Do not acquire or use sacred objects casually; follow the household tradition for Shaligrama worship.",
+  },
+  {
+    name: "Chhath Puja Preparation",
+    region: "Bihar, Jharkhand, eastern Uttar Pradesh and diaspora communities",
+    purpose: "Preparation support for the disciplined Surya and Chhathi Maiya observance.",
+    duration: "Four-day observance",
+    materials: ["Clean bamboo baskets and seasonal fruits", "Thekua and prescribed sattvic offerings", "Lamp, clean cloth and safe water access"],
+    steps: ["Follow the local four-day calendar and the vratin's established discipline.", "Maintain kitchen, vessel and offering purity according to family custom.", "Prepare offerings without tasting where that rule is followed.", "Use an officially safe ghat for evening and morning arghya.", "Protect children and elders near water and complete community distribution."],
+    note: "This is a demanding regional vrata. Health, water safety and the instructions of experienced family/community members come first.",
+  },
+  {
+    name: "Onam Thiruvonam Home Observance",
+    region: "Kerala and Malayali households",
+    purpose: "A family cultural and devotional observance of Thiruvonam and Mahabali remembrance.",
+    duration: "Morning family observance",
+    materials: ["Seasonal flowers for pookalam", "Lamp and clean traditional space", "Onasadya ingredients according to capacity"],
+    steps: ["Confirm Thiruvonam in the Malayalam calendar.", "Clean the home and create a pookalam without wasteful materials.", "Light the lamp and offer family prayers.", "Prepare and share Onasadya with attention to dietary needs.", "Include elders, neighbours and acts of generosity."],
+    note: "Onam practices are cultural and regional as well as devotional; respect the family's local form.",
+  },
+  {
+    name: "Rudrabhisheka",
+    region: "Pan-Indian Shaiva traditions",
+    priestRequired: true,
+    purpose: "Structured abhisheka and Rudra recitation for Shiva worship.",
+    duration: "1–3 hours",
+    materials: ["Appropriate Shiva linga and abhisheka vessel", "Water and substances approved for that linga", "Bilva, flowers, lamp and naivedya"],
+    steps: ["Confirm sankalpa, recitation method and materials with the officiating priest.", "Prepare drainage and protect the worship space.", "Complete purification, Ganesha worship and kalasha preparation.", "Follow the priest during Rudra recitation and measured abhisheka.", "Complete alankara, naivedya, aarti and shanti prayers."],
+    note: "The Vedic recitation and substance sequence should be led by a trained priest; do not pour damaging materials on a household murti.",
+  },
+  {
+    name: "Namakarana",
+    region: "Regional Hindu samskara traditions",
+    priestRequired: true,
+    purpose: "The naming samskara welcoming and blessing a child.",
+    duration: "1–2 hours",
+    materials: ["Family altar and child-safe seating", "Rice tray or regional naming materials", "Flowers, lamp, fruit and family offerings"],
+    steps: ["Agree on the family tradition, date, name and health-safe gathering plan.", "Begin with purification, Ganesha worship and sankalpa.", "Perform the lineage-specific blessings under priestly guidance.", "Announce or write the name in the regional manner.", "Receive elders' blessings and share prasada."],
+    note: "Protect the infant from smoke, loud sound, crowds and allergens; medical needs override ceremonial preferences.",
+  },
+  {
+    name: "Annaprashana",
+    region: "Regional Hindu samskara traditions",
+    priestRequired: true,
+    purpose: "The first ceremonial feeding of solid food to a child.",
+    duration: "60–120 minutes",
+    materials: ["Child-safe food approved by the family doctor", "Family altar, flowers and lamp", "Small clean bowl and spoon"],
+    steps: ["Confirm developmental readiness, allergies and safe food with the child's clinician.", "Choose the family date and ritual form with the priest.", "Perform a short Ganesha and family-deity prayer.", "A parent offers only a tiny safe portion while the child is upright.", "Stop immediately if the child is distressed and conclude with blessings."],
+    note: "This guide never replaces pediatric advice. Avoid honey, choking hazards and any food not medically appropriate for the child's age.",
+  },
+  {
+    name: "Upanayana Preparation",
+    region: "Lineage and Vedic school-specific samskara",
+    priestRequired: true,
+    purpose: "Preparation checklist for a lineage-specific initiation samskara.",
+    duration: "One or more days",
+    materials: ["Items specified by the family's acharya", "Traditional clothing and sacred-thread materials", "Homa and hospitality arrangements led by the priest"],
+    steps: ["Identify the family's Veda shakha, sutra, gotra and qualified acharya.", "Agree on eligibility, date, language and teaching responsibilities.", "Obtain the acharya's exact materials list rather than a generic online list.", "Prepare the student for discipline, meaning and daily responsibilities.", "Follow the acharya throughout the samskara and post-ceremony teaching."],
+    note: "This is an initiation, not a self-guided internet ritual. The app supports preparation only.",
+  },
+  {
+    name: "Diwali Lakshmi-Ganesha Puja",
+    region: "North and West Indian household traditions",
+    purpose: "A household Diwali worship of Lakshmi and Ganesha with gratitude and ethical renewal.",
+    duration: "45–90 minutes",
+    materials: ["Lakshmi and Ganesha images", "Lamps, flowers, kumkum, rice and account book if customary", "Sweets, fruit and clean water"],
+    steps: ["Confirm the local Amavasya puja window and clean the altar.", "Arrange lamps safely away from curtains, children and pets.", "Invoke Ganesha, then offer worship to Lakshmi.", "Offer flowers, naivedya and a prayer for honest prosperity.", "Perform aarti and extinguish unattended flames safely."],
+    note: "Fireworks, lamps and electrical decorations require adult supervision and local safety compliance.",
+  },
+  {
+    name: "Ekadashi Home Observance",
+    region: "Vaishnava traditions across India",
+    purpose: "A recurring day of restraint, remembrance of Vishnu and focused spiritual practice.",
+    duration: "One lunar day",
+    materials: ["Vishnu or Krishna image", "Tulasi, lamp, flowers and fruit", "Permitted fasting food where needed"],
+    steps: ["Confirm Ekadashi and parana timing in the family's regional Panchanga.", "Choose a medically safe form of fasting or simple dietary restraint.", "Offer lamp, tulasi and prayer to Vishnu or Krishna.", "Read Gita or Bhagavata passages and practise nama japa.", "Break the fast in the proper window according to local tradition."],
+    note: "Children, elders, pregnant people and anyone with a medical condition should not undertake unsafe fasting.",
+  },
+  {
+    name: "Simple Daily Surya Arghya",
+    region: "Pan-Indian household practice",
+    purpose: "A brief morning practice of gratitude to Surya and the natural source of light.",
+    duration: "5–15 minutes",
+    materials: ["Clean water in a small vessel", "Safe open space facing the morning light", "Optional flower"],
+    steps: ["Choose a safe non-slip place where water will not create a hazard.", "Stand comfortably; never stare directly at the sun.", "Offer a small stream of water with a familiar Surya prayer.", "Pause for gratitude and set an ethical intention for the day.", "Clean the area and conserve water."],
+    note: "Protect the eyes and avoid rooftops, traffic areas or slippery surfaces.",
+  },
 ];
 
 export default function PriestDirectoryPage() {
   const { tk, lc, lcl } = useLocale();
+  const [searchParams] = useSearchParams();
   const [items, setItems] = useState<Priest[]>([]);
-  const [q, setQ] = useState("");
+  const [q, setQ] = useState(() => searchParams.get("search") || "");
   const [nearbyUrl, setNearbyUrl] = useState("");
   const [locationError, setLocationError] = useState("");
+  const [ritualQuery, setRitualQuery] = useState("");
+  const [guidedPuja, setGuidedPuja] = useState<Puja | null>(null);
   useEffect(() => {
     void fetch("/api/priests")
       .then((r) => {
@@ -185,6 +376,27 @@ export default function PriestDirectoryPage() {
       ),
     [items, q],
   );
+  const localSearch = useMemo(() => {
+    const place = q.trim();
+    if (!place) return null;
+    const search = `pandit purohit priest puja services in ${place}`;
+    const encoded = encodeURIComponent(search);
+    return {
+      place,
+      maps: `https://www.google.com/maps/search/?api=1&query=${encoded}`,
+      google: `https://www.google.com/search?q=${encodeURIComponent(`${search} contact phone reviews`)}`,
+      justdial: `https://www.google.com/search?q=${encodeURIComponent(`site:justdial.com ${search}`)}`,
+    };
+  }, [q]);
+  const shownPujas = useMemo(() => {
+    const needle = ritualQuery.trim().toLowerCase();
+    if (!needle) return pujas;
+    return pujas.filter((puja) =>
+      `${puja.name} ${puja.region || ""} ${puja.purpose}`
+        .toLowerCase()
+        .includes(needle),
+    );
+  }, [ritualQuery]);
   const locate = () => {
     setLocationError("");
     if (!navigator.geolocation) {
@@ -199,6 +411,16 @@ export default function PriestDirectoryPage() {
         setNearbyUrl(
           `https://www.google.com/maps/search/?api=1&query=${query}`,
         );
+        const params = new URLSearchParams({
+          lat: String(p.coords.latitude),
+          lon: String(p.coords.longitude),
+        });
+        void fetch(`/api/location-preference?${params}`)
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.place) setQ(data.place);
+          })
+          .catch(() => undefined);
       },
       () => setLocationError(tk("allowLocationPriests")),
       { enableHighAccuracy: false, timeout: 8000, maximumAge: 3600000 },
@@ -256,6 +478,30 @@ export default function PriestDirectoryPage() {
               {tk("verifyDirectoryLinks")}
             </div>
             <section className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+              {localSearch && (
+                <article className="rounded-3xl border-2 border-orange-300 bg-gradient-to-br from-orange-50 to-amber-50 p-6 shadow-lg dark:from-orange-950/30 dark:to-background md:col-span-2 xl:col-span-3">
+                  <div className="flex flex-col justify-between gap-5 lg:flex-row lg:items-center">
+                    <div>
+                      <Badge className="bg-orange-600 text-white">
+                        {lc("Live locality search")}
+                      </Badge>
+                      <h2 className="mt-3 text-2xl font-bold">
+                        {lc("Priests and puja services near")} {lc(localSearch.place)}
+                      </h2>
+                      <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground">
+                        {lc(
+                          "This search is generated from the exact village, town, district, PIN code, language or puja you entered. It is not limited to the city cards below.",
+                        )}
+                      </p>
+                    </div>
+                    <div className="grid gap-2 sm:grid-cols-3">
+                      <DirectoryAction url={localSearch.maps} label={lc("Google Maps")} icon={Map} />
+                      <DirectoryAction url={localSearch.google} label={lc("Contact and reviews")} icon={Search} />
+                      <DirectoryAction url={localSearch.justdial} label={lc("Justdial results")} icon={ExternalLink} />
+                    </div>
+                  </div>
+                </article>
+              )}
               {shown.map((x, i) => (
                 <article
                   key={x.id}
@@ -304,7 +550,7 @@ export default function PriestDirectoryPage() {
                       rel="noopener noreferrer"
                       className="inline-flex items-center justify-center rounded-xl border px-3 py-2.5 text-sm font-semibold hover:bg-muted"
                     >
-                      Sulekha
+                      {lc("Sulekha results")}
                       <ExternalLink className="ml-2 h-3.5 w-3.5" />
                     </a>
                   </div>
@@ -320,7 +566,7 @@ export default function PriestDirectoryPage() {
                 </article>
               ))}
             </section>
-            {!shown.length && (
+            {!shown.length && !localSearch && (
               <div className="rounded-3xl border border-dashed p-10 text-center text-muted-foreground">
                 {tk("noDirectoryMatches")}
               </div>
@@ -342,12 +588,26 @@ export default function PriestDirectoryPage() {
               <p className="mt-3 max-w-3xl text-muted-foreground">
                 {tk("pujaPrepareIntro")}
               </p>
+              <div className="relative mt-6 max-w-xl">
+                <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                <Input
+                  value={ritualQuery}
+                  onChange={(event) => setRitualQuery(event.target.value)}
+                  className="pl-9"
+                  placeholder={lc(
+                    "Search daily puja, vrata, festival, samskara or regional ritual",
+                  )}
+                />
+              </div>
+              <p className="mt-2 text-xs text-muted-foreground">
+                {lc(`${shownPujas.length} guided rituals available`)}
+              </p>
               <Accordion
                 type="single"
                 collapsible
                 className="mt-7 grid gap-4 lg:grid-cols-2"
               >
-                {pujas.map((p) => (
+                {shownPujas.map((p) => (
                   <AccordionItem
                     key={p.name}
                     value={p.name}
@@ -390,14 +650,212 @@ export default function PriestDirectoryPage() {
                       <p className="mt-5 rounded-xl bg-amber-50 p-3 text-xs leading-5 text-amber-900 dark:bg-amber-950/30 dark:text-amber-200">
                         {lc(p.note)}
                       </p>
+                      <Button
+                        type="button"
+                        className="mt-5 w-full"
+                        onClick={() => setGuidedPuja(p)}
+                      >
+                        <Flower2 className="mr-2 h-4 w-4" />
+                        {lc("Start guided puja")}
+                      </Button>
                     </AccordionContent>
                   </AccordionItem>
                 ))}
               </Accordion>
+              {!shownPujas.length && (
+                <div className="mt-6 rounded-3xl border border-dashed p-8 text-center text-muted-foreground">
+                  {lc(
+                    "This ritual is not in the reviewed guide yet. Use the locality search above to find a qualified regional priest.",
+                  )}
+                </div>
+              )}
             </section>
           </div>
+          {guidedPuja && (
+            <GuidedPuja puja={guidedPuja} onClose={() => setGuidedPuja(null)} />
+          )}
         </main>
       </Layout>
     </ThemeProvider>
+  );
+}
+
+function GuidedPuja({ puja, onClose }: { puja: Puja; onClose: () => void }) {
+  const { lc, lcl } = useLocale();
+  const [stage, setStage] = useState(0);
+  const [materials, setMaterials] = useState<Set<number>>(new Set());
+  const complete = stage > puja.steps.length;
+  const progress = Math.round(
+    (Math.min(stage, puja.steps.length + 1) / (puja.steps.length + 1)) * 100,
+  );
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-stone-950/80 p-3 backdrop-blur-sm md:p-6"
+      role="dialog"
+      aria-modal="true"
+      aria-label={lc(`${puja.name} guided puja`)}
+    >
+      <section className="relative max-h-[94vh] w-full max-w-3xl overflow-hidden rounded-[2rem] border border-orange-200/30 bg-background shadow-2xl">
+        {complete && (
+          <div className="pointer-events-none absolute inset-0 z-20 overflow-hidden" aria-hidden>
+            {Array.from({ length: 24 }).map((_, index) => (
+              <span
+                key={index}
+                className="ritual-petal absolute -top-10 text-2xl"
+                style={{
+                  left: `${(index * 37) % 100}%`,
+                  animationDelay: `${(index % 8) * 0.16}s`,
+                }}
+              >
+                {index % 3 === 0 ? "🌼" : index % 3 === 1 ? "🌸" : "🌺"}
+              </span>
+            ))}
+          </div>
+        )}
+        <header className="relative overflow-hidden bg-gradient-to-br from-orange-700 via-red-700 to-rose-900 p-6 text-white md:p-8">
+          <div className="absolute -right-12 -top-12 h-44 w-44 rounded-full border border-white/15" />
+          <button
+            type="button"
+            onClick={onClose}
+            className="absolute right-4 top-4 rounded-full bg-black/20 p-2 transition hover:bg-black/40"
+            aria-label={lc("Close guided puja")}
+          >
+            <X className="h-5 w-5" />
+          </button>
+          <p className="text-xs font-bold uppercase tracking-[.2em] text-amber-200">
+            {lc(puja.region || "Regional household guidance")}
+          </p>
+          <h2 className="mt-2 pr-10 text-3xl font-bold">{lc(puja.name)}</h2>
+          <div className="mt-5 h-2 overflow-hidden rounded-full bg-black/25">
+            <div
+              className="h-full rounded-full bg-amber-300 transition-all duration-700"
+              style={{ width: `${progress}%` }}
+            />
+          </div>
+          <p className="mt-2 text-xs text-orange-100">{progress}% {lc("complete")}</p>
+        </header>
+
+        <div className="max-h-[62vh] overflow-y-auto p-6 md:p-8">
+          {puja.priestRequired && !complete && (
+            <div className="mb-5 flex gap-3 rounded-2xl border border-amber-300 bg-amber-50 p-4 text-sm leading-6 text-amber-950 dark:bg-amber-950/30 dark:text-amber-100">
+              <Flame className="mt-0.5 h-5 w-5 shrink-0" />
+              {lc(
+                "Priest-led rite: use this as a preparation and progress guide. Do not perform initiation, Vedic fire or lineage-specific steps without the qualified officiant.",
+              )}
+            </div>
+          )}
+
+          {stage === 0 && (
+            <div className="animate-fade-in">
+              <p className="text-xs font-bold uppercase tracking-widest text-orange-700">
+                {lc("Preparation")}
+              </p>
+              <h3 className="mt-2 text-2xl font-bold">
+                {lc("Gather and check the materials")}
+              </h3>
+              <p className="mt-2 text-sm leading-6 text-muted-foreground">
+                {lc(puja.purpose)}
+              </p>
+              <div className="mt-6 space-y-3">
+                {lcl(puja.materials).map((material, index) => (
+                  <button
+                    type="button"
+                    key={material}
+                    onClick={() =>
+                      setMaterials((current) => {
+                        const next = new Set(current);
+                        if (next.has(index)) next.delete(index);
+                        else next.add(index);
+                        return next;
+                      })
+                    }
+                    className={`flex w-full items-center gap-3 rounded-2xl border p-4 text-left transition ${materials.has(index) ? "border-emerald-400 bg-emerald-50 dark:bg-emerald-950/20" : "hover:border-orange-300"}`}
+                  >
+                    <span className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full ${materials.has(index) ? "bg-emerald-600 text-white" : "border"}`}>
+                      {materials.has(index) && <Check className="h-4 w-4" />}
+                    </span>
+                    {material}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {stage > 0 && !complete && (
+            <div key={stage} className="animate-fade-in py-4 text-center">
+              <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-amber-300 to-orange-600 text-white shadow-[0_0_55px_rgba(234,88,12,.35)]">
+                {stage === puja.steps.length ? (
+                  <Flower2 className="h-9 w-9" />
+                ) : (
+                  <Flame className="h-9 w-9 ritual-flame" />
+                )}
+              </div>
+              <p className="mt-6 text-xs font-bold uppercase tracking-[.2em] text-orange-700">
+                {lc("Step")} {stage} / {puja.steps.length}
+              </p>
+              <h3 className="mx-auto mt-3 max-w-xl text-2xl font-bold leading-10">
+                {lc(puja.steps[stage - 1])}
+              </h3>
+              <p className="mx-auto mt-5 max-w-xl rounded-2xl bg-muted p-4 text-sm leading-6 text-muted-foreground">
+                {lc(puja.note)}
+              </p>
+            </div>
+          )}
+
+          {complete && (
+            <div className="animate-fade-in py-10 text-center">
+              <div className="mx-auto flex h-24 w-24 items-center justify-center rounded-full bg-emerald-100 text-emerald-700">
+                <CheckCircle2 className="h-12 w-12" />
+              </div>
+              <h3 className="mt-6 text-3xl font-bold">{lc("Puja guide complete")}</h3>
+              <p className="mx-auto mt-3 max-w-lg leading-7 text-muted-foreground">
+                {lc(
+                  "Offer a quiet prayer for universal wellbeing, distribute prasada safely, extinguish every flame and leave the worship space clean.",
+                )}
+              </p>
+            </div>
+          )}
+        </div>
+
+        <footer className="flex items-center justify-between border-t bg-muted/30 p-4 md:px-8">
+          <Button
+            variant="outline"
+            onClick={() => (stage === 0 ? onClose() : setStage(stage - 1))}
+          >
+            <ChevronLeft className="mr-2 h-4 w-4" />
+            {lc(stage === 0 ? "Close" : "Previous")}
+          </Button>
+          <Button
+            onClick={() => (complete ? onClose() : setStage(stage + 1))}
+          >
+            {lc(complete ? "Finish" : stage === 0 ? "Begin puja" : "Step complete")}
+            {!complete && <ChevronRight className="ml-2 h-4 w-4" />}
+          </Button>
+        </footer>
+      </section>
+    </div>
+  );
+}
+
+function DirectoryAction({
+  url,
+  label,
+  icon: Icon,
+}: {
+  url: string;
+  label: string;
+  icon: typeof Map;
+}) {
+  return (
+    <a
+      href={url}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="inline-flex min-h-12 items-center justify-center rounded-xl border bg-background px-4 py-3 text-sm font-semibold transition hover:-translate-y-0.5 hover:border-orange-400"
+    >
+      <Icon className="mr-2 h-4 w-4" />
+      {label}
+    </a>
   );
 }

@@ -122,8 +122,10 @@ export default function PanchangWidget() {
                 {data ? formatPanchangDate(locale, data.date) : tk('loadingTodayDetails')}
               </p>
               <button
+                type="button"
                 onClick={localize}
-                className="mt-4 inline-flex items-center rounded-full border border-orange-200/30 bg-black/20 px-4 py-2 text-xs font-medium backdrop-blur transition hover:-translate-y-0.5 hover:bg-orange-500/30"
+                disabled={loading}
+                className="mt-4 inline-flex min-h-11 items-center rounded-full border border-amber-200/70 bg-gradient-to-r from-orange-600 to-amber-500 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-orange-950/25 transition hover:-translate-y-0.5 hover:from-orange-500 hover:to-amber-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-200 disabled:cursor-wait disabled:opacity-75"
               >
                 {loading ? (
                   <Loader2 className="mr-2 h-3.5 w-3.5 animate-spin" />
