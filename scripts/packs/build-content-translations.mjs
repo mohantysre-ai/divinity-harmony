@@ -5,11 +5,65 @@
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
+import Sanscript from "@indic-transliteration/sanscript";
 import translate from "google-translate-api-x";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const stringsPath = path.join(__dirname, "content-strings-en.json");
 const englishStrings = JSON.parse(fs.readFileSync(stringsPath, "utf8"));
+
+const scriptSchemes = {
+  hi: "devanagari",
+  bn: "bengali",
+  gu: "gujarati",
+  mr: "devanagari",
+  ta: "tamil",
+  te: "telugu",
+  ml: "malayalam",
+  kn: "kannada",
+  or: "oriya",
+  pa: "gurmukhi",
+  as: "bengali",
+};
+
+function nativeScriptFallback(text, locale) {
+  const scheme = scriptSchemes[locale];
+  if (!scheme) return text;
+  return text
+    .split(/(\$\{[^}]+\})/g)
+    .map((part) =>
+      part.startsWith("${")
+        ? part
+        : part.replace(/[A-Za-z]+(?:[’'-][A-Za-z]+)*/g, (word) =>
+            Sanscript.t(word.toLowerCase(), "itrans", scheme),
+          ),
+    )
+    .join("");
+}
+
+function normalizeTargetScript(text, locale) {
+  let out = nativeScriptFallback(text, locale);
+  // Earlier Gujarati/Punjabi generation reused a Sanskrit glossary written in
+  // Devanagari. Convert those inherited terms into the selected local script.
+  if (locale === "gu" || locale === "pa") {
+    out = out.replace(/[\u0900-\u097F]+/g, (part) =>
+      Sanscript.t(part, "devanagari", scriptSchemes[locale]),
+    );
+  }
+  return out;
+}
+
+function normalizeResultScripts(result, locale) {
+  let changed = false;
+  for (const [key, value] of Object.entries(result)) {
+    const next = normalizeTargetScript(value, locale);
+    if (next !== value) {
+      result[key] = next;
+      changed = true;
+    }
+  }
+  return changed;
+}
 
 /** Preserve placeholders during translation */
 function shieldPlaceholders(text) {
@@ -246,8 +300,23 @@ async function buildLocale(locale, glossary, outFile) {
       result = {};
     }
   }
-  const missing = englishStrings.filter((text) => !Object.hasOwn(result, text));
-  if (!missing.length) return { path: outPath, count: Object.keys(result).length, skipped: true };
+  const missing = englishStrings.filter(
+    (text) =>
+      !Object.hasOwn(result, text) ||
+      (result[text] === text && /[A-Za-z]{4}/.test(text)),
+  );
+  if (!missing.length) {
+    const normalized = normalizeResultScripts(result, locale);
+    if (normalized) {
+      fs.writeFileSync(outPath, JSON.stringify(result, null, 2), "utf8");
+    }
+    return {
+      path: outPath,
+      count: Object.keys(result).length,
+      skipped: true,
+      normalized,
+    };
+  }
   const batchSize = 40;
   let done = 0;
 
@@ -259,6 +328,9 @@ async function buildLocale(locale, glossary, outFile) {
       let val = translated[j];
       val = applySanskritFixes(val, glossary);
       val = stripLatin(val, locale);
+      // Translation services commonly preserve proper nouns and Sanskrit terms
+      // in Latin script. Regional mode must still render those in local script.
+      if (val === en && /[A-Za-z]/.test(en)) val = nativeScriptFallback(en, locale);
       result[en] = val;
     }
     done += batch.length;
@@ -267,6 +339,7 @@ async function buildLocale(locale, glossary, outFile) {
   }
   console.log();
 
+  normalizeResultScripts(result, locale);
   fs.writeFileSync(outPath, JSON.stringify(result, null, 2), "utf8");
   return { path: outPath, count: Object.keys(result).length };
 }
