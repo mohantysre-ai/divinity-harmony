@@ -1,6 +1,6 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import { Link, useParams } from "react-router-dom";
-import { ArrowLeft, ChevronLeft, ChevronRight, ExternalLink, Loader2 } from "lucide-react";
+import { ArrowLeft, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, ExternalLink, Grid3X3, Loader2, Maximize2, Pause, Play, ZoomIn, ZoomOut } from "lucide-react";
 import Layout from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -38,6 +38,10 @@ export default function ScriptureReaderPage() {
   const [error, setError] = useState("");
   const [page, setPage] = useState(0);
   const [turn, setTurn] = useState<"next" | "previous" | null>(null);
+  const [zoom, setZoom] = useState(1);
+  const [slideshow, setSlideshow] = useState(false);
+  const [showThumbnails, setShowThumbnails] = useState(false);
+  const readerRef = useRef<HTMLElement>(null);
   const pages = useMemo(() => paginate(source?.content || ""), [source?.content]);
 
   useEffect(() => {
@@ -67,6 +71,23 @@ export default function ScriptureReaderPage() {
     return () => window.removeEventListener("keydown", key);
   });
 
+  useEffect(() => {
+    if (!slideshow || page >= pages.length - 1) return;
+    const timer = window.setInterval(() => move("next"), 5000);
+    return () => window.clearInterval(timer);
+  });
+
+  useEffect(() => {
+    if (!source) return;
+    const hashPage = Number(window.location.hash.match(/book\/(\d+)/)?.[1]);
+    if (Number.isFinite(hashPage) && hashPage > 0) setPage(Math.min(hashPage - 1, pages.length - 1));
+  }, [source, pages.length]);
+
+  useEffect(() => {
+    if (!source) return;
+    window.history.replaceState(null, "", `${window.location.pathname}${window.location.search}#book/${page + 1}`);
+  }, [page, source]);
+
   const chooseChapter = async (chapter: string) => {
     if (!source || chapter === source.activeChapter) return;
     setLoading(true); setError("");
@@ -88,13 +109,31 @@ export default function ScriptureReaderPage() {
           <p className="mt-3 leading-7 text-muted-foreground">{lc(article.introduction)}</p>
           <div className="mt-5 flex flex-wrap gap-2"><Button size="sm" variant={language === "en" ? "default" : "outline"} onClick={() => setLanguage("en")}>{tk("english")}</Button><Button size="sm" variant={language === "sa" ? "default" : "outline"} onClick={() => setLanguage("sa")}>संस्कृत</Button></div>
         </header>
-        <section className="rounded-[2rem] border bg-card p-4 shadow-xl md:p-8">
+        <section ref={readerRef} className="scripture-reader-shell rounded-[2rem] border bg-card p-4 shadow-xl md:p-8">
           {source?.chapters.length ? <label className="mb-5 block text-sm font-semibold">{tk("chooseChapterSection")}<select className="mt-2 h-11 w-full rounded-md border bg-background px-3 font-normal" value={source.activeChapter || ""} onChange={(event) => chooseChapter(event.target.value)} disabled={loading}>{source.chapters.map((chapter) => <option key={chapter} value={chapter}>{chapter.replace(`${source.title}/`, "")}</option>)}</select></label> : null}
           {loading && !source ? <div className="flex min-h-96 items-center justify-center gap-2"><Loader2 className="h-5 w-5 animate-spin" />{tk("loadingSourceText")}</div> : null}
           {error ? <p className="mb-4 rounded-xl border border-destructive/30 bg-destructive/5 p-4 text-destructive">{error}</p> : null}
           {source ? <>
             <div className="mb-4 flex flex-wrap items-center justify-between gap-3 text-xs text-muted-foreground"><span>{source.source} · {source.language} · {source.license}</span><a href={source.url} target="_blank" rel="noreferrer" className="inline-flex items-center hover:text-orange-700">{tk("sourceAndLicense")}<ExternalLink className="ml-1 h-3.5 w-3.5" /></a></div>
-            <div className="scripture-book"><div className="scripture-book-spine" aria-hidden /><div key={`${source.activeChapter}-${page}`} className={`scripture-book-page ${turn ? `is-turning-${turn}` : ""}`}><div className="scripture-book-ornament" aria-hidden>ॐ</div><div data-no-regionalize className="whitespace-pre-wrap text-base leading-8 text-stone-800 dark:text-stone-200">{pages[page]}</div><span className="scripture-page-number">{page + 1}</span></div></div>
+            <div className="scripture-reader-toolbar" role="toolbar" aria-label={lc("Book controls")}>
+              <Button size="icon" variant="ghost" disabled={page === 0} onClick={() => setPage(0)} aria-label={lc("First page")}><ChevronsLeft /></Button>
+              <Button size="icon" variant="ghost" disabled={page === 0} onClick={() => move("previous")} aria-label={lc("Previous page")}><ChevronLeft /></Button>
+              <Button size="icon" variant="ghost" disabled={page >= pages.length - 1} onClick={() => move("next")} aria-label={lc("Next page")}><ChevronRight /></Button>
+              <Button size="icon" variant="ghost" disabled={page >= pages.length - 1} onClick={() => setPage(pages.length - 1)} aria-label={lc("Last page")}><ChevronsRight /></Button>
+              <span className="scripture-toolbar-divider" />
+              <Button size="icon" variant="ghost" disabled={zoom <= .8} onClick={() => setZoom((value) => Math.max(.8, value - .1))} aria-label={lc("Zoom out")}><ZoomOut /></Button>
+              <Button size="icon" variant="ghost" disabled={zoom >= 1.5} onClick={() => setZoom((value) => Math.min(1.5, value + .1))} aria-label={lc("Zoom in")}><ZoomIn /></Button>
+              <Button size="icon" variant={slideshow ? "default" : "ghost"} onClick={() => setSlideshow((value) => !value)} aria-label={lc(slideshow ? "Pause slideshow" : "Start slideshow")}>{slideshow ? <Pause /> : <Play />}</Button>
+              <Button size="icon" variant={showThumbnails ? "default" : "ghost"} onClick={() => setShowThumbnails((value) => !value)} aria-label={lc("Show page thumbnails")}><Grid3X3 /></Button>
+              <Button size="icon" variant="ghost" onClick={() => readerRef.current?.requestFullscreen()} aria-label={lc("Full screen")}><Maximize2 /></Button>
+              <Badge variant="secondary" className="ml-auto">{lc("Page")} {page + 1} / {pages.length}</Badge>
+            </div>
+            {showThumbnails ? <div className="scripture-thumbnail-strip">{pages.map((_, index) => <button key={index} type="button" className={index === page ? "is-active" : ""} onClick={() => setPage(index)}><span>ॐ</span><small>{index + 1}</small></button>)}</div> : null}
+            <div className="scripture-book scripture-book-spread" style={{ "--reader-zoom": zoom } as CSSProperties}>
+              <div className="scripture-book-spine" aria-hidden />
+              <div key={`${source.activeChapter}-${page}`} className={`scripture-book-page scripture-book-left ${turn ? `is-turning-${turn}` : ""}`}><div className="scripture-book-ornament" aria-hidden>ॐ</div><div data-no-regionalize className="whitespace-pre-wrap text-base leading-8 text-stone-800 dark:text-stone-200">{pages[page]}</div><span className="scripture-page-number">{page + 1}</span></div>
+              {pages[page + 1] !== undefined ? <div className="scripture-book-page scripture-book-right"><div className="scripture-book-ornament" aria-hidden>ॐ</div><div data-no-regionalize className="whitespace-pre-wrap text-base leading-8 text-stone-800 dark:text-stone-200">{pages[page + 1]}</div><span className="scripture-page-number">{page + 2}</span></div> : null}
+            </div>
             <div className="mt-5 flex items-center justify-between gap-2"><Button variant="outline" disabled={page === 0 || loading} onClick={() => move("previous")}><ChevronLeft className="mr-1 h-4 w-4" />{lc("Previous page")}</Button><Badge variant="secondary">{lc("Page")} {page + 1} / {pages.length}</Badge><Button variant="outline" disabled={page >= pages.length - 1 || loading} onClick={() => move("next")}>{lc("Next page")}<ChevronRight className="ml-1 h-4 w-4" /></Button></div>
           </> : null}
         </section>

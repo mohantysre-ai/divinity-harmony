@@ -15,6 +15,7 @@ import ResilientCoverImage from '@/components/ResilientCoverImage';
 import { Link, useSearchParams } from 'react-router-dom';
 import { useLocale } from '@/hooks/use-locale';
 import { sacredCategoryKey } from '@/lib/sacred-category-i18n';
+import VedicHeritageCatalog from '@/components/VedicHeritageCatalog';
 
 const categoryStyle: Record<string, { Icon: typeof BookOpen; accent: string }> = {
   'Vedas & Vedangas': { Icon: Scroll, accent: 'from-amber-500/25 to-orange-600/10' },
@@ -210,6 +211,8 @@ const SacredTexts = () => {
               <Badge variant="secondary" className="px-4 py-2 text-sm"><BookOpen className="mr-2 h-4 w-4" />{tk('knowledgePathsTemplate', { count: '9' })}</Badge>
             </div>
           </section>
+
+          <VedicHeritageCatalog />
 
           <section className="mb-8 space-y-5">
             <div className="relative mx-auto max-w-2xl">

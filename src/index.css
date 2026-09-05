@@ -539,6 +539,20 @@ html[data-app-locale="ml"] body {
   @keyframes scripture-turn-next { 0% { transform: rotateY(0); opacity: 1; } 100% { transform: rotateY(-86deg); opacity: .15; } }
   @keyframes scripture-turn-previous { 0% { transform: rotateY(0); opacity: 1; } 100% { transform: rotateY(86deg); opacity: .15; } }
   @media (prefers-reduced-motion: reduce) { .scripture-book-page.is-turning-next, .scripture-book-page.is-turning-previous { animation: none; } }
+  .scripture-reader-shell:fullscreen { @apply overflow-y-auto rounded-none bg-stone-950 p-6; }
+  .scripture-reader-toolbar { @apply mb-4 flex flex-wrap items-center gap-1 rounded-2xl border bg-stone-900 p-2 text-amber-50 shadow-lg; }
+  .scripture-reader-toolbar button { @apply text-amber-50 hover:bg-amber-100/15 hover:text-white; }
+  .scripture-reader-toolbar button svg { @apply h-4 w-4; }
+  .scripture-toolbar-divider { @apply mx-1 h-7 w-px bg-white/20; }
+  .scripture-thumbnail-strip { @apply mb-4 flex gap-2 overflow-x-auto rounded-2xl border bg-muted/30 p-3; }
+  .scripture-thumbnail-strip button { @apply relative grid h-24 min-w-16 place-items-center rounded border bg-[#fffaf0] text-2xl text-amber-800 shadow-sm transition hover:-translate-y-1; }
+  .scripture-thumbnail-strip button.is-active { @apply border-orange-600 ring-2 ring-orange-500/30; }
+  .scripture-thumbnail-strip small { @apply absolute bottom-1 text-[10px] text-stone-500; }
+  .scripture-book-spread { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); overflow: auto; }
+  .scripture-book-spread .scripture-book-page { zoom: var(--reader-zoom,1); }
+  .scripture-book-left { @apply rounded-l-xl border-r border-amber-900/15; box-shadow: inset -22px 0 32px -30px rgba(69,26,3,.65); }
+  .scripture-book-right { @apply rounded-r-xl; box-shadow: inset 22px 0 32px -30px rgba(69,26,3,.65); }
+  @media (max-width: 767px) { .scripture-book-spread { grid-template-columns: 1fr; } .scripture-book-right { display: none; } .scripture-reader-toolbar { @apply sticky top-2 z-20; } }
   
   .audio-player {
     @apply relative my-3 p-3 rounded-lg border border-border bg-card;
