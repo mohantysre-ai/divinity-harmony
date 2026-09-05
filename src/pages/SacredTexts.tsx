@@ -370,14 +370,14 @@ const SacredTexts = () => {
                         )}
                         <div className="relative mt-6 border-t pt-6">
                           {sourceLoading && <Loader2 className="absolute right-0 top-3 h-5 w-5 animate-spin text-hindu-red" />}
-                          <div className="scripture-book" aria-live="polite">
+                          <div className="scripture-book scripture-book-viewport" aria-live="polite">
                             <div className="scripture-book-spine" aria-hidden />
                             <div
                               key={`${sourceContent.activeChapter}-${readerPage}`}
                               className={`scripture-book-page ${turnDirection ? `is-turning-${turnDirection}` : ''}`}
                             >
                               <div className="scripture-book-ornament" aria-hidden>ॐ</div>
-                              <div data-no-regionalize className="whitespace-pre-wrap text-base leading-8 text-stone-800 dark:text-stone-200">
+                              <div data-no-regionalize className="scripture-book-copy whitespace-pre-wrap text-base leading-8 text-stone-800 dark:text-stone-200">
                                 {readerPages[readerPage]}
                               </div>
                               <span className="scripture-page-number">{readerPage + 1}</span>

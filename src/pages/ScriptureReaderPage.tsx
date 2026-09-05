@@ -59,7 +59,7 @@ export default function ScriptureReaderPage() {
     const next = Math.max(0, Math.min(pages.length - 1, page + (direction === "next" ? 1 : -1)));
     if (next === page) return;
     setTurn(direction);
-    window.setTimeout(() => { setPage(next); setTurn(null); window.scrollTo({ top: 0, behavior: "smooth" }); }, 230);
+    window.setTimeout(() => { setPage(next); setTurn(null); }, 230);
   };
 
   useEffect(() => {
@@ -129,10 +129,10 @@ export default function ScriptureReaderPage() {
               <Badge variant="secondary" className="ml-auto">{lc("Page")} {page + 1} / {pages.length}</Badge>
             </div>
             {showThumbnails ? <div className="scripture-thumbnail-strip">{pages.map((_, index) => <button key={index} type="button" className={index === page ? "is-active" : ""} onClick={() => setPage(index)}><span>ॐ</span><small>{index + 1}</small></button>)}</div> : null}
-            <div className="scripture-book scripture-book-spread" style={{ "--reader-zoom": zoom } as CSSProperties}>
+            <div className="scripture-book scripture-book-spread scripture-book-viewport scripture-book-viewport-spread" style={{ "--reader-zoom": zoom } as CSSProperties}>
               <div className="scripture-book-spine" aria-hidden />
-              <div key={`${source.activeChapter}-${page}`} className={`scripture-book-page scripture-book-left ${turn ? `is-turning-${turn}` : ""}`}><div className="scripture-book-ornament" aria-hidden>ॐ</div><div data-no-regionalize className="whitespace-pre-wrap text-base leading-8 text-stone-800 dark:text-stone-200">{pages[page]}</div><span className="scripture-page-number">{page + 1}</span></div>
-              {pages[page + 1] !== undefined ? <div className="scripture-book-page scripture-book-right"><div className="scripture-book-ornament" aria-hidden>ॐ</div><div data-no-regionalize className="whitespace-pre-wrap text-base leading-8 text-stone-800 dark:text-stone-200">{pages[page + 1]}</div><span className="scripture-page-number">{page + 2}</span></div> : null}
+              <div key={`${source.activeChapter}-${page}`} className={`scripture-book-page scripture-book-left ${turn ? `is-turning-${turn}` : ""}`}><div className="scripture-book-ornament" aria-hidden>ॐ</div><div data-no-regionalize className="scripture-book-copy whitespace-pre-wrap text-base leading-8 text-stone-800 dark:text-stone-200">{pages[page]}</div><span className="scripture-page-number">{page + 1}</span></div>
+              {pages[page + 1] !== undefined ? <div key={`${source.activeChapter}-${page + 1}`} className="scripture-book-page scripture-book-right"><div className="scripture-book-ornament" aria-hidden>ॐ</div><div data-no-regionalize className="scripture-book-copy whitespace-pre-wrap text-base leading-8 text-stone-800 dark:text-stone-200">{pages[page + 1]}</div><span className="scripture-page-number">{page + 2}</span></div> : null}
             </div>
             <div className="mt-5 flex items-center justify-between gap-2"><Button variant="outline" disabled={page === 0 || loading} onClick={() => move("previous")}><ChevronLeft className="mr-1 h-4 w-4" />{lc("Previous page")}</Button><Badge variant="secondary">{lc("Page")} {page + 1} / {pages.length}</Badge><Button variant="outline" disabled={page >= pages.length - 1 || loading} onClick={() => move("next")}>{lc("Next page")}<ChevronRight className="ml-1 h-4 w-4" /></Button></div>
           </> : null}
