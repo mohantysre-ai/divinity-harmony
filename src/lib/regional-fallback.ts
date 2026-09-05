@@ -27,7 +27,14 @@ export function regionalScriptFallback(
 ): string {
   if (!text || locale === "en" || !/[A-Za-z]/.test(text)) return text;
   const scheme = schemes[locale];
-  return text.replace(/[A-Za-z]+(?:[’'-][A-Za-z]+)*/g, (word) =>
-    Sanscript.t(word.toLowerCase(), "itrans", scheme),
-  );
+  return text
+    .split(/(\$?\{[^}]+\})/g)
+    .map((part) =>
+      /^\$?\{[^}]+\}$/.test(part)
+        ? part
+        : part.replace(/[A-Za-z]+(?:[’'-][A-Za-z]+)*/g, (word) =>
+            Sanscript.t(word.toLowerCase(), "itrans", scheme),
+          ),
+    )
+    .join("");
 }

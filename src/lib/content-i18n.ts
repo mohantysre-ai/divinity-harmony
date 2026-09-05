@@ -8,7 +8,8 @@ const packs = contentPacks as Record<ContentLocale, Record<string, string>>;
 /** Localize catalog/content strings without leaking Latin copy in regional mode. */
 export function localizeContent(text: string, locale: AppLocale): string {
   if (!text || locale === "en") return text;
-  return packs[locale]?.[text] ?? regionalScriptFallback(text, locale);
+  const translated = packs[locale]?.[text] ?? text;
+  return regionalScriptFallback(translated, locale);
 }
 
 export function localizeContentList(

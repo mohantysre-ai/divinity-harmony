@@ -9,9 +9,10 @@ const localePacks = packs as Record<UiLocale, Record<UiKey, string>>;
 
 export function translateKey(locale: AppLocale, key: UiKey): string {
   if (locale === "en") return UI_KEYS[key];
-  return (
+  return regionalScriptFallback(
     localePacks[locale]?.[key] ??
-    regionalScriptFallback(UI_KEYS[key], locale)
+      UI_KEYS[key],
+    locale,
   );
 }
 

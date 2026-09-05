@@ -2,12 +2,8 @@ import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import {
   BookOpen,
-  Check,
   CheckCircle2,
-  ChevronLeft,
-  ChevronRight,
   ExternalLink,
-  Flame,
   Flower2,
   Languages,
   LocateFixed,
@@ -15,8 +11,11 @@ import {
   MapPin,
   Search,
   ShieldCheck,
-  X,
 } from "lucide-react";
+import {
+  VirtualPuja,
+  type VirtualPujaGuide,
+} from "@/components/puja/VirtualPuja";
 import Layout from "@/components/layout/Layout";
 import { ThemeProvider } from "@/hooks/use-theme";
 import { Input } from "@/components/ui/input";
@@ -40,16 +39,7 @@ type Priest = {
   google_search_url: string;
   sulekha_url: string;
 };
-type Puja = {
-  name: string;
-  region?: string;
-  priestRequired?: boolean;
-  purpose: string;
-  duration: string;
-  materials: string[];
-  steps: string[];
-  note: string;
-};
+type Puja = VirtualPujaGuide;
 const pujas: Puja[] = [
   {
     name: "Griha Pravesh & Vastu Shanti",
@@ -672,169 +662,11 @@ export default function PriestDirectoryPage() {
             </section>
           </div>
           {guidedPuja && (
-            <GuidedPuja puja={guidedPuja} onClose={() => setGuidedPuja(null)} />
+            <VirtualPuja puja={guidedPuja} onClose={() => setGuidedPuja(null)} />
           )}
         </main>
       </Layout>
     </ThemeProvider>
-  );
-}
-
-function GuidedPuja({ puja, onClose }: { puja: Puja; onClose: () => void }) {
-  const { lc, lcl } = useLocale();
-  const [stage, setStage] = useState(0);
-  const [materials, setMaterials] = useState<Set<number>>(new Set());
-  const complete = stage > puja.steps.length;
-  const progress = Math.round(
-    (Math.min(stage, puja.steps.length + 1) / (puja.steps.length + 1)) * 100,
-  );
-
-  return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-stone-950/80 p-3 backdrop-blur-sm md:p-6"
-      role="dialog"
-      aria-modal="true"
-      aria-label={lc(`${puja.name} guided puja`)}
-    >
-      <section className="relative max-h-[94vh] w-full max-w-3xl overflow-hidden rounded-[2rem] border border-orange-200/30 bg-background shadow-2xl">
-        {complete && (
-          <div className="pointer-events-none absolute inset-0 z-20 overflow-hidden" aria-hidden>
-            {Array.from({ length: 24 }).map((_, index) => (
-              <span
-                key={index}
-                className="ritual-petal absolute -top-10 text-2xl"
-                style={{
-                  left: `${(index * 37) % 100}%`,
-                  animationDelay: `${(index % 8) * 0.16}s`,
-                }}
-              >
-                {index % 3 === 0 ? "🌼" : index % 3 === 1 ? "🌸" : "🌺"}
-              </span>
-            ))}
-          </div>
-        )}
-        <header className="relative overflow-hidden bg-gradient-to-br from-orange-700 via-red-700 to-rose-900 p-6 text-white md:p-8">
-          <div className="absolute -right-12 -top-12 h-44 w-44 rounded-full border border-white/15" />
-          <button
-            type="button"
-            onClick={onClose}
-            className="absolute right-4 top-4 rounded-full bg-black/20 p-2 transition hover:bg-black/40"
-            aria-label={lc("Close guided puja")}
-          >
-            <X className="h-5 w-5" />
-          </button>
-          <p className="text-xs font-bold uppercase tracking-[.2em] text-amber-200">
-            {lc(puja.region || "Regional household guidance")}
-          </p>
-          <h2 className="mt-2 pr-10 text-3xl font-bold">{lc(puja.name)}</h2>
-          <div className="mt-5 h-2 overflow-hidden rounded-full bg-black/25">
-            <div
-              className="h-full rounded-full bg-amber-300 transition-all duration-700"
-              style={{ width: `${progress}%` }}
-            />
-          </div>
-          <p className="mt-2 text-xs text-orange-100">{progress}% {lc("complete")}</p>
-        </header>
-
-        <div className="max-h-[62vh] overflow-y-auto p-6 md:p-8">
-          {puja.priestRequired && !complete && (
-            <div className="mb-5 flex gap-3 rounded-2xl border border-amber-300 bg-amber-50 p-4 text-sm leading-6 text-amber-950 dark:bg-amber-950/30 dark:text-amber-100">
-              <Flame className="mt-0.5 h-5 w-5 shrink-0" />
-              {lc(
-                "Priest-led rite: use this as a preparation and progress guide. Do not perform initiation, Vedic fire or lineage-specific steps without the qualified officiant.",
-              )}
-            </div>
-          )}
-
-          {stage === 0 && (
-            <div className="animate-fade-in">
-              <p className="text-xs font-bold uppercase tracking-widest text-orange-700">
-                {lc("Preparation")}
-              </p>
-              <h3 className="mt-2 text-2xl font-bold">
-                {lc("Gather and check the materials")}
-              </h3>
-              <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                {lc(puja.purpose)}
-              </p>
-              <div className="mt-6 space-y-3">
-                {lcl(puja.materials).map((material, index) => (
-                  <button
-                    type="button"
-                    key={material}
-                    onClick={() =>
-                      setMaterials((current) => {
-                        const next = new Set(current);
-                        if (next.has(index)) next.delete(index);
-                        else next.add(index);
-                        return next;
-                      })
-                    }
-                    className={`flex w-full items-center gap-3 rounded-2xl border p-4 text-left transition ${materials.has(index) ? "border-emerald-400 bg-emerald-50 dark:bg-emerald-950/20" : "hover:border-orange-300"}`}
-                  >
-                    <span className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full ${materials.has(index) ? "bg-emerald-600 text-white" : "border"}`}>
-                      {materials.has(index) && <Check className="h-4 w-4" />}
-                    </span>
-                    {material}
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {stage > 0 && !complete && (
-            <div key={stage} className="animate-fade-in py-4 text-center">
-              <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-amber-300 to-orange-600 text-white shadow-[0_0_55px_rgba(234,88,12,.35)]">
-                {stage === puja.steps.length ? (
-                  <Flower2 className="h-9 w-9" />
-                ) : (
-                  <Flame className="h-9 w-9 ritual-flame" />
-                )}
-              </div>
-              <p className="mt-6 text-xs font-bold uppercase tracking-[.2em] text-orange-700">
-                {lc("Step")} {stage} / {puja.steps.length}
-              </p>
-              <h3 className="mx-auto mt-3 max-w-xl text-2xl font-bold leading-10">
-                {lc(puja.steps[stage - 1])}
-              </h3>
-              <p className="mx-auto mt-5 max-w-xl rounded-2xl bg-muted p-4 text-sm leading-6 text-muted-foreground">
-                {lc(puja.note)}
-              </p>
-            </div>
-          )}
-
-          {complete && (
-            <div className="animate-fade-in py-10 text-center">
-              <div className="mx-auto flex h-24 w-24 items-center justify-center rounded-full bg-emerald-100 text-emerald-700">
-                <CheckCircle2 className="h-12 w-12" />
-              </div>
-              <h3 className="mt-6 text-3xl font-bold">{lc("Puja guide complete")}</h3>
-              <p className="mx-auto mt-3 max-w-lg leading-7 text-muted-foreground">
-                {lc(
-                  "Offer a quiet prayer for universal wellbeing, distribute prasada safely, extinguish every flame and leave the worship space clean.",
-                )}
-              </p>
-            </div>
-          )}
-        </div>
-
-        <footer className="flex items-center justify-between border-t bg-muted/30 p-4 md:px-8">
-          <Button
-            variant="outline"
-            onClick={() => (stage === 0 ? onClose() : setStage(stage - 1))}
-          >
-            <ChevronLeft className="mr-2 h-4 w-4" />
-            {lc(stage === 0 ? "Close" : "Previous")}
-          </Button>
-          <Button
-            onClick={() => (complete ? onClose() : setStage(stage + 1))}
-          >
-            {lc(complete ? "Finish" : stage === 0 ? "Begin puja" : "Step complete")}
-            {!complete && <ChevronRight className="ml-2 h-4 w-4" />}
-          </Button>
-        </footer>
-      </section>
-    </div>
   );
 }
 

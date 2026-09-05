@@ -129,6 +129,7 @@ function extractLocalizedPageCopy() {
     "src/pages/TemplesPage.tsx",
     "src/pages/PriestDirectoryPage.tsx",
     "src/pages/CultureIndiaPage.tsx",
+    "src/components/puja/VirtualPuja.tsx",
   ];
   for (const file of files) {
     const text = fs.readFileSync(path.join(root, file), "utf8");
