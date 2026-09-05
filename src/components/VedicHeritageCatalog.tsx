@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { BookMarked, ExternalLink, Landmark, LockKeyhole, Search } from "lucide-react";
+import { BookMarked, ExternalLink, FileText, Headphones, Landmark, LockKeyhole, Search } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -11,6 +11,13 @@ import {
 } from "@/data/vedic-heritage-catalog";
 
 const PAGE_SIZE = 18;
+
+const formatLabel = {
+  portal: "PORTAL",
+  flipbook: "FLIPBOOK",
+  "text-audio": "TEXT + AUDIO",
+  pdf: "PDF",
+} as const;
 
 export default function VedicHeritageCatalog() {
   const { tk, lc } = useLocale();
@@ -32,6 +39,9 @@ export default function VedicHeritageCatalog() {
     setVisible(PAGE_SIZE);
   };
 
+  const categoryLabel = (value: (typeof vedicHeritageCategories)[number]) =>
+    value === "All" ? tk("all") : value === "Gitas" ? tk("categoryGitas") : lc(value);
+
   return (
     <section className="mb-12 overflow-hidden rounded-[2rem] border border-amber-200/70 bg-gradient-to-br from-amber-50 via-background to-orange-50 shadow-sm dark:border-amber-900/40 dark:from-stone-950 dark:to-stone-900">
       <div className="grid gap-6 border-b border-amber-200/60 p-6 md:grid-cols-[1fr_auto] md:items-center md:p-8 dark:border-amber-900/40">
@@ -43,7 +53,9 @@ export default function VedicHeritageCatalog() {
           <h2 className="text-2xl font-bold md:text-3xl">{lc("Vedic Heritage Portal")}</h2>
           <div className="mt-3 flex flex-wrap gap-2">
             <Badge variant="secondary">{vedicHeritageCatalog.length}</Badge>
-            <Badge variant="secondary" data-no-regionalize>IGNCA</Badge>
+            {[...new Set(vedicHeritageCatalog.map((entry) => entry.source))].map((source) => (
+              <Badge key={source} variant="secondary" data-no-regionalize>{source}</Badge>
+            ))}
             <Badge variant="secondary"><BookMarked className="h-3.5 w-3.5" aria-hidden /></Badge>
           </div>
         </div>
@@ -75,7 +87,7 @@ export default function VedicHeritageCatalog() {
               className="rounded-full"
               onClick={() => changeCategory(item)}
             >
-              {item === "All" ? tk("all") : lc(item)}
+              {categoryLabel(item)}
             </Button>
           ))}
         </div>
@@ -86,10 +98,14 @@ export default function VedicHeritageCatalog() {
               const content = (
                 <>
                   <div className="flex items-start justify-between gap-3">
-                    <Badge variant="outline" className="bg-background/80">{lc(entry.category)}</Badge>
-                    {entry.format === "flipbook" ? <BookMarked className="h-5 w-5 text-hindu-red" /> : <ExternalLink className="h-4 w-4 text-muted-foreground" />}
+                    <div className="flex flex-wrap gap-1.5">
+                      <Badge variant="outline" className="bg-background/80">{entry.category === "Gitas" ? tk("categoryGitas") : lc(entry.category)}</Badge>
+                      <Badge variant="secondary" className="max-w-52 truncate" data-no-regionalize>{entry.source}</Badge>
+                    </div>
+                    {entry.format === "flipbook" ? <BookMarked className="h-5 w-5 shrink-0 text-hindu-red" /> : entry.format === "pdf" ? <FileText className="h-5 w-5 shrink-0 text-hindu-red" /> : entry.format === "text-audio" ? <Headphones className="h-5 w-5 shrink-0 text-hindu-red" /> : <ExternalLink className="h-4 w-4 shrink-0 text-muted-foreground" />}
                   </div>
                   <h3 className="mt-4 text-base font-bold leading-snug">{lc(entry.title)}</h3>
+                  <p className="mt-3 text-[11px] font-bold tracking-[.14em] text-muted-foreground" data-no-regionalize>{formatLabel[entry.format]}</p>
                 </>
               );
               const className = "group min-h-32 rounded-2xl border bg-card p-5 text-left shadow-sm transition duration-300 hover:-translate-y-1 hover:border-hindu-gold/60 hover:shadow-lg animate-fade-in";
