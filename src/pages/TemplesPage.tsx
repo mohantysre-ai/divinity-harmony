@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import {
   BookOpenCheck,
@@ -75,9 +75,19 @@ function tourismSearch(temple: Temple) {
 }
 
 export default function TemplesPage() {
-  const { tk, lc, lcl } = useLocale();
+  const { locale, tk, lc, lcl } = useLocale();
   const [searchParams] = useSearchParams();
-  const [query, setQuery] = useState(() => searchParams.get("search") || "");
+  const initialQuery = searchParams.get("search") || "";
+  const [query, setQuery] = useState(initialQuery);
+  const querySource = useRef(initialQuery);
+  const previousLocale = useRef(locale);
+  const [queryInput, setQueryInput] = useState(() =>
+    locale === "en"
+      ? initialQuery
+      : initialQuery.trim().toLocaleLowerCase() === "chandi temple"
+        ? lc("Chandi Temple")
+        : lc(initialQuery),
+  );
   const [position, setPosition] = useState<{ lat: number; lon: number } | null>(
     null,
   );
@@ -85,6 +95,27 @@ export default function TemplesPage() {
   const [selected, setSelected] = useState<Temple>(temples[0]);
   const [searching, setSearching] = useState(false);
   const [locationError, setLocationError] = useState("");
+
+  const localizeQueryInput = useCallback((value: string) => {
+    if (locale === "en") return value;
+    return value.trim().toLocaleLowerCase() === "chandi temple"
+      ? lc("Chandi Temple")
+      : lc(value);
+  }, [lc, locale]);
+
+  useEffect(() => {
+    if (previousLocale.current === locale) return;
+    setQueryInput(localizeQueryInput(querySource.current));
+    previousLocale.current = locale;
+  }, [locale, localizeQueryInput]);
+
+  const changeQuery = (value: string) => {
+    // Keep the exact query for filtering and the remote place API. The displayed
+    // value is localized separately when the site language changes.
+    querySource.current = value;
+    setQuery(value);
+    setQueryInput(value);
+  };
 
   useEffect(() => {
     const term = query.trim();
@@ -269,8 +300,11 @@ export default function TemplesPage() {
               <div className="relative flex-1">
                 <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                 <Input
-                  value={query}
-                  onChange={(event) => setQuery(event.target.value)}
+                  value={queryInput}
+                  onChange={(event) => changeQuery(event.target.value)}
+                  onBlur={() =>
+                    setQueryInput(localizeQueryInput(querySource.current))
+                  }
                   className="pl-9"
                   placeholder={lc(
                     "Search Biraja Temple, Jajpur, Bali, Indonesia or any village",
