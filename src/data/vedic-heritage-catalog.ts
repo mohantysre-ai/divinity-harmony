@@ -1,9 +1,10 @@
 export type VedicHeritageEntry = {
   id: string;
   title: string;
-  category: "Samhitas" | "Brahmanas" | "Aranyakas" | "Upanishads" | "Vedangas" | "Rituals";
+  category: "Samhitas" | "Brahmanas" | "Aranyakas" | "Upanishads" | "Gitas" | "Vedangas" | "Rituals";
   url: string;
-  format: "portal" | "flipbook";
+  format: "portal" | "flipbook" | "text-audio" | "pdf";
+  source: "IGNCA" | "Sri Aurobindo & The Mother";
 };
 
 const portal = (id: string, title: string, category: VedicHeritageEntry["category"], path: string): VedicHeritageEntry => ({
@@ -12,9 +13,55 @@ const portal = (id: string, title: string, category: VedicHeritageEntry["categor
   category,
   url: `https://vedicheritage.gov.in${path}`,
   format: "portal",
+  source: "IGNCA",
 });
 
+const aurobindo = (
+  id: string,
+  title: string,
+  category: VedicHeritageEntry["category"],
+  url: string,
+  format: "text-audio" | "pdf",
+): VedicHeritageEntry => ({ id, title, category, url, format, source: "Sri Aurobindo & The Mother" });
+
 export const vedicHeritageCatalog: VedicHeritageEntry[] = [
+  // Direct source editions: these open the complete original text or scan,
+  // never an app-written summary. URLs were verified against the source site.
+  aurobindo(
+    "aurobindo-rigveda-text-audio",
+    "Rigveda Samhita",
+    "Samhitas",
+    "https://sri-aurobindo.co.in/workings/matherials/rigveda/index.htm",
+    "text-audio",
+  ),
+  aurobindo(
+    "aurobindo-bhagavad-gita-text-audio",
+    "Bhagavad Gita",
+    "Gitas",
+    "https://sri-aurobindo.co.in/workings/audio/gita/index_e.htm",
+    "text-audio",
+  ),
+  aurobindo(
+    "aurobindo-arctic-home-vedas-pdf",
+    "The Arctic Home in the Vedas",
+    "Vedangas",
+    "https://sri-aurobindo.co.in/workings/matherials/rigveda/tilak-arctic_home_in_the_vedas.pdf",
+    "pdf",
+  ),
+  aurobindo(
+    "aurobindo-rigveda-padanam-pdf",
+    "Rigveda Padanam",
+    "Vedangas",
+    "https://sri-aurobindo.co.in/workings/matherials/rigveda/padanam_devanagari.pdf",
+    "pdf",
+  ),
+  aurobindo(
+    "aurobindo-vedic-accents-pdf",
+    "Vedic Accents",
+    "Vedangas",
+    "https://sri-aurobindo.co.in/workings/matherials/accents.pdf",
+    "pdf",
+  ),
   portal("rigveda", "Rigveda Samhitas", "Samhitas", "/samhitas/rigveda/"),
   portal("rigveda-maharashtra", "Rigveda Shakala — Maharashtra Tradition", "Samhitas", "/samhitas/rigveda/shakala-samhita/maharashtra-tradition/"),
   portal("rigveda-kerala", "Rigveda Shakala — Kerala Tradition", "Samhitas", "/samhitas/rigveda/shakala-samhita/mandal-01/"),
@@ -55,6 +102,7 @@ export const vedicHeritageCatalog: VedicHeritageEntry[] = [
     category: "Brahmanas",
     url: "https://vedicheritage.gov.in/flipbook/Kanva_Shatapatha_Brahmanam_Vol_I/#book/1",
     format: "flipbook",
+    source: "IGNCA",
   },
 
   portal("aitareya-aranyaka", "Aitareya Aranyaka", "Aranyakas", "/aranyakas/aitareyaranyaka/"),
@@ -96,6 +144,7 @@ export const vedicHeritageCategories = [
   "Brahmanas",
   "Aranyakas",
   "Upanishads",
+  "Gitas",
   "Vedangas",
   "Rituals",
 ] as const;
