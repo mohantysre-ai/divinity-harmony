@@ -21,6 +21,12 @@ const contentSupplementPacks = JSON.parse(
     "utf8",
   ),
 );
+const contentReleaseSupplementPacks = JSON.parse(
+  fs.readFileSync(
+    path.join(root, "src/lib/content-release-supplement-packs.json"),
+    "utf8",
+  ),
+);
 const uiKeys = JSON.parse(
   fs.readFileSync(path.join(root, "src/lib/ui-keys-export.json"), "utf8"),
 );
@@ -43,6 +49,7 @@ for (const [section, phrases] of Object.entries(sections)) {
     let valid = 0;
     for (const english of phrases) {
       const translated =
+        contentReleaseSupplementPacks[locale]?.[english] ??
         contentSupplementPacks[locale]?.[english] ??
         contentPacks[locale]?.[english];
       if (!translated) {

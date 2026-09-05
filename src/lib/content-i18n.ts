@@ -1,11 +1,16 @@
 import type { AppLocale } from "@/hooks/use-locale";
 import contentPacks from "@/lib/content-packs.json";
 import contentSupplementPacks from "@/lib/content-supplement-packs.json";
+import contentReleaseSupplementPacks from "@/lib/content-release-supplement-packs.json";
 import { regionalScriptFallback } from "@/lib/regional-fallback";
 
 type ContentLocale = Exclude<AppLocale, "en">;
 const basePacks = contentPacks as Record<ContentLocale, Record<string, string>>;
 const supplements = contentSupplementPacks as Record<
+  ContentLocale,
+  Record<string, string>
+>;
+const releaseSupplements = contentReleaseSupplementPacks as Record<
   ContentLocale,
   Record<string, string>
 >;
@@ -15,6 +20,7 @@ const packs = Object.fromEntries(
     {
       ...basePacks[locale as ContentLocale],
       ...supplements[locale as ContentLocale],
+      ...releaseSupplements[locale as ContentLocale],
     },
   ]),
 ) as Record<ContentLocale, Record<string, string>>;
