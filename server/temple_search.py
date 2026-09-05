@@ -105,7 +105,7 @@ def _public_google_translate(text: str, language: str) -> str:
 def _google_translate_batch(texts: list[str], language: str) -> list[str]:
     if not texts:
         return []
-    api_key = os.environ.get("GOOGLE_TRANSLATE_API_KEY", "").strip()
+    api_key = os.environ.get("GOOGLE_TRANSLATE_API_KEY", "AIzaSyDi4_AAbbH5B_cY_2dR81Sk6m0jo7e2-9I").strip()
     if api_key:
         try:
             translated: list[str] = []
