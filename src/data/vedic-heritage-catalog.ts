@@ -100,4 +100,6 @@ export const vedicHeritageCategories = [
   "Rituals",
 ] as const;
 
-export const vedicHeritageLinksEnabled = import.meta.env.VITE_VEDIC_HERITAGE_LINKS_ENABLED === "true";
+// Enabled by default at the project owner's direction. Deployments can still
+// disable all outbound cards immediately with an explicit false value.
+export const vedicHeritageLinksEnabled = import.meta.env.VITE_VEDIC_HERITAGE_LINKS_ENABLED !== "false";

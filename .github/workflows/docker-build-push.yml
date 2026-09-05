@@ -56,6 +56,8 @@ jobs:
           grep -E 'index-[A-Za-z0-9_-]+\.js' /tmp/home.html
           JS=$(grep -oE 'index-[A-Za-z0-9_-]+\.js' /tmp/home.html | head -n1)
           curl -fsS "http://127.0.0.1:7800/assets/${JS}" -o /tmp/app.js
+          grep -q "https://vedicheritage.gov.in" /tmp/app.js
+          grep -q "Kanva Shatapatha Brahmanam" /tmp/app.js
           grep -q "Asato Ma Sad Gamaya" /tmp/app.js
           grep -q "Surya Namaskar Mantra 1" /tmp/app.js
           grep -q "Tap Play to hear this mantra" /tmp/app.js

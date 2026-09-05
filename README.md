@@ -156,9 +156,9 @@ Only use recordings, translations and images that are public domain, openly lice
 The Scriptures page includes a searchable catalogue of official Vedic Heritage
 Portal sections and a verified Kanva Shatapatha Brahmanam flipbook example. The
 integration stores metadata only and does not copy government scans or articles.
-Because IGNCA's published policy requires prior permission for inbound hyperlinks,
-outbound cards remain disabled until `VITE_VEDIC_HERITAGE_LINKS_ENABLED=true` is
-set after written permission is received. See
+Outbound cards are enabled by default at the project owner's direction. The deployer
+remains responsible for obtaining any permission required by IGNCA's published
+hyperlinking policy; set `VITE_VEDIC_HERITAGE_LINKS_ENABLED=false` to disable them. See
 [Vedic Heritage integration](docs/vedic-heritage-integration.md).
 
 Each mantra searches for a matching devotional recording through the same-origin

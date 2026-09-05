@@ -5,14 +5,17 @@ Samhita, Brahmana, Aranyaka, Upanishad, Vedanga, ritual, manuscript and publishe
 book sections. It stores only titles, categories and destination URLs. It does not
 copy the portal's article text, scans, PDFs, audio or video.
 
-## Why links are disabled by default
+## Deployment status
 
 IGNCA's published **Hyper linking Policy** says that prior permission is required
 before another website links to the portal. Its **Copyright Policy** also says the
 site's contents may not be reproduced partially or fully without written
 permission from IGNCA or the contributor.
 
-Obtain permission before enabling the outbound cards:
+The metadata-only outbound cards are enabled by default at the project owner's
+direction. This project setting is not a representation that IGNCA has granted
+permission. The deployer remains responsible for obtaining any permission required
+by the following published policies:
 
 - Hyperlinking policy: https://vedicheritage.gov.in/hyper-linking-policy/
 - Copyright policy: https://vedicheritage.gov.in/copyright-policy/
@@ -24,10 +27,10 @@ page is a non-misleading educational catalogue, and state the exact link label
 permission if scanned pages, article text, cover images or other portal content
 will be reproduced inside Divinity Harmony.
 
-After written permission is received, set this build-time variable and redeploy:
+To disable the outbound cards, set this build-time variable and redeploy:
 
 ```env
-VITE_VEDIC_HERITAGE_LINKS_ENABLED=true
+VITE_VEDIC_HERITAGE_LINKS_ENABLED=false
 ```
 
 The catalogue is defined in `src/data/vedic-heritage-catalog.ts`. Each entry uses
