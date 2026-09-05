@@ -78,19 +78,20 @@ async function translateBatch(texts, to) {
   }
 }
 
-async function translateSupplementBlock(keys, locale) {
-  const result = {};
-  const english = keys.map((key) => UI_KEYS[key]);
+async function translateSupplementBlock(keys, locale, existing = {}) {
+  const result = { ...existing };
+  const translatableKeys = keys.filter((key) => typeof UI_KEYS[key] === "string");
+  const english = translatableKeys.map((key) => UI_KEYS[key]);
   const batchSize = 20;
 
-  for (let i = 0; i < keys.length; i += batchSize) {
-    const keyBatch = keys.slice(i, i + batchSize);
+  for (let i = 0; i < translatableKeys.length; i += batchSize) {
+    const keyBatch = translatableKeys.slice(i, i + batchSize);
     const textBatch = english.slice(i, i + batchSize);
     const translated = await translateBatch(textBatch, locale);
     for (let j = 0; j < keyBatch.length; j++) {
       result[keyBatch[j]] = translated[j].replace(/\s+/g, " ").trim();
     }
-    process.stdout.write(`\r  ${locale}: ${Math.min(i + batchSize, keys.length)}/${keys.length}`);
+    process.stdout.write(`\r  ${locale}: ${Math.min(i + batchSize, translatableKeys.length)}/${translatableKeys.length}`);
     await sleep(200);
   }
   console.log();
@@ -106,7 +107,7 @@ for (const file of SUPPLEMENT_FILES) {
 
   for (const locale of TARGET_LOCALES) {
     console.log(`Translating ${locale}...`);
-    supplement[locale] = await translateSupplementBlock(keys, locale);
+    supplement[locale] = await translateSupplementBlock(keys, locale, supplement[locale]);
   }
 
   fs.writeFileSync(filePath, JSON.stringify(supplement, null, 2) + "\n");

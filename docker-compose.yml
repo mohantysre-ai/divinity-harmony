@@ -11,6 +11,7 @@ services:
         VITE_LIVE_DARSHAN_FEED_URL: ${VITE_LIVE_DARSHAN_FEED_URL:-}
         VITE_SUPPORT_URL: ${VITE_SUPPORT_URL:-}
         VITE_SITE_URL: ${VITE_SITE_URL:-https://mantra.sigq.in}
+        VITE_VEDIC_HERITAGE_LINKS_ENABLED: ${VITE_VEDIC_HERITAGE_LINKS_ENABLED:-true}
     ports:
       - "7800:80"
     environment:

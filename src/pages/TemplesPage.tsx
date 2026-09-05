@@ -199,40 +199,40 @@ export default function TemplesPage() {
 
   const actions = [
     {
-      label: "Directions",
-      detail: "Door-to-temple route",
+      label: lc("Directions"),
+      detail: lc("Door-to-temple route"),
       icon: Navigation,
       url: mapsUrl(selected),
     },
     {
-      label: "Flights",
-      detail: selected.nearestAirport || "Search the nearest airport",
+      label: lc("Flights"),
+      detail: lc(selected.nearestAirport || "Search the nearest airport"),
       icon: Plane,
       url: searchUrl(`flights to ${selected.city} ${selected.country}`),
     },
     {
-      label: "Stay nearby",
-      detail: "Compare current rooms",
+      label: lc("Stay nearby"),
+      detail: lc("Compare current rooms"),
       icon: Hotel,
       url: searchUrl(`hotels near ${selected.name} ${selected.city}`),
     },
     {
-      label: "Tour packages",
-      detail: "Compare current pilgrimage plans",
+      label: lc("Tour packages"),
+      detail: lc("Compare current pilgrimage plans"),
       icon: TicketCheck,
       url: searchUrl(
         `${selected.name} ${selected.city} pilgrimage tour package from my city`,
       ),
     },
     {
-      label: "Official travel guide",
-      detail: "Government, temple or UNESCO source",
+      label: lc("Official travel guide"),
+      detail: lc("Government, temple or UNESCO source"),
       icon: Globe2,
       url: tourismSearch(selected),
     },
     {
-      label: "Local transport",
-      detail: selected.railOrRoad || "Rail, bus and road options",
+      label: lc("Local transport"),
+      detail: lc(selected.railOrRoad || "Rail, bus and road options"),
       icon: TrainFront,
       url: searchUrl(
         `how to reach ${selected.name} ${selected.city} public transport`,
@@ -362,11 +362,11 @@ export default function TemplesPage() {
                   <action.icon className="mt-0.5 h-5 w-5 shrink-0 text-orange-600" />
                   <span>
                     <strong className="flex items-center gap-1">
-                      {lc(action.label)}
+                      {action.label}
                       <ExternalLink className="h-3 w-3 opacity-50" />
                     </strong>
                     <small className="mt-1 block leading-5 text-muted-foreground">
-                      {lc(action.detail)}
+                      {action.detail}
                     </small>
                   </span>
                 </a>

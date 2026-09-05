@@ -30,13 +30,13 @@ export default function CultureIndiaPage() {
   const selected = culturePacks.find((pack) => pack.id === id);
 
   const guideModules = useMemo(() => selected ? [
-    { id: "calendar", icon: CalendarRange, title: "Festival calendar and seasonal rhythm" },
-    { id: "rituals", icon: UsersRound, title: "Home worship and community ritual" },
-    { id: "journeys", icon: Landmark, title: "Temples and sacred journeys" },
-    { id: "language", icon: Languages, title: "Language, script and oral memory" },
-    { id: "arts", icon: Sparkles, title: "Arts, food and living heritage" },
-    { id: "travel", icon: MapPinned, title: "Respectful local travel" },
-  ] : [], [selected]);
+    { id: "calendar", icon: CalendarRange, title: lc("Festival calendar and seasonal rhythm") },
+    { id: "rituals", icon: UsersRound, title: lc("Home worship and community ritual") },
+    { id: "journeys", icon: Landmark, title: lc("Temples and sacred journeys") },
+    { id: "language", icon: Languages, title: lc("Language, script and oral memory") },
+    { id: "arts", icon: Sparkles, title: lc("Arts, food and living heritage") },
+    { id: "travel", icon: MapPinned, title: lc("Respectful local travel") },
+  ] : [], [selected, lc]);
 
   useEffect(() => {
     setVisibleGuideCount(3);
@@ -154,7 +154,7 @@ export default function CultureIndiaPage() {
                     </div>
                     <div className="p-6 md:p-8">
                       <p className="text-xs font-bold uppercase tracking-[.2em] text-orange-700">{lc(selected.name)} · {String(index + 1).padStart(2, "0")}</p>
-                      <h2 className="mt-2 text-2xl font-bold">{lc(module.title)}</h2>
+                      <h2 className="mt-2 text-2xl font-bold">{module.title}</h2>
                       <StateGuideBody section={module.id} selected={selected} lc={lc} lcl={lcl} />
                       {module.id === "journeys" && <div className="mt-4 flex flex-wrap gap-2">{selected.temples.map((temple, templeIndex) => <Link key={temple} to={`/temples?search=${encodeURIComponent(temple)}`} className="rounded-full border px-4 py-2 text-sm font-semibold hover:border-orange-500">{lcl(selected.temples)[templeIndex]}</Link>)}</div>}
                     </div>
@@ -283,12 +283,12 @@ export default function CultureIndiaPage() {
 }
 
 function StateGuideBody({ section, selected, lc, lcl }: { section: string; selected: (typeof culturePacks)[number]; lc: (value: string) => string; lcl: (values: string[]) => string[] }) {
-  const common = "Dates and customs can differ by district, community, family tradition and lineage.";
-  if (section === "calendar") return <p className="mt-3 leading-7 text-muted-foreground">{lcl(selected.festivals).join(", ")} {lc("are important observances connected with")} {lc(selected.calendar)}. {lc(common)}</p>;
+  const common = lc("Dates and customs can differ by district, community, family tradition and lineage.");
+  if (section === "calendar") return <p className="mt-3 leading-7 text-muted-foreground">{lcl(selected.festivals).join(", ")} {lc("are important observances connected with")} {lc(selected.calendar)}. {common}</p>;
   if (section === "rituals") return <p className="mt-3 leading-7 text-muted-foreground">{lcl(selected.traditions).join(", ")} {lc("are major living traditions in")} {lc(selected.name)}. {lc("Consult local elders, temple priests and community organizations for lineage-specific procedure.")}</p>;
   if (section === "journeys") return <p className="mt-3 leading-7 text-muted-foreground">{lcl(selected.temples).join(", ")} {lc("form a starting route for understanding local sacred geography, festivals, temple food, art, music and pilgrimage etiquette.")}</p>;
   if (section === "language") return <p className="mt-3 leading-7 text-muted-foreground">{lc(selected.language)} · {selected.script}. {lc("Regional languages carry local names, songs, vows, stories and ritual vocabulary. Learn pronunciation and meaning with local speakers.")}</p>;
-  if (section === "arts") return <p className="mt-3 leading-7 text-muted-foreground">{lc("Explore regional crafts, performance traditions, sacred foods, textiles and festival decorations.")} {lc(common)}</p>;
+  if (section === "arts") return <p className="mt-3 leading-7 text-muted-foreground">{lc("Explore regional crafts, performance traditions, sacred foods, textiles and festival decorations.")} {common}</p>;
   return <p className="mt-3 leading-7 text-muted-foreground">{lc("Plan temple timings, transport, dress, accessibility and accommodation before travel.")} {lc("Ask before photographing worship or private ceremonies, and support local artisans and guides.")}</p>;
 }
 

@@ -151,6 +151,16 @@ See:
 
 Only use recordings, translations and images that are public domain, openly licensed, owned by the project, or used with permission. The interface provides graceful media fallbacks when an external file becomes unavailable.
 
+## Government Vedic catalogue
+
+The Scriptures page includes a searchable catalogue of official Vedic Heritage
+Portal sections and a verified Kanva Shatapatha Brahmanam flipbook example. The
+integration stores metadata only and does not copy government scans or articles.
+Outbound cards are enabled by default at the project owner's direction. The deployer
+remains responsible for obtaining any permission required by IGNCA's published
+hyperlinking policy; set `VITE_VEDIC_HERITAGE_LINKS_ENABLED=false` to disable them. See
+[Vedic Heritage integration](docs/vedic-heritage-integration.md).
+
 Each mantra searches for a matching devotional recording through the same-origin
 API and plays it in YouTube's privacy-enhanced official player. The app does not
 download, extract or convert YouTube audio to MP3. Visitors can switch the sacred
