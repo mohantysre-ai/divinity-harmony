@@ -62,8 +62,12 @@ export default function ResilientCoverImage({
     return (
       <div
         className={`${className} bg-[radial-gradient(circle_at_20%_20%,rgba(251,191,36,0.45),transparent_45%),radial-gradient(circle_at_80%_80%,rgba(194,65,12,0.4),transparent_50%),linear-gradient(135deg,#7c2d12,#1c1917)]`}
-        aria-hidden
-      />
+        role={alt ? "img" : undefined}
+        aria-label={alt || undefined}
+        aria-hidden={alt ? undefined : true}
+      >
+        {alt && <span className="absolute inset-0 flex items-center justify-center p-8 text-center text-2xl font-bold text-amber-50/85">ॐ<br />{alt}</span>}
+      </div>
     );
   }
 

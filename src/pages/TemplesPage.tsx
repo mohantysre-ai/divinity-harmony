@@ -39,11 +39,7 @@ const templeImageCandidates = (temple: Temple) => {
     ["prambanan", "Prambanan Temple Compounds.jpg"],
   ];
   const match = exact.find(([key]) => name.includes(key));
-  return [
-    ...(match ? [commonsFile(match[1])] : []),
-    commonsFile("Meenakshi Amman Temple, Madurai, India.jpg"),
-    commonsFile("Jagannath Temple Puri.jpg"),
-  ];
+  return match ? [commonsFile(match[1])] : [];
 };
 
 const distance = (a: number, b: number, c: number, d: number) => {
