@@ -37,7 +37,12 @@
     "Karya Siddhi Hanuman Temple": "कार्य सिद्धि हनुमान मंदिर",
     "Bengaluru": "बेंगलुरु",
     "Kempegowda International Airport, Bengaluru": "केम्पेगौड़ा अंतरराष्ट्रीय विमानबंदर, बेंगलुरु",
-    "A prominent Hanuman temple in Girinagar, Bengaluru, associated with Sri Ganapathy Sachchidananda Ashrama.": "बेंगलुरु के गिरिनगर में स्थित प्रमुख हनुमान मंदिर, जो श्री गणपति सच्चिदानंद आश्रम से जुड़ा है।"
+    "A prominent Hanuman temple in Girinagar, Bengaluru, associated with Sri Ganapathy Sachchidananda Ashrama.": "बेंगलुरु के गिरिनगर में स्थित प्रमुख हनुमान मंदिर, जो श्री गणपति सच्चिदानंद आश्रम से जुड़ा है।",
+    "Ram Mandir Ayodhya": "राम मंदिर, अयोध्या",
+    "Shri Ram": "श्रीराम",
+    "The Shri Ram Janmabhoomi temple in Ayodhya is dedicated to Shri Ram.": "अयोध्या में श्रीराम जन्मभूमि पर स्थित यह मंदिर भगवान श्रीराम को समर्पित है।",
+    "Maharishi Valmiki International Airport, Ayodhya": "महर्षि वाल्मीकि अंतरराष्ट्रीय हवाई अड्डा, अयोध्या",
+    "Ayodhya Dham Junction; follow current local traffic and security directions": "अयोध्या धाम जंक्शन; स्थानीय यातायात और सुरक्षा के वर्तमान निर्देशों का पालन करें"
   },
   "bn": {
     "${count} results · curated guides plus live OpenStreetMap discovery": "${count}টি ফলাফল · নির্বাচিত নির্দেশিকা ও OpenStreetMap-এর সাম্প্রতিক স্থান-অনুসন্ধান",
@@ -78,7 +83,12 @@
     "Karya Siddhi Hanuman Temple": "কার্যসিদ্ধি হনুমান মন্দির",
     "Bengaluru": "বেঙ্গালুরু",
     "Kempegowda International Airport, Bengaluru": "কেম্পেগৌড়া আন্তর্জাতিক বিমানবন্দর, বেঙ্গালুরু",
-    "A prominent Hanuman temple in Girinagar, Bengaluru, associated with Sri Ganapathy Sachchidananda Ashrama.": "বেঙ্গালুরুর গিরিনগরে অবস্থিত প্রধান হনুমান মন্দির, যা শ্রী গণপতি সচ্চিদানন্দ আশ্রমের সঙ্গে যুক্ত।"
+    "A prominent Hanuman temple in Girinagar, Bengaluru, associated with Sri Ganapathy Sachchidananda Ashrama.": "বেঙ্গালুরুর গিরিনগরে অবস্থিত প্রধান হনুমান মন্দির, যা শ্রী গণপতি সচ্চিদানন্দ আশ্রমের সঙ্গে যুক্ত।",
+    "Ram Mandir Ayodhya": "রাম মন্দির, অযোধ্যা",
+    "Shri Ram": "শ্রীরাম",
+    "The Shri Ram Janmabhoomi temple in Ayodhya is dedicated to Shri Ram.": "অযোধ্যায় শ্রীরাম জন্মভূমিতে অবস্থিত এই মন্দিরটি শ্রীরামকে উৎসর্গ করা হয়েছে।",
+    "Maharishi Valmiki International Airport, Ayodhya": "মহর্ষি বাল্মীকি আন্তর্জাতিক বিমানবন্দর, অযোধ্যা",
+    "Ayodhya Dham Junction; follow current local traffic and security directions": "অযোধ্যা ধাম জংশন; স্থানীয় যানচলাচল ও নিরাপত্তার বর্তমান নির্দেশনা অনুসরণ করুন"
   },
   "gu": {
     "${count} results · curated guides plus live OpenStreetMap discovery": "${count} પરિણામ · પસંદ કરેલી માર્ગદર્શિકા અને OpenStreetMap પરથી તાજી સ્થળ-શોધ",
@@ -116,7 +126,12 @@
     "Karya Siddhi Hanuman Temple": "કાર્યસિદ્ધિ હનુમાન મંદિર",
     "Bengaluru": "બેંગલુરુ",
     "Kempegowda International Airport, Bengaluru": "કેમ્પેગૌડા આંતરરાષ્ટ્રીય વિમાનમથક, બેંગલુરુ",
-    "A prominent Hanuman temple in Girinagar, Bengaluru, associated with Sri Ganapathy Sachchidananda Ashrama.": "બેંગલુરુના ગિરિનગરમાં આવેલું મુખ્ય હનુમાન મંદિર, જે શ્રી ગણપતિ સચ્ચિદાનંદ આશ્રમ સાથે જોડાયેલું છે."
+    "A prominent Hanuman temple in Girinagar, Bengaluru, associated with Sri Ganapathy Sachchidananda Ashrama.": "બેંગલુરુના ગિરિનગરમાં આવેલું મુખ્ય હનુમાન મંદિર, જે શ્રી ગણપતિ સચ્ચિદાનંદ આશ્રમ સાથે જોડાયેલું છે.",
+    "Ram Mandir Ayodhya": "રામ મંદિર, અયોધ્યા",
+    "Shri Ram": "શ્રીરામ",
+    "The Shri Ram Janmabhoomi temple in Ayodhya is dedicated to Shri Ram.": "અયોધ્યામાં શ્રીરામ જન્મભૂમિ પર આવેલું આ મંદિર ભગવાન શ્રીરામને સમર્પિત છે.",
+    "Maharishi Valmiki International Airport, Ayodhya": "મહર્ષિ વાલ્મીકિ આંતરરાષ્ટ્રીય વિમાનમથક, અયોધ્યા",
+    "Ayodhya Dham Junction; follow current local traffic and security directions": "અયોધ્યા ધામ જંક્શન; સ્થાનિક વાહનવ્યવહાર અને સુરક્ષાની વર્તમાન સૂચનાઓનું પાલન કરો"
   },
   "mr": {
     "${count} results · curated guides plus live OpenStreetMap discovery": "${count} निकाल · निवडक मार्गदर्शिका आणि OpenStreetMapवरील ताजी स्थळ-शोध",
@@ -155,7 +170,12 @@
     "Karya Siddhi Hanuman Temple": "कार्यसिद्धी हनुमान मंदिर",
     "Bengaluru": "बेंगळुरू",
     "Kempegowda International Airport, Bengaluru": "केम्पेगौडा आंतरराष्ट्रीय विमानतळ, बेंगळुरू",
-    "A prominent Hanuman temple in Girinagar, Bengaluru, associated with Sri Ganapathy Sachchidananda Ashrama.": "बेंगळुरूच्या गिरीनगरमधील प्रमुख हनुमान मंदिर, जे श्री गणपती सच्चिदानंद आश्रमाशी संबंधित आहे."
+    "A prominent Hanuman temple in Girinagar, Bengaluru, associated with Sri Ganapathy Sachchidananda Ashrama.": "बेंगळुरूच्या गिरीनगरमधील प्रमुख हनुमान मंदिर, जे श्री गणपती सच्चिदानंद आश्रमाशी संबंधित आहे.",
+    "Ram Mandir Ayodhya": "राम मंदिर, अयोध्या",
+    "Shri Ram": "श्रीराम",
+    "The Shri Ram Janmabhoomi temple in Ayodhya is dedicated to Shri Ram.": "अयोध्येतील श्रीराम जन्मभूमीवर असलेले हे मंदिर प्रभू श्रीरामांना समर्पित आहे.",
+    "Maharishi Valmiki International Airport, Ayodhya": "महर्षी वाल्मीकी आंतरराष्ट्रीय विमानतळ, अयोध्या",
+    "Ayodhya Dham Junction; follow current local traffic and security directions": "अयोध्या धाम जंक्शन; स्थानिक वाहतूक आणि सुरक्षेच्या सध्याच्या सूचनांचे पालन करा"
   },
   "ta": {
     "${count} results · curated guides plus live OpenStreetMap discovery": "${count} முடிவுகள் · தேர்ந்தெடுக்கப்பட்ட வழிகாட்டிகளும் OpenStreetMap புதிய இடத் தேடலும்",
@@ -194,7 +214,12 @@
     "Karya Siddhi Hanuman Temple": "காரிய சித்தி அனுமன் கோவில்",
     "Bengaluru": "பெங்களூரு",
     "Kempegowda International Airport, Bengaluru": "கெம்பேகவுடா பன்னாட்டு விமான நிலையம், பெங்களூரு",
-    "A prominent Hanuman temple in Girinagar, Bengaluru, associated with Sri Ganapathy Sachchidananda Ashrama.": "பெங்களூரு கிரிநகரில் அமைந்துள்ள, ஸ்ரீ கணபதி சச்சிதானந்த ஆசிரமத்துடன் தொடர்புடைய முக்கிய அனுமன் கோவில்."
+    "A prominent Hanuman temple in Girinagar, Bengaluru, associated with Sri Ganapathy Sachchidananda Ashrama.": "பெங்களூரு கிரிநகரில் அமைந்துள்ள, ஸ்ரீ கணபதி சச்சிதானந்த ஆசிரமத்துடன் தொடர்புடைய முக்கிய அனுமன் கோவில்.",
+    "Ram Mandir Ayodhya": "அயோத்தி ராமர் கோவில்",
+    "Shri Ram": "ஸ்ரீராமர்",
+    "The Shri Ram Janmabhoomi temple in Ayodhya is dedicated to Shri Ram.": "அயோத்தியில் ஸ்ரீராமர் பிறந்த இடத்தில் அமைந்துள்ள இந்தக் கோவில் ஸ்ரீராமருக்கு அர்ப்பணிக்கப்பட்டுள்ளது.",
+    "Maharishi Valmiki International Airport, Ayodhya": "மகரிஷி வால்மீகி பன்னாட்டு விமான நிலையம், அயோத்தி",
+    "Ayodhya Dham Junction; follow current local traffic and security directions": "அயோத்தி தாம் சந்திப்பு; உள்ளூர் போக்குவரத்து மற்றும் பாதுகாப்புக்கான தற்போதைய வழிமுறைகளைப் பின்பற்றவும்"
   },
   "te": {
     "${count} results · curated guides plus live OpenStreetMap discovery": "${count} ఫలితాలు · ఎంపిక చేసిన మార్గదర్శకాలు మరియు OpenStreetMap తాజా ప్రదేశ శోధన",
@@ -234,7 +259,12 @@
     "Karya Siddhi Hanuman Temple": "కార్యసిద్ధి హనుమాన్ ఆలయం",
     "Bengaluru": "బెంగళూరు",
     "Kempegowda International Airport, Bengaluru": "కెంపేగౌడ అంతర్జాతీయ విమానాశ్రయం, బెంగళూరు",
-    "A prominent Hanuman temple in Girinagar, Bengaluru, associated with Sri Ganapathy Sachchidananda Ashrama.": "బెంగళూరు గిరినగర్‌లోని ప్రముఖ హనుమాన్ ఆలయం; ఇది శ్రీ గణపతి సచ్చిదానంద ఆశ్రమంతో అనుబంధమైంది."
+    "A prominent Hanuman temple in Girinagar, Bengaluru, associated with Sri Ganapathy Sachchidananda Ashrama.": "బెంగళూరు గిరినగర్‌లోని ప్రముఖ హనుమాన్ ఆలయం; ఇది శ్రీ గణపతి సచ్చిదానంద ఆశ్రమంతో అనుబంధమైంది.",
+    "Ram Mandir Ayodhya": "అయోధ్య రామ మందిరం",
+    "Shri Ram": "శ్రీరాముడు",
+    "The Shri Ram Janmabhoomi temple in Ayodhya is dedicated to Shri Ram.": "అయోధ్యలోని శ్రీరామ జన్మభూమిలో ఉన్న ఈ ఆలయం శ్రీరాముడికి అంకితం చేయబడింది.",
+    "Maharishi Valmiki International Airport, Ayodhya": "మహర్షి వాల్మీకి అంతర్జాతీయ విమానాశ్రయం, అయోధ్య",
+    "Ayodhya Dham Junction; follow current local traffic and security directions": "అయోధ్య ధామ్ జంక్షన్; స్థానిక రవాణా మరియు భద్రతకు సంబంధించిన ప్రస్తుత సూచనలను పాటించండి"
   },
   "ml": {
     "${count} results · curated guides plus live OpenStreetMap discovery": "${count} ഫലങ്ങൾ · തിരഞ്ഞെടുത്ത മാർഗദർശനങ്ങളും OpenStreetMap-ലെ പുതിയ സ്ഥലാന്വേഷണവും",
@@ -272,7 +302,12 @@
     "Karya Siddhi Hanuman Temple": "കാര്യസിദ്ധി ഹനുമാൻ ക്ഷേത്രം",
     "Bengaluru": "ബെംഗളൂരു",
     "Kempegowda International Airport, Bengaluru": "കെമ്പെഗൗഡ അന്താരാഷ്ട്ര വിമാനത്താവളം, ബെംഗളൂരു",
-    "A prominent Hanuman temple in Girinagar, Bengaluru, associated with Sri Ganapathy Sachchidananda Ashrama.": "ബെംഗളൂരുവിലെ ഗിരിനഗറിൽ സ്ഥിതിചെയ്യുന്ന, ശ്രീ ഗണപതി സച്ചിദാനന്ദ ആശ്രമവുമായി ബന്ധപ്പെട്ട പ്രമുഖ ഹനുമാൻ ക്ഷേത്രം."
+    "A prominent Hanuman temple in Girinagar, Bengaluru, associated with Sri Ganapathy Sachchidananda Ashrama.": "ബെംഗളൂരുവിലെ ഗിരിനഗറിൽ സ്ഥിതിചെയ്യുന്ന, ശ്രീ ഗണപതി സച്ചിദാനന്ദ ആശ്രമവുമായി ബന്ധപ്പെട്ട പ്രമുഖ ഹനുമാൻ ക്ഷേത്രം.",
+    "Ram Mandir Ayodhya": "അയോധ്യ രാമക്ഷേത്രം",
+    "Shri Ram": "ശ്രീരാമൻ",
+    "The Shri Ram Janmabhoomi temple in Ayodhya is dedicated to Shri Ram.": "അയോധ്യയിലെ ശ്രീരാമജന്മഭൂമിയിൽ സ്ഥിതിചെയ്യുന്ന ഈ ക്ഷേത്രം ശ്രീരാമന് സമർപ്പിച്ചിരിക്കുന്നു.",
+    "Maharishi Valmiki International Airport, Ayodhya": "മഹർഷി വാൽമീകി അന്താരാഷ്ട്ര വിമാനത്താവളം, അയോധ്യ",
+    "Ayodhya Dham Junction; follow current local traffic and security directions": "അയോധ്യ ധാം ജങ്ഷൻ; പ്രാദേശിക ഗതാഗതത്തിന്റെയും സുരക്ഷയുടെയും നിലവിലെ നിർദേശങ്ങൾ പാലിക്കുക"
   },
   "kn": {
     "${count} results · curated guides plus live OpenStreetMap discovery": "${count} ಫಲಿತಾಂಶಗಳು · ಆಯ್ದ ಮಾರ್ಗದರ್ಶಿಗಳು ಮತ್ತು OpenStreetMapನ ಹೊಸ ಸ್ಥಳ ಹುಡುಕಾಟ",
@@ -312,7 +347,12 @@
     "Karya Siddhi Hanuman Temple": "ಕಾರ್ಯಸಿದ್ಧಿ ಹನುಮಾನ್ ದೇವಸ್ಥಾನ",
     "Bengaluru": "ಬೆಂಗಳೂರು",
     "Kempegowda International Airport, Bengaluru": "ಕೆಂಪೇಗೌಡ ಅಂತರರಾಷ್ಟ್ರೀಯ ವಿಮಾನ ನಿಲ್ದಾಣ, ಬೆಂಗಳೂರು",
-    "A prominent Hanuman temple in Girinagar, Bengaluru, associated with Sri Ganapathy Sachchidananda Ashrama.": "ಬೆಂಗಳೂರಿನ ಗಿರಿನಗರದಲ್ಲಿರುವ, ಶ್ರೀ ಗಣಪತಿ ಸಚ್ಚಿದಾನಂದ ಆಶ್ರಮದೊಂದಿಗೆ ಸಂಬಂಧಿಸಿದ ಪ್ರಮುಖ ಹನುಮಾನ್ ದೇವಸ್ಥಾನ."
+    "A prominent Hanuman temple in Girinagar, Bengaluru, associated with Sri Ganapathy Sachchidananda Ashrama.": "ಬೆಂಗಳೂರಿನ ಗಿರಿನಗರದಲ್ಲಿರುವ, ಶ್ರೀ ಗಣಪತಿ ಸಚ್ಚಿದಾನಂದ ಆಶ್ರಮದೊಂದಿಗೆ ಸಂಬಂಧಿಸಿದ ಪ್ರಮುಖ ಹನುಮಾನ್ ದೇವಸ್ಥಾನ.",
+    "Ram Mandir Ayodhya": "ಅಯೋಧ್ಯೆ ರಾಮ ಮಂದಿರ",
+    "Shri Ram": "ಶ್ರೀರಾಮ",
+    "The Shri Ram Janmabhoomi temple in Ayodhya is dedicated to Shri Ram.": "ಅಯೋಧ್ಯೆಯ ಶ್ರೀರಾಮ ಜನ್ಮಭೂಮಿಯಲ್ಲಿರುವ ಈ ದೇವಾಲಯವು ಶ್ರೀರಾಮನಿಗೆ ಸಮರ್ಪಿತವಾಗಿದೆ.",
+    "Maharishi Valmiki International Airport, Ayodhya": "ಮಹರ್ಷಿ ವಾಲ್ಮೀಕಿ ಅಂತರರಾಷ್ಟ್ರೀಯ ವಿಮಾನ ನಿಲ್ದಾಣ, ಅಯೋಧ್ಯೆ",
+    "Ayodhya Dham Junction; follow current local traffic and security directions": "ಅಯೋಧ್ಯಾ ಧಾಮ್ ಜಂಕ್ಷನ್; ಸ್ಥಳೀಯ ಸಂಚಾರ ಮತ್ತು ಭದ್ರತೆಯ ಪ್ರಸ್ತುತ ಸೂಚನೆಗಳನ್ನು ಪಾಲಿಸಿ"
   },
   "pa": {
     "${count} results · curated guides plus live OpenStreetMap discovery": "${count} ਨਤੀਜੇ · ਚੁਣੀਆਂ ਹੋਈਆਂ ਮਾਰਗਦਰਸ਼ਿਕਾਵਾਂ ਅਤੇ OpenStreetMap ਦੀ ਤਾਜ਼ਾ ਸਥਾਨ-ਖੋਜ",
@@ -350,7 +390,12 @@
     "Karya Siddhi Hanuman Temple": "ਕਾਰਜ ਸਿੱਧੀ ਹਨੂਮਾਨ ਮੰਦਰ",
     "Bengaluru": "ਬੇਂਗਲੁਰੂ",
     "Kempegowda International Airport, Bengaluru": "ਕੇਂਪੇਗੌੜਾ ਅੰਤਰਰਾਸ਼ਟਰੀ ਹਵਾਈ ਅੱਡਾ, ਬੇਂਗਲੁਰੂ",
-    "A prominent Hanuman temple in Girinagar, Bengaluru, associated with Sri Ganapathy Sachchidananda Ashrama.": "ਬੇਂਗਲੁਰੂ ਦੇ ਗਿਰੀਨਗਰ ਵਿੱਚ ਸਥਿਤ ਪ੍ਰਸਿੱਧ ਹਨੂਮਾਨ ਮੰਦਰ, ਜੋ ਸ਼੍ਰੀ ਗਣਪਤੀ ਸੱਚਿਦਾਨੰਦ ਆਸ਼ਰਮ ਨਾਲ ਸੰਬੰਧਿਤ ਹੈ।"
+    "A prominent Hanuman temple in Girinagar, Bengaluru, associated with Sri Ganapathy Sachchidananda Ashrama.": "ਬੇਂਗਲੁਰੂ ਦੇ ਗਿਰੀਨਗਰ ਵਿੱਚ ਸਥਿਤ ਪ੍ਰਸਿੱਧ ਹਨੂਮਾਨ ਮੰਦਰ, ਜੋ ਸ਼੍ਰੀ ਗਣਪਤੀ ਸੱਚਿਦਾਨੰਦ ਆਸ਼ਰਮ ਨਾਲ ਸੰਬੰਧਿਤ ਹੈ।",
+    "Ram Mandir Ayodhya": "ਰਾਮ ਮੰਦਰ, ਅਯੁੱਧਿਆ",
+    "Shri Ram": "ਸ੍ਰੀ ਰਾਮ",
+    "The Shri Ram Janmabhoomi temple in Ayodhya is dedicated to Shri Ram.": "ਅਯੁੱਧਿਆ ਵਿੱਚ ਸ੍ਰੀ ਰਾਮ ਜਨਮਭੂਮੀ ਵਿਖੇ ਸਥਿਤ ਇਹ ਮੰਦਰ ਸ੍ਰੀ ਰਾਮ ਨੂੰ ਸਮਰਪਿਤ ਹੈ।",
+    "Maharishi Valmiki International Airport, Ayodhya": "ਮਹਾਰਿਸ਼ੀ ਵਾਲਮੀਕਿ ਅੰਤਰਰਾਸ਼ਟਰੀ ਹਵਾਈ ਅੱਡਾ, ਅਯੁੱਧਿਆ",
+    "Ayodhya Dham Junction; follow current local traffic and security directions": "ਅਯੁੱਧਿਆ ਧਾਮ ਜੰਕਸ਼ਨ; ਸਥਾਨਕ ਆਵਾਜਾਈ ਅਤੇ ਸੁਰੱਖਿਆ ਦੀਆਂ ਮੌਜੂਦਾ ਹਦਾਇਤਾਂ ਦੀ ਪਾਲਣਾ ਕਰੋ"
   },
   "as": {
     "${count} results · curated guides plus live OpenStreetMap discovery": "${count}টা ফলাফল · নিৰ্বাচিত পথনিৰ্দেশিকা আৰু OpenStreetMapৰ শেহতীয়া স্থান-সন্ধান",
@@ -391,6 +436,11 @@
     "Karya Siddhi Hanuman Temple": "কাৰ্যসিদ্ধি হনুমান মন্দিৰ",
     "Bengaluru": "বেংগালুৰু",
     "Kempegowda International Airport, Bengaluru": "কেম্পেগৌড়া আন্তঃৰাষ্ট্ৰীয় বিমানবন্দৰ, বেংগালুৰু",
-    "A prominent Hanuman temple in Girinagar, Bengaluru, associated with Sri Ganapathy Sachchidananda Ashrama.": "বেংগালুৰুৰ গিৰিনগৰত অৱস্থিত প্ৰসিদ্ধ হনুমান মন্দিৰ, যিটো শ্ৰী গণপতি সচ্চিদানন্দ আশ্ৰমৰ সৈতে জড়িত।"
+    "A prominent Hanuman temple in Girinagar, Bengaluru, associated with Sri Ganapathy Sachchidananda Ashrama.": "বেংগালুৰুৰ গিৰিনগৰত অৱস্থিত প্ৰসিদ্ধ হনুমান মন্দিৰ, যিটো শ্ৰী গণপতি সচ্চিদানন্দ আশ্ৰমৰ সৈতে জড়িত।",
+    "Ram Mandir Ayodhya": "ৰাম মন্দিৰ, অযোধ্যা",
+    "Shri Ram": "শ্ৰীৰাম",
+    "The Shri Ram Janmabhoomi temple in Ayodhya is dedicated to Shri Ram.": "অযোধ্যাৰ শ্ৰীৰাম জন্মভূমিত অৱস্থিত এই মন্দিৰটো শ্ৰীৰামৰ প্ৰতি উৎসৰ্গিত।",
+    "Maharishi Valmiki International Airport, Ayodhya": "মহৰ্ষি বাল্মীকি আন্তঃৰাষ্ট্ৰীয় বিমানবন্দৰ, অযোধ্যা",
+    "Ayodhya Dham Junction; follow current local traffic and security directions": "অযোধ্যা ধাম জংচন; স্থানীয় যাতায়াত আৰু সুৰক্ষাৰ বৰ্তমানৰ নিৰ্দেশনা মানি চলক"
   }
 }

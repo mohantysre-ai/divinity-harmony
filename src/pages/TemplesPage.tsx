@@ -35,6 +35,8 @@ const normalizeTempleSearch = (value: string) =>
     .normalize("NFKC")
     .toLocaleLowerCase()
     .replace(/\bkarya\s+sidhi\b/g, "karya siddhi")
+    .replace(/\b(?:shri\s+)?ram\s+(?:janmabhoomi\s+)?temple(?:\s+ayodhya)?\b/g, "ram mandir ayodhya")
+    .replace(/\b(?:shri\s+)?ram\s+janmabhoomi(?:\s+mandir)?(?:\s+ayodhya)?\b/g, "ram mandir ayodhya")
     .replace(/[^\p{L}\p{N}]+/gu, " ")
     .trim();
 
