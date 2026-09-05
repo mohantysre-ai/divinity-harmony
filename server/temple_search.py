@@ -101,6 +101,47 @@ def _public_google_translate(text: str, language: str) -> str:
     return html.unescape("".join(str(segment[0]) for segment in segments if isinstance(segment, list) and segment).strip())
 
 
+def _google_translate_batch(texts: list[str], language: str) -> list[str]:
+    if not texts:
+        return []
+    api_key = os.environ.get("GOOGLE_TRANSLATE_API_KEY", "").strip()
+    if api_key:
+        try:
+            translated: list[str] = []
+            for offset in range(0, len(texts), 128):
+                translated.extend(_official_google_translate(texts[offset : offset + 128], language, api_key))
+            return translated
+        except Exception:
+            # A missing, expired or misconfigured key must not disable the
+            # best-effort path while deployment configuration is corrected.
+            pass
+    try:
+        with ThreadPoolExecutor(max_workers=min(12, len(texts))) as executor:
+            return list(executor.map(lambda text: _public_google_translate(text, language), texts))
+    except Exception:
+        return []
+
+
+def _translate_query_to_latin(text: str, language: str) -> str:
+    """Turn a regional-script search into an English/Latin OSM lookup term."""
+    target_script = _TARGET_SCRIPT.get(language)
+    if language == "en" or not target_script or not target_script.search(text):
+        return text
+    now = time.time()
+    cache_key = ("query-en", text)
+    with _LOCK:
+        cached = _TRANSLATION_CACHE.get(cache_key)
+        if cached and now - cached[0] < _TRANSLATION_TTL_SECONDS:
+            return cached[1]
+    translated = _google_translate_batch([text], "en")
+    latin = translated[0].strip() if translated else ""
+    if not re.search(r"[A-Za-z]", latin):
+        return text
+    with _LOCK:
+        _TRANSLATION_CACHE[cache_key] = (now, latin)
+    return latin
+
+
 def _translate_texts(texts: list[str], language: str) -> dict[str, str]:
     """Translate arbitrary OSM fields once, cache them, and fail safely to source text."""
     if language == "en":
@@ -119,19 +160,9 @@ def _translate_texts(texts: list[str], language: str) -> dict[str, str]:
     if not missing:
         return translated
 
-    fresh: list[str] = []
-    api_key = os.environ.get("GOOGLE_TRANSLATE_API_KEY", "").strip()
-    try:
-        if api_key:
-            for offset in range(0, len(missing), 128):
-                fresh.extend(_official_google_translate(missing[offset : offset + 128], language, api_key))
-        else:
-            with ThreadPoolExecutor(max_workers=min(12, len(missing))) as executor:
-                fresh = list(executor.map(lambda text: _public_google_translate(text, language), missing))
-    except Exception:
-        # A failed translation must never make temple discovery fail. The browser
-        # displays the original OSM text instead of manufacturing fake script.
-        fresh = []
+    # A failed translation must never make temple discovery fail. The browser
+    # displays the original OSM text instead of manufacturing fake script.
+    fresh = _google_translate_batch(missing, language)
 
     with _LOCK:
         for source, target in zip(missing, fresh):
@@ -171,7 +202,9 @@ def search_temples(query: str, limit: int = 18, language: str = "en") -> list[di
         if cached and now - cached[0] < _TTL_SECONDS:
             return cached[1]
 
-    search_term = term if any(word in key for word in ("temple", "mandir", "kovil", "pura", "matha", "devasthan")) else f"{term} Hindu temple"
+    lookup_term = _translate_query_to_latin(term, lang)
+    lookup_folded = lookup_term.casefold()
+    search_term = lookup_term if any(word in lookup_folded for word in ("temple", "mandir", "kovil", "pura", "matha", "devasthan")) else f"{lookup_term} Hindu temple"
     params = urlencode(
         {
             "format": "jsonv2",

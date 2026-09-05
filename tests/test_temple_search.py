@@ -88,6 +88,28 @@ class TempleSearchTests(unittest.TestCase):
         self.assertEqual(result[0]["summary"], "ଅଜଣା ରାମ ମନ୍ଦିର, ଉଦାହରଣ ଗାଁ, ଉତ୍ତର ପ୍ରଦେଶ, ଭାରତ")
         self.assertEqual(result[0]["imageQuery"], "Random Ram Temple India")
 
+    @patch("temple_search._translate_texts")
+    @patch("temple_search._translate_query_to_latin")
+    @patch("temple_search.urlopen")
+    def test_converts_regional_query_to_latin_before_search(self, mocked_open, mocked_query, mocked_results):
+        payload = [{
+            "osm_type": "node", "osm_id": 100, "lat": "21.51", "lon": "85.88",
+            "display_name": "Maa Tarini Temple, Ghatgaon, Odisha, India",
+            "namedetails": {"name": "Maa Tarini Temple"},
+            "address": {"village": "Ghatgaon", "state": "Odisha", "country": "India"},
+            "extratags": {"deity": "Tarini"},
+        }]
+        mocked_open.return_value.__enter__.return_value = io.BytesIO(json.dumps(payload).encode())
+        mocked_query.return_value = "Maa Tarini Temple"
+        mocked_results.return_value = {"Maa Tarini Temple": "ମା’ ତାରିଣୀ ମନ୍ଦିର"}
+        temple_search._CACHE.clear()
+
+        result = temple_search.search_temples("ମା’ ତାରିଣୀ ମନ୍ଦିର", language="or")
+
+        mocked_query.assert_called_once_with("ମା’ ତାରିଣୀ ମନ୍ଦିର", "or")
+        self.assertIn("q=Maa+Tarini+Temple", mocked_open.call_args.args[0].full_url)
+        self.assertEqual(result[0]["name"], "ମା’ ତାରିଣୀ ମନ୍ଦିର")
+
     @patch("temple_search.urlopen")
     def test_maps_nearby_overpass_result(self, mocked_open):
         payload = {
