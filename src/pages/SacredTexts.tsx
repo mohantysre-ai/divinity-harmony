@@ -12,7 +12,7 @@ import { buildSacredTextArticle } from '@/lib/sacred-text-content';
 import { fetchSacredChapter, fetchSacredSourceContent, type SacredSourceContent } from '@/lib/sacred-source-content';
 import { sacredTextGradient, sacredTextImageCandidates, sacredTextImagePosition, sacredTextImageSearchQuery } from '@/lib/sacred-text-art';
 import ResilientCoverImage from '@/components/ResilientCoverImage';
-import { useSearchParams } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { useLocale } from '@/hooks/use-locale';
 import { sacredCategoryKey } from '@/lib/sacred-category-i18n';
 
@@ -270,8 +270,10 @@ const SacredTexts = () => {
                     </div>
                   </CardContent>
                   <CardFooter className="border-t bg-muted/20 p-4">
-                    <Button className="w-full transition-transform group-hover:scale-[1.02]" onClick={() => openText(text)}>
-                      <BookOpen className="mr-2 h-4 w-4" /> {tk('readFullDetails')}
+                    <Button asChild className="w-full transition-transform group-hover:scale-[1.02]">
+                      <Link to={`/scriptures/read/${text.id}`} target="_blank" rel="noopener noreferrer">
+                        <BookOpen className="mr-2 h-4 w-4" /> {tk('readFullDetails')}
+                      </Link>
                     </Button>
                   </CardFooter>
                 </Card>

@@ -164,6 +164,7 @@ function collectLiteralArguments(node, sourceFile, strings) {
 function extractLocalizedPageCopy(
   files = [
     "src/pages/SacredTexts.tsx",
+    "src/pages/ScriptureReaderPage.tsx",
     "src/pages/TemplesPage.tsx",
     "src/pages/PriestDirectoryPage.tsx",
     "src/pages/CultureIndiaPage.tsx",
@@ -254,6 +255,7 @@ const priestCatalog = extractPriestCatalog();
 const wisdomCatalog = extractWisdom();
 const scripturePageCopy = extractLocalizedPageCopy([
   "src/pages/SacredTexts.tsx",
+  "src/pages/ScriptureReaderPage.tsx",
   "src/lib/sacred-text-content.ts",
 ]);
 const templePageCopy = extractLocalizedPageCopy(["src/pages/TemplesPage.tsx"]);

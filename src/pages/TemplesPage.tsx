@@ -241,13 +241,13 @@ export default function TemplesPage() {
   ];
 
   const preparation = [
-    "Recheck opening hours, special darshan rules and festival closures on the day before travel.",
-    "Use only official temple counters or clearly identified authorized channels for tickets, seva and donations.",
-    "Confirm dress, footwear, photography, luggage, food and entry restrictions for every family member.",
-    "Plan medicines, hydration, accessibility, queue time, local weather and emergency contacts for elders and children.",
+    lc("Recheck opening hours, special darshan rules and festival closures on the day before travel."),
+    lc("Use only official temple counters or clearly identified authorized channels for tickets, seva and donations."),
+    lc("Confirm dress, footwear, photography, luggage, food and entry restrictions for every family member."),
+    lc("Plan medicines, hydration, accessibility, queue time, local weather and emergency contacts for elders and children."),
     selected.country !== "India"
-      ? "Check passport validity, visa or entry rules, travel insurance, currency, roaming and local customs."
-      : "Keep identity documents, booking confirmations and an offline copy of the route.",
+      ? lc("Check passport validity, visa or entry rules, travel insurance, currency, roaming and local customs.")
+      : lc("Keep identity documents, booking confirmations and an offline copy of the route."),
   ];
 
   return (
@@ -390,7 +390,7 @@ export default function TemplesPage() {
                 {lc("Before you book")}
               </h2>
               <ol className="mt-5 space-y-4">
-                {lcl(preparation).map((item, index) => (
+                {preparation.map((item, index) => (
                   <li key={item} className="flex gap-3 text-sm leading-6">
                     <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-orange-100 text-xs font-bold text-orange-700 dark:bg-orange-950/40">
                       {index + 1}

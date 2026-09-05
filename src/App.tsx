@@ -8,6 +8,7 @@ import NotFound from "./pages/NotFound";
 import MantrasPage from "./pages/MantrasPage";
 import LiveDarshan from "./pages/LiveDarshan";
 import SacredTexts from "./pages/SacredTexts";
+import ScriptureReaderPage from "./pages/ScriptureReaderPage";
 import UserSettings from "./pages/UserSettings";
 import SplashScreen from "./components/auth/SplashScreen";
 import DeitiesPage from "./pages/DeitiesPage";
@@ -37,6 +38,7 @@ const App = () => (
               <Route path="/darshan" element={<LiveDarshan />} />
               <Route path="/pdf-reader" element={<SacredTexts />} />
               <Route path="/scriptures" element={<SacredTexts />} />
+              <Route path="/scriptures/read/:id" element={<ScriptureReaderPage />} />
               <Route path="/deities" element={<DeitiesPage />} />
               <Route path="/deities/:slug" element={<DeitiesPage />} />
               <Route path="/temples" element={<TemplesPage />} />
