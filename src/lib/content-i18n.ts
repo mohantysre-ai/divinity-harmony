@@ -2,6 +2,7 @@ import type { AppLocale } from "@/hooks/use-locale";
 import contentPacks from "@/lib/content-packs.json";
 import contentSupplementPacks from "@/lib/content-supplement-packs.json";
 import contentReleaseSupplementPacks from "@/lib/content-release-supplement-packs.json";
+import reviewedOdiaTempleCopy from "../../scripts/packs/odia-temples-reviewed.json";
 import { regionalScriptFallback } from "@/lib/regional-fallback";
 
 type ContentLocale = Exclude<AppLocale, "en">;
@@ -21,6 +22,7 @@ const packs = Object.fromEntries(
       ...basePacks[locale as ContentLocale],
       ...supplements[locale as ContentLocale],
       ...releaseSupplements[locale as ContentLocale],
+      ...(locale === "or" ? reviewedOdiaTempleCopy : {}),
     },
   ]),
 ) as Record<ContentLocale, Record<string, string>>;
@@ -90,7 +92,7 @@ export function localizeContent(text: string, locale: AppLocale): string {
   const contentLocale = locale as ContentLocale;
   const translated =
     packs[contentLocale]?.[text] ?? localizeTemplate(text, contentLocale);
-  return regionalScriptFallback(translated ?? text, locale);
+  return translated ?? regionalScriptFallback(text, locale);
 }
 
 export function localizeContentList(

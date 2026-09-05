@@ -33,6 +33,12 @@ const uiKeys = JSON.parse(
 const uiPacks = JSON.parse(
   fs.readFileSync(path.join(root, "src/lib/locale-packs.json"), "utf8"),
 );
+const reviewedOdiaTempleCopy = JSON.parse(
+  fs.readFileSync(
+    path.join(root, "scripts/packs/odia-temples-reviewed.json"),
+    "utf8",
+  ),
+);
 
 const placeholderNames = (text) =>
   [...text.matchAll(/(?:\$)?\{([A-Za-z0-9_]+)\}/g)]
@@ -43,12 +49,39 @@ const placeholderNames = (text) =>
 const failures = [];
 const report = {};
 
+const templePhrases = sections.temples ?? [];
+for (const english of templePhrases) {
+  if (!Object.hasOwn(reviewedOdiaTempleCopy, english)) {
+    failures.push(`temples/or: missing reviewed phrase ${JSON.stringify(english)}`);
+  }
+}
+for (const english of Object.keys(reviewedOdiaTempleCopy)) {
+  if (!templePhrases.includes(english)) {
+    failures.push(`temples/or: stale reviewed phrase ${JSON.stringify(english)}`);
+  }
+}
+const permittedTempleLatin = /(?:OpenStreetMap|UNESCO|BAPS|MRT|KTM|TTD)/g;
+for (const [english, translated] of Object.entries(reviewedOdiaTempleCopy)) {
+  const fragments = translated
+    .replace(/(?:\$)?\{[A-Za-z0-9_]+\}/g, "")
+    .replace(permittedTempleLatin, "")
+    .match(/[A-Za-z]{2,}/g);
+  if (fragments) {
+    failures.push(
+      `temples/or: unexpected Latin text ${fragments.join(", ")} in ${JSON.stringify(english)}`,
+    );
+  }
+}
+
 for (const [section, phrases] of Object.entries(sections)) {
   report[section] = { phrases: phrases.length };
   for (const locale of locales) {
     let valid = 0;
     for (const english of phrases) {
       const translated =
+        (section === "temples" && locale === "or"
+          ? reviewedOdiaTempleCopy[english]
+          : undefined) ??
         contentReleaseSupplementPacks[locale]?.[english] ??
         contentSupplementPacks[locale]?.[english] ??
         contentPacks[locale]?.[english];
