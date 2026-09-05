@@ -56,7 +56,7 @@ class TempleSearchTests(unittest.TestCase):
         self.assertEqual(result[0]["name"], "ಕಾರ್ಯ ಸಿದ್ಧಿ ಹನುಮಾನ್ ದೇವಸ್ಥಾನ")
         requested_url = mocked_open.call_args.args[0].full_url
         self.assertIn("karya+siddhi+hanuman", requested_url)
-        self.assertIn("accept-language=en", requested_url)
+        self.assertIn("accept-language=kn%2Cen", requested_url)
 
     @patch("temple_search._translate_texts")
     @patch("temple_search.urlopen")
@@ -109,6 +109,36 @@ class TempleSearchTests(unittest.TestCase):
         mocked_query.assert_called_once_with("ମା’ ତାରିଣୀ ମନ୍ଦିର", "or")
         self.assertIn("q=Maa+Tarini+Temple", mocked_open.call_args.args[0].full_url)
         self.assertEqual(result[0]["name"], "ମା’ ତାରିଣୀ ମନ୍ଦିର")
+
+    @patch("temple_search._translate_texts", return_value={})
+    @patch("temple_search._translate_query_to_latin", return_value="Kedareswar")
+    @patch("temple_search.urlopen")
+    def test_retries_regional_name_when_translated_temple_query_is_empty(self, mocked_open, _mocked_query, _mocked_results):
+        hit = [{
+            "osm_type": "node", "osm_id": 101, "lat": "20.238", "lon": "85.834",
+            "display_name": "କେଦାରେଶ୍ୱର ମନ୍ଦିର, ଭୁବନେଶ୍ୱର, ଓଡ଼ିଶା, ଭାରତ",
+            "namedetails": {"name": "କେଦାରେଶ୍ୱର ମନ୍ଦିର"},
+            "address": {"city": "ଭୁବନେଶ୍ୱର", "state": "ଓଡ଼ିଶା", "country": "ଭାରତ"},
+            "extratags": {"deity": "ଶିବ"},
+        }]
+        empty_response = io.BytesIO(b"[]")
+        raw_response = io.BytesIO(json.dumps(hit).encode())
+        mocked_open.return_value.__enter__.side_effect = [empty_response, empty_response, raw_response]
+        temple_search._CACHE.clear()
+
+        result = temple_search.search_temples("କେଦାରେଶ୍ୱର", language="or")
+
+        self.assertEqual(mocked_open.call_count, 3)
+        self.assertIn("q=%E0%AC%95%E0%AD%87%E0%AC%A6%E0%AC%BE%E0%AC%B0%E0%AD%87%E0%AC%B6%E0%AD%8D%E0%AD%B1%E0%AC%B0", mocked_open.call_args.args[0].full_url)
+        self.assertEqual(result[0]["name"], "କେଦାରେଶ୍ୱର ମନ୍ଦିର")
+
+    @patch.dict("temple_search.os.environ", {"GOOGLE_TRANSLATE_API_KEY": "", "VITE_GOOGLE_API_KEY": "legacy-key"}, clear=False)
+    @patch("temple_search._official_google_translate", return_value=["Kedareswar"])
+    def test_accepts_legacy_vite_key_only_on_server(self, mocked_translate):
+        result = temple_search._google_translate_batch(["କେଦାରେଶ୍ୱର"], "en")
+
+        mocked_translate.assert_called_once_with(["କେଦାରେଶ୍ୱର"], "en", "legacy-key")
+        self.assertEqual(result, ["Kedareswar"])
 
     @patch("temple_search.urlopen")
     def test_maps_nearby_overpass_result(self, mocked_open):
