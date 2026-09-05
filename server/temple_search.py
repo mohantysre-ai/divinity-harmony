@@ -20,6 +20,7 @@ from urllib.request import Request, urlopen
 _CACHE: dict[str, tuple[float, list[dict[str, Any]]]] = {}
 _LOCK = threading.Lock()
 _TTL_SECONDS = 60 * 60
+_EMPTY_TTL_SECONDS = 30
 _TRANSLATION_TTL_SECONDS = 30 * 24 * 60 * 60
 _TRANSLATION_CACHE_LIMIT = 5000
 _TRANSLATION_CACHE: dict[tuple[str, str], tuple[float, str]] = {}
@@ -104,7 +105,13 @@ def _public_google_translate(text: str, language: str) -> str:
 def _google_translate_batch(texts: list[str], language: str) -> list[str]:
     if not texts:
         return []
-    api_key = os.environ.get("GOOGLE_TRANSLATE_API_KEY", "").strip()
+    # VITE_GOOGLE_API_KEY is accepted as a migration alias because early
+    # deployments used that name. It remains server-only: the Docker build does
+    # not pass it as a Vite build argument or embed it in browser JavaScript.
+    api_key = (
+        os.environ.get("GOOGLE_TRANSLATE_API_KEY", "").strip()
+        or os.environ.get("VITE_GOOGLE_API_KEY", "").strip()
+    )
     if api_key:
         try:
             translated: list[str] = []
@@ -199,32 +206,56 @@ def search_temples(query: str, limit: int = 18, language: str = "en") -> list[di
     now = time.time()
     with _LOCK:
         cached = _CACHE.get(key)
-        if cached and now - cached[0] < _TTL_SECONDS:
+        cache_ttl = _TTL_SECONDS if cached and cached[1] else _EMPTY_TTL_SECONDS
+        if cached and now - cached[0] < cache_ttl:
             return cached[1]
 
     lookup_term = _translate_query_to_latin(term, lang)
     lookup_folded = lookup_term.casefold()
-    search_term = lookup_term if any(word in lookup_folded for word in ("temple", "mandir", "kovil", "pura", "matha", "devasthan")) else f"{lookup_term} Hindu temple"
-    params = urlencode(
-        {
-            "format": "jsonv2",
-            "q": search_term,
-            "limit": max(1, min(limit, 25)),
-            "addressdetails": 1,
-            "namedetails": 1,
-            "extratags": 1,
-            "accept-language": "en",
-        }
+    temple_words = (
+        "temple", "mandir", "kovil", "pura", "matha", "devasthan",
+        "मंदिर", "মন্দির", "મંદિર", "ਮੰਦਰ", "கோவில்", "கோயில்",
+        "ఆలయం", "మందిరం", "ದೇವಸ್ಥಾನ", "ದೇವಾಲಯ", "ക്ഷേത്രം", "മന്ദിരം", "ମନ୍ଦିର",
     )
-    request = Request(
-        f"https://nominatim.openstreetmap.org/search?{params}",
-        headers={
-            "User-Agent": "DivinityHarmony/2.0 (https://mantra.sigq.in)",
-            "Accept-Language": "en",
-        },
-    )
-    with urlopen(request, timeout=12) as response:
-        payload = json.loads(response.read().decode("utf-8"))
+    primary_term = lookup_term if any(word in lookup_folded for word in temple_words) else f"{lookup_term} Hindu temple"
+    # Search progressively: translated + temple context is normally most
+    # precise, while raw translated and original-script forms recover spelling
+    # variants and places whose OSM name only exists in a regional script.
+    search_terms = list(dict.fromkeys(candidate for candidate in (primary_term, lookup_term, term) if candidate))
+    payload: list[dict[str, Any]] = []
+    completed_request = False
+    last_error: Exception | None = None
+    for search_term in search_terms:
+        params = urlencode(
+            {
+                "format": "jsonv2",
+                "q": search_term,
+                "limit": max(1, min(limit, 25)),
+                "addressdetails": 1,
+                "namedetails": 1,
+                "extratags": 1,
+                "accept-language": f"{lang},en" if lang != "en" else "en",
+            }
+        )
+        request = Request(
+            f"https://nominatim.openstreetmap.org/search?{params}",
+            headers={
+                "User-Agent": "DivinityHarmony/2.0 (https://mantra.sigq.in)",
+                "Accept-Language": f"{lang},en" if lang != "en" else "en",
+            },
+        )
+        try:
+            with urlopen(request, timeout=12) as response:
+                candidate_payload = json.loads(response.read().decode("utf-8"))
+            completed_request = True
+        except Exception as exc:
+            last_error = exc
+            continue
+        if isinstance(candidate_payload, list) and candidate_payload:
+            payload = candidate_payload
+            break
+    if not completed_request and last_error is not None:
+        raise last_error
 
     results: list[dict[str, Any]] = []
     seen: set[str] = set()

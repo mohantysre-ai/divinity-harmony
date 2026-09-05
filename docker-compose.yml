@@ -17,6 +17,9 @@ services:
     environment:
       DH_DB_PATH: /data/divinity-harmony.db
       GOOGLE_TRANSLATE_API_KEY: ${GOOGLE_TRANSLATE_API_KEY:-}
+      # Backward-compatible runtime alias; unlike a Vite build arg this is not
+      # compiled into the public browser bundle.
+      VITE_GOOGLE_API_KEY: ${VITE_GOOGLE_API_KEY:-}
     volumes:
       - divinity-data:/data
     restart: unless-stopped
