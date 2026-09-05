@@ -6,9 +6,13 @@ added place discoverable without waiting for a frontend release.
 """
 from __future__ import annotations
 
+import html
 import json
+import os
+import re
 import threading
 import time
+from concurrent.futures import ThreadPoolExecutor
 from typing import Any
 from urllib.parse import urlencode, urlparse
 from urllib.request import Request, urlopen
@@ -16,7 +20,24 @@ from urllib.request import Request, urlopen
 _CACHE: dict[str, tuple[float, list[dict[str, Any]]]] = {}
 _LOCK = threading.Lock()
 _TTL_SECONDS = 60 * 60
+_TRANSLATION_TTL_SECONDS = 30 * 24 * 60 * 60
+_TRANSLATION_CACHE_LIMIT = 5000
+_TRANSLATION_CACHE: dict[tuple[str, str], tuple[float, str]] = {}
 _SUPPORTED_LANGUAGES = {"en", "hi", "bn", "gu", "mr", "ta", "te", "ml", "kn", "or", "pa", "as"}
+_TARGET_SCRIPT = {
+    "hi": re.compile(r"[\u0900-\u097f]"),
+    "mr": re.compile(r"[\u0900-\u097f]"),
+    "bn": re.compile(r"[\u0980-\u09ff]"),
+    "as": re.compile(r"[\u0980-\u09ff]"),
+    "gu": re.compile(r"[\u0a80-\u0aff]"),
+    "pa": re.compile(r"[\u0a00-\u0a7f]"),
+    "or": re.compile(r"[\u0b00-\u0b7f]"),
+    "ta": re.compile(r"[\u0b80-\u0bff]"),
+    "te": re.compile(r"[\u0c00-\u0c7f]"),
+    "kn": re.compile(r"[\u0c80-\u0cff]"),
+    "ml": re.compile(r"[\u0d00-\u0d7f]"),
+}
+_LOCALIZED_FIELDS = ("name", "deity", "city", "state", "country", "type", "timings", "summary")
 
 
 def _language(value: str) -> str:
@@ -43,6 +64,100 @@ def _safe_url(value: Any) -> str:
     return candidate if parsed.scheme in {"http", "https"} and parsed.netloc else ""
 
 
+def _needs_translation(text: str, language: str) -> bool:
+    if not text or language == "en" or not any(character.isalpha() for character in text):
+        return False
+    target_script = _TARGET_SCRIPT.get(language)
+    if target_script and target_script.search(text) and not re.search(r"[A-Za-z]", text):
+        return False
+    return True
+
+
+def _official_google_translate(texts: list[str], language: str, api_key: str) -> list[str]:
+    fields: list[tuple[str, str]] = [("q", text) for text in texts]
+    fields.extend((("target", language), ("format", "text")))
+    request = Request(
+        "https://translation.googleapis.com/language/translate/v2?" + urlencode({"key": api_key}),
+        data=urlencode(fields).encode("utf-8"),
+        headers={"Content-Type": "application/x-www-form-urlencoded", "User-Agent": "DivinityHarmony/2.0"},
+    )
+    with urlopen(request, timeout=12) as response:
+        payload = json.loads(response.read().decode("utf-8"))
+    translations = payload.get("data", {}).get("translations", [])
+    if len(translations) != len(texts):
+        raise ValueError("Google Translation returned an incomplete batch")
+    return [html.unescape(str(item.get("translatedText", "")).strip()) for item in translations]
+
+
+def _public_google_translate(text: str, language: str) -> str:
+    request = Request(
+        "https://translate.googleapis.com/translate_a/single",
+        data=urlencode({"client": "gtx", "sl": "auto", "tl": language, "dt": "t", "q": text}).encode("utf-8"),
+        headers={"Content-Type": "application/x-www-form-urlencoded", "User-Agent": "Mozilla/5.0"},
+    )
+    with urlopen(request, timeout=12) as response:
+        payload = json.loads(response.read().decode("utf-8"))
+    segments = payload[0] if isinstance(payload, list) and payload else []
+    return html.unescape("".join(str(segment[0]) for segment in segments if isinstance(segment, list) and segment).strip())
+
+
+def _translate_texts(texts: list[str], language: str) -> dict[str, str]:
+    """Translate arbitrary OSM fields once, cache them, and fail safely to source text."""
+    if language == "en":
+        return {}
+    now = time.time()
+    unique = list(dict.fromkeys(text for text in texts if _needs_translation(text, language)))
+    translated: dict[str, str] = {}
+    missing: list[str] = []
+    with _LOCK:
+        for text in unique:
+            cached = _TRANSLATION_CACHE.get((language, text))
+            if cached and now - cached[0] < _TRANSLATION_TTL_SECONDS:
+                translated[text] = cached[1]
+            else:
+                missing.append(text)
+    if not missing:
+        return translated
+
+    fresh: list[str] = []
+    api_key = os.environ.get("GOOGLE_TRANSLATE_API_KEY", "").strip()
+    try:
+        if api_key:
+            for offset in range(0, len(missing), 128):
+                fresh.extend(_official_google_translate(missing[offset : offset + 128], language, api_key))
+        else:
+            with ThreadPoolExecutor(max_workers=min(12, len(missing))) as executor:
+                fresh = list(executor.map(lambda text: _public_google_translate(text, language), missing))
+    except Exception:
+        # A failed translation must never make temple discovery fail. The browser
+        # displays the original OSM text instead of manufacturing fake script.
+        fresh = []
+
+    with _LOCK:
+        for source, target in zip(missing, fresh):
+            if target:
+                translated[source] = target
+                _TRANSLATION_CACHE[(language, source)] = (now, target)
+        if len(_TRANSLATION_CACHE) > _TRANSLATION_CACHE_LIMIT:
+            oldest = sorted(_TRANSLATION_CACHE, key=lambda key: _TRANSLATION_CACHE[key][0])
+            for key in oldest[: len(_TRANSLATION_CACHE) - _TRANSLATION_CACHE_LIMIT]:
+                _TRANSLATION_CACHE.pop(key, None)
+    return translated
+
+
+def _localize_results(results: list[dict[str, Any]], language: str) -> list[dict[str, Any]]:
+    if language == "en" or not results:
+        return results
+    source_values = [str(item.get(field, "")).strip() for item in results for field in _LOCALIZED_FIELDS]
+    translations = _translate_texts(source_values, language)
+    for item in results:
+        for field in _LOCALIZED_FIELDS:
+            source = str(item.get(field, "")).strip()
+            if source in translations:
+                item[field] = translations[source]
+    return results
+
+
 def search_temples(query: str, limit: int = 18, language: str = "en") -> list[dict[str, Any]]:
     term = _normalize_query(query)
     if len(term) < 2:
@@ -65,14 +180,14 @@ def search_temples(query: str, limit: int = 18, language: str = "en") -> list[di
             "addressdetails": 1,
             "namedetails": 1,
             "extratags": 1,
-            "accept-language": f"{lang},en",
+            "accept-language": "en",
         }
     )
     request = Request(
         f"https://nominatim.openstreetmap.org/search?{params}",
         headers={
             "User-Agent": "DivinityHarmony/2.0 (https://mantra.sigq.in)",
-            "Accept-Language": f"{lang},en",
+            "Accept-Language": "en",
         },
     )
     with urlopen(request, timeout=12) as response:
@@ -90,7 +205,7 @@ def search_temples(query: str, limit: int = 18, language: str = "en") -> list[di
         names = hit.get("namedetails") if isinstance(hit.get("namedetails"), dict) else {}
         tags = hit.get("extratags") if isinstance(hit.get("extratags"), dict) else {}
         display_name = str(hit.get("display_name", "")).strip()
-        name = str(names.get(f"name:{lang}") or names.get("name") or hit.get("name") or display_name.split(",")[0]).strip()
+        name = str(names.get("name:en") or names.get("name") or hit.get("name") or display_name.split(",")[0]).strip()
         identity = f"{name.casefold()}:{lat:.5f}:{lon:.5f}"
         if not name or identity in seen:
             continue
@@ -114,6 +229,7 @@ def search_temples(query: str, limit: int = 18, language: str = "en") -> list[di
             }
         )
 
+    results = _localize_results(results, lang)
     with _LOCK:
         _CACHE[key] = (now, results)
     return results
@@ -145,7 +261,7 @@ def nearby_temples(lat: float, lon: float, radius_km: int = 35, language: str = 
     results: list[dict[str, Any]] = []
     for item in payload.get("elements", []) if isinstance(payload, dict) else []:
         tags = item.get("tags") if isinstance(item.get("tags"), dict) else {}
-        name = str(tags.get(f"name:{lang}") or tags.get("name") or tags.get("name:en") or "Local Hindu temple").strip()
+        name = str(tags.get("name:en") or tags.get("name") or "Local Hindu temple").strip()
         center = item.get("center") if isinstance(item.get("center"), dict) else {}
         item_lat = item.get("lat", center.get("lat"))
         item_lon = item.get("lon", center.get("lon"))
@@ -174,6 +290,7 @@ def nearby_temples(lat: float, lon: float, radius_km: int = 35, language: str = 
             }
         )
 
+    results = _localize_results(results, lang)
     with _LOCK:
         _CACHE[key] = (now, results)
     return results

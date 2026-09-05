@@ -16,6 +16,7 @@ services:
       - "7800:80"
     environment:
       DH_DB_PATH: /data/divinity-harmony.db
+      GOOGLE_TRANSLATE_API_KEY: ${GOOGLE_TRANSLATE_API_KEY:-}
     volumes:
       - divinity-data:/data
     restart: unless-stopped

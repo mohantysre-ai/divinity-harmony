@@ -108,6 +108,7 @@ cp .env.example .env
 | `ANTHROPIC_API_KEY`             | No           | Enables enhanced server-side explanations. Never expose it as a `VITE_*` value. |
 | `VITE_MANTRA_CATALOG_URL`       | No           | Merges a hosted, validated mantra JSON catalog with bundled content.            |
 | `VITE_LIVE_DARSHAN_FEED_URL`    | No           | Uses an alternative public Live Darshan feed.                                   |
+| `GOOGLE_TRANSLATE_API_KEY`       | Recommended  | Reliably translates arbitrary OpenStreetMap temple fields on the server.         |
 | `VITE_SUPPORT_URL`              | No           | Displays an optional external donation/support destination.                     |
 | `VITE_SUPABASE_URL`             | For accounts | Supabase project URL used by browser authentication.                            |
 | `VITE_SUPABASE_PUBLISHABLE_KEY` | For accounts | Supabase publishable key. The legacy anon key is also accepted.                 |
