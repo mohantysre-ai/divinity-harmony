@@ -188,6 +188,14 @@ const templeCatalog = extractTemples();
 const priestCatalog = extractPriestCatalog();
 const wisdomCatalog = extractWisdom();
 const localizedPageCopy = extractLocalizedPageCopy();
+// Retain shared ritual labels even when their rendering moves into a typed
+// component; other dynamic surfaces still use these semantic translations.
+const sharedRitualCopy = new Set([
+  "Gather and check the materials",
+  "Preparation",
+  "Step",
+  "complete",
+]);
 
 const all = new Set([
   ...sacred,
@@ -199,6 +207,7 @@ const all = new Set([
   ...priestCatalog,
   ...wisdomCatalog,
   ...localizedPageCopy,
+  ...sharedRitualCopy,
 ]);
 const sorted = [...all].sort();
 

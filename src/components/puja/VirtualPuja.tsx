@@ -50,16 +50,20 @@ type RitualStep = {
 const RITUAL_STEPS: RitualStep[] = [
   { id: "sankalpa", devanagari: "संकल्प", english: "Sankalpa", action: "hold" },
   { id: "avahana", devanagari: "ध्यान एवं आवाहन", english: "Dhyana and Avahana", action: "tap" },
-  { id: "asana", devanagari: "आसन एवं अर्घ्य", english: "Asana and Arghya", action: "tap" },
-  { id: "abhisheka", devanagari: "स्नान एवं अभिषेक", english: "Snana and Abhisheka", action: "hold" },
-  { id: "vastra", devanagari: "वस्त्र एवं अलंकार", english: "Vastra and Alankara", action: "tap" },
+  { id: "asana", devanagari: "आसन", english: "Asana", action: "tap" },
+  { id: "padya", devanagari: "पाद्य", english: "Padya", action: "hold" },
+  { id: "arghya", devanagari: "अर्घ्य", english: "Arghya", action: "tap" },
+  { id: "achamaniya", devanagari: "आचमनीय", english: "Achamaniya", action: "tap" },
+  { id: "snana", devanagari: "स्नान एवं अभिषेक", english: "Snana and Abhisheka", action: "hold" },
+  { id: "vastra", devanagari: "वस्त्र", english: "Vastra", action: "tap" },
+  { id: "alankara", devanagari: "यज्ञोपवीत एवं अलंकार", english: "Yajnopavita and Alankara", action: "tap" },
   { id: "tilaka", devanagari: "गंध एवं तिलक", english: "Gandha and Tilaka", action: "target" },
   { id: "pushpa", devanagari: "पुष्पार्चन", english: "Pushparchana", action: "flowers" },
   { id: "dhoopa", devanagari: "धूप", english: "Dhoopa", action: "incense" },
-  { id: "deepa", devanagari: "दीप एवं आरती", english: "Deepa and Aarti", action: "aarti" },
-  { id: "naivedya", devanagari: "नैवेद्य", english: "Naivedya", action: "tap" },
-  { id: "mantra", devanagari: "मंत्र जप एवं प्रार्थना", english: "Mantra Japa and Prayer", action: "hold" },
-  { id: "samarpana", devanagari: "क्षमा प्रार्थना एवं समर्पण", english: "Closing Prayer", action: "tap" },
+  { id: "deepa", devanagari: "दीप", english: "Deepa", action: "hold" },
+  { id: "naivedya", devanagari: "नैवेद्य एवं ताम्बूल", english: "Naivedya and Tambula", action: "tap" },
+  { id: "nirajana", devanagari: "नीराजन एवं मंत्रपुष्प", english: "Aarti and Mantrapushpa", action: "aarti" },
+  { id: "samarpana", devanagari: "प्रदक्षिणा, नमस्कार एवं समर्पण", english: "Pradakshina and Samarpana", action: "hold" },
 ];
 
 const DEITY_MANTRAS: Record<string, string> = {
@@ -169,20 +173,21 @@ export function VirtualPuja({
   const stopHold = useCallback(() => {
     if (holdTimer.current !== undefined) window.clearInterval(holdTimer.current);
     holdTimer.current = undefined;
-    if (step?.id === "abhisheka") setWaterActive(false);
+    if (step?.id === "padya" || step?.id === "snana") setWaterActive(false);
   }, [step?.id]);
 
   useEffect(() => stopHold, [stopHold]);
 
   const startHold = () => {
     if (stepDone || holdTimer.current !== undefined) return;
-    if (step.id === "abhisheka") setWaterActive(true);
+    if (step.id === "padya" || step.id === "snana") setWaterActive(true);
     if (step.id === "dhoopa") setIncenseLit(true);
     holdTimer.current = window.setInterval(() => {
       setHoldProgress((current) => {
         const next = Math.min(100, current + 3);
         if (next === 100) {
           window.setTimeout(() => {
+            if (step.id === "deepa") setLampLit(true);
             stopHold();
             finishStep();
           }, 0);
@@ -194,7 +199,7 @@ export function VirtualPuja({
 
   const completeTap = () => {
     if (stepDone) return;
-    if (step.id === "vastra") setDressed(true);
+    if (step.id === "vastra" || step.id === "alankara") setDressed(true);
     if (step.id === "naivedya") setFoodOffered(true);
     finishStep();
   };
