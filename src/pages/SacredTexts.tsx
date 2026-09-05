@@ -47,25 +47,29 @@ function SacredTextHero({
   const CategoryIcon = style.Icon;
 
   return (
-    <div className={`relative w-full overflow-hidden bg-muted ${tall ? 'aspect-[2/1] min-h-[220px]' : 'aspect-[2/1]'}`}>
+    <div
+      className={`relative isolate w-full overflow-hidden bg-stone-900 ${
+        tall ? 'h-64 sm:h-80' : 'h-48 sm:h-[13.5rem]'
+      }`}
+    >
       <ResilientCoverImage
         sources={imageSources}
         searchQuery={imageSearch}
         objectPosition={imagePosition}
-        className="absolute inset-0 h-full w-full object-cover transition duration-700 ease-out group-hover:scale-[1.03]"
+        alt=""
+        className="absolute inset-0 z-0 h-full w-full object-cover transition duration-700 ease-out group-hover:scale-[1.03]"
       />
-      <div className={`absolute inset-0 bg-gradient-to-t ${overlay} via-black/35 to-transparent`} />
-      <div className={`absolute inset-0 bg-gradient-to-br ${style.accent} opacity-45`} />
-      <div className="pointer-events-none absolute -right-6 -top-6 h-40 w-40 rounded-full bg-hindu-gold/15 blur-3xl transition duration-700 group-hover:scale-125" />
+      <div className={`absolute inset-0 z-[1] bg-gradient-to-t ${overlay}`} />
+      <div className="pointer-events-none absolute -right-6 -top-6 z-[1] h-40 w-40 rounded-full bg-hindu-gold/10 blur-3xl" />
       <CategoryIcon
-        className="pointer-events-none absolute bottom-3 right-4 h-14 w-14 text-white/20 md:h-16 md:w-16"
+        className="pointer-events-none absolute bottom-3 right-4 z-[1] h-12 w-12 text-white/25 md:h-14 md:w-14"
         strokeWidth={1.25}
         aria-hidden
       />
-      <Badge className="absolute left-4 top-4 border-white/25 bg-black/35 text-white backdrop-blur-sm hover:bg-black/35">
+      <Badge className="absolute left-4 top-4 z-[2] border-white/25 bg-black/45 text-white backdrop-blur-sm hover:bg-black/45">
         #{text.id}
       </Badge>
-      {children}
+      <div className="absolute inset-x-0 bottom-0 z-[2]">{children}</div>
     </div>
   );
 }
@@ -186,7 +190,7 @@ const SacredTexts = () => {
                   className="scripture-card group flex h-full flex-col overflow-hidden rounded-3xl border-border/50 shadow-md transition-all duration-500 hover:-translate-y-2 hover:border-hindu-gold/40 hover:shadow-2xl animate-fade-in"
                 >
                   <SacredTextHero text={text}>
-                    <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 via-black/45 to-transparent p-5 pt-16">
+                    <div className="p-5 pt-10">
                       <Badge variant="secondary" className="mb-2 border-white/20 bg-white/15 text-white backdrop-blur-sm hover:bg-white/15">
                         {tk(sacredCategoryKey(text.category))}
                       </Badge>
@@ -240,9 +244,9 @@ const SacredTexts = () => {
             {selected && selectedArticle && (
               <>
                 <SacredTextHero text={selected} tall>
-                  <div className="relative flex h-full min-h-[220px] flex-col justify-end p-7 text-white">
+                  <div className="p-6 text-white sm:p-7">
                     <DialogHeader>
-                      <Badge className="mb-3 w-fit border-white/30 bg-black/30 text-white backdrop-blur-sm hover:bg-black/30">
+                      <Badge className="mb-3 w-fit border-white/30 bg-black/40 text-white backdrop-blur-sm hover:bg-black/40">
                         {tk(sacredCategoryKey(selected.category))}
                       </Badge>
                       <DialogTitle className="text-left text-3xl text-white drop-shadow-lg">{lc(selected.title)}</DialogTitle>

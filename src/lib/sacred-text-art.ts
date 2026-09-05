@@ -1,50 +1,51 @@
-/** Hero artwork for sacred-text cards — verified deity/mantra URLs, unique per card. */
+/** Hero artwork for sacred-text cards — Commons FilePath URLs stay valid if files move. */
 
 import { deities } from "@/data/deities";
 
-const W = "https://upload.wikimedia.org/wikipedia/commons";
+function commonsFile(file: string, width = 960): string {
+  return `https://commons.wikimedia.org/wiki/Special:FilePath/${encodeURIComponent(file)}?width=${width}`;
+}
 
-/** URLs verified in smoke tests and deity catalog — Wikimedia blocks hotlinking without referrerPolicy. */
+/** Stable Commons files (deity catalog + manuscripts/temples used as covers). */
 export const ART_POOL: readonly string[] = [
   ...deities.map((d) => d.imageUrl),
-  `${W}/3/3b/Kartikeya.jpg`,
-  `${W}/1/1e/Tulsidas_composes_the_Ramcharitmanas.jpg`,
-  `${W}/0/0f/Brihadisvara_Temple%2C_Thanjavur%2C_Tamil_Nadu%2C_India.jpg`,
-  `${W}/8/8c/Meenakshi_Amman_Temple%2C_Madurai%2C_India.jpg`,
-  `${W}/9/9a/Jagannath_Temple%2C_Puri%2C_Odisha%2C_India.jpg`,
-  `${W}/1/1c/Golden_Temple_India.jpg`,
-  `${W}/6/6a/Palm-leaf_manuscript.jpg`,
-  `${W}/3/30/Sanskrit_Manuscript_on_Palm_Leaf%2C_Kerala.jpg`,
-  `${W}/8/8d/Nataraja_Chennai_Museum.jpg`,
-  `${W}/5/57/Chola_Bronze_Nataraja%2C_Tamil_Nadu%2C_c1000.jpg`,
-  `${W}/b/b4/Gayatri1.jpg`,
-  `${W}/8/85/Adiyogi_-_The_Source_of_Yoga_%28kovai%29.jpg`,
-  `${W}/b/bd/Panchmukhi-Hanuman-Idol-GoldArtIndia.jpg`,
-  `${W}/f/f7/Suryatanjore.jpg`,
-  `${W}/f/f6/Ravanan_-_King_of_Lanka.jpg`,
+  commonsFile("Kartikeya.jpg"),
+  commonsFile("Palm-leaf manuscript.jpg"),
+  commonsFile("Sanskrit manuscript.jpg"),
+  commonsFile("Nataraja.jpg"),
+  commonsFile("Bhagavad Gita.jpg"),
+  commonsFile("Valmiki Ramayana.jpg"),
+  commonsFile("Mahabharata.jpg"),
+  commonsFile("Vedas.jpg"),
+  commonsFile("Jagannath Temple Puri.jpg"),
+  commonsFile("Brihadeeswarar Temple.jpg"),
+  commonsFile("Meenakshi Temple.jpg"),
+  commonsFile("Adiyogi Shiva.jpg"),
+  commonsFile("Gayatri Mantra.jpg"),
+  commonsFile("Tulsidas.jpg"),
 ];
 
 const titleArt: Record<string, string> = {
-  "Rigveda Samhita": ART_POOL[10],
-  "Samaveda Samhita": ART_POOL[16],
-  "Shukla Yajurveda": ART_POOL[10],
-  "Krishna Yajurveda": ART_POOL[17],
-  "Atharvaveda Samhita": ART_POOL[9],
-  "Bhagavad Gita": ART_POOL[1],
-  "Bhagavata Purana": ART_POOL[2],
+  "Rigveda Samhita": commonsFile("Vedas.jpg"),
+  "Samaveda Samhita": commonsFile("Palm-leaf manuscript.jpg"),
+  "Shukla Yajurveda": commonsFile("Vedas.jpg"),
+  "Krishna Yajurveda": commonsFile("Palm-leaf manuscript.jpg"),
+  "Atharvaveda Samhita": commonsFile("Sanskrit manuscript.jpg"),
+  "Bhagavad Gita": ART_POOL[3],
+  "Bhagavata Purana": ART_POOL[3],
   "Valmiki Ramayana": ART_POOL[4],
-  Ramcharitmanas: ART_POOL[11],
+  Ramcharitmanas: commonsFile("Tulsidas.jpg"),
   Mahabharata: ART_POOL[4],
-  "Devi Mahatmya": ART_POOL[6],
-  "Markandeya Purana": ART_POOL[6],
+  "Devi Mahatmya": ART_POOL[5],
+  "Markandeya Purana": ART_POOL[5],
   "Shiva Purana": ART_POOL[1],
   "Vishnu Purana": ART_POOL[2],
-  "Isha Upanishad": ART_POOL[16],
-  "Chandogya Upanishad": ART_POOL[17],
-  "Kena Upanishad": ART_POOL[18],
-  "Katha Upanishad": ART_POOL[13],
-  "Brihadaranyaka Upanishad": ART_POOL[17],
-  "Mandukya Upanishad": ART_POOL[19],
+  "Isha Upanishad": commonsFile("Sanskrit manuscript.jpg"),
+  "Chandogya Upanishad": commonsFile("Palm-leaf manuscript.jpg"),
+  "Kena Upanishad": ART_POOL[7],
+  "Katha Upanishad": ART_POOL[1],
+  "Brihadaranyaka Upanishad": commonsFile("Sanskrit manuscript.jpg"),
+  "Mandukya Upanishad": ART_POOL[7],
 };
 
 const CATEGORY_INDEX: Record<string, number> = {
@@ -85,12 +86,17 @@ export function sacredTextImageCandidates(
     (id * 29 + cat * 11 + 3) % ART_POOL.length,
     (id * 41 + cat * 17 + 5) % ART_POOL.length,
   ];
-  return [...new Set([primary, ...altIndices.map((i) => ART_POOL[i])])];
+  const deityFallback = deities.map((d) => d.imageUrl);
+  return [...new Set([primary, ...altIndices.map((i) => ART_POOL[i]), ...deityFallback])];
 }
 
 export function sacredTextImageSearchQuery(title: string, category: string): string {
   const topic = title.split(/[,:]/)[0]?.trim() || title;
-  return `Hindu ${topic} ${category} India manuscript temple`;
+  if (category === "Vedas & Vedangas") return `Hindu Vedas palm leaf manuscript India`;
+  if (category === "Upanishads") return `Sanskrit manuscript Hindu India`;
+  if (category === "Gitas") return `Bhagavad Gita Krishna Arjuna painting`;
+  if (category === "Puranas") return `Hindu Purana temple painting India`;
+  return `Hindu ${topic} temple India painting`;
 }
 
 export function sacredTextImagePosition(category: string, id: number): string {
@@ -100,17 +106,15 @@ export function sacredTextImagePosition(category: string, id: number): string {
 
 export function sacredTextGradient(category: string): string {
   const gradients: Record<string, string> = {
-    "Vedas & Vedangas": "from-amber-950/70 via-orange-900/40 to-transparent",
-    Upanishads: "from-indigo-950/70 via-violet-900/40 to-transparent",
-    Puranas: "from-rose-950/70 via-red-900/40 to-transparent",
-    Gitas: "from-blue-950/70 via-sky-900/40 to-transparent",
-    "Itihasa & Sacred Narratives":
-      "from-emerald-950/70 via-green-900/40 to-transparent",
-    "Philosophy & Yoga": "from-slate-950/70 via-indigo-900/40 to-transparent",
-    "Deities & Sacred Lore":
-      "from-fuchsia-950/70 via-pink-900/40 to-transparent",
-    "Ancestors & Dharma": "from-stone-950/70 via-amber-900/40 to-transparent",
-    "Hymns & Mantras": "from-teal-950/70 via-cyan-900/40 to-transparent",
+    "Vedas & Vedangas": "from-black/80 via-black/25 to-transparent",
+    Upanishads: "from-black/80 via-indigo-950/30 to-transparent",
+    Puranas: "from-black/80 via-rose-950/25 to-transparent",
+    Gitas: "from-black/80 via-sky-950/25 to-transparent",
+    "Itihasa & Sacred Narratives": "from-black/80 via-emerald-950/25 to-transparent",
+    "Philosophy & Yoga": "from-black/80 via-slate-950/25 to-transparent",
+    "Deities & Sacred Lore": "from-black/80 via-fuchsia-950/25 to-transparent",
+    "Ancestors & Dharma": "from-black/80 via-amber-950/25 to-transparent",
+    "Hymns & Mantras": "from-black/80 via-teal-950/25 to-transparent",
   };
-  return gradients[category] ?? gradients["Itihasa & Sacred Narratives"];
+  return gradients[category] ?? "from-black/80 via-black/25 to-transparent";
 }

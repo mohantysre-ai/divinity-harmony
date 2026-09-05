@@ -61,7 +61,7 @@ export default function ResilientCoverImage({
   if (!current) {
     return (
       <div
-        className={`${className} bg-gradient-to-br from-orange-900/40 to-amber-800/30`}
+        className={`${className} bg-[radial-gradient(circle_at_20%_20%,rgba(251,191,36,0.45),transparent_45%),radial-gradient(circle_at_80%_80%,rgba(194,65,12,0.4),transparent_50%),linear-gradient(135deg,#7c2d12,#1c1917)]`}
         aria-hidden
       />
     );
@@ -74,7 +74,6 @@ export default function ResilientCoverImage({
       loading="lazy"
       decoding="async"
       referrerPolicy="no-referrer"
-      crossOrigin="anonymous"
       className={className}
       style={{ objectPosition }}
       onError={() => void advance()}
