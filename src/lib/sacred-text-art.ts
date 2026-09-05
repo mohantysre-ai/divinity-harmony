@@ -6,6 +6,19 @@ function commonsFile(file: string, width = 960): string {
   return `https://commons.wikimedia.org/wiki/Special:FilePath/${encodeURIComponent(file)}?width=${width}`;
 }
 
+/**
+ * Title-specific Upanishad artwork. Keep these as named files instead of
+ * ART_POOL indices: the pool starts with a variable-length deity list and its
+ * indices are not a stable identity for an image.
+ */
+const UPANISHAD_ART = {
+  palmLeaf: commonsFile("Palm-leaf manuscript.jpg"),
+  sanskritManuscript: commonsFile("Sanskrit manuscript.jpg"),
+  natarajaChennai: commonsFile("Nataraja Chennai Museum.jpg"),
+  meenakshiTemple: commonsFile("Meenakshi Amman Temple, Madurai, India.jpg"),
+  cholaNataraja: commonsFile("Chola Bronze Nataraja, Tamil Nadu, c1000.jpg"),
+} as const;
+
 /** Stable Commons files (deity catalog + manuscripts/temples used as covers). */
 export const ART_POOL: readonly string[] = [
   ...deities.map((d) => d.imageUrl),
@@ -40,12 +53,12 @@ const titleArt: Record<string, string> = {
   "Markandeya Purana": ART_POOL[5],
   "Shiva Purana": ART_POOL[1],
   "Vishnu Purana": ART_POOL[2],
-  "Isha Upanishad": commonsFile("Sanskrit manuscript.jpg"),
-  "Chandogya Upanishad": commonsFile("Palm-leaf manuscript.jpg"),
-  "Kena Upanishad": ART_POOL[7],
-  "Katha Upanishad": ART_POOL[1],
-  "Brihadaranyaka Upanishad": commonsFile("Sanskrit manuscript.jpg"),
-  "Mandukya Upanishad": ART_POOL[7],
+  "Isha Upanishad": UPANISHAD_ART.palmLeaf,
+  "Chandogya Upanishad": UPANISHAD_ART.sanskritManuscript,
+  "Kena Upanishad": UPANISHAD_ART.natarajaChennai,
+  "Katha Upanishad": UPANISHAD_ART.meenakshiTemple,
+  "Brihadaranyaka Upanishad": UPANISHAD_ART.sanskritManuscript,
+  "Mandukya Upanishad": UPANISHAD_ART.cholaNataraja,
 };
 
 const CATEGORY_INDEX: Record<string, number> = {
