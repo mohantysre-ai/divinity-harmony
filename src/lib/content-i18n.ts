@@ -3,6 +3,7 @@ import contentPacks from "@/lib/content-packs.json";
 import contentSupplementPacks from "@/lib/content-supplement-packs.json";
 import contentReleaseSupplementPacks from "@/lib/content-release-supplement-packs.json";
 import reviewedOdiaTempleCopy from "../../scripts/packs/odia-temples-reviewed.json";
+import reviewedTempleCopy from "../../scripts/packs/temples-reviewed.json";
 import { regionalScriptFallback } from "@/lib/regional-fallback";
 
 type ContentLocale = Exclude<AppLocale, "en">;
@@ -15,6 +16,9 @@ const releaseSupplements = contentReleaseSupplementPacks as Record<
   ContentLocale,
   Record<string, string>
 >;
+const reviewedTemples = reviewedTempleCopy as Partial<
+  Record<ContentLocale, Record<string, string>>
+>;
 const packs = Object.fromEntries(
   Object.keys(basePacks).map((locale) => [
     locale,
@@ -22,6 +26,7 @@ const packs = Object.fromEntries(
       ...basePacks[locale as ContentLocale],
       ...supplements[locale as ContentLocale],
       ...releaseSupplements[locale as ContentLocale],
+      ...reviewedTemples[locale as ContentLocale],
       ...(locale === "or" ? reviewedOdiaTempleCopy : {}),
     },
   ]),
@@ -93,6 +98,12 @@ export function localizeContent(text: string, locale: AppLocale): string {
   const translated =
     packs[contentLocale]?.[text] ?? localizeTemplate(text, contentLocale);
   return translated ?? regionalScriptFallback(text, locale);
+}
+
+/** Whether catalog copy has an authored translation for this exact value. */
+export function hasLocalizedContent(text: string, locale: AppLocale): boolean {
+  if (!text || locale === "en") return false;
+  return Object.hasOwn(packs[locale as ContentLocale] ?? {}, text);
 }
 
 export function localizeContentList(

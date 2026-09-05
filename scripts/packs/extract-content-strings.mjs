@@ -111,16 +111,34 @@ function extractDeities() {
 }
 
 function extractTemples() {
-  const text = fs.readFileSync(path.join(root, "src/data/temples.ts"), "utf8");
+  const file = "src/data/temples.ts";
+  const text = fs.readFileSync(path.join(root, file), "utf8");
   const strings = new Set();
-  const re = /(?:name|deity|city|state|country|type|timings|summary|bestSeason|nearestAirport|railOrRoad|imageQuery):\s*["']([^"']+)["']/g;
-  let m;
-  while ((m = re.exec(text))) strings.add(m[1]);
-  const arrayRe = /etiquette:\s*\[([^\]]+)\]/g;
-  while ((m = arrayRe.exec(text))) {
-    const items = m[1].match(/["']([^"']+)["']/g);
-    if (items) items.forEach((item) => strings.add(item.slice(1, -1)));
-  }
+  const sourceFile = ts.createSourceFile(
+    file,
+    text,
+    ts.ScriptTarget.Latest,
+    true,
+    ts.ScriptKind.TS,
+  );
+  const textProperties = new Set([
+    "name", "deity", "city", "state", "country", "type", "timings",
+    "summary", "bestSeason", "nearestAirport", "railOrRoad", "imageQuery",
+  ]);
+  const visit = (node) => {
+    if (ts.isPropertyAssignment(node)) {
+      const property = node.name.getText(sourceFile).replace(/["']/g, "");
+      if (textProperties.has(property) && ts.isStringLiteralLike(node.initializer)) {
+        strings.add(node.initializer.text.trim());
+      } else if (property === "etiquette" && ts.isArrayLiteralExpression(node.initializer)) {
+        node.initializer.elements.forEach((item) => {
+          if (ts.isStringLiteralLike(item)) strings.add(item.text.trim());
+        });
+      }
+    }
+    ts.forEachChild(node, visit);
+  };
+  visit(sourceFile);
   return strings;
 }
 
@@ -188,7 +206,7 @@ function extractLocalizedPageCopy(
       if (
         ts.isCallExpression(node) &&
         ts.isIdentifier(node.expression) &&
-        ["lc", "lcl"].includes(node.expression.text)
+        ["lc", "lcl", "localizeTempleText"].includes(node.expression.text)
       ) {
         node.arguments.forEach((argument) =>
           collectLiteralArguments(argument, sourceFile, strings),

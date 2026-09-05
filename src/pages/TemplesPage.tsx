@@ -24,6 +24,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ThemeProvider } from "@/hooks/use-theme";
 import { useLocale } from "@/hooks/use-locale";
+import { hasLocalizedContent } from "@/lib/content-i18n";
 import { temples, type Temple } from "@/data/temples";
 
 const commonsFile = (name: string, width = 1400) =>
@@ -86,7 +87,9 @@ export default function TemplesPage() {
       ? initialQuery
       : initialQuery.trim().toLocaleLowerCase() === "chandi temple"
         ? lc("Chandi Temple")
-        : lc(initialQuery),
+        : hasLocalizedContent(initialQuery, locale)
+          ? lc(initialQuery)
+          : initialQuery,
   );
   const [position, setPosition] = useState<{ lat: number; lon: number } | null>(
     null,
@@ -98,9 +101,10 @@ export default function TemplesPage() {
 
   const localizeQueryInput = useCallback((value: string) => {
     if (locale === "en") return value;
-    return value.trim().toLocaleLowerCase() === "chandi temple"
-      ? lc("Chandi Temple")
-      : lc(value);
+    const canonical = value.trim().toLocaleLowerCase() === "chandi temple"
+      ? "Chandi Temple"
+      : value;
+    return hasLocalizedContent(canonical, locale) ? lc(canonical) : value;
   }, [lc, locale]);
 
   useEffect(() => {
@@ -116,6 +120,12 @@ export default function TemplesPage() {
     setQuery(value);
     setQueryInput(value);
   };
+
+  const localizeTempleText = useCallback(
+    (temple: Temple, value: string) =>
+      temple.discovered && !hasLocalizedContent(value, locale) ? value : lc(value),
+    [lc, locale],
+  );
 
   useEffect(() => {
     const term = query.trim();
@@ -237,7 +247,7 @@ export default function TemplesPage() {
     },
     {
       label: lc("Flights"),
-      detail: lc(selected.nearestAirport || "Search the nearest airport"),
+      detail: localizeTempleText(selected, selected.nearestAirport || "Search the nearest airport"),
       icon: Plane,
       url: searchUrl(`flights to ${selected.city} ${selected.country}`),
     },
@@ -263,7 +273,7 @@ export default function TemplesPage() {
     },
     {
       label: lc("Local transport"),
-      detail: lc(selected.railOrRoad || "Rail, bus and road options"),
+      detail: localizeTempleText(selected, selected.railOrRoad || "Rail, bus and road options"),
       icon: TrainFront,
       url: searchUrl(
         `how to reach ${selected.name} ${selected.city} public transport`,
@@ -329,33 +339,34 @@ export default function TemplesPage() {
                 <ResilientCoverImage
                   sources={templeImageCandidates(selected)}
                   searchQuery={selected.imageQuery || `${selected.name} temple`}
-                  alt={lc(selected.name)}
+                  alt={localizeTempleText(selected, selected.name)}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent" />
                 <div className="absolute inset-x-0 bottom-0 p-6 text-white">
                   <div className="flex flex-wrap gap-2">
                     <Badge className="bg-orange-500 text-white">
-                      {lc(selected.type)}
+                      {localizeTempleText(selected, selected.type)}
                     </Badge>
                     <Badge className="bg-black/40 text-white backdrop-blur">
-                      {lc(selected.country)}
+                      {localizeTempleText(selected, selected.country)}
                     </Badge>
                   </div>
                   <h2 className="mt-3 text-3xl font-bold">
-                    {lc(selected.name)}
+                    {localizeTempleText(selected, selected.name)}
                   </h2>
                   <p className="mt-1 text-orange-100">
-                    {lc(selected.city)}, {lc(selected.state)}
+                    {localizeTempleText(selected, selected.city)}, {localizeTempleText(selected, selected.state)}
                   </p>
                   <p className="mt-2 text-xs text-white/75">{lc("Temple photograph")}</p>
                 </div>
               </div>
               <div className="p-6 md:p-8">
                 <p className="text-sm font-semibold text-orange-700">
-                  {lc(selected.deity)}
+                  {localizeTempleText(selected, selected.deity)}
                 </p>
                 <p className="mt-3 leading-7 text-muted-foreground">
-                  {lc(
+                  {localizeTempleText(
+                    selected,
                     selected.summary ||
                       "A live place-search result. Confirm ritual, access and visitor information with the temple before travelling.",
                   )}
@@ -364,22 +375,22 @@ export default function TemplesPage() {
                   <GuideFact
                     icon={CalendarDays}
                     label={lc("Darshan planning")}
-                    value={lc(selected.timings)}
+                    value={localizeTempleText(selected, selected.timings)}
                   />
                   <GuideFact
                     icon={Sparkles}
                     label={lc("Best season")}
-                    value={lc(selected.bestSeason || "Check local weather and festival dates")}
+                    value={localizeTempleText(selected, selected.bestSeason || "Check local weather and festival dates")}
                   />
                   <GuideFact
                     icon={Plane}
                     label={lc("Nearest airport")}
-                    value={lc(selected.nearestAirport || "Use the live flight search below")}
+                    value={localizeTempleText(selected, selected.nearestAirport || "Use the live flight search below")}
                   />
                   <GuideFact
                     icon={Route}
                     label={lc("Rail and road")}
-                    value={lc(selected.railOrRoad || "Use the live route search below")}
+                    value={localizeTempleText(selected, selected.railOrRoad || "Use the live route search below")}
                   />
                 </div>
               </div>
@@ -412,7 +423,7 @@ export default function TemplesPage() {
             <section className="overflow-hidden rounded-3xl border bg-card">
               <iframe
                 key={selected.id}
-                title={tk("mapOfTempleTemplate", { name: lc(selected.name) })}
+                title={tk("mapOfTempleTemplate", { name: localizeTempleText(selected, selected.name) })}
                 src={mapUrl(selected)}
                 className="h-[380px] w-full border-0"
                 loading="lazy"
@@ -473,7 +484,7 @@ export default function TemplesPage() {
               >
                 <div className="flex items-start justify-between gap-3">
                   <Badge variant={temple.discovered ? "outline" : "secondary"}>
-                    {lc(temple.type)}
+                    {localizeTempleText(temple, temple.type)}
                   </Badge>
                   {temple.distance != null && (
                     <span className="text-xs text-muted-foreground">
@@ -481,15 +492,15 @@ export default function TemplesPage() {
                     </span>
                   )}
                 </div>
-                <h3 className="mt-5 text-xl font-bold">{lc(temple.name)}</h3>
+                <h3 className="mt-5 text-xl font-bold">{localizeTempleText(temple, temple.name)}</h3>
                 <p className="mt-2 text-sm text-orange-700">
-                  {lc(temple.deity)}
+                  {localizeTempleText(temple, temple.deity)}
                 </p>
                 <p className="mt-3 flex items-start text-sm text-muted-foreground">
                   <MapPin className="mr-2 mt-0.5 h-4 w-4 shrink-0" />
                   {[temple.city, temple.state, temple.country]
                     .filter(Boolean)
-                    .map(lc)
+                    .map((value) => localizeTempleText(temple, value))
                     .join(", ")}
                 </p>
               </button>

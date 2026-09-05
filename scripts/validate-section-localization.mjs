@@ -39,6 +39,9 @@ const reviewedOdiaTempleCopy = JSON.parse(
     "utf8",
   ),
 );
+const reviewedTempleCopy = JSON.parse(
+  fs.readFileSync(path.join(root, "scripts/packs/temples-reviewed.json"), "utf8"),
+);
 
 const placeholderNames = (text) =>
   [...text.matchAll(/(?:\$)?\{([A-Za-z0-9_]+)\}/g)]
@@ -50,6 +53,20 @@ const failures = [];
 const report = {};
 
 const templePhrases = sections.temples ?? [];
+for (const [locale, reviewed] of Object.entries(reviewedTempleCopy)) {
+  if (!locales.includes(locale) || locale === "or") {
+    failures.push(`temples: invalid reviewed locale ${locale}`);
+    continue;
+  }
+  for (const [english, translated] of Object.entries(reviewed)) {
+    if (!templePhrases.includes(english)) {
+      failures.push(`temples/${locale}: stale reviewed phrase ${JSON.stringify(english)}`);
+    }
+    if (placeholderNames(english) !== placeholderNames(translated)) {
+      failures.push(`temples/${locale}: placeholders changed in reviewed phrase ${JSON.stringify(english)}`);
+    }
+  }
+}
 for (const english of templePhrases) {
   if (!Object.hasOwn(reviewedOdiaTempleCopy, english)) {
     failures.push(`temples/or: missing reviewed phrase ${JSON.stringify(english)}`);
@@ -82,6 +99,7 @@ for (const [section, phrases] of Object.entries(sections)) {
         (section === "temples" && locale === "or"
           ? reviewedOdiaTempleCopy[english]
           : undefined) ??
+        (section === "temples" ? reviewedTempleCopy[locale]?.[english] : undefined) ??
         contentReleaseSupplementPacks[locale]?.[english] ??
         contentSupplementPacks[locale]?.[english] ??
         contentPacks[locale]?.[english];
@@ -100,6 +118,32 @@ for (const [section, phrases] of Object.entries(sections)) {
       valid += 1;
     }
     report[section][locale] = `${valid}/${phrases.length}`;
+  }
+}
+
+const forbiddenTempleFragments = {
+  hi: /उतार प्रदेश|तीर्थ तीर्थ/,
+  bn: /চর ধাম|[0-9]:[0-9]{2} অম্|[0-9]:[0-9]{2} প্ম্|ওপেন্স্ত্রীত্মপ্/,
+  gu: /[0-9]:[0-9]{2} અમ્|[0-9]:[0-9]{2} પ્મ્|ઓપેન્સ્ત্রীত্মપ્/,
+  mr: /उंच उंच|[0-9]:[0-9]{2} अम्|[0-9]:[0-9]{2} प्म्/,
+  ta: /[0-9]:[0-9]{2} அம்|[0-9]:[0-9]{2} ப்ம்|பிரஜா தேவி/,
+  te: /[0-9]:[0-9]{2} అమ్|[0-9]:[0-9]{2} ప్మ్|ఉనేస్చో/,
+  ml: /[0-9]:[0-9]{2} അമ്|[0-9]:[0-9]{2} പ്മ്/,
+  kn: /[0-9]:[0-9]{2} ಅಮ್|[0-9]:[0-9]{2} ಪ್ಮ್|ಉನೇಸ್ಚೋ|ಓಪೇನ್ಸ್ತ್ರೀತ್ಮಪ್/,
+  pa: /[0-9]:[0-9]{2} ਅਮ੍|[0-9]:[0-9]{2} ਪ੍ਮ੍/,
+  as: /চৰ ধাম|ওপেন্স্ত্রীত্মপ্/,
+};
+for (const [locale, pattern] of Object.entries(forbiddenTempleFragments)) {
+  for (const english of templePhrases) {
+    const translated =
+      reviewedTempleCopy[locale]?.[english] ??
+      contentReleaseSupplementPacks[locale]?.[english] ??
+      contentSupplementPacks[locale]?.[english] ??
+      contentPacks[locale]?.[english] ??
+      "";
+    if (pattern.test(translated)) {
+      failures.push(`temples/${locale}: known corruption remains in ${JSON.stringify(english)}`);
+    }
   }
 }
 
