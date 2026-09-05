@@ -30,11 +30,25 @@ export default function CultureIndiaPage() {
   const items = useMemo(
     () =>
       culturePacks.filter((x) =>
-        `${x.name} ${x.language} ${x.calendar} ${x.festivals} ${x.traditions} ${x.temples}`
+        [
+          x.name,
+          x.language,
+          x.calendar,
+          ...x.festivals,
+          ...x.traditions,
+          ...x.temples,
+          lc(x.name),
+          lc(x.language),
+          lc(x.calendar),
+          ...lcl(x.festivals),
+          ...lcl(x.traditions),
+          ...lcl(x.temples),
+        ]
+          .join(" ")
           .toLowerCase()
           .includes(q.toLowerCase()),
       ),
-    [q],
+    [q, lc, lcl],
   );
 
   if (selected) {

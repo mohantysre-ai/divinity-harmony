@@ -357,15 +357,24 @@ export default function PriestDirectoryPage() {
       .then((d) => setItems(d.items || []))
       .catch(() => setItems([]));
   }, []);
-  const shown = useMemo(
-    () =>
-      items.filter((x) =>
-        `${x.city} ${x.state} ${x.languages} ${x.services}`
-          .toLowerCase()
-          .includes(q.toLowerCase()),
-      ),
-    [items, q],
-  );
+  const shown = useMemo(() => {
+    const needle = q.trim().toLowerCase();
+    return items.filter((x) =>
+      [
+        x.city,
+        x.state,
+        ...x.languages,
+        ...x.services,
+        lc(x.city),
+        lc(x.state),
+        ...x.languages.map(lc),
+        ...x.services.map(lc),
+      ]
+        .join(" ")
+        .toLowerCase()
+        .includes(needle),
+    );
+  }, [items, q, lc]);
   const localSearch = useMemo(() => {
     const place = q.trim();
     if (!place) return null;
@@ -382,11 +391,19 @@ export default function PriestDirectoryPage() {
     const needle = ritualQuery.trim().toLowerCase();
     if (!needle) return pujas;
     return pujas.filter((puja) =>
-      `${puja.name} ${puja.region || ""} ${puja.purpose}`
+      [
+        puja.name,
+        puja.region || "",
+        puja.purpose,
+        lc(puja.name),
+        lc(puja.region || ""),
+        lc(puja.purpose),
+      ]
+        .join(" ")
         .toLowerCase()
         .includes(needle),
     );
-  }, [ritualQuery]);
+  }, [ritualQuery, lc]);
   const locate = () => {
     setLocationError("");
     if (!navigator.geolocation) {
@@ -508,7 +525,7 @@ export default function PriestDirectoryPage() {
                     </span>
                   </div>
                   <h2 className="mt-4 text-xl font-bold">
-                    {tk("cityPriestSearchTemplate", { city: x.city })}
+                    {tk("cityPriestSearchTemplate", { city: lc(x.city) })}
                   </h2>
                   <p className="mt-1 text-sm text-muted-foreground">
                     {lc(x.state)}

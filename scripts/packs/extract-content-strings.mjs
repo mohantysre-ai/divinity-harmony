@@ -4,6 +4,7 @@
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
+import ts from "typescript";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(__dirname, "../..");
@@ -123,25 +124,89 @@ function extractTemples() {
   return strings;
 }
 
-function extractLocalizedPageCopy() {
-  const strings = new Set();
-  const files = [
+function templateSource(node, sourceFile) {
+  if (ts.isStringLiteralLike(node)) return node.text;
+  if (!ts.isTemplateExpression(node)) return null;
+
+  let result = node.head.text;
+  for (const span of node.templateSpans) {
+    const expression = span.expression.getText(sourceFile);
+    const property = expression.match(/\.([A-Za-z][A-Za-z0-9_]*)$/)?.[1];
+    const helper = expression.match(/^([A-Za-z][A-Za-z0-9_]*)\(/)?.[1];
+    const placeholder =
+      (expression.includes("length") ? "count" : null) ||
+      (helper === "joinedTopics" ? "topics" : null) ||
+      property ||
+      expression.replace(/[^A-Za-z0-9_]/g, "") ||
+      "value";
+    result += `\${${placeholder}}${span.literal.text}`;
+  }
+  return result;
+}
+
+function collectLiteralArguments(node, sourceFile, strings) {
+  if (ts.isStringLiteralLike(node) || ts.isTemplateExpression(node)) {
+    const value = templateSource(node, sourceFile);
+    if (value?.trim() && /[\p{L}\p{N}]/u.test(value)) strings.add(value.trim());
+    return;
+  }
+
+  if (
+    ts.isConditionalExpression(node) ||
+    ts.isParenthesizedExpression(node) ||
+    ts.isBinaryExpression(node) ||
+    ts.isArrayLiteralExpression(node)
+  ) {
+    node.forEachChild((child) => collectLiteralArguments(child, sourceFile, strings));
+  }
+}
+
+function extractLocalizedPageCopy(
+  files = [
+    "src/pages/SacredTexts.tsx",
     "src/pages/TemplesPage.tsx",
     "src/pages/PriestDirectoryPage.tsx",
     "src/pages/CultureIndiaPage.tsx",
     "src/components/puja/VirtualPuja.tsx",
-  ];
+    "src/lib/sacred-text-content.ts",
+  ],
+) {
+  const strings = new Set();
   for (const file of files) {
     const text = fs.readFileSync(path.join(root, file), "utf8");
-    const re = /\blc\(\s*"((?:\\.|[^"\\])*)"\s*\)/g;
-    let m;
-    while ((m = re.exec(text))) {
-      try {
-        strings.add(JSON.parse(`"${m[1]}"`));
-      } catch {
-        /* Ignore malformed source; TypeScript will report it during the build. */
+    const sourceFile = ts.createSourceFile(
+      file,
+      text,
+      ts.ScriptTarget.Latest,
+      true,
+      file.endsWith("x") ? ts.ScriptKind.TSX : ts.ScriptKind.TS,
+    );
+    const includeEveryLiteral = file.endsWith("sacred-text-content.ts");
+
+    const visit = (node) => {
+      if (
+        ts.isCallExpression(node) &&
+        ts.isIdentifier(node.expression) &&
+        ["lc", "lcl"].includes(node.expression.text)
+      ) {
+        node.arguments.forEach((argument) =>
+          collectLiteralArguments(argument, sourceFile, strings),
+        );
+      } else if (
+        includeEveryLiteral &&
+        (ts.isStringLiteralLike(node) || ts.isTemplateExpression(node))
+      ) {
+        const value = templateSource(node, sourceFile);
+        if (
+          value?.trim() &&
+          /[\p{L}\p{N}]/u.test(value) &&
+          !value.startsWith("@/")
+        )
+          strings.add(value.trim());
       }
-    }
+      ts.forEachChild(node, visit);
+    };
+    visit(sourceFile);
   }
   return strings;
 }
@@ -187,7 +252,24 @@ const deityCatalog = extractDeities();
 const templeCatalog = extractTemples();
 const priestCatalog = extractPriestCatalog();
 const wisdomCatalog = extractWisdom();
-const localizedPageCopy = extractLocalizedPageCopy();
+const scripturePageCopy = extractLocalizedPageCopy([
+  "src/pages/SacredTexts.tsx",
+  "src/lib/sacred-text-content.ts",
+]);
+const templePageCopy = extractLocalizedPageCopy(["src/pages/TemplesPage.tsx"]);
+const priestPageCopy = extractLocalizedPageCopy([
+  "src/pages/PriestDirectoryPage.tsx",
+  "src/components/puja/VirtualPuja.tsx",
+]);
+const culturePageCopy = extractLocalizedPageCopy([
+  "src/pages/CultureIndiaPage.tsx",
+]);
+const localizedPageCopy = new Set([
+  ...scripturePageCopy,
+  ...templePageCopy,
+  ...priestPageCopy,
+  ...culturePageCopy,
+]);
 // Retain shared ritual labels even when their rendering moves into a typed
 // component; other dynamic surfaces still use these semantic translations.
 const sharedRitualCopy = new Set([
@@ -214,6 +296,15 @@ const sorted = [...all].sort();
 const outPath = path.join(__dirname, "content-strings-en.json");
 fs.writeFileSync(outPath, JSON.stringify(sorted, null, 2), "utf8");
 
+const sectionPath = path.join(__dirname, "section-strings-en.json");
+const sections = {
+  scriptures: [...new Set([...sacred, ...scripturePageCopy])].sort(),
+  temples: [...new Set([...templeCatalog, ...templePageCopy])].sort(),
+  purohit: [...new Set([...pujas, ...priestCatalog, ...priestPageCopy])].sort(),
+  culture: [...new Set([...culture, ...culturePageCopy])].sort(),
+};
+fs.writeFileSync(sectionPath, JSON.stringify(sections, null, 2), "utf8");
+
 console.log(JSON.stringify({
   sacred: sacred.size,
   mantras: mantras.size,
@@ -224,6 +315,10 @@ console.log(JSON.stringify({
   priests: priestCatalog.size,
   wisdom: wisdomCatalog.size,
   pageCopy: localizedPageCopy.size,
+  sections: Object.fromEntries(
+    Object.entries(sections).map(([name, values]) => [name, values.length]),
+  ),
   totalUnique: all.size,
   outPath,
+  sectionPath,
 }, null, 2));

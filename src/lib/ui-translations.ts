@@ -28,5 +28,8 @@ export function translateUiText(text: string, locale: AppLocale): string {
 
   // The DOM observer sees both interface labels and catalog/article copy.
   // Consult the semantic content pack before using its phonetic fallback.
-  return regionalScriptFallback(dict[text] ?? localizeContent(text, locale), locale);
+  return regionalScriptFallback(
+    dict[text] ?? localizeContent(text, locale),
+    locale,
+  );
 }

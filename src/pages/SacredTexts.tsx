@@ -75,7 +75,7 @@ function SacredTextHero({
 }
 
 const SacredTexts = () => {
-  const { tk, lc } = useLocale();
+  const { locale, tk, lc } = useLocale();
   const [query, setQuery] = useState('');
   const [category, setCategory] = useState('All');
   const [selected, setSelected] = useState<SacredText | null>(null);
@@ -90,12 +90,22 @@ const SacredTexts = () => {
     const normalized = query.trim().toLowerCase();
     return sacredTexts.filter((text) => {
       const matchesCategory = category === 'All' || text.category === category;
-      const haystack = [text.title, text.category, text.tradition, text.description, ...text.topics]
+      const haystack = [
+        text.title,
+        text.category,
+        text.tradition,
+        text.description,
+        ...text.topics,
+        lc(text.title),
+        lc(text.tradition),
+        lc(text.description),
+        ...text.topics.map(lc),
+      ]
         .join(' ')
         .toLowerCase();
       return matchesCategory && (!normalized || haystack.includes(normalized));
     });
-  }, [category, query]);
+  }, [category, query, lc]);
 
   useEffect(() => setVisibleCount(PAGE_SIZE), [category, query]);
   useEffect(() => { const initial = searchParams.get('search'); if (initial) setQuery(initial); }, [searchParams]);
@@ -114,7 +124,7 @@ const SacredTexts = () => {
   }, [selected, sourceLanguage]);
 
   const openText = (text: SacredText) => {
-    setSourceLanguage('en');
+    setSourceLanguage(locale === 'en' ? 'en' : 'sa');
     setSelected(text);
   };
 
@@ -306,7 +316,7 @@ const SacredTexts = () => {
                         )}
                         <div className="relative mt-6 border-t pt-6">
                           {sourceLoading && <Loader2 className="absolute right-0 top-3 h-5 w-5 animate-spin text-hindu-red" />}
-                          <div className="whitespace-pre-wrap text-base leading-8 text-foreground/90">{sourceContent.content}</div>
+                          <div data-no-regionalize className="whitespace-pre-wrap text-base leading-8 text-foreground/90">{sourceContent.content}</div>
                         </div>
                       </>
                     )}

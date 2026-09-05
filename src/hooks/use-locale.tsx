@@ -174,10 +174,14 @@ export function LocaleProvider({ children }: { children: ReactNode }) {
         return translateUiText(english, locale);
       },
       tk: (key: UiKey, vars: Record<string, string | number> = {}) =>
-        regionalScriptFallback(Object.entries(vars).reduce(
-          (text, [name, value]) => text.replace(`{${name}}`, String(value)),
-          translateKey(locale, key),
-        ), locale),
+        regionalScriptFallback(
+          Object.entries(vars).reduce(
+            (text, [name, value]) =>
+              text.replace(`{${name}}`, String(value)),
+            translateKey(locale, key),
+          ),
+          locale,
+        ),
       ui: (text: string) => translateUiText(text, locale),
       lc: (text: string) => localizeContent(text, locale),
       lcl: (items: string[]) => localizeContentList(items, locale),

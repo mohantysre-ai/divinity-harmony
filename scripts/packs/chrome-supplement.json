@@ -154,7 +154,7 @@
     "generatePersonalChart": "ବ୍ୟକ୍ତିଗତ ଚାର୍ଟ ସୃଷ୍ଟି କରନ୍ତୁ |",
     "birthChartNeedsDateTime": "ଜନ୍ମ ତାରିଖ ଏବଂ ସମୟ ପ୍ରବେଶ କର, ତାପରେ ତୁମର ବ୍ୟକ୍ତିଗତ ସ୍ନାପସଟ୍ ଦେଖିବା ପାଇଁ ସଞ୍ଚୟ କିମ୍ବା ସୃଷ୍ଟି କର |",
     "birthChartApproxNote": "ତାରିଖ, ସମୟ ଏବଂ ସ୍ଥାନରୁ ଶିକ୍ଷାଗତ ସାଇଡେରାଲ୍ ଆନୁମାନିକତା - ଏଫେମେରିସ୍-ଗ୍ରେଡ୍ ମୁହୁରଟା ସଫ୍ଟୱେର୍ ନୁହେଁ |",
-    "mapOfTempleTemplate": "{ନାମର ମାନଚିତ୍ର"
+    "mapOfTempleTemplate": "{name} ର ମାନଚିତ୍ର"
   },
   "hi": {
     "detectedStateTemplate": "पहचान: {state}",
@@ -311,7 +311,7 @@
     "generatePersonalChart": "व्यक्तिगत चार्ट तैयार करें",
     "birthChartNeedsDateTime": "जन्मतिथि और समय दर्ज करें, फिर अपना वैयक्तिकृत स्नैपशॉट देखने के लिए सहेजें या जेनरेट करें।",
     "birthChartApproxNote": "तिथि, समय और स्थान से शैक्षिक नाक्षत्र अनुमान - पंचांग-ग्रेड मुहूर्त सॉफ्टवेयर नहीं।",
-    "mapOfTempleTemplate": "{नाम} का मानचित्र"
+    "mapOfTempleTemplate": "{name} का मानचित्र"
   },
   "bn": {
     "detectedStateTemplate": "সনাক্ত করা হয়েছে: {state}",

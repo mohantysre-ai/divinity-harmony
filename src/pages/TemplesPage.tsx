@@ -436,11 +436,10 @@ export default function TemplesPage() {
                 </p>
                 <p className="mt-3 flex items-start text-sm text-muted-foreground">
                   <MapPin className="mr-2 mt-0.5 h-4 w-4 shrink-0" />
-                  {lc(
-                    [temple.city, temple.state, temple.country]
-                      .filter(Boolean)
-                      .join(", "),
-                  )}
+                  {[temple.city, temple.state, temple.country]
+                    .filter(Boolean)
+                    .map(lc)
+                    .join(", ")}
                 </p>
               </button>
             ))}
