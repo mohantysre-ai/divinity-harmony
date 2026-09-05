@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { BookOpen, CircleCheck, ExternalLink, Flame, Landmark, Library, Loader2, Scroll, Search, Sparkles, Sun } from 'lucide-react';
+import { BookOpen, ChevronLeft, ChevronRight, CircleCheck, ExternalLink, Flame, Landmark, Library, Loader2, Scroll, Search, Sparkles, Sun } from 'lucide-react';
 import { sacredTextCategories, sacredTexts, type SacredText } from '@/data/sacred-texts';
 import { buildSacredTextArticle } from '@/lib/sacred-text-content';
 import { fetchSacredChapter, fetchSacredSourceContent, type SacredSourceContent } from '@/lib/sacred-source-content';
@@ -29,6 +29,25 @@ const categoryStyle: Record<string, { Icon: typeof BookOpen; accent: string }> =
 };
 
 const PAGE_SIZE = 60;
+const READER_PAGE_WORDS = 360;
+
+function paginateText(content: string) {
+  const paragraphs = content.split(/\n{2,}/).filter(Boolean);
+  const pages: string[] = [];
+  let page = '';
+  paragraphs.forEach((paragraph) => {
+    const words = paragraph.split(/\s+/).length;
+    const pageWords = page.split(/\s+/).filter(Boolean).length;
+    if (page && pageWords + words > READER_PAGE_WORDS) {
+      pages.push(page);
+      page = paragraph;
+    } else {
+      page += `${page ? '\n\n' : ''}${paragraph}`;
+    }
+  });
+  if (page) pages.push(page);
+  return pages.length ? pages : [''];
+}
 
 function SacredTextHero({
   text,
@@ -84,6 +103,8 @@ const SacredTexts = () => {
   const [sourceLanguage, setSourceLanguage] = useState<'en' | 'sa'>('en');
   const [sourceLoading, setSourceLoading] = useState(false);
   const [sourceError, setSourceError] = useState('');
+  const [readerPage, setReaderPage] = useState(0);
+  const [turnDirection, setTurnDirection] = useState<'next' | 'previous' | null>(null);
   const [searchParams] = useSearchParams();
 
   const filteredTexts = useMemo(() => {
@@ -122,6 +143,34 @@ const SacredTexts = () => {
       .finally(() => active && setSourceLoading(false));
     return () => { active = false; };
   }, [selected, sourceLanguage]);
+
+  useEffect(() => setReaderPage(0), [selected, sourceLanguage, sourceContent?.activeChapter]);
+
+  const readerPages = useMemo(
+    () => paginateText(sourceContent?.content || ''),
+    [sourceContent?.content],
+  );
+
+  const turnPage = (direction: 'next' | 'previous') => {
+    const delta = direction === 'next' ? 1 : -1;
+    const next = Math.max(0, Math.min(readerPages.length - 1, readerPage + delta));
+    if (next === readerPage) return;
+    setTurnDirection(direction);
+    window.setTimeout(() => {
+      setReaderPage(next);
+      setTurnDirection(null);
+    }, 230);
+  };
+
+  useEffect(() => {
+    if (!selected) return;
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === 'ArrowRight') turnPage('next');
+      if (event.key === 'ArrowLeft') turnPage('previous');
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  });
 
   const openText = (text: SacredText) => {
     setSourceLanguage(locale === 'en' ? 'en' : 'sa');
@@ -250,7 +299,7 @@ const SacredTexts = () => {
         </main>
 
         <Dialog open={Boolean(selected)} onOpenChange={(open) => !open && setSelected(null)}>
-          <DialogContent className="max-h-[90vh] max-w-4xl overflow-y-auto p-0">
+          <DialogContent className="max-h-[94vh] max-w-6xl overflow-y-auto p-0">
             {selected && selectedArticle && (
               <>
                 <SacredTextHero text={selected} tall>
@@ -316,7 +365,28 @@ const SacredTexts = () => {
                         )}
                         <div className="relative mt-6 border-t pt-6">
                           {sourceLoading && <Loader2 className="absolute right-0 top-3 h-5 w-5 animate-spin text-hindu-red" />}
-                          <div data-no-regionalize className="whitespace-pre-wrap text-base leading-8 text-foreground/90">{sourceContent.content}</div>
+                          <div className="scripture-book" aria-live="polite">
+                            <div className="scripture-book-spine" aria-hidden />
+                            <div
+                              key={`${sourceContent.activeChapter}-${readerPage}`}
+                              className={`scripture-book-page ${turnDirection ? `is-turning-${turnDirection}` : ''}`}
+                            >
+                              <div className="scripture-book-ornament" aria-hidden>ॐ</div>
+                              <div data-no-regionalize className="whitespace-pre-wrap text-base leading-8 text-stone-800 dark:text-stone-200">
+                                {readerPages[readerPage]}
+                              </div>
+                              <span className="scripture-page-number">{readerPage + 1}</span>
+                            </div>
+                          </div>
+                          <div className="mt-5 flex items-center justify-between gap-3">
+                            <Button type="button" variant="outline" disabled={readerPage === 0 || sourceLoading} onClick={() => turnPage('previous')}>
+                              <ChevronLeft className="mr-2 h-4 w-4" /> {lc('Previous page')}
+                            </Button>
+                            <span className="text-sm text-muted-foreground">{lc('Page')} {readerPage + 1} / {readerPages.length}</span>
+                            <Button type="button" variant="outline" disabled={readerPage >= readerPages.length - 1 || sourceLoading} onClick={() => turnPage('next')}>
+                              {lc('Next page')} <ChevronRight className="ml-2 h-4 w-4" />
+                            </Button>
+                          </div>
                         </div>
                       </>
                     )}

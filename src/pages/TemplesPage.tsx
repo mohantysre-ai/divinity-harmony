@@ -26,6 +26,26 @@ import { ThemeProvider } from "@/hooks/use-theme";
 import { useLocale } from "@/hooks/use-locale";
 import { temples, type Temple } from "@/data/temples";
 
+const commonsFile = (name: string, width = 1400) =>
+  `https://commons.wikimedia.org/wiki/Special:FilePath/${encodeURIComponent(name)}?width=${width}`;
+
+const templeImageCandidates = (temple: Temple) => {
+  const name = temple.name.toLowerCase();
+  const exact: Array<[string, string]> = [
+    ["jagannath", "Jagannath Temple Puri.jpg"],
+    ["meenakshi", "Meenakshi Amman Temple, Madurai, India.jpg"],
+    ["brihadeeswar", "Brihadeeswarar Temple.jpg"],
+    ["angkor", "Angkor Wat.jpg"],
+    ["prambanan", "Prambanan Temple Compounds.jpg"],
+  ];
+  const match = exact.find(([key]) => name.includes(key));
+  return [
+    ...(match ? [commonsFile(match[1])] : []),
+    commonsFile("Meenakshi Amman Temple, Madurai, India.jpg"),
+    commonsFile("Jagannath Temple Puri.jpg"),
+  ];
+};
+
 const distance = (a: number, b: number, c: number, d: number) => {
   const radius = 6371;
   const radians = Math.PI / 180;
@@ -277,7 +297,7 @@ export default function TemplesPage() {
             <div className="grid lg:grid-cols-[.9fr_1.1fr]">
               <div className="relative min-h-[330px] overflow-hidden bg-orange-950">
                 <ResilientCoverImage
-                  sources={[]}
+                  sources={templeImageCandidates(selected)}
                   searchQuery={selected.imageQuery || `${selected.name} temple`}
                   alt={lc(selected.name)}
                 />
@@ -297,6 +317,7 @@ export default function TemplesPage() {
                   <p className="mt-1 text-orange-100">
                     {lc(selected.city)}, {lc(selected.state)}
                   </p>
+                  <p className="mt-2 text-xs text-white/75">{lc("Temple photograph")}</p>
                 </div>
               </div>
               <div className="p-6 md:p-8">
