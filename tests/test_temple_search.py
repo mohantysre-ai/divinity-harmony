@@ -38,6 +38,25 @@ class TempleSearchTests(unittest.TestCase):
         self.assertEqual(temple_search.search_temples("x"), [])
 
     @patch("temple_search.urlopen")
+    def test_normalizes_spelling_and_prefers_selected_language_name(self, mocked_open):
+        payload = [{
+            "osm_type": "node", "osm_id": 51, "lat": "12.94", "lon": "77.54",
+            "display_name": "Karya Siddhi Hanuman Temple, Bengaluru, India",
+            "namedetails": {"name": "Karya Siddhi Hanuman Temple", "name:kn": "ಕಾರ್ಯ ಸಿದ್ಧಿ ಹನುಮಾನ್ ದೇವಸ್ಥಾನ"},
+            "address": {"city": "Bengaluru", "state": "Karnataka", "country": "India"},
+            "extratags": {"deity": "Hanuman"},
+        }]
+        mocked_open.return_value.__enter__.return_value = io.BytesIO(json.dumps(payload).encode())
+        temple_search._CACHE.clear()
+
+        result = temple_search.search_temples("karya sidhi hanuman", language="kn")
+
+        self.assertEqual(result[0]["name"], "ಕಾರ್ಯ ಸಿದ್ಧಿ ಹನುಮಾನ್ ದೇವಸ್ಥಾನ")
+        requested_url = mocked_open.call_args.args[0].full_url
+        self.assertIn("karya+siddhi+hanuman", requested_url)
+        self.assertIn("accept-language=kn%2Cen", requested_url)
+
+    @patch("temple_search.urlopen")
     def test_maps_nearby_overpass_result(self, mocked_open):
         payload = {
             "elements": [

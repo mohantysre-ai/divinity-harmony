@@ -421,11 +421,12 @@ class Handler(BaseHTTPRequestHandler):
             return
         if path == "/api/temples/search":
             term = query.get("q", [""])[0].strip()
+            language = query.get("lang", ["en"])[0].strip()
             if len(term) < 2:
                 self._json(200, {"items": []})
                 return
             try:
-                self._json(200, {"items": search_temples(term)})
+                self._json(200, {"items": search_temples(term, language=language)})
             except Exception:
                 self._json(503, {"error": "Temple search is temporarily unavailable.", "items": []})
             return
@@ -433,7 +434,8 @@ class Handler(BaseHTTPRequestHandler):
             try:
                 lat = float(query.get("lat", [""])[0])
                 lon = float(query.get("lon", [""])[0])
-                self._json(200, {"items": nearby_temples(lat, lon)})
+                language = query.get("lang", ["en"])[0].strip()
+                self._json(200, {"items": nearby_temples(lat, lon, language=language)})
             except (ValueError, OverflowError):
                 self._json(400, {"error": "Valid coordinates are required.", "items": []})
             except Exception:

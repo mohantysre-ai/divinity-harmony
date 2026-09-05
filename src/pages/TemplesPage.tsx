@@ -30,6 +30,14 @@ import { temples, type Temple } from "@/data/temples";
 const commonsFile = (name: string, width = 1400) =>
   `https://commons.wikimedia.org/wiki/Special:FilePath/${encodeURIComponent(name)}?width=${width}`;
 
+const normalizeTempleSearch = (value: string) =>
+  value
+    .normalize("NFKC")
+    .toLocaleLowerCase()
+    .replace(/\bkarya\s+sidhi\b/g, "karya siddhi")
+    .replace(/[^\p{L}\p{N}]+/gu, " ")
+    .trim();
+
 const templeImageCandidates = (temple: Temple) => {
   const name = temple.name.toLowerCase();
   const exact: Array<[string, string]> = [
@@ -137,7 +145,7 @@ export default function TemplesPage() {
     const controller = new AbortController();
     const timer = window.setTimeout(() => {
       setSearching(true);
-      void fetch(`/api/temples/search?q=${encodeURIComponent(term)}`, {
+      void fetch(`/api/temples/search?q=${encodeURIComponent(term)}&lang=${locale}`, {
         signal: controller.signal,
       })
         .then((response) =>
@@ -153,13 +161,13 @@ export default function TemplesPage() {
       controller.abort();
       window.clearTimeout(timer);
     };
-  }, [query]);
+  }, [query, locale]);
 
   const list = useMemo(() => {
-    const needle = query.trim().toLocaleLowerCase();
+    const needle = normalizeTempleSearch(query);
     const local = temples.filter((temple) => {
       if (!needle) return true;
-      return [
+      return normalizeTempleSearch([
         lc(temple.name),
         lc(temple.deity),
         lc(temple.city),
@@ -170,10 +178,8 @@ export default function TemplesPage() {
         temple.city,
         temple.state,
         temple.country,
-      ]
-        .join(" ")
-        .toLocaleLowerCase()
-        .includes(needle);
+        ...(temple.searchAliases || []),
+      ].join(" ")).includes(needle);
     });
     const identities = new Set(local.map((temple) => temple.name.toLowerCase()));
     const merged = [
@@ -194,6 +200,9 @@ export default function TemplesPage() {
       );
   }, [query, position, remote, lc]);
 
+  const hasMatchingSelection =
+    !query.trim() || list.some((temple) => temple.id === selected.id);
+
   useEffect(() => {
     if (query.trim() && list.length) setSelected(list[0]);
   }, [query, list]);
@@ -213,7 +222,7 @@ export default function TemplesPage() {
         setPosition(next);
         setSearching(true);
         void fetch(
-          `/api/temples/nearby?lat=${next.lat}&lon=${next.lon}`,
+          `/api/temples/nearby?lat=${next.lat}&lon=${next.lon}&lang=${locale}`,
         )
           .then((response) =>
             response.ok ? response.json() : Promise.reject(new Error()),
@@ -333,7 +342,7 @@ export default function TemplesPage() {
             )}
           </section>
 
-          <section className="mt-8 overflow-hidden rounded-[2rem] border bg-card shadow-xl">
+          <section className={`mt-8 overflow-hidden rounded-[2rem] border bg-card shadow-xl ${hasMatchingSelection ? "" : "hidden"}`}>
             <div className="grid lg:grid-cols-[.9fr_1.1fr]">
               <div className="relative min-h-[330px] overflow-hidden bg-orange-950">
                 <ResilientCoverImage
@@ -419,7 +428,7 @@ export default function TemplesPage() {
             </div>
           </section>
 
-          <div className="mt-8 grid gap-6 lg:grid-cols-[1.15fr_.85fr]">
+          <div className={`mt-8 grid gap-6 lg:grid-cols-[1.15fr_.85fr] ${hasMatchingSelection ? "" : "hidden"}`}>
             <section className="overflow-hidden rounded-3xl border bg-card">
               <iframe
                 key={selected.id}

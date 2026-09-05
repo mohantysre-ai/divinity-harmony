@@ -16,6 +16,17 @@ from urllib.request import Request, urlopen
 _CACHE: dict[str, tuple[float, list[dict[str, Any]]]] = {}
 _LOCK = threading.Lock()
 _TTL_SECONDS = 60 * 60
+_SUPPORTED_LANGUAGES = {"en", "hi", "bn", "gu", "mr", "ta", "te", "ml", "kn", "or", "pa", "as"}
+
+
+def _language(value: str) -> str:
+    candidate = str(value or "en").strip().lower().split("-", 1)[0]
+    return candidate if candidate in _SUPPORTED_LANGUAGES else "en"
+
+
+def _normalize_query(value: str) -> str:
+    words = " ".join(value.strip().split())[:120]
+    return words.replace("karya sidhi", "karya siddhi").replace("Karya Sidhi", "Karya Siddhi")
 
 
 def _first(address: dict[str, Any], *keys: str) -> str:
@@ -32,12 +43,13 @@ def _safe_url(value: Any) -> str:
     return candidate if parsed.scheme in {"http", "https"} and parsed.netloc else ""
 
 
-def search_temples(query: str, limit: int = 18) -> list[dict[str, Any]]:
-    term = " ".join(query.strip().split())[:120]
+def search_temples(query: str, limit: int = 18, language: str = "en") -> list[dict[str, Any]]:
+    term = _normalize_query(query)
     if len(term) < 2:
         return []
 
-    key = term.casefold()
+    lang = _language(language)
+    key = f"search:{lang}:{term.casefold()}"
     now = time.time()
     with _LOCK:
         cached = _CACHE.get(key)
@@ -53,13 +65,14 @@ def search_temples(query: str, limit: int = 18) -> list[dict[str, Any]]:
             "addressdetails": 1,
             "namedetails": 1,
             "extratags": 1,
+            "accept-language": f"{lang},en",
         }
     )
     request = Request(
         f"https://nominatim.openstreetmap.org/search?{params}",
         headers={
             "User-Agent": "DivinityHarmony/2.0 (https://mantra.sigq.in)",
-            "Accept-Language": "en",
+            "Accept-Language": f"{lang},en",
         },
     )
     with urlopen(request, timeout=12) as response:
@@ -77,7 +90,7 @@ def search_temples(query: str, limit: int = 18) -> list[dict[str, Any]]:
         names = hit.get("namedetails") if isinstance(hit.get("namedetails"), dict) else {}
         tags = hit.get("extratags") if isinstance(hit.get("extratags"), dict) else {}
         display_name = str(hit.get("display_name", "")).strip()
-        name = str(names.get("name") or hit.get("name") or display_name.split(",")[0]).strip()
+        name = str(names.get(f"name:{lang}") or names.get("name") or hit.get("name") or display_name.split(",")[0]).strip()
         identity = f"{name.casefold()}:{lat:.5f}:{lon:.5f}"
         if not name or identity in seen:
             continue
@@ -106,11 +119,12 @@ def search_temples(query: str, limit: int = 18) -> list[dict[str, Any]]:
     return results
 
 
-def nearby_temples(lat: float, lon: float, radius_km: int = 35) -> list[dict[str, Any]]:
+def nearby_temples(lat: float, lon: float, radius_km: int = 35, language: str = "en") -> list[dict[str, Any]]:
     if not (-90 <= lat <= 90 and -180 <= lon <= 180):
         raise ValueError("Invalid coordinates")
     radius = max(2, min(radius_km, 100)) * 1000
-    key = f"near:{lat:.3f}:{lon:.3f}:{radius}"
+    lang = _language(language)
+    key = f"near:{lang}:{lat:.3f}:{lon:.3f}:{radius}"
     now = time.time()
     with _LOCK:
         cached = _CACHE.get(key)
@@ -131,7 +145,7 @@ def nearby_temples(lat: float, lon: float, radius_km: int = 35) -> list[dict[str
     results: list[dict[str, Any]] = []
     for item in payload.get("elements", []) if isinstance(payload, dict) else []:
         tags = item.get("tags") if isinstance(item.get("tags"), dict) else {}
-        name = str(tags.get("name") or tags.get("name:en") or "Local Hindu temple").strip()
+        name = str(tags.get(f"name:{lang}") or tags.get("name") or tags.get("name:en") or "Local Hindu temple").strip()
         center = item.get("center") if isinstance(item.get("center"), dict) else {}
         item_lat = item.get("lat", center.get("lat"))
         item_lon = item.get("lon", center.get("lon"))

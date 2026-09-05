@@ -16,6 +16,7 @@ export type Temple = {
   etiquette?: string[];
   tourismUrl?: string;
   imageQuery?: string;
+  searchAliases?: string[];
   discovered?: boolean;
 };
 
@@ -132,6 +133,32 @@ export const temples: Temple[] = [
     etiquette: ["Dress modestly", "Ask before photography", "Use authorized counters for offerings"],
     tourismUrl: "https://odishatourism.gov.in/",
     imageQuery: "Maa Sarala Temple Jhankad Jagatsinghpur Odisha",
+  },
+  {
+    id: "karya-siddhi-hanuman-bengaluru",
+    name: "Karya Siddhi Hanuman Temple",
+    deity: "Hanuman",
+    city: "Bengaluru",
+    state: "Karnataka",
+    country: "India",
+    lat: 12.9424,
+    lon: 77.544,
+    type: "Hanuman",
+    timings: "Verify current temple and aarti hours",
+    summary: "A prominent Hanuman temple in Girinagar, Bengaluru, associated with Sri Ganapathy Sachchidananda Ashrama.",
+    bestSeason: "Year-round",
+    nearestAirport: "Kempegowda International Airport, Bengaluru",
+    railOrRoad: "Road or local taxi/rideshare",
+    etiquette: ["Dress modestly", "Use authorized counters for offerings", "Ask before photography"],
+    tourismUrl: "https://www.blrhanuman.org/",
+    searchAliases: [
+      "karya sidhi hanuman",
+      "karya siddhi hanuman",
+      "karya siddhi anjaneya",
+      "karyasiddhi hanuman",
+      "ಕಾರ್ಯ ಸಿದ್ಧಿ ಹನುಮಾನ್",
+      "ಕಾರ್ಯಸಿದ್ಧಿ ಆಂಜನೇಯ",
+    ],
   },
   {
     id: 6,
