@@ -1,3 +1,4 @@
+import json
 import re
 import unittest
 from pathlib import Path
@@ -47,6 +48,17 @@ class VirtualPujaGuidanceTests(unittest.TestCase):
         ):
             self.assertIn(f'lc("{label}")', component)
 
+    def test_all_step_meanings_have_reviewed_odia_copy(self):
+        guidance = (ROOT / "src/components/puja/ritual-guidance.ts").read_text(encoding="utf-8")
+        reviewed = json.loads(
+            (ROOT / "scripts/packs/odia-virtual-puja-reviewed.json").read_text(encoding="utf-8")
+        )
+        meanings = re.findall(r'^    meaning: "([^"]+)",$', guidance, flags=re.MULTILINE)
+
+        self.assertEqual(len(meanings), 16)
+        self.assertEqual(set(meanings), set(reviewed))
+        for translation in reviewed.values():
+            self.assertNotRegex(translation, r"[A-Za-z]")
 
 if __name__ == "__main__":
     unittest.main()
