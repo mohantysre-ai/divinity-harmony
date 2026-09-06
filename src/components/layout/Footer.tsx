@@ -17,7 +17,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { useLocale } from "@/hooks/use-locale";
 import type { UiKey } from "@/lib/ui-keys";
-import { BRAND_NAME } from "@/lib/brand";
+import { localizedBrandName } from "@/lib/brand";
 
 const productKeys = [
   ["myDharma", "/my-dharma"],
@@ -50,7 +50,8 @@ const socials = [
 ].filter((item) => item.url);
 
 export default function Footer() {
-  const { tk } = useLocale();
+  const { locale, tk } = useLocale();
+  const brandName = localizedBrandName(locale);
   const [email, setEmail] = useState("");
   const [consent, setConsent] = useState(false);
   const [state, setState] = useState<"idle" | "loading" | "success" | "error">(
@@ -166,7 +167,12 @@ export default function Footer() {
                 aria-hidden="true"
                 className="h-11 w-11 rounded-2xl shadow-lg"
               />
-              <span data-no-regionalize className="whitespace-nowrap text-xl font-bold">{BRAND_NAME}</span>
+              <span
+                data-no-regionalize
+                className="max-w-48 whitespace-normal break-words text-xl font-bold leading-tight"
+              >
+                {brandName}
+              </span>
             </Link>
             <p className="mt-5 max-w-sm text-sm leading-7 text-muted-foreground">
               {tk("footerTagline")}
@@ -245,7 +251,7 @@ export default function Footer() {
           </div>
         </div>
         <div className="flex flex-col gap-3 border-t border-orange-950/10 py-6 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
-          <p>© {new Date().getFullYear()} <span data-no-regionalize>{BRAND_NAME}</span>.</p>
+          <p>© {new Date().getFullYear()} <span data-no-regionalize>{brandName}</span>.</p>
           <p>{tk("footerDisclaimer")}</p>
         </div>
       </div>

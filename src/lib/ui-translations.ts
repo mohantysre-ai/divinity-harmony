@@ -2,7 +2,7 @@ import type { AppLocale } from "@/hooks/use-locale";
 import { localizeContent } from "@/lib/content-i18n";
 import { buildUiDict } from "@/lib/locale-packs";
 import { regionalScriptFallback } from "@/lib/regional-fallback";
-import { isProtectedBrandText } from "@/lib/brand";
+import { isCanonicalBrandText, localizedBrandName } from "@/lib/brand";
 
 /** Real UI copy — keys are exact English source strings in the app. */
 export const uiTranslations: Partial<Record<AppLocale, Record<string, string>>> =
@@ -22,7 +22,8 @@ export const uiTranslations: Partial<Record<AppLocale, Record<string, string>>> 
 
 /** Exact-match only — avoids partial replacements like "Explore" inside English sentences. */
 export function translateUiText(text: string, locale: AppLocale): string {
-  if (locale === "en" || isProtectedBrandText(text)) return text;
+  if (isCanonicalBrandText(text)) return localizedBrandName(locale);
+  if (locale === "en") return text;
 
   const dict = uiTranslations[locale];
   if (!dict) return localizeContent(text, locale);

@@ -38,7 +38,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useAuth } from "@/hooks/use-auth";
 import { localeOptions, useLocale } from "@/hooks/use-locale";
 import type { UiKey } from "@/lib/ui-keys";
-import { BRAND_NAME } from "@/lib/brand";
+import { localizedBrandName } from "@/lib/brand";
 
 const Navigation: { key: UiKey; href: string; icon: typeof Home }[] = [
   { key: "home", href: "/", icon: Home },
@@ -70,6 +70,7 @@ const Header = () => {
   const isMoreNavigationActive = MoreNavigation.some(
     (item) => location.pathname === item.href,
   );
+  const brandName = localizedBrandName(locale);
 
   const displayName = String(
     user?.user_metadata?.display_name ||
@@ -96,15 +97,15 @@ const Header = () => {
       <div className="container mx-auto">
         <nav className="flex items-center justify-between py-3">
           <div className="min-w-0 flex-none">
-            <Link to="/" className="flex flex-none items-center gap-2.5" aria-label={BRAND_NAME}>
+            <Link to="/" className="flex flex-none items-center gap-2.5" aria-label={brandName}>
               <img
                 src="/dharmdisha-icon.svg"
                 alt=""
                 aria-hidden="true"
                 className="h-10 w-10 flex-none rounded-xl shadow-lg"
               />
-              <span data-no-regionalize className="flex-none whitespace-nowrap bg-gradient-to-r from-hindu-red to-hindu-gold bg-clip-text text-lg font-bold leading-none text-transparent sm:text-xl md:text-2xl">
-                {BRAND_NAME}
+              <span data-no-regionalize className="max-w-36 flex-none whitespace-normal break-words text-left text-lg font-bold leading-[1.05] text-[#7c2d12] dark:text-[#ffb347] sm:max-w-44 sm:text-xl md:text-2xl">
+                {brandName}
               </span>
             </Link>
           </div>
