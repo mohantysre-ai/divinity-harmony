@@ -33,6 +33,9 @@ const virtualPujaTranslationPacks = JSON.parse(
     "utf8",
   ),
 );
+const cultureExperiencePacks = JSON.parse(
+  fs.readFileSync(path.join(root, "src/lib/culture-experience-packs.json"), "utf8"),
+);
 const uiKeys = JSON.parse(
   fs.readFileSync(path.join(root, "src/lib/ui-keys-export.json"), "utf8"),
 );
@@ -107,6 +110,7 @@ for (const [section, phrases] of Object.entries(sections)) {
           : undefined) ??
         (section === "temples" ? reviewedTempleCopy[locale]?.[english] : undefined) ??
         virtualPujaTranslationPacks[locale]?.[english] ??
+        cultureExperiencePacks[locale]?.[english] ??
         contentReleaseSupplementPacks[locale]?.[english] ??
         contentSupplementPacks[locale]?.[english] ??
         contentPacks[locale]?.[english];

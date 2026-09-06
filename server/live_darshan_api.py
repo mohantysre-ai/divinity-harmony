@@ -30,6 +30,7 @@ from db import get_profile, init_db, list_favorites, list_priests, save_japa, sa
 from panchang import daily_panchang, birth_chart as approx_birth_chart
 from region import geocode_place, regional_preference
 from temple_search import nearby_temples, search_temples
+from culture_context import culture_context
 
 try:
     from vedic_chart import EPHEMERIS_AVAILABLE, birth_chart
@@ -538,6 +539,15 @@ class Handler(BaseHTTPRequestHandler):
                 self._json(400, {"error": "Valid coordinates are required."})
             except Exception:
                 self._json(503, {"error": "Regional detection is temporarily unavailable."})
+            return
+        if path == "/api/culture/context":
+            state_id = query.get("state", [""])[0].strip()[:80]
+            try:
+                self._json(200, culture_context(state_id))
+            except ValueError as exc:
+                self._json(400, {"error": str(exc)})
+            except Exception:
+                self._json(503, {"error": "Live cultural context is temporarily unavailable."})
             return
         if path == "/api/mantra-recordings":
             title = query.get("title", [""])[0].strip()

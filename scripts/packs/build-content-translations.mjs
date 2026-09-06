@@ -20,6 +20,7 @@ try {
   const supplements = readJson("src/lib/content-supplement-packs.json");
   const releaseSupplements = readJson("src/lib/content-release-supplement-packs.json");
   const virtualPujaTranslations = readJson("src/lib/virtual-puja-translation-packs.json");
+  const cultureExperienceTranslations = readJson("src/lib/culture-experience-packs.json");
   const reviewedTemples = readJson("scripts/packs/temples-reviewed.json");
   const reviewedOdiaTemples = readJson("scripts/packs/odia-temples-reviewed.json");
   const reviewedOdiaVirtualPuja = readJson("scripts/packs/odia-virtual-puja-reviewed.json");
@@ -31,6 +32,7 @@ try {
         ...(supplements[locale] || {}),
         ...(releaseSupplements[locale] || {}),
         ...(virtualPujaTranslations[locale] || {}),
+        ...(cultureExperienceTranslations[locale] || {}),
         ...(reviewedTemples[locale] || {}),
         ...(locale === "or" ? reviewedOdiaTemples : {}),
         ...(locale === "or" ? reviewedOdiaVirtualPuja : {}),
