@@ -1,8 +1,10 @@
 import importlib.util
+import io
 import json
 import sys
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 
 SERVER_DIR = Path(__file__).resolve().parents[1] / "server"
@@ -77,6 +79,24 @@ class LiveDarshanParserTests(unittest.TestCase):
         self.assertEqual(results[0]["videoId"], "hanuman123")
         self.assertEqual(results[0]["channelTitle"], "Bhakti Channel")
         self.assertIn("youtube-nocookie.com/embed/hanuman123", results[0]["embedUrl"])
+
+    @patch.object(api, "urlopen")
+    def test_fetches_real_youtube_thumbnail_for_pravachan(self, mocked_open):
+        data = {"contents": [{"videoRenderer": {
+            "videoId": "pravachan123",
+            "title": {"simpleText": "Latest official discourse"},
+            "ownerText": {"runs": [{"text": "Official Channel"}]},
+            "thumbnail": {"thumbnails": [{"url": "https://i.ytimg.com/vi/pravachan123/hqdefault.jpg"}]},
+        }}]}
+        page = f"<script>var ytInitialData = {json.dumps(data)};</script>"
+        mocked_open.return_value.__enter__.return_value = io.BytesIO(page.encode())
+
+        result = api.fetch_pravachan_thumbnail("Example Teacher", "Example Teacher official")
+
+        self.assertEqual(result["name"], "Example Teacher")
+        self.assertEqual(result["videoId"], "pravachan123")
+        self.assertEqual(result["thumbnailUrl"], "https://i.ytimg.com/vi/pravachan123/hqdefault.jpg")
+        self.assertEqual(result["channelTitle"], "Official Channel")
 
     def test_parses_live_darshan_hub_cards_and_deduplicates_buttons(self):
         page = '''

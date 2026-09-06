@@ -91,6 +91,37 @@ function extractPujas() {
   return strings;
 }
 
+function extractVirtualPujaGuidance() {
+  const file = "src/components/puja/ritual-guidance.ts";
+  const text = fs.readFileSync(path.join(root, file), "utf8");
+  const sourceFile = ts.createSourceFile(
+    file,
+    text,
+    ts.ScriptTarget.Latest,
+    true,
+    ts.ScriptKind.TS,
+  );
+  const strings = new Set();
+  const textProperties = new Set([
+    "meaning", "purpose", "materials", "say", "duration", "completeWhen", "note",
+  ]);
+  const visit = (node) => {
+    if (ts.isPropertyAssignment(node)) {
+      const property = node.name.getText(sourceFile).replace(/["']/g, "");
+      if (textProperties.has(property) && ts.isStringLiteralLike(node.initializer)) {
+        strings.add(node.initializer.text.trim());
+      } else if (property === "actions" && ts.isArrayLiteralExpression(node.initializer)) {
+        node.initializer.elements.forEach((item) => {
+          if (ts.isStringLiteralLike(item)) strings.add(item.text.trim());
+        });
+      }
+    }
+    ts.forEachChild(node, visit);
+  };
+  visit(sourceFile);
+  return strings;
+}
+
 function extractDeities() {
   const text = fs.readFileSync(path.join(root, "src/data/deities.ts"), "utf8");
   const strings = new Set();
@@ -267,6 +298,7 @@ const sacred = extractSacredTexts();
 const mantras = extractMantras();
 const culture = extractCulturePacks();
 const pujas = extractPujas();
+const virtualPujaGuidance = extractVirtualPujaGuidance();
 const deityCatalog = extractDeities();
 const templeCatalog = extractTemples();
 const priestCatalog = extractPriestCatalog();
@@ -281,6 +313,7 @@ const priestPageCopy = extractLocalizedPageCopy([
   "src/pages/PriestDirectoryPage.tsx",
   "src/components/puja/VirtualPuja.tsx",
 ]);
+for (const text of virtualPujaGuidance) priestPageCopy.add(text);
 const culturePageCopy = extractLocalizedPageCopy([
   "src/pages/CultureIndiaPage.tsx",
 ]);
@@ -304,6 +337,7 @@ const all = new Set([
   ...mantras,
   ...culture,
   ...pujas,
+  ...virtualPujaGuidance,
   ...deityCatalog,
   ...templeCatalog,
   ...priestCatalog,
@@ -330,6 +364,7 @@ console.log(JSON.stringify({
   mantras: mantras.size,
   culture: culture.size,
   pujas: pujas.size,
+  virtualPujaGuidance: virtualPujaGuidance.size,
   deities: deityCatalog.size,
   temples: templeCatalog.size,
   priests: priestCatalog.size,

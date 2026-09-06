@@ -56,6 +56,20 @@ LIVE_FILTER = "EgJAAQ=="
 CACHE_SECONDS = int(os.environ.get("LIVE_DARSHAN_CACHE_SECONDS", "300"))
 REQUEST_TIMEOUT_SECONDS = int(os.environ.get("LIVE_DARSHAN_TIMEOUT_SECONDS", "20"))
 PORT = int(os.environ.get("LIVE_DARSHAN_API_PORT", "8080"))
+PRAVACHAN_THUMBNAIL_CACHE_SECONDS = int(os.environ.get("PRAVACHAN_THUMBNAIL_CACHE_SECONDS", "21600"))
+PRAVACHAN_QUERIES = {
+    "Premanand Ji Maharaj": "Premanand Ji Maharaj Bhajan Marg latest pravachan",
+    "Aniruddhacharya Ji": "Aniruddhacharya Ji official latest pravachan",
+    "Sanatan Bhakti TV": "Sanatan Bhakti TV latest pravachan",
+    "Swami Mukundananda": "Swami Mukundananda official latest discourse",
+    "Chinmaya Mission": "Chinmaya Mission official latest pravachan",
+    "ISKCON Bangalore Daily Lectures": "ISKCON Bangalore official daily lecture",
+    "ISKCON Mumbai Kirtan & Lectures": "ISKCON Mumbai official kirtan lecture",
+    "ISKCON Vrindavan Kirtan & Lectures": "ISKCON Vrindavan official kirtan lecture",
+    "Chinmaya Channel": "Chinmaya Channel official latest discourse",
+    "Sri Sri Ravi Shankar": "Sri Sri Ravi Shankar official latest wisdom talk",
+    "Sadhguru": "Sadhguru official latest spiritual discourse",
+}
 
 
 def _text(value: Any) -> str:
@@ -222,6 +236,80 @@ def search_mantra_recordings(query: str) -> list[dict[str, Any]]:
     with MANTRA_RECORDING_LOCK:
         MANTRA_RECORDING_CACHE[normalized.casefold()] = (now, items)
     return items
+
+
+def fetch_pravachan_thumbnail(name: str, query: str) -> dict[str, Any] | None:
+    """Return a real YouTube video thumbnail for one pravachan source."""
+    params = urlencode({"search_query": query, "hl": "en", "gl": "IN"})
+    request = Request(
+        f"{YOUTUBE_SEARCH_URL}?{params}",
+        headers={
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/131.0 Safari/537.36",
+            "Accept-Language": "en-IN,en;q=0.9,hi;q=0.8",
+            "Cookie": "CONSENT=YES+cb.20210328-17-p0.en+FX+410",
+        },
+    )
+    with urlopen(request, timeout=REQUEST_TIMEOUT_SECONDS) as response:
+        page = response.read().decode("utf-8", errors="replace")
+    videos = parse_mantra_recordings(extract_initial_data(page), limit=1)
+    if not videos:
+        return None
+    video = videos[0]
+    thumbnail = str(video.get("thumbnailUrl") or "").strip()
+    video_id = str(video.get("videoId") or "").strip()
+    if not thumbnail or not video_id:
+        return None
+    return {
+        "name": name,
+        "videoId": video_id,
+        "title": str(video.get("title") or name).strip(),
+        "channelTitle": str(video.get("channelTitle") or "YouTube").strip(),
+        "thumbnailUrl": thumbnail,
+        "url": str(video.get("url") or f"https://www.youtube.com/watch?v={video_id}"),
+    }
+
+
+class PravachanThumbnailCache:
+    def __init__(self) -> None:
+        self._lock = threading.Lock()
+        self._items: list[dict[str, Any]] = []
+        self._updated_at = 0.0
+
+    def get(self) -> dict[str, Any]:
+        now = time.time()
+        with self._lock:
+            if self._updated_at and now - self._updated_at < PRAVACHAN_THUMBNAIL_CACHE_SECONDS:
+                return self._payload()
+
+        items: list[dict[str, Any]] = []
+        with ThreadPoolExecutor(max_workers=min(11, len(PRAVACHAN_QUERIES))) as executor:
+            futures = {
+                executor.submit(fetch_pravachan_thumbnail, name, query): name
+                for name, query in PRAVACHAN_QUERIES.items()
+            }
+            for future in as_completed(futures):
+                try:
+                    item = future.result()
+                    if item:
+                        items.append(item)
+                except Exception:
+                    continue
+
+        ordered = sorted(items, key=lambda item: list(PRAVACHAN_QUERIES).index(item["name"]))
+        with self._lock:
+            # Preserve the last successful YouTube images during a temporary
+            # provider failure; never substitute unrelated stock artwork.
+            if ordered:
+                self._items = ordered
+                self._updated_at = now
+            return self._payload()
+
+    def _payload(self) -> dict[str, Any]:
+        updated = datetime.fromtimestamp(self._updated_at, timezone.utc).isoformat() if self._updated_at else None
+        return {"updatedAt": updated, "items": self._items, "source": "youtube-search"}
+
+
+PRAVACHAN_THUMBNAILS = PravachanThumbnailCache()
 
 
 def fetch_query(query: str) -> list[dict[str, Any]]:
@@ -460,6 +548,9 @@ class Handler(BaseHTTPRequestHandler):
                 self._json(200, {"items": search_mantra_recordings(title)})
             except Exception:
                 self._json(503, {"error": "YouTube recordings are temporarily unavailable.", "items": []})
+            return
+        if path == "/api/pravachan-thumbnails":
+            self._json(200, PRAVACHAN_THUMBNAILS.get())
             return
         if path == "/api/profile":
             device_id = self.headers.get("X-Device-ID", "")[:100]

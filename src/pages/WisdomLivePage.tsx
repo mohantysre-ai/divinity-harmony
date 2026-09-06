@@ -1,10 +1,10 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   BookMarked,
-  CalendarClock,
   ExternalLink,
   Mic2,
   Search,
+  Youtube,
 } from "lucide-react";
 import Layout from "@/components/layout/Layout";
 import { ThemeProvider } from "@/hooks/use-theme";
@@ -17,6 +17,15 @@ import {
   wisdomImageCandidates,
   wisdomImageSearchQuery,
 } from "@/lib/wisdom-art";
+
+type PravachanThumbnail = {
+  name: string;
+  videoId: string;
+  title: string;
+  channelTitle: string;
+  thumbnailUrl: string;
+  url: string;
+};
 
 const pravachans = [
   {
@@ -120,6 +129,21 @@ const reading = [
 export default function WisdomLivePage() {
   const { tk, lc } = useLocale();
   const [q, setQ] = useState("");
+  const [pravachanThumbnails, setPravachanThumbnails] = useState<Record<string, PravachanThumbnail>>({});
+
+  useEffect(() => {
+    const controller = new AbortController();
+    void fetch("/api/pravachan-thumbnails", { signal: controller.signal })
+      .then((response) => response.ok ? response.json() : Promise.reject(new Error()))
+      .then((payload) => {
+        const items = Array.isArray(payload.items) ? payload.items as PravachanThumbnail[] : [];
+        setPravachanThumbnails(Object.fromEntries(items.map((item) => [item.name, item])));
+      })
+      .catch((error) => {
+        if (error.name !== "AbortError") setPravachanThumbnails({});
+      });
+    return () => controller.abort();
+  }, []);
   const talks = useMemo(
     () =>
       pravachans.filter((x) => {
@@ -167,7 +191,9 @@ export default function WisdomLivePage() {
               </div>
             </div>
             <div className="mt-5 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-              {talks.map((x) => (
+              {talks.map((x) => {
+                const youtubePreview = pravachanThumbnails[x.name];
+                return (
                 <a
                   key={x.name}
                   href={x.url}
@@ -176,12 +202,12 @@ export default function WisdomLivePage() {
                   className="group flex flex-col overflow-hidden rounded-3xl border bg-card shadow-sm transition hover:-translate-y-1 hover:border-orange-300 hover:shadow-xl"
                 >
                   <div className="relative aspect-[16/9] w-full overflow-hidden bg-muted">
-                    <ResilientCoverImage
-                      sources={wisdomImageCandidates(x.name, x.topic)}
-                      searchQuery={wisdomImageSearchQuery(x.name, x.topic)}
-                      objectPosition="50% 35%"
-                    />
+                    <YouTubePravachanImage preview={youtubePreview} name={x.name} />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+                    <span className="absolute bottom-3 left-3 right-10 line-clamp-2 text-xs font-semibold leading-5 text-white/90">
+                      {youtubePreview?.title || lc(x.name)}
+                    </span>
+                    <Youtube className="absolute left-3 top-3 h-5 w-5 fill-red-600 text-red-600 drop-shadow" />
                     <ExternalLink className="absolute right-3 top-3 h-4 w-4 text-white/80" />
                   </div>
                   <div className="flex flex-1 flex-col p-5">
@@ -197,7 +223,8 @@ export default function WisdomLivePage() {
                     </Badge>
                   </div>
                 </a>
-              ))}
+                );
+              })}
             </div>
           </section>
           <section className="mt-14">
@@ -244,5 +271,31 @@ export default function WisdomLivePage() {
         </main>
       </Layout>
     </ThemeProvider>
+  );
+}
+
+function YouTubePravachanImage({ preview, name }: { preview?: PravachanThumbnail; name: string }) {
+  const [failed, setFailed] = useState(false);
+
+  useEffect(() => setFailed(false), [preview?.thumbnailUrl]);
+
+  if (!preview?.thumbnailUrl || failed) {
+    return (
+      <div className="absolute inset-0 grid place-items-center bg-gradient-to-br from-red-950 via-stone-950 to-orange-950" role="img" aria-label={name}>
+        <Youtube className="h-14 w-14 text-white/25" />
+      </div>
+    );
+  }
+
+  return (
+    <img
+      src={preview.thumbnailUrl}
+      alt={preview.title || name}
+      loading="lazy"
+      decoding="async"
+      referrerPolicy="no-referrer"
+      className="absolute inset-0 h-full w-full object-cover transition duration-500 group-hover:scale-105"
+      onError={() => setFailed(true)}
+    />
   );
 }

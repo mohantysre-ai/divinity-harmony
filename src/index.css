@@ -232,6 +232,34 @@ html[data-app-locale="en"] body {
 .vp-step-heading h3 { margin-top: 2px; font-size: clamp(23px,3vw,34px); font-weight: 800; line-height: 1.25; }
 .vp-mantra { margin-top: 18px; padding: 13px 16px; border-left: 3px solid #d98a2b; color: #ffe3a1; background: rgba(247,199,109,.06); font-size: 18px; line-height: 1.7; }
 .vp-guidance { margin-top: 17px; color: rgba(255,247,232,.88); font-size: 15px; line-height: 1.75; }
+.vp-beginner-guide { display: grid; gap: 12px; margin-top: 14px; }
+.vp-beginner-kicker { display: flex; align-items: center; gap: 8px; color: #ffd47d; font-size: 12px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+.vp-beginner-kicker svg { width: 16px; }
+.vp-meaning-card { padding: 15px; border: 1px solid rgba(247,199,109,.18); border-radius: 16px; background: linear-gradient(135deg,rgba(247,199,109,.1),rgba(255,255,255,.025)); }
+.vp-meaning-card h4,.vp-action-guide h4 { color: #ffe0a0; font-size: 14px; font-weight: 800; }
+.vp-meaning-card p { margin-top: 5px; color: rgba(255,247,232,.92); font-size: 14px; line-height: 1.65; }
+.vp-meaning-card > span { display: block; margin-top: 9px; color: rgba(255,247,232,.68); font-size: 12px; line-height: 1.55; }
+.vp-meaning-card strong { color: #ffc968; }
+.vp-guide-facts { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.vp-guide-facts section,.vp-completion-cue { display: flex; align-items: flex-start; gap: 10px; padding: 12px; border: 1px solid rgba(247,199,109,.13); border-radius: 14px; background: rgba(255,255,255,.035); }
+.vp-guide-facts svg,.vp-completion-cue svg { width: 18px; min-width: 18px; color: #f5b94f; }
+.vp-guide-facts span,.vp-completion-cue span { color: rgba(255,247,232,.72); font-size: 12px; line-height: 1.55; }
+.vp-guide-facts strong,.vp-completion-cue strong { display: block; margin-bottom: 2px; color: #fff0cd; font-size: 11px; text-transform: uppercase; }
+.vp-action-guide { padding: 15px; border-radius: 16px; background: rgba(0,0,0,.2); }
+.vp-action-guide h4 { display: flex; align-items: center; gap: 8px; }
+.vp-action-guide h4 svg { width: 17px; }
+.vp-action-guide ol { display: grid; gap: 9px; margin-top: 11px; }
+.vp-action-guide li { display: flex; align-items: flex-start; gap: 10px; color: rgba(255,247,232,.88); font-size: 13px; line-height: 1.55; }
+.vp-action-guide li > span { display: grid; width: 23px; height: 23px; min-width: 23px; place-items: center; border-radius: 50%; color: #3b1609; background: #efb851; font-size: 11px; font-weight: 900; }
+.vp-say-card { padding: 14px 15px; border-left: 3px solid #e7942c; border-radius: 4px 14px 14px 4px; background: rgba(177,79,21,.13); }
+.vp-say-card > span { color: #f7bd5b; font-size: 11px; font-weight: 800; text-transform: uppercase; }
+.vp-say-card p { margin-top: 6px; color: #fff1d0; font-size: 14px; font-weight: 650; line-height: 1.65; }
+.vp-say-card small { display: block; margin-top: 7px; color: rgba(255,247,232,.55); font-size: 11px; line-height: 1.5; }
+.vp-completion-cue { border-color: rgba(74,222,128,.2); background: rgba(34,197,94,.07); }
+.vp-completion-cue svg { color: #6ee7a0; }
+.vp-completion-cue strong { color: #9bf2bc; }
+.vp-beginner-note { display: flex; align-items: flex-start; gap: 9px; padding: 11px 12px; border: 1px solid rgba(251,191,36,.18); border-radius: 13px; color: rgba(255,239,198,.75); background: rgba(251,191,36,.055); font-size: 11px; line-height: 1.55; }
+.vp-beginner-note svg { width: 16px; min-width: 16px; color: #f6bd54; }
 .vp-specific-guide { margin-top: 13px; padding: 13px; border-radius: 14px; color: rgba(255,247,232,.7); background: rgba(255,255,255,.045); font-size: 13px; line-height: 1.65; }
 .vp-specific-guide strong { color: var(--vp-gold); }
 .vp-hold-action,.vp-tap-action { position: relative; display: flex; width: 100%; min-height: 54px; align-items: center; justify-content: center; gap: 9px; overflow: hidden; margin-top: 20px; border: 1px solid #ffd98c; border-radius: 15px; color: #351006; background: linear-gradient(180deg,#ffe5a4,#d88a28); font-weight: 800; }
@@ -290,6 +318,7 @@ html[data-app-locale="en"] body {
   .vp-sanctum { position: relative; top: 0; min-height: 410px; border-radius: 210px 210px 24px 24px; }
   .vp-image-frame { width: 58%; max-width: 230px; }
   .vp-step-panel { max-height: none; margin-top: 14px; padding: 20px 16px; }
+  .vp-guide-facts { grid-template-columns: 1fr; }
   .vp-material-grid { grid-template-columns: 1fr; }
   .vp-temple-arch { height: 460px; }
 }
