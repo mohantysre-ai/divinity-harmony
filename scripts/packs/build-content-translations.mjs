@@ -9,8 +9,37 @@ import Sanscript from "@indic-transliteration/sanscript";
 import translate from "google-translate-api-x";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const root = path.resolve(__dirname, "../..");
 const stringsPath = path.join(__dirname, "content-strings-en.json");
 const englishStrings = JSON.parse(fs.readFileSync(stringsPath, "utf8"));
+let compiledPacks = {};
+try {
+  const readJson = (relativePath) =>
+    JSON.parse(fs.readFileSync(path.join(root, relativePath), "utf8"));
+  const base = readJson("src/lib/content-packs.json");
+  const supplements = readJson("src/lib/content-supplement-packs.json");
+  const releaseSupplements = readJson("src/lib/content-release-supplement-packs.json");
+  const virtualPujaTranslations = readJson("src/lib/virtual-puja-translation-packs.json");
+  const reviewedTemples = readJson("scripts/packs/temples-reviewed.json");
+  const reviewedOdiaTemples = readJson("scripts/packs/odia-temples-reviewed.json");
+  const reviewedOdiaVirtualPuja = readJson("scripts/packs/odia-virtual-puja-reviewed.json");
+  compiledPacks = Object.fromEntries(
+    Object.keys(base).map((locale) => [
+      locale,
+      {
+        ...base[locale],
+        ...(supplements[locale] || {}),
+        ...(releaseSupplements[locale] || {}),
+        ...(virtualPujaTranslations[locale] || {}),
+        ...(reviewedTemples[locale] || {}),
+        ...(locale === "or" ? reviewedOdiaTemples : {}),
+        ...(locale === "or" ? reviewedOdiaVirtualPuja : {}),
+      },
+    ]),
+  );
+} catch {
+  console.warn("Existing compiled content packs are unavailable for recovery.");
+}
 
 const scriptSchemes = {
   hi: "devanagari",
@@ -297,7 +326,11 @@ async function buildLocale(locale, glossary, outFile) {
     try {
       result = JSON.parse(fs.readFileSync(outPath, "utf8"));
     } catch {
-      result = {};
+      // Older source translation files may be corrupted even though the
+      // generated application pack is valid. Recover the last good locale
+      // map so a small content change never retranslates the whole catalogue.
+      result = { ...(compiledPacks[locale] || {}) };
+      console.warn(`${locale}: recovered ${Object.keys(result).length} translations from content-packs.json`);
     }
   }
   const missing = englishStrings.filter(
