@@ -18,6 +18,7 @@ import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/hooks/use-auth";
 import { authEmailRedirectTo } from "@/lib/auth-redirect";
 import { useLocale } from "@/hooks/use-locale";
+import { BRAND_NAME } from "@/lib/brand";
 
 interface Props {
   onComplete?: () => void;
@@ -133,7 +134,7 @@ export default function SplashScreen({ onComplete }: Props) {
         <div className="relative max-w-xl">
           <img
             src="/dharmdisha-logo.svg"
-            alt="DharmDisha"
+              alt={BRAND_NAME}
             className="h-40 w-32 rounded-3xl object-cover object-top shadow-2xl"
           />
           <h1 className="mt-6 text-5xl font-bold leading-tight">
@@ -157,7 +158,7 @@ export default function SplashScreen({ onComplete }: Props) {
               aria-hidden="true"
               className="mx-auto h-20 w-20 rounded-3xl shadow-xl"
             />
-            <h1 className="mt-3 text-3xl font-bold">{tk("divinityHarmony")}</h1>
+            <h1 data-no-regionalize className="mt-3 text-3xl font-bold">{BRAND_NAME}</h1>
           </div>
           {!configured ? (
             <Card className="border-amber-200 bg-amber-50">

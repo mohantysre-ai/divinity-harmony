@@ -36,6 +36,9 @@ const virtualPujaTranslationPacks = JSON.parse(
 const cultureExperiencePacks = JSON.parse(
   fs.readFileSync(path.join(root, "src/lib/culture-experience-packs.json"), "utf8"),
 );
+const reviewedCultureExperienceCopy = JSON.parse(
+  fs.readFileSync(path.join(root, "scripts/packs/culture-experience-reviewed.json"), "utf8"),
+);
 const uiKeys = JSON.parse(
   fs.readFileSync(path.join(root, "src/lib/ui-keys-export.json"), "utf8"),
 );
@@ -105,6 +108,7 @@ for (const [section, phrases] of Object.entries(sections)) {
     let valid = 0;
     for (const english of phrases) {
       const translated =
+        reviewedCultureExperienceCopy[locale]?.[english] ??
         (section === "temples" && locale === "or"
           ? reviewedOdiaTempleCopy[english]
           : undefined) ??

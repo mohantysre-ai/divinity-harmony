@@ -1,6 +1,7 @@
 import Sanscript from "@indic-transliteration/sanscript";
 
 import type { AppLocale } from "@/hooks/use-locale";
+import { BRAND_NAME } from "@/lib/brand";
 
 const schemes: Record<Exclude<AppLocale, "en">, string> = {
   hi: "devanagari",
@@ -33,7 +34,9 @@ export function regionalScriptFallback(
       /^\$?\{[^}]+\}$/.test(part)
         ? part
         : part.replace(/[A-Za-z]+(?:[’'-][A-Za-z]+)*/g, (word) =>
-            Sanscript.t(word.toLowerCase(), "itrans", scheme),
+            word === BRAND_NAME
+              ? word
+              : Sanscript.t(word.toLowerCase(), "itrans", scheme),
           ),
     )
     .join("");

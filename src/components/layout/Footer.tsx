@@ -17,6 +17,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { useLocale } from "@/hooks/use-locale";
 import type { UiKey } from "@/lib/ui-keys";
+import { BRAND_NAME } from "@/lib/brand";
 
 const productKeys = [
   ["myDharma", "/my-dharma"],
@@ -165,7 +166,7 @@ export default function Footer() {
                 aria-hidden="true"
                 className="h-11 w-11 rounded-2xl shadow-lg"
               />
-              <span className="text-xl font-bold">{tk("divinityHarmony")}</span>
+              <span data-no-regionalize className="whitespace-nowrap text-xl font-bold">{BRAND_NAME}</span>
             </Link>
             <p className="mt-5 max-w-sm text-sm leading-7 text-muted-foreground">
               {tk("footerTagline")}
@@ -244,7 +245,7 @@ export default function Footer() {
           </div>
         </div>
         <div className="flex flex-col gap-3 border-t border-orange-950/10 py-6 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
-          <p>© {new Date().getFullYear()} {tk("divinityHarmony")}.</p>
+          <p>© {new Date().getFullYear()} <span data-no-regionalize>{BRAND_NAME}</span>.</p>
           <p>{tk("footerDisclaimer")}</p>
         </div>
       </div>

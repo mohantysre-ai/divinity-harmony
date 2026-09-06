@@ -37,6 +37,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useAuth } from "@/hooks/use-auth";
 import { localeOptions, useLocale } from "@/hooks/use-locale";
 import type { UiKey } from "@/lib/ui-keys";
+import { BRAND_NAME } from "@/lib/brand";
 
 const Navigation: { key: UiKey; href: string; icon: typeof Home }[] = [
   { key: "home", href: "/", icon: Home },
@@ -88,16 +89,16 @@ const Header = () => {
     <header className="sticky top-0 z-50 w-full backdrop-blur-md bg-background/70 border-b border-border/40 shadow-sm">
       <div className="container mx-auto">
         <nav className="flex items-center justify-between py-3">
-          <div className="flex items-center gap-2">
-            <Link to="/" className="flex items-center gap-3">
+          <div className="min-w-0 flex-none">
+            <Link to="/" className="flex flex-none items-center gap-2.5" aria-label={BRAND_NAME}>
               <img
                 src="/dharmdisha-icon.svg"
                 alt=""
                 aria-hidden="true"
-                className="h-10 w-10 rounded-xl shadow-lg"
+                className="h-10 w-10 flex-none rounded-xl shadow-lg"
               />
-              <span className="text-xl md:text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-hindu-red to-hindu-gold">
-                {tk("divinityHarmony")}
+              <span data-no-regionalize className="flex-none whitespace-nowrap bg-gradient-to-r from-hindu-red to-hindu-gold bg-clip-text text-lg font-bold leading-none text-transparent sm:text-xl md:text-2xl">
+                {BRAND_NAME}
               </span>
             </Link>
           </div>
@@ -268,6 +269,7 @@ const Header = () => {
               size="icon"
               onClick={() => setElderMode(!elderMode)}
               aria-label={tk("elderMode")}
+              className="hidden sm:inline-flex"
             >
               <Accessibility className="h-5 w-5" />
             </Button>
@@ -275,7 +277,7 @@ const Header = () => {
               variant="ghost"
               size="icon"
               onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-              className="text-foreground/70"
+              className="hidden text-foreground/70 sm:inline-flex"
             >
               {theme === "dark" ? (
                 <Sun className="h-5 w-5" />
@@ -285,7 +287,7 @@ const Header = () => {
             </Button>
 
             {user ? (
-              <Link to="/settings">
+              <Link to="/settings" className="hidden min-[420px]:block">
                 <Avatar className="h-8 w-8">
                   <AvatarImage src={avatarUrl} alt={displayName} />
                   <AvatarFallback>{initials}</AvatarFallback>
@@ -296,7 +298,7 @@ const Header = () => {
                 variant="default"
                 size="sm"
                 onClick={handleLogin}
-                className="bg-gradient-to-r from-hindu-red to-hindu-orange"
+                className="hidden bg-gradient-to-r from-hindu-red to-hindu-orange min-[420px]:inline-flex"
               >
                 <LogIn className="h-4 w-4 mr-1" />
                 {tk("login")}
@@ -372,6 +374,19 @@ const Header = () => {
               <Settings className="h-5 w-5 mr-3" />
               {tk("settings")}
             </Link>
+            {!user && (
+              <Button
+                variant="ghost"
+                className="w-full justify-start rounded-lg px-3 py-2.5 text-sm font-medium min-[420px]:hidden"
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  handleLogin();
+                }}
+              >
+                <LogIn className="mr-3 h-5 w-5" />
+                {tk("login")}
+              </Button>
+            )}
             {user && (
               <Button
                 variant="ghost"

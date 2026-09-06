@@ -2,12 +2,14 @@ import type { AppLocale } from "@/hooks/use-locale";
 import { UI_KEYS, type UiKey, type UiLocale } from "@/lib/ui-keys";
 import packs from "@/lib/locale-packs.json";
 import { regionalScriptFallback } from "@/lib/regional-fallback";
+import { BRAND_NAME } from "@/lib/brand";
 
 export type { UiKey };
 
 const localePacks = packs as Record<UiLocale, Record<UiKey, string>>;
 
 export function translateKey(locale: AppLocale, key: UiKey): string {
+  if (key === "divinityHarmony") return BRAND_NAME;
   if (locale === "en") return UI_KEYS[key];
   return regionalScriptFallback(
     localePacks[locale]?.[key] ??
