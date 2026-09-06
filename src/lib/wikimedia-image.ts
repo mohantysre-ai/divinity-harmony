@@ -16,6 +16,7 @@ export async function searchWikimediaImage(
     gsrnamespace: "6",
     gsrlimit: String(limit),
     prop: "imageinfo",
+    iiprop: "url",
     iiurlwidth: "800",
     format: "json",
     origin: "*",
