@@ -1,8 +1,8 @@
-"""Worldwide temple-place search backed by OpenStreetMap Nominatim.
+"""Worldwide temple-place search backed by Google Places and OpenStreetMap.
 
 The endpoint is intentionally query-driven: the bundled catalog supplies rich
-editorial guides, while Nominatim makes a village, overseas temple or newly
-added place discoverable without waiting for a frontend release.
+editorial guides, while live place providers make a village, overseas temple
+or newly added place discoverable without waiting for a frontend release.
 """
 from __future__ import annotations
 
@@ -39,6 +39,20 @@ _TARGET_SCRIPT = {
     "ml": re.compile(r"[\u0d00-\u0d7f]"),
 }
 _LOCALIZED_FIELDS = ("name", "deity", "city", "state", "country", "type", "timings", "summary")
+_GOOGLE_PLACES_URL = "https://places.googleapis.com/v1/places:searchText"
+_GOOGLE_PLACES_FIELDS = ",".join(
+    (
+        "places.id",
+        "places.displayName",
+        "places.formattedAddress",
+        "places.location",
+        "places.primaryType",
+        "places.types",
+        "places.googleMapsUri",
+        "places.addressComponents",
+        "places.regularOpeningHours.weekdayDescriptions",
+    )
+)
 
 
 def _language(value: str) -> str:
@@ -63,6 +77,98 @@ def _safe_url(value: Any) -> str:
     candidate = str(value or "").strip()
     parsed = urlparse(candidate)
     return candidate if parsed.scheme in {"http", "https"} and parsed.netloc else ""
+
+
+def _google_api_key() -> str:
+    """Return a server-only Google key, preferring a Places-specific key."""
+    return (
+        os.environ.get("GOOGLE_PLACES_API_KEY", "").strip()
+        or os.environ.get("GOOGLE_TRANSLATE_API_KEY", "").strip()
+        or os.environ.get("VITE_GOOGLE_API_KEY", "").strip()
+    )
+
+
+def _google_translation_api_key() -> str:
+    return (
+        os.environ.get("GOOGLE_TRANSLATE_API_KEY", "").strip()
+        or os.environ.get("VITE_GOOGLE_API_KEY", "").strip()
+    )
+
+
+def _google_address_component(place: dict[str, Any], component_type: str) -> str:
+    for component in place.get("addressComponents", []):
+        if not isinstance(component, dict) or component_type not in component.get("types", []):
+            continue
+        return str(component.get("longText") or component.get("shortText") or "").strip()
+    return ""
+
+
+def _google_places_search(query: str, limit: int, language: str, api_key: str) -> list[dict[str, Any]]:
+    """Search Google Places using the regional query and return Temple records."""
+    request = Request(
+        _GOOGLE_PLACES_URL,
+        data=json.dumps(
+            {
+                "textQuery": query,
+                "languageCode": language,
+                "maxResultCount": max(1, min(limit, 20)),
+            }
+        ).encode("utf-8"),
+        headers={
+            "Content-Type": "application/json",
+            "X-Goog-Api-Key": api_key,
+            "X-Goog-FieldMask": _GOOGLE_PLACES_FIELDS,
+            "User-Agent": "DivinityHarmony/2.1 (https://mantra.sigq.in)",
+        },
+        method="POST",
+    )
+    with urlopen(request, timeout=12) as response:
+        payload = json.loads(response.read().decode("utf-8"))
+
+    results: list[dict[str, Any]] = []
+    for index, place in enumerate(payload.get("places", []) if isinstance(payload, dict) else []):
+        if not isinstance(place, dict):
+            continue
+        location = place.get("location") if isinstance(place.get("location"), dict) else {}
+        try:
+            lat = float(location["latitude"])
+            lon = float(location["longitude"])
+        except (KeyError, TypeError, ValueError):
+            continue
+        display = place.get("displayName") if isinstance(place.get("displayName"), dict) else {}
+        name = str(display.get("text") or "").strip()
+        if not name:
+            continue
+        city = (
+            _google_address_component(place, "locality")
+            or _google_address_component(place, "postal_town")
+            or _google_address_component(place, "administrative_area_level_3")
+        )
+        state = _google_address_component(place, "administrative_area_level_1")
+        country = _google_address_component(place, "country")
+        opening = place.get("regularOpeningHours") if isinstance(place.get("regularOpeningHours"), dict) else {}
+        weekday_descriptions = opening.get("weekdayDescriptions", [])
+        timings = " · ".join(str(item) for item in weekday_descriptions if item)
+        results.append(
+            {
+                "id": f"google-{place.get('id') or index}",
+                "name": name,
+                "deity": "Hindu temple",
+                "city": city,
+                "state": state,
+                "country": country,
+                "lat": lat,
+                "lon": lon,
+                "type": "Google place",
+                "timings": timings or "Verify current hours before travel",
+                "summary": str(place.get("formattedAddress") or name).strip(),
+                "tourismUrl": "",
+                "mapsUrl": _safe_url(place.get("googleMapsUri")),
+                "imageQuery": f"{name} {city} {country}".strip(),
+                "discovered": True,
+            }
+        )
+    return results
 
 
 def _needs_translation(text: str, language: str) -> bool:
@@ -108,10 +214,7 @@ def _google_translate_batch(texts: list[str], language: str) -> list[str]:
     # VITE_GOOGLE_API_KEY is accepted as a migration alias because early
     # deployments used that name. It remains server-only: the Docker build does
     # not pass it as a Vite build argument or embed it in browser JavaScript.
-    api_key = (
-        os.environ.get("GOOGLE_TRANSLATE_API_KEY", "").strip()
-        or os.environ.get("VITE_GOOGLE_API_KEY", "").strip()
-    )
+    api_key = _google_translation_api_key()
     if api_key:
         try:
             translated: list[str] = []
@@ -218,6 +321,22 @@ def search_temples(query: str, limit: int = 18, language: str = "en") -> list[di
         "ఆలయం", "మందిరం", "ದೇವಸ್ಥಾನ", "ದೇವಾಲಯ", "ക്ഷേത്രം", "മന്ദിരം", "ମନ୍ଦିର",
     )
     primary_term = lookup_term if any(word in lookup_folded for word in temple_words) else f"{lookup_term} Hindu temple"
+    # Google Places understands aliases and common names that are absent from
+    # OpenStreetMap (for example Krishna Janmabhoomi vs Shri Krishna
+    # Janmasthan). Use it first when the server key has Places API enabled.
+    google_key = _google_api_key()
+    if google_key:
+        try:
+            results = _google_places_search(primary_term, limit, lang, google_key)
+            if results:
+                results = _localize_results(results, lang)
+                with _LOCK:
+                    _CACHE[key] = (now, results)
+                return results
+        except Exception:
+            # Key restrictions, quota, or a provider outage must not disable
+            # the free OpenStreetMap fallback.
+            pass
     # Search progressively: translated + temple context is normally most
     # precise, while raw translated and original-script forms recover spelling
     # variants and places whose OSM name only exists in a regional script.
