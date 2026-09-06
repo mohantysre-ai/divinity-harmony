@@ -66,13 +66,15 @@ function extractMantras() {
 }
 
 function extractCulturePacks() {
-  const text = fs.readFileSync(path.join(root, "src/data/culture-packs.ts"), "utf8");
+  const text = ["src/data/culture-packs.ts", "src/data/state-culture-profiles.ts"]
+    .map((file) => fs.readFileSync(path.join(root, file), "utf8"))
+    .join("\n");
   const strings = new Set();
-  const re = /(?:name|language|calendar|script): "([^"]+)"/g;
+  const re = /(?:name|language|calendar|script|region|motif|pride|landscape|bestSeason): "([^"]+)"/g;
   let m;
   while ((m = re.exec(text))) strings.add(m[1]);
 
-  const arrRe = /(?:festivals|traditions|temples): \[([^\]]+)\]/g;
+  const arrRe = /(?:festivals|traditions|temples|arts|foods): \[([^\]]+)\]/g;
   while ((m = arrRe.exec(text))) {
     const items = m[1].match(/"([^"]+)"/g);
     if (items) items.forEach((i) => strings.add(i.slice(1, -1)));
