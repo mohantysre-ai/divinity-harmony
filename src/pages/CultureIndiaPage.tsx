@@ -1,318 +1,102 @@
-import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { useEffect, useMemo, useState, type CSSProperties, type ReactNode } from "react";
 import { Link, useParams } from "react-router-dom";
-import {
-  ArrowLeft,
-  BookOpen,
-  CalendarRange,
-  ExternalLink,
-  Landmark,
-  Languages,
-  MapPinned,
-  Search,
-  Sparkles,
-  UsersRound,
-} from "lucide-react";
+import { ArrowLeft, ArrowUpRight, BookOpen, CalendarRange, ChefHat, Clock3, ExternalLink, Landmark, Languages, MapPinned, Mountain, Palette, Search, Sparkles, UsersRound } from "lucide-react";
 import Layout from "@/components/layout/Layout";
-import { ThemeProvider } from "@/hooks/use-theme";
-import { useLocale } from "@/hooks/use-locale";
-import { culturePacks } from "@/data/culture-packs";
-import { Input } from "@/components/ui/input";
+import ResilientCoverImage from "@/components/ResilientCoverImage";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { ThemeProvider } from "@/hooks/use-theme";
+import { useLocale } from "@/hooks/use-locale";
+import { culturePacks, type CulturePack } from "@/data/culture-packs";
+import { defaultCultureProfile, stateCultureProfiles, type StateCultureProfile } from "@/data/state-culture-profiles";
+
+type LiveCultureContext = { title: string; description: string; summary: string; imageUrl: string; sourceUrl: string; officialUrl: string; sourceName: string };
+const profileFor = (id: string) => stateCultureProfiles[id] ?? defaultCultureProfile;
+const themed = (profile: StateCultureProfile) => ({ "--state-accent": profile.accent, "--state-accent-2": profile.accent2, "--state-ink": profile.ink }) as CSSProperties;
+
+function useLiveCultureContext(stateId?: string) {
+  const [context, setContext] = useState<LiveCultureContext | null>(null);
+  const [loading, setLoading] = useState(false);
+  useEffect(() => {
+    if (!stateId) { setContext(null); return; }
+    const controller = new AbortController();
+    setLoading(true);
+    fetch(`/api/culture/context?state=${encodeURIComponent(stateId)}`, { signal: controller.signal })
+      .then((response) => response.ok ? response.json() : Promise.reject(new Error("context unavailable")))
+      .then((data: LiveCultureContext) => setContext(data)).catch(() => setContext(null)).finally(() => setLoading(false));
+    return () => controller.abort();
+  }, [stateId]);
+  return { context, loading };
+}
 
 export default function CultureIndiaPage() {
   const { id } = useParams();
   const { tk, lc, lcl } = useLocale();
-  const [q, setQ] = useState("");
-  const [localTopic, setLocalTopic] = useState("");
-  const [visibleGuideCount, setVisibleGuideCount] = useState(3);
-  const guideSentinel = useRef<HTMLDivElement>(null);
+  const [query, setQuery] = useState("");
+  const [quickStateId, setQuickStateId] = useState<string>();
   const selected = culturePacks.find((pack) => pack.id === id);
+  const quickState = culturePacks.find((pack) => pack.id === quickStateId);
+  const selectedLive = useLiveCultureContext(selected?.id);
+  const quickLive = useLiveCultureContext(quickStateId);
+  const items = useMemo(() => {
+    const normalized = query.trim().toLocaleLowerCase();
+    if (!normalized) return culturePacks;
+    return culturePacks.filter((pack) => {
+      const profile = profileFor(pack.id);
+      return [pack.name, pack.language, pack.calendar, profile.region, profile.motif, ...pack.festivals, ...pack.traditions, ...pack.temples, ...profile.arts, ...profile.foods].join(" ").toLocaleLowerCase().includes(normalized);
+    });
+  }, [query]);
+  const statistics = useMemo(() => ({ places: culturePacks.length, festivals: new Set(culturePacks.flatMap((pack) => pack.festivals)).size, traditions: new Set(culturePacks.flatMap((pack) => pack.traditions)).size, sacredPlaces: culturePacks.reduce((count, pack) => count + pack.temples.length, 0) }), []);
 
-  const guideModules = useMemo(() => selected ? [
-    { id: "calendar", icon: CalendarRange, title: lc("Festival calendar and seasonal rhythm") },
-    { id: "rituals", icon: UsersRound, title: lc("Home worship and community ritual") },
-    { id: "journeys", icon: Landmark, title: lc("Temples and sacred journeys") },
-    { id: "language", icon: Languages, title: lc("Language, script and oral memory") },
-    { id: "arts", icon: Sparkles, title: lc("Arts, food and living heritage") },
-    { id: "travel", icon: MapPinned, title: lc("Respectful local travel") },
-  ] : [], [selected, lc]);
+  if (selected) return <ThemeProvider><Layout><StateCultureGuide selected={selected} profile={profileFor(selected.id)} context={selectedLive.context} loading={selectedLive.loading} lc={lc} lcl={lcl} tk={tk} /></Layout></ThemeProvider>;
 
-  useEffect(() => {
-    setVisibleGuideCount(3);
-  }, [selected?.id]);
-
-  useEffect(() => {
-    const node = guideSentinel.current;
-    if (!node || visibleGuideCount >= guideModules.length) return;
-    const observer = new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting) setVisibleGuideCount((count) => Math.min(count + 2, guideModules.length));
-    }, { rootMargin: "240px" });
-    observer.observe(node);
-    return () => observer.disconnect();
-  }, [guideModules.length, visibleGuideCount]);
-
-  const scrollToGuide = (sectionId: string) => {
-    const index = guideModules.findIndex((item) => item.id === sectionId);
-    if (index >= visibleGuideCount) setVisibleGuideCount(index + 1);
-    window.setTimeout(() => document.getElementById(`culture-${sectionId}`)?.scrollIntoView({ behavior: "smooth", block: "start" }), 0);
-  };
-
-  const items = useMemo(
-    () =>
-      culturePacks.filter((x) =>
-        [
-          x.name,
-          x.language,
-          x.calendar,
-          ...x.festivals,
-          ...x.traditions,
-          ...x.temples,
-          lc(x.name),
-          lc(x.language),
-          lc(x.calendar),
-          ...lcl(x.festivals),
-          ...lcl(x.traditions),
-          ...lcl(x.temples),
-        ]
-          .join(" ")
-          .toLowerCase()
-          .includes(q.toLowerCase()),
-      ),
-    [q, lc, lcl],
-  );
-
-  if (selected) {
-    return (
-      <ThemeProvider>
-        <Layout>
-          <main className="container mx-auto px-4 py-10">
-            <Button asChild variant="ghost" className="mb-6">
-              <Link to="/culture">
-                <ArrowLeft className="mr-2 h-4 w-4" />
-                {tk("backToCulturePacks")}
-              </Link>
-            </Button>
-            <section className="relative overflow-hidden rounded-[2rem] border bg-gradient-to-br from-orange-50 via-card to-rose-50 p-8 shadow-sm dark:from-orange-950/20 dark:to-background">
-              <div className="absolute -right-16 -top-16 h-64 w-64 rounded-full border-[40px] border-orange-200/20" />
-              <div className="relative flex h-24 w-24 items-center justify-center rounded-full border-4 border-white bg-gradient-to-br from-orange-500 to-rose-700 text-center text-xl font-bold text-white shadow-xl ring-1 ring-orange-900/10" aria-label={lc("Cultural identity symbol")}>
-                {selected.script}
-              </div>
-              <h1 className="relative mt-3 text-4xl font-bold md:text-5xl">
-                {lc(selected.name)}
-              </h1>
-              <p className="relative mt-3 max-w-3xl text-lg leading-8 text-muted-foreground">
-                {lc("A living regional culture shaped by")} {lc(selected.calendar)}, {lcl(selected.traditions).join(", ")} {lc("and sacred journeys to")} {lcl(selected.temples).join(", ")}.
-              </p>
-              <div className="relative mt-6 flex flex-wrap gap-2">
-                <Badge className="bg-orange-600 text-white">{lc(selected.language)}</Badge>
-                <Badge variant="outline">{lc(selected.calendar)}</Badge>
-              </div>
-            </section>
-
-            <nav className="mt-6 grid gap-5 md:grid-cols-2 xl:grid-cols-4" aria-label={lc("Explore this state guide")}>
-              <CultureDetailCard icon={CalendarRange} title={lc("Seasonal rhythm")} openLabel={lc("Open section")} onClick={() => scrollToGuide("calendar")}>
-                <p className="text-sm leading-6 text-muted-foreground">
-                  {lc("Festivals follow")} {lc(selected.calendar)}. {lc("Always confirm the date and local observance window in a regional Panchanga.")}
-                </p>
-                <div className="mt-3 flex flex-wrap gap-2">
-                  {lcl(selected.festivals).map((item) => <Badge key={item} variant="secondary">{item}</Badge>)}
-                </div>
-              </CultureDetailCard>
-              <CultureDetailCard icon={UsersRound} title={lc("Home and community traditions")} openLabel={lc("Open section")} onClick={() => scrollToGuide("rituals")}>
-                <ul className="space-y-2 text-sm leading-6 text-muted-foreground">
-                  {lcl(selected.traditions).map((item) => <li key={item}>• {item}</li>)}
-                </ul>
-              </CultureDetailCard>
-              <CultureDetailCard icon={Landmark} title={lc("Sacred journeys")} openLabel={lc("Open section")} onClick={() => scrollToGuide("journeys")}>
-                <div className="space-y-2">
-                  {selected.temples.map((temple, index) => (
-                    <Link key={temple} to={`/temples?search=${encodeURIComponent(temple)}`} className="flex items-center justify-between rounded-xl border p-3 text-sm font-semibold transition hover:border-orange-400">
-                      {lcl(selected.temples)[index]}
-                      <MapPinned className="h-4 w-4 text-orange-600" />
-                    </Link>
-                  ))}
-                </div>
-              </CultureDetailCard>
-              <CultureDetailCard icon={Languages} title={lc("Language and learning")} openLabel={lc("Open section")} onClick={() => scrollToGuide("language")}>
-                <p className="text-sm leading-6 text-muted-foreground">
-                  {lc("Use the language switch in the header to read the portal in")} {lc(selected.language)}. {lc("Pronunciation, offerings and ritual names should follow local speakers and family custom.")}
-                </p>
-                <Link to="/scriptures" className="mt-4 inline-flex text-sm font-semibold text-orange-700">
-                  {lc("Open the sacred reading library")} →
-                </Link>
-              </CultureDetailCard>
-            </nav>
-
-            <section className="mt-8 space-y-5" aria-label={lc("Detailed state culture guide")}>
-              {guideModules.slice(0, visibleGuideCount).map((module, index) => (
-                <article id={`culture-${module.id}`} key={module.id} className="scroll-mt-28 animate-fade-in overflow-hidden rounded-[2rem] border bg-card shadow-sm">
-                  <div className="grid md:grid-cols-[190px_1fr]">
-                    <div className="relative flex min-h-40 items-center justify-center overflow-hidden bg-gradient-to-br from-orange-100 via-amber-50 to-rose-100 dark:from-orange-950/40 dark:to-rose-950/30">
-                      <span className="absolute text-8xl font-bold text-orange-900/5">{selected.script}</span>
-                      <module.icon className="relative h-14 w-14 text-orange-700" />
-                    </div>
-                    <div className="p-6 md:p-8">
-                      <p className="text-xs font-bold uppercase tracking-[.2em] text-orange-700">{lc(selected.name)} · {String(index + 1).padStart(2, "0")}</p>
-                      <h2 className="mt-2 text-2xl font-bold">{module.title}</h2>
-                      <StateGuideBody section={module.id} selected={selected} lc={lc} lcl={lcl} />
-                      {module.id === "journeys" && <div className="mt-4 flex flex-wrap gap-2">{selected.temples.map((temple, templeIndex) => <Link key={temple} to={`/temples?search=${encodeURIComponent(temple)}`} className="rounded-full border px-4 py-2 text-sm font-semibold hover:border-orange-500">{lcl(selected.temples)[templeIndex]}</Link>)}</div>}
-                    </div>
-                  </div>
-                </article>
-              ))}
-              <div ref={guideSentinel} className="flex min-h-14 items-center justify-center">
-                {visibleGuideCount < guideModules.length && <Button variant="ghost" onClick={() => setVisibleGuideCount((count) => Math.min(count + 2, guideModules.length))}>{lc("Load more state culture")}</Button>}
-              </div>
-            </section>
-
-            <section className="mt-6 rounded-[2rem] border bg-card p-6 md:p-8">
-              <div className="grid gap-8 lg:grid-cols-[1fr_.9fr]">
-                <div>
-                  <p className="text-xs font-bold uppercase tracking-[.2em] text-orange-700">
-                    {lc("District and community explorer")}
-                  </p>
-                  <h2 className="mt-2 text-2xl font-bold">
-                    {lc("Go beyond the state-level summary")}
-                  </h2>
-                  <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                    {lc("Enter a district, village, community, art form, food tradition, temple festival or family ritual. The search stays specific to")} {lc(selected.name)}.
-                  </p>
-                  <div className="relative mt-5">
-                    <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                    <Input
-                      value={localTopic}
-                      onChange={(event) => setLocalTopic(event.target.value)}
-                      className="pl-9"
-                      placeholder={lc("Example: Jajpur Chandan Yatra or coastal wedding customs")}
-                    />
-                  </div>
-                  {localTopic.trim() && (
-                    <div className="mt-3 grid gap-2 sm:grid-cols-2">
-                      <a href={`https://www.google.com/search?q=${encodeURIComponent(`${localTopic} ${selected.name} culture tradition official tourism`)}`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center rounded-xl bg-orange-600 px-4 py-3 text-sm font-semibold text-white">
-                        {lc("Research this tradition")}
-                        <ExternalLink className="ml-2 h-4 w-4" />
-                      </a>
-                      <Link to={`/priests?search=${encodeURIComponent(`${localTopic} ${selected.name}`)}`} className="inline-flex items-center justify-center rounded-xl border px-4 py-3 text-sm font-semibold">
-                        {lc("Find local ritual guidance")}
-                      </Link>
-                    </div>
-                  )}
-                </div>
-                <div className="rounded-3xl bg-amber-50 p-6 dark:bg-amber-950/20">
-                  <h3 className="font-bold">{lc("Respectful culture guide")}</h3>
-                  <ul className="mt-4 space-y-3 text-sm leading-6 text-muted-foreground">
-                    <li>• {lc("Ask before photographing worship, people, sacred objects or private ceremonies.")}</li>
-                    <li>• {lc("Do not present one caste, district, sampradaya or family custom as the only form of the state.")}</li>
-                    <li>• {lc("Confirm fasting, dress, food, mantra and calendar rules with local practitioners.")}</li>
-                    <li>• {lc("Support community artisans, temple trusts and verified local guides directly.")}</li>
-                  </ul>
-                </div>
-              </div>
-            </section>
-          </main>
-        </Layout>
-      </ThemeProvider>
-    );
-  }
-
-  return (
-    <ThemeProvider>
-      <Layout>
-        <main>
-          <section className="relative overflow-hidden rounded-[2rem] bg-gradient-to-br from-amber-50 via-orange-50 to-rose-50 p-8 dark:from-amber-950/30 dark:via-background dark:to-rose-950/20">
-            <Sparkles className="absolute right-8 top-8 h-20 w-20 text-orange-200/50" />
-            <p className="text-xs font-bold uppercase tracking-[.22em] text-orange-700">
-              {tk("manyCalendarsTagline")}
-            </p>
-            <h1 className="mt-2 text-4xl font-bold">{tk("cultureOfIndia")}</h1>
-            <p className="mt-3 max-w-3xl text-muted-foreground">{tk("cultureIndiaIntro")}</p>
-            <div className="relative mt-6 max-w-xl">
-              <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-              <Input
-                value={q}
-                onChange={(e) => setQ(e.target.value)}
-                className="pl-9"
-                placeholder={tk("searchCulturePlaceholder")}
-              />
-            </div>
-          </section>
-          <p className="my-6 text-sm text-muted-foreground">
-            {tk("culturePacksNoticeTemplate", { count: String(items.length) })}
-          </p>
-          <section className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-            {items.map((pack, index) => (
-              <Link
-                key={pack.id}
-                to={`/culture/${pack.id}`}
-                style={{ animationDelay: `${index * 35}ms` }}
-                className="animate-fade-in block rounded-3xl border bg-card p-6 shadow-sm transition hover:-translate-y-1 hover:border-orange-300 hover:shadow-xl"
-              >
-                <div className="flex items-start justify-between">
-                  <div>
-                    <div className="flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-orange-500 to-rose-700 px-2 text-center text-sm font-bold text-white shadow-md ring-4 ring-orange-100 dark:ring-orange-950/30" aria-label={lc("Cultural identity symbol")}>{pack.script}</div>
-                    <h2 className="mt-2 text-xl font-bold">{lc(pack.name)}</h2>
-                    <p className="text-sm text-muted-foreground">
-                      {lc(pack.language)} · {lc(pack.calendar)}
-                    </p>
-                  </div>
-                  <Landmark className="h-6 w-6 text-orange-600" />
-                </div>
-                <h3 className="mt-5 flex items-center gap-2 text-sm font-bold">
-                  <Sparkles className="h-4 w-4" />
-                  {tk("observances")}
-                </h3>
-                <div className="mt-2 flex flex-wrap gap-2">
-                  {lcl(pack.festivals.slice(0, 3)).map((x, i) => (
-                    <Badge key={`${pack.id}-fest-${i}`} variant="secondary">
-                      {x}
-                    </Badge>
-                  ))}
-                </div>
-                <p className="mt-4 line-clamp-2 text-sm leading-6 text-muted-foreground">
-                  {lcl(pack.traditions).join(" · ")}
-                </p>
-                <p className="mt-5 text-sm font-medium text-orange-700">{tk("viewCultureDetails")} →</p>
-              </Link>
-            ))}
-          </section>
-        </main>
-      </Layout>
-    </ThemeProvider>
-  );
+  return <ThemeProvider><Layout><main className="container mx-auto px-4 py-8 md:py-12">
+    <section className="culture-atlas-hero">
+      <div className="relative z-10 max-w-3xl"><p className="text-sm font-bold uppercase tracking-[.22em] text-amber-200">{tk("manyCalendarsTagline")}</p><h1 className="mt-3 text-4xl font-bold text-white md:text-6xl">{tk("cultureOfIndia")}</h1><p className="mt-4 max-w-2xl text-base leading-7 text-white/80 md:text-lg">{tk("cultureIndiaIntro")}</p><div className="relative mt-7 max-w-2xl"><Search className="absolute left-4 top-4 h-5 w-5 text-white/60" /><Input value={query} onChange={(event) => setQuery(event.target.value)} className="h-13 border-white/20 bg-white/10 pl-12 text-base text-white backdrop-blur placeholder:text-white/55" placeholder={tk("searchCulturePlaceholder")} /></div></div>
+      <div className="culture-atlas-mandala" aria-hidden>भारत</div>
+    </section>
+    <section className="culture-stat-ribbon" aria-label={lc("State culture statistics")}><CultureStat value={statistics.places} label={lc("States and union territories")} /><CultureStat value={statistics.festivals} label={lc("Featured festivals")} /><CultureStat value={statistics.traditions} label={lc("Living traditions")} /><CultureStat value={statistics.sacredPlaces} label={lc("Sacred places to explore")} /></section>
+    <div className="mt-9 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between"><div><p className="text-sm font-bold uppercase tracking-[.18em] text-orange-700">{lc("A cultural atlas")}</p><h2 className="mt-1 text-3xl font-bold">{lc("Choose a state. Open its story.")}</h2></div><p className="text-sm text-muted-foreground">{tk("culturePacksNoticeTemplate", { count: String(items.length) })}</p></div>
+    <section className="mt-6 grid gap-6 md:grid-cols-2 xl:grid-cols-3">{items.map((pack, index) => { const profile = profileFor(pack.id); return <button type="button" key={pack.id} onClick={() => setQuickStateId(pack.id)} style={{ ...themed(profile), animationDelay: `${index * 30}ms` }} className="culture-state-card animate-fade-in text-left"><div className="culture-state-card-top"><span className="culture-state-script">{pack.script}</span><Badge className="border-white/20 bg-black/20 text-white backdrop-blur">{lc(profile.region)}</Badge></div><div className="relative z-10 mt-14"><p className="text-sm font-semibold text-white/70">{lc(profile.motif)}</p><h3 className="mt-1 text-3xl font-bold text-white">{lc(pack.name)}</h3><p className="mt-2 line-clamp-2 min-h-12 text-base leading-6 text-white/80">{lc(profile.pride)}</p></div><div className="relative z-10 mt-6 grid grid-cols-3 gap-2 border-t border-white/15 pt-4"><MiniStat value={pack.festivals.length} label={lc("Festivals")} /><MiniStat value={profile.arts.length} label={lc("Arts")} /><MiniStat value={pack.temples.length} label={lc("Journeys")} /></div><span className="relative z-10 mt-5 inline-flex items-center text-sm font-bold text-white">{lc("Reveal this culture")} <ArrowUpRight className="ml-2 h-4 w-4" /></span></button>; })}</section>
+    {!items.length && <div className="mt-10 rounded-3xl border bg-card p-10 text-center"><Search className="mx-auto h-10 w-10 text-muted-foreground" /><h2 className="mt-4 text-xl font-bold">{lc("No culture card matches this search")}</h2><p className="mt-2 text-muted-foreground">{lc("Try a state, language, festival, art form, food or temple name.")}</p></div>}
+    <StateQuickView pack={quickState} profile={quickState ? profileFor(quickState.id) : undefined} context={quickLive.context} loading={quickLive.loading} open={Boolean(quickState)} onOpenChange={(open) => !open && setQuickStateId(undefined)} lc={lc} lcl={lcl} />
+  </main></Layout></ThemeProvider>;
 }
 
-function StateGuideBody({ section, selected, lc, lcl }: { section: string; selected: (typeof culturePacks)[number]; lc: (value: string) => string; lcl: (values: string[]) => string[] }) {
-  const common = lc("Dates and customs can differ by district, community, family tradition and lineage.");
-  if (section === "calendar") return <p className="mt-3 leading-7 text-muted-foreground">{lcl(selected.festivals).join(", ")} {lc("are important observances connected with")} {lc(selected.calendar)}. {common}</p>;
-  if (section === "rituals") return <p className="mt-3 leading-7 text-muted-foreground">{lcl(selected.traditions).join(", ")} {lc("are major living traditions in")} {lc(selected.name)}. {lc("Consult local elders, temple priests and community organizations for lineage-specific procedure.")}</p>;
-  if (section === "journeys") return <p className="mt-3 leading-7 text-muted-foreground">{lcl(selected.temples).join(", ")} {lc("form a starting route for understanding local sacred geography, festivals, temple food, art, music and pilgrimage etiquette.")}</p>;
-  if (section === "language") return <p className="mt-3 leading-7 text-muted-foreground">{lc(selected.language)} · {selected.script}. {lc("Regional languages carry local names, songs, vows, stories and ritual vocabulary. Learn pronunciation and meaning with local speakers.")}</p>;
-  if (section === "arts") return <p className="mt-3 leading-7 text-muted-foreground">{lc("Explore regional crafts, performance traditions, sacred foods, textiles and festival decorations.")} {common}</p>;
-  return <p className="mt-3 leading-7 text-muted-foreground">{lc("Plan temple timings, transport, dress, accessibility and accommodation before travel.")} {lc("Ask before photographing worship or private ceremonies, and support local artisans and guides.")}</p>;
+function StateQuickView({ pack, profile, context, loading, open, onOpenChange, lc, lcl }: { pack?: CulturePack; profile?: StateCultureProfile; context: LiveCultureContext | null; loading: boolean; open: boolean; onOpenChange: (open: boolean) => void; lc: (value: string) => string; lcl: (values: string[]) => string[] }) {
+  if (!pack || !profile) return null;
+  return <Dialog open={open} onOpenChange={onOpenChange}><DialogContent style={themed(profile)} className="max-h-[92vh] max-w-5xl overflow-y-auto border-0 p-0 sm:rounded-[2rem]">
+    <div className="culture-quick-hero"><ResilientCoverImage sources={context?.imageUrl ? [context.imageUrl] : []} searchQuery={`${pack.name} culture heritage India`} alt={lc(`${pack.name} cultural landscape`)} /><div className="absolute inset-0 bg-gradient-to-t from-[var(--state-ink)] via-black/45 to-transparent" /><DialogHeader className="relative z-10 mt-auto p-7 text-left text-white md:p-10"><Badge className="mb-3 w-fit border-white/20 bg-white/15 text-white">{lc(profile.region)} · {pack.script}</Badge><DialogTitle className="text-4xl font-bold md:text-5xl">{lc(pack.name)}</DialogTitle><DialogDescription className="max-w-3xl text-base leading-7 text-white/80">{lc(profile.pride)}</DialogDescription></DialogHeader></div>
+    <div className="grid gap-8 p-7 md:grid-cols-[1.15fr_.85fr] md:p-10"><div><p className="culture-eyebrow">{lc("Why this place is special")}</p>{loading ? <div className="mt-4 h-24 animate-pulse rounded-2xl bg-muted" /> : <p className="mt-3 text-base leading-8 text-muted-foreground">{context?.summary || lc(profile.pride)}</p>}<div className="mt-6 grid gap-3 sm:grid-cols-2"><StoryTile icon={Palette} title={lc("Signature arts")} text={lcl(profile.arts).join(" · ")} /><StoryTile icon={ChefHat} title={lc("Taste of the state")} text={lcl(profile.foods).join(" · ")} /><StoryTile icon={Mountain} title={lc("Cultural landscape")} text={lc(profile.landscape)} /><StoryTile icon={Clock3} title={lc("Comfortable travel season")} text={lc(profile.bestSeason)} /></div></div>
+      <aside className="rounded-3xl bg-muted/60 p-6"><p className="culture-eyebrow">{lc("State pulse")}</p><div className="mt-4 grid grid-cols-3 gap-2"><MiniStat value={pack.festivals.length} label={lc("Festivals")} dark /><MiniStat value={pack.traditions.length} label={lc("Traditions")} dark /><MiniStat value={pack.temples.length} label={lc("Journeys")} dark /></div><h3 className="mt-7 font-bold">{lc("Begin with these living traditions")}</h3><div className="mt-3 flex flex-wrap gap-2">{lcl([...pack.festivals, ...pack.traditions]).map((item) => <Badge key={item} variant="secondary">{item}</Badge>)}</div><div className="mt-7 grid gap-3"><Button asChild className="bg-[var(--state-accent)] text-white hover:opacity-90"><Link to={`/culture/${pack.id}`}>{lc("Explore the complete state story")} <ArrowUpRight className="ml-2 h-4 w-4" /></Link></Button><a href={context?.officialUrl || `https://www.incredibleindia.gov.in/en/${pack.id}`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center rounded-xl border px-4 py-3 text-sm font-semibold">{lc("Open official tourism source")} <ExternalLink className="ml-2 h-4 w-4" /></a></div></aside>
+    </div>
+  </DialogContent></Dialog>;
 }
 
-function CultureDetailCard({
-  icon: Icon,
-  title,
-  children,
-  onClick,
-  openLabel,
-}: {
-  icon: typeof Landmark;
-  title: string;
-  children: ReactNode;
-  onClick: () => void;
-  openLabel: string;
-}) {
-  return (
-    <article className="animate-fade-in rounded-3xl border bg-card p-5 text-left shadow-sm transition hover:-translate-y-1 hover:border-orange-300 hover:shadow-lg">
-      <button type="button" onClick={onClick} className="w-full text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500">
-        <Icon className="h-6 w-6 text-orange-600" />
-        <h2 className="mt-4 font-bold">{title}</h2>
-        <span className="mt-2 inline-flex text-sm font-semibold text-orange-700">{openLabel} →</span>
-      </button>
-      <div className="mt-3">{children}</div>
-    </article>
-  );
+function StateCultureGuide({ selected, profile, context, loading, lc, lcl, tk }: { selected: CulturePack; profile: StateCultureProfile; context: LiveCultureContext | null; loading: boolean; lc: (value: string) => string; lcl: (values: string[]) => string[]; tk: (key: string, vars?: Record<string, string>) => string }) {
+  const modules = [
+    { id: "calendar", icon: CalendarRange, title: "Festival calendar", intro: "Festivals connect the year to harvest, devotion and community memory." },
+    { id: "rituals", icon: UsersRound, title: "Ritual and community", intro: "These traditions are starting points—not a single rule for every family or district." },
+    { id: "journeys", icon: Landmark, title: "Sacred journeys", intro: "Sacred places reveal how landscape, architecture, story and pilgrimage meet." },
+    { id: "language", icon: Languages, title: "Language and oral memory", intro: "Language carries local names, songs, vows, proverbs and ritual vocabulary." },
+    { id: "arts", icon: Palette, title: "Arts and material culture", intro: "Art carries knowledge through bodies, cloth, colour, rhythm and craft." },
+    { id: "food", icon: ChefHat, title: "Food and hospitality", intro: "Food offers an accessible doorway into season, geography and celebration." },
+  ];
+  return <main style={themed(profile)} className="pb-12">
+    <section className="culture-detail-hero"><ResilientCoverImage sources={context?.imageUrl ? [context.imageUrl] : []} searchQuery={`${selected.name} culture heritage India`} alt={lc(`${selected.name} cultural landscape`)} /><div className="absolute inset-0 bg-gradient-to-r from-[var(--state-ink)] via-black/70 to-transparent" /><div className="container relative z-10 mx-auto px-4 py-10 text-white md:py-16"><Button asChild variant="ghost" className="mb-10 text-white hover:bg-white/10 hover:text-white"><Link to="/culture"><ArrowLeft className="mr-2 h-4 w-4" />{tk("backToCulturePacks")}</Link></Button><p className="text-sm font-bold uppercase tracking-[.22em] text-white/65">{lc(profile.region)} · {lc(profile.motif)}</p><h1 className="mt-3 text-5xl font-bold md:text-7xl">{lc(selected.name)}</h1><p className="mt-5 max-w-3xl text-lg leading-8 text-white/85">{lc(profile.pride)}</p><div className="mt-7 flex flex-wrap gap-2"><Badge className="bg-white text-[var(--state-ink)]">{lc(selected.language)}</Badge><Badge className="border-white/25 bg-white/10 text-white">{lc(selected.calendar)}</Badge><Badge className="border-white/25 bg-white/10 text-white">{selected.script}</Badge></div></div></section>
+    <div className="container mx-auto px-4"><section className="culture-detail-stats"><CultureStat value={selected.festivals.length} label={lc("Featured festivals")} /><CultureStat value={selected.traditions.length} label={lc("Living traditions")} /><CultureStat value={profile.arts.length} label={lc("Signature arts")} /><CultureStat value={selected.temples.length} label={lc("Sacred journeys")} /></section>
+      <section className="mt-10 grid gap-8 lg:grid-cols-[1.2fr_.8fr]"><article className="rounded-[2rem] border bg-card p-7 shadow-sm md:p-9"><p className="culture-eyebrow">{lc("A sourced living overview")}</p><h2 className="mt-2 text-3xl font-bold">{lc("The story behind the state")}</h2>{loading ? <div className="mt-5 h-32 animate-pulse rounded-2xl bg-muted" /> : <p className="mt-4 text-base leading-8 text-muted-foreground">{context?.summary || lc(profile.pride)}</p>}<div className="mt-7 flex flex-wrap gap-3"><a href={context?.officialUrl || `https://www.incredibleindia.gov.in/en/${selected.id}`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center rounded-xl bg-[var(--state-accent)] px-5 py-3 text-sm font-bold text-white">{lc("Incredible India state guide")}<ExternalLink className="ml-2 h-4 w-4" /></a>{context?.sourceUrl && <a href={context.sourceUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center rounded-xl border px-5 py-3 text-sm font-bold">{lc("Read the reference overview")}<BookOpen className="ml-2 h-4 w-4" /></a>}</div></article><aside className="culture-pride-panel"><span className="text-7xl font-bold opacity-15">{selected.script}</span><p className="mt-5 text-sm font-bold uppercase tracking-[.2em] opacity-70">{lc("Pride of place")}</p><p className="mt-3 text-xl font-semibold leading-8">{lc(profile.pride)}</p></aside></section>
+      <section className="mt-10"><p className="culture-eyebrow">{lc("Explore by meaning, not just category")}</p><h2 className="mt-2 text-3xl font-bold">{lc("Six ways to understand this culture")}</h2><div className="mt-6 grid gap-5 md:grid-cols-2 xl:grid-cols-3">{modules.map((module, index) => <MeaningCard key={module.id} index={index + 1} icon={module.icon} title={lc(module.title)} text={lc(module.intro)} accent={profile.accent}>{module.id === "calendar" && <ChipList items={lcl(selected.festivals)} />}{module.id === "rituals" && <ChipList items={lcl(selected.traditions)} />}{module.id === "journeys" && <div className="mt-5 grid gap-2">{selected.temples.map((temple, templeIndex) => <Link key={temple} to={`/temples?search=${encodeURIComponent(temple)}`} className="flex items-center justify-between rounded-xl border p-3 text-sm font-semibold hover:border-[var(--state-accent)]">{lcl(selected.temples)[templeIndex]}<MapPinned className="h-4 w-4" /></Link>)}</div>}{module.id === "arts" && <ChipList items={lcl(profile.arts)} />}{module.id === "food" && <ChipList items={lcl(profile.foods)} />}</MeaningCard>)}</div></section>
+      <section className="mt-10 grid gap-6 md:grid-cols-2"><StoryTile icon={Mountain} title={lc("Landscape shapes culture")} text={lc(profile.landscape)} large /><StoryTile icon={Clock3} title={lc("Plan with the season")} text={`${lc(profile.bestSeason)}. ${lc("Festival dates and access conditions still need local confirmation.")}`} large /></section>
+      <section className="mt-10 rounded-[2rem] border bg-card p-7 md:p-9"><div className="grid gap-8 lg:grid-cols-[1fr_.9fr]"><div><p className="culture-eyebrow">{lc("Continue exploring")}</p><h2 className="mt-2 text-2xl font-bold">{lc("Move from state overview to living places")}</h2><p className="mt-3 leading-7 text-muted-foreground">{lc("Open a sacred-place guide, check a current official tourism source, or search for a district-level tradition. Local communities are the final authority on living practice.")}</p><div className="mt-5 flex flex-wrap gap-3"><Button asChild className="bg-[var(--state-accent)]"><Link to={`/temples?search=${encodeURIComponent(selected.name)}`}>{lc("Explore sacred places")}</Link></Button><Button asChild variant="outline"><Link to="/scriptures">{lc("Open the reading library")}</Link></Button></div></div><div className="rounded-3xl bg-muted/60 p-6"><h3 className="font-bold">{lc("Read with respect")}</h3><ul className="mt-4 space-y-3 text-sm leading-6 text-muted-foreground"><li>• {lc("A state contains many communities, districts, languages and lineages.")}</li><li>• {lc("Ask before photographing worship, people or sacred objects.")}</li><li>• {lc("Confirm ritual, calendar, food and dress customs locally.")}</li></ul></div></div></section>
+    </div>
+  </main>;
 }
+
+function CultureStat({ value, label }: { value: number; label: string }) { return <div><strong>{value}</strong><span>{label}</span></div>; }
+function MiniStat({ value, label, dark = false }: { value: number; label: string; dark?: boolean }) { return <div className={dark ? "text-foreground" : "text-white"}><strong className="block text-xl">{value}</strong><span className="text-xs opacity-70">{label}</span></div>; }
+function StoryTile({ icon: Icon, title, text, large = false }: { icon: typeof Palette; title: string; text: string; large?: boolean }) { return <article className={`rounded-2xl border bg-card ${large ? "p-7" : "p-4"}`}><Icon className="h-5 w-5 text-[var(--state-accent)]" /><h3 className="mt-3 font-bold">{title}</h3><p className="mt-1 text-sm leading-6 text-muted-foreground">{text}</p></article>; }
+function ChipList({ items }: { items: string[] }) { return <div className="mt-5 flex flex-wrap gap-2">{items.map((item) => <Badge key={item} variant="secondary">{item}</Badge>)}</div>; }
+function MeaningCard({ icon: Icon, index, title, text, children, accent }: { icon: typeof Landmark; index: number; title: string; text: string; children?: ReactNode; accent: string }) { return <article className="culture-meaning-card" style={{ "--module-accent": accent } as CSSProperties}><div className="flex items-center justify-between"><span className="culture-meaning-icon"><Icon className="h-6 w-6" /></span><span className="text-xs font-bold tracking-[.2em] text-muted-foreground">{String(index).padStart(2, "0")}</span></div><h3 className="mt-5 text-xl font-bold">{title}</h3><p className="mt-3 text-base leading-7 text-muted-foreground">{text}</p>{children}</article>; }
