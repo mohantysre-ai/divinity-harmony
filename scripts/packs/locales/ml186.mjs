@@ -1,6 +1,6 @@
 /** ML base UI pack — 186 semantic keys (187–225 in tail-supplement.json). */
 export const ml186 = {
-  divinityHarmony: "ദിവ്യ സാമരസ്യം",
+  divinityHarmony: "DharmDisha",
   home: "ഹോം",
   mantras: "മന്ത്രങ്ങൾ",
   liveDarshan: "ലൈവ് ദർശനം",
@@ -172,7 +172,7 @@ export const ml186 = {
   beginWithGayatri: "Gayatri-യോടെ ആരംഭിക്കുക",
   enterTheTemple: "ക്ഷേത്രത്തിൽ പ്രവേശിക്കുക",
   exploreTheGita: "Gita explore ചെയ്യുക",
-  backToDivinityHarmony: "Divinity Harmony-ലേക്ക് മടങ്ങുക",
+  backToDharmDisha: "DharmDisha-ലേക്ക് മടങ്ങുക",
   practiceRemembered: "നിങ്ങളുടെ practice, securely remembered.",
   profileAcrossDevices: "profile, avatar, spiritual preferences devices-ൽ connected ആയി keep ചെയ്യുക.",
   authPoweredBy: "authentication, file storage Supabase-ൽ നിന്ന്",

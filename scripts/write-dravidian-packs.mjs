@@ -13,7 +13,7 @@ const keys = Object.keys(bnPack);
 /** @type {Record<string, Record<string, string>>} */
 const translations = {
   ta: {
-    divinityHarmony: "திவ்ய சாமரசம்",
+    divinityHarmony: "DharmDisha",
     home: "முகப்பு",
     mantras: "மந்திரங்கள்",
     liveDarshan: "நேரடி தர்சனம்",
@@ -192,7 +192,7 @@ const translations = {
     beginWithGayatri: "Gayatri-யுடன் தொடங்க",
     enterTheTemple: "கோயிலில் நுழை",
     exploreTheGita: "Gita ஆராய",
-    backToDivinityHarmony: "Divinity Harmony-க்குத் திரும்ப",
+    backToDharmDisha: "DharmDisha-க்குத் திரும்ப",
     practiceRemembered: "உங்கள் சadhana, பாதukappu-யாக நினைவில் வைக்கப்படுகிறது.",
     profileAcrossDevices:
       "சுயவிவரம், avatar மற்றும் ஆspiritual விருப்பங்களை சாதனங்களில் இணைக்கவும்.",

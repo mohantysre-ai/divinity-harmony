@@ -159,9 +159,12 @@ export default function Footer() {
         <div className="grid gap-10 py-14 md:grid-cols-2 lg:grid-cols-[1.35fr_1fr_1fr_1fr]">
           <div>
             <Link to="/" className="inline-flex items-center gap-3">
-              <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-orange-700 to-red-700 text-xl font-bold text-white shadow-lg">
-                ॐ
-              </span>
+              <img
+                src="/dharmdisha-icon.svg"
+                alt=""
+                aria-hidden="true"
+                className="h-11 w-11 rounded-2xl shadow-lg"
+              />
               <span className="text-xl font-bold">{tk("divinityHarmony")}</span>
             </Link>
             <p className="mt-5 max-w-sm text-sm leading-7 text-muted-foreground">

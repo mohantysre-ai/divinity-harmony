@@ -38,7 +38,7 @@ const PATCHES = {
     beginWithGayatri: "Gayatri tho prarambhinchandi",
     enterTheTemple: "devaalayamlo praveshinchandi",
     exploreTheGita: "Gita anveshinchandi",
-    backToDivinityHarmony: "Divinity Harmony ki tirigi",
+    backToDharmDisha: "DharmDisha ki tirigi",
     practiceRemembered: "mee sadhana, surakshitamga gurtunchabadutundi.",
     profileAcrossDevices:
       "mee profile, avatar mariyu aadhyatmika preferences devices lo connect chesi unchandi.",

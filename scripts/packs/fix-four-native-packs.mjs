@@ -33,7 +33,7 @@ const FIXES = {
     beginWithGayatri: "Gayatri తో ప్రారంభించండి",
     enterTheTemple: "దేవాలయంలో ప్రవేశించండి",
     exploreTheGita: "Gita అన్వేషించండి",
-    backToDivinityHarmony: "Divinity Harmony కు తిరిగి",
+    backToDharmDisha: "DharmDisha కు తిరిగి",
     practiceRemembered: "మీ సాధన, సురక్షితంగా గుర్తుంచబడుతుంది.",
     profileAcrossDevices:
       "మీ ప్రొఫైల్, అవతార్ మరియు ఆధ్యాత్మిక అభిరుచులను పరికరాలలో అనుసంధానించి ఉంచండి.",
@@ -132,7 +132,7 @@ const FIXES = {
     designedAroundYou: "ਤੁਹਾਡੇ ਲਈ ਡਿਜ਼ਾਈਨ",
     fastDiscovery: "ਤੇਜ਼ ਖੋਜ",
     exploreTheGita: "Gita ਖੋਜੋ",
-    backToDivinityHarmony: "Divinity Harmony ਤੇ ਵਾਪਸ",
+    backToDharmDisha: "DharmDisha ਤੇ ਵਾਪਸ",
     profileAcrossDevices:
       "ਤੁਹਾਡੀ ਪ੍ਰੋਫਾਈਲ, ਅਵਤਾਰ ਅਤੇ \u0A06\u0A07\u0A27\u0A3F\u0A06\u0A24\u0A2E\u0A3F\u0A15 ਪਸੰਦਗੀਆਂ ਡਿਵਾਈਸਾਂ ਵਿੱਚ ਜੁੜੀਆਂ ਰੱਖੋ।",
     authPoweredBy: "ਪ੍ਰਮਾਣੀਕਰਨ ਅਤੇ ਫਾਈਲ ਸਟੋਰੇਜ Supabase ਦੁਆਰਾ",

@@ -118,7 +118,7 @@ def _google_places_search(query: str, limit: int, language: str, api_key: str) -
             "Content-Type": "application/json",
             "X-Goog-Api-Key": api_key,
             "X-Goog-FieldMask": _GOOGLE_PLACES_FIELDS,
-            "User-Agent": "DivinityHarmony/2.1 (https://mantra.sigq.in)",
+            "User-Agent": "DharmDisha/2.1 (https://mantra.sigq.in)",
         },
         method="POST",
     )
@@ -186,7 +186,7 @@ def _official_google_translate(texts: list[str], language: str, api_key: str) ->
     request = Request(
         "https://translation.googleapis.com/language/translate/v2?" + urlencode({"key": api_key}),
         data=urlencode(fields).encode("utf-8"),
-        headers={"Content-Type": "application/x-www-form-urlencoded", "User-Agent": "DivinityHarmony/2.0"},
+        headers={"Content-Type": "application/x-www-form-urlencoded", "User-Agent": "DharmDisha/2.0"},
     )
     with urlopen(request, timeout=12) as response:
         payload = json.loads(response.read().decode("utf-8"))
@@ -359,7 +359,7 @@ def search_temples(query: str, limit: int = 18, language: str = "en") -> list[di
         request = Request(
             f"https://nominatim.openstreetmap.org/search?{params}",
             headers={
-                "User-Agent": "DivinityHarmony/2.0 (https://mantra.sigq.in)",
+                "User-Agent": "DharmDisha/2.0 (https://mantra.sigq.in)",
                 "Accept-Language": f"{lang},en" if lang != "en" else "en",
             },
         )
@@ -436,7 +436,7 @@ def nearby_temples(lat: float, lon: float, radius_km: int = 35, language: str = 
     )
     request = Request(
         "https://overpass-api.de/api/interpreter?" + urlencode({"data": statement}),
-        headers={"User-Agent": "DivinityHarmony/2.0 (https://mantra.sigq.in)"},
+        headers={"User-Agent": "DharmDisha/2.0 (https://mantra.sigq.in)"},
     )
     with urlopen(request, timeout=25) as response:
         payload = json.loads(response.read().decode("utf-8"))

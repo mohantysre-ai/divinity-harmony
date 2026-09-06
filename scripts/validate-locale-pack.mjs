@@ -11,7 +11,7 @@ const packs = JSON.parse(
 );
 
 const allowedProperNouns =
-  /Shiva|Krishna|Gayatri|Gita|YouTube|Supabase|Divinity Harmony|Ganesha|Nakshatra|Tithi|Yoga|Karana|Vedas|Gitas|Puranas|OpenStreetMap|Email|LIVE NOW|Reset|Krishna Paksha|Waning|Moon|Sunrise|Sunset|Punarvasu/i;
+  /Shiva|Krishna|Gayatri|Gita|YouTube|Supabase|DharmDisha|Ganesha|Nakshatra|Tithi|Yoga|Karana|Vedas|Gitas|Puranas|OpenStreetMap|Email|LIVE NOW|Reset|Krishna Paksha|Waning|Moon|Sunrise|Sunset|Punarvasu/i;
 const latin = /[A-Za-z]{4,}/;
 
 let failed = false;

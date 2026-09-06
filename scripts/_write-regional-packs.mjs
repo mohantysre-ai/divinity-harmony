@@ -9,7 +9,7 @@ const keys = Object.keys(bnPack);
 
 const packs = {
   gu: {
-    divinityHarmony: "દિવ્ય સામરસ",
+    divinityHarmony: "DharmDisha",
     home: "મુખ્ય પૃષ્ઠ",
     mantras: "મંત્ર",
     liveDarshan: "લાઇવ દર્શન",
@@ -188,7 +188,7 @@ const packs = {
     beginWithGayatri: "Gayatri થી શરૂ કરો",
     enterTheTemple: "મંદિરમાં પ્રવેશ",
     exploreTheGita: "Gita શોધો",
-    backToDivinityHarmony: "Divinity Harmony પર પાછા",
+    backToDharmDisha: "DharmDisha પર પાછા",
     practiceRemembered: "તમારી સાધના, સુરક્ષિત રીતે યાદ રાખવામાં આવે.",
     profileAcrossDevices:
       "પ્રોફાઇલ, અવતાર અને આધ્યાત્મિક પસંદગીઓ ઉપકરણોમાં જોડાયેલ રાખો.",

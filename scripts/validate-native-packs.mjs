@@ -1,6 +1,6 @@
 /**
  * Finds Latin-mixed values in locale packs.
- * Allowed Latin: Shiva, Krishna, Gayatri, Gita, YouTube, Supabase, Divinity Harmony,
+ * Allowed Latin: Shiva, Krishna, Gayatri, Gita, YouTube, Supabase, DharmDisha,
  * Nakshatra, Tithi, Yoga, Karana, Vedas, Gitas, Puranas, UT, {count}, {n}
  */
 import fs from "node:fs";
@@ -9,7 +9,7 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ALLOWED =
-  /(?:Shiva|Krishna|Gayatri|Gita|YouTube|Supabase|Divinity Harmony|Nakshatra|Tithi|Yoga|Karana|Vedas|Gitas|Puranas|\{count\}|\{n\}|UT)/g;
+  /(?:Shiva|Krishna|Gayatri|Gita|YouTube|Supabase|DharmDisha|Nakshatra|Tithi|Yoga|Karana|Vedas|Gitas|Puranas|\{count\}|\{n\}|UT)/g;
 
 function stripAllowed(s) {
   return s.replace(ALLOWED, "");

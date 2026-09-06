@@ -7,7 +7,7 @@ import { bnPack } from "../bn-pack.mjs";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const as186 = {
-  divinityHarmony: "দিব্য সামৰস",
+  divinityHarmony: "DharmDisha",
   home: "মূল পৃষ্ঠা",
   mantras: "মন্ত্ৰ",
   liveDarshan: "লাইভ দৰ্শন",
@@ -186,7 +186,7 @@ const as186 = {
   beginWithGayatri: "Gayatri ৰে আৰম্ভ",
   enterTheTemple: "মন্দিৰত প্ৰৱেশ",
   exploreTheGita: "Gita অন্বেষণ",
-  backToDivinityHarmony: "Divinity Harmony-লৈ ঘূৰি যাওক",
+  backToDharmDisha: "DharmDisha-লৈ ঘূৰি যাওক",
   practiceRemembered: "আপোনাৰ সাধনা, সুৰক্ষিতভাৱে মনত ৰখা হয়।",
   profileAcrossDevices: "প্ৰ'ফাইল, অৱতাৰ আৰু আধ্যাত্মিক পছন্দ ডিভাইচত সংযুক্ত ৰাখক।",
   authPoweredBy: "প্ৰমাণীকৰণ আৰু ফাইল সংৰক্ষণ Supabase-ৰ দ্বাৰা",
@@ -207,7 +207,7 @@ const as186 = {
 as186.accessibility = "সulabhata";
 
 const ml186 = {
-  divinityHarmony: "ദിവ്യ സാമരസ്യം",
+  divinityHarmony: "DharmDisha",
   home: "ഹോം",
   mantras: "മന്ത്രങ്ങൾ",
   liveDarshan: "ലൈവ് ദർശനം",
@@ -386,7 +386,7 @@ const ml186 = {
   beginWithGayatri: "Gayatri-യോടെ ആരംഭിക്കുക",
   enterTheTemple: "ക്ഷേത്രത്തിൽ പ്രവേശിക്കുക",
   exploreTheGita: "Gita explore ചെയ്യുക",
-  backToDivinityHarmony: "Divinity Harmony-ലേക്ക് മടങ്ങുക",
+  backToDharmDisha: "DharmDisha-ലേക്ക് മടങ്ങുക",
   practiceRemembered: "നിങ്ങളുടെ practice, securely remembered.",
   profileAcrossDevices:
     "profile, avatar, spiritual preferences devices-ൽ connected ആയി keep ചെയ്യുക.",
@@ -412,7 +412,7 @@ ml186.sacredRhythmEveryDay = "എല്ലാ ദിവസവും ഒരു �
 ml186.personalSpiritualHome = "വ്യക്തിഗത ആത്മീയ home";
 
 const pa186 = {
-  divinityHarmony: "ਦਿਵ्य ਸਾਮਰਸ",
+  divinityHarmony: "DharmDisha",
   home: "ਮੁੱਖ ਪੰਨਾ",
   mantras: "ਮੰਤਰ",
   liveDarshan: "ਲਾਈਵ ਦਰਸ਼ਨ",
@@ -591,7 +591,7 @@ const pa186 = {
   beginWithGayatri: "Gayatri ਨਾਲ ਸ਼ੁਰੂ",
   enterTheTemple: "ਮੰਦਰ ਵਿੱਚ ਦਾਖਲ",
   exploreTheGita: "Gita explore",
-  backToDivinityHarmony: "Divinity Harmony ਤੇ ਵapas",
+  backToDharmDisha: "DharmDisha ਤੇ ਵapas",
   practiceRemembered: "ਤੁਹਾਡੀ ਸਾਧਨਾ, ਸੁਰੱਖਿਅਤ ਯਾਦ ਰੱਖੀ ਜਾਂਦੀ ਹੈ।",
   profileAcrossDevices:
     "profile, avatar, spiritual preferences devices ਵਿੱਚ connected ਰੱਖੋ।",

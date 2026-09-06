@@ -1,6 +1,6 @@
 /** Marathi base UI pack — 186 semantic keys (187–225 in tail-supplement.json). */
 export const mr186 = {
-  divinityHarmony: "दिव्य सामरस",
+  divinityHarmony: "DharmDisha",
   home: "मुख्यपृष्ठ",
   mantras: "मंत्र",
   liveDarshan: "थेट दर्शन",
@@ -173,7 +173,7 @@ export const mr186 = {
   beginWithGayatri: "Gayatri पासून सुरुवात",
   enterTheTemple: "मंदिरात प्रवेश",
   exploreTheGita: "Gita शोधा",
-  backToDivinityHarmony: "Divinity Harmony कडे परत",
+  backToDharmDisha: "DharmDisha कडे परत",
   practiceRemembered: "तुमची साधना, सुरक्षितपणे लक्षात ठेवली जाते.",
   profileAcrossDevices: "तुमचे प्रोफाइल, अवतार आणि आध्यात्मिक प्राधान्ये उपकरणांमध्ये जोडलेली ठेवा.",
   authPoweredBy: "प्रमाणीकरण आणि फाइल साठवण Supabase द्वारे",

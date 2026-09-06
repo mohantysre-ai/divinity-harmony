@@ -24,7 +24,7 @@ export const mlFixes = {
 };
 
 export const paFixes = {
-  divinityHarmony: "ਦਿਵinity Harmony",
+  divinityHarmony: "DharmDisha",
   myDharma: "ਮera ਧਰਮ",
   saveMyDharma: "ਮera ਧਰਮ ਸੇਵ ਕਰੋ",
   personalSpiritualHome: "ਨਿੱਜੀ ਆਧਿਆatmik ਘਰ",

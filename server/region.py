@@ -78,7 +78,7 @@ def geocode_place(place: str) -> dict:
     req = Request(
         f"https://nominatim.openstreetmap.org/search?{params}",
         headers={
-            "User-Agent": "DivinityHarmony/1.0 (https://mantra.sigq.in)",
+            "User-Agent": "DharmDisha/1.0 (https://mantra.sigq.in)",
             "Accept-Language": "en",
         },
     )
@@ -101,7 +101,7 @@ def regional_preference(lat: float, lon: float) -> dict:
   cached=_CACHE.get(key)
   if cached and now-cached[0]<86400:return cached[1]
  params=urlencode({"format":"jsonv2","lat":f"{lat:.5f}","lon":f"{lon:.5f}","zoom":5,"addressdetails":1})
- req=Request(f"https://nominatim.openstreetmap.org/reverse?{params}",headers={"User-Agent":"DivinityHarmony/1.0 (https://mantra.sigq.in)","Accept-Language":"en"})
+ req=Request(f"https://nominatim.openstreetmap.org/reverse?{params}",headers={"User-Agent":"DharmDisha/1.0 (https://mantra.sigq.in)","Accept-Language":"en"})
  with urlopen(req,timeout=8) as response: payload=json.loads(response.read().decode("utf-8"))
  address=payload.get("address",{});state=str(address.get("state","")).strip();country=str(address.get("country_code","")).lower()
  city=str(address.get("city") or address.get("town") or address.get("village") or address.get("county") or "").strip()

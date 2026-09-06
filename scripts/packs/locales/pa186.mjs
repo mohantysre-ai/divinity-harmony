@@ -1,6 +1,6 @@
 /** PA base UI pack — 186 semantic keys (187–225 in tail-supplement.json). */
 export const pa186 = {
-  divinityHarmony: "ਦਿਵ्य ਸਾਮਰਸ",
+  divinityHarmony: "DharmDisha",
   home: "ਮੁੱਖ ਪੰਨਾ",
   mantras: "ਮੰਤਰ",
   liveDarshan: "ਲਾਈਵ ਦਰਸ਼ਨ",
@@ -172,7 +172,7 @@ export const pa186 = {
   beginWithGayatri: "Gayatri ਨਾਲ ਸ਼ੁਰੂ",
   enterTheTemple: "ਮੰਦਰ ਵਿੱਚ ਦਾਖਲ",
   exploreTheGita: "Gita explore",
-  backToDivinityHarmony: "Divinity Harmony ਤੇ ਵapas",
+  backToDharmDisha: "DharmDisha ਤੇ ਵapas",
   practiceRemembered: "ਤੁਹਾਡੀ ਸਾਧਨਾ, ਸੁਰੱਖਿਅਤ ਯਾਦ ਰੱਖੀ ਜਾਂਦੀ ਹੈ।",
   profileAcrossDevices: "profile, avatar, spiritual preferences devices ਵਿੱਚ connected ਰੱਖੋ।",
   authPoweredBy: "authentication ਅਤੇ file storage Supabase ਦੁਆਰਾ",

@@ -3,43 +3,43 @@ import { join } from "node:path";
 
 const routes = {
   mantras: [
-    "Sacred Mantras | Divinity Harmony",
+    "Sacred Mantras | DharmDisha",
     "Read, listen and count japa with a growing Hindu mantra library.",
   ],
   darshan: [
-    "Live Temple Darshan | Divinity Harmony",
+    "Live Temple Darshan | DharmDisha",
     "Watch dynamically discovered Hindu temple streams currently marked live.",
   ],
   scriptures: [
-    "Hindu Scriptures | Divinity Harmony",
+    "Hindu Scriptures | DharmDisha",
     "Read Vedas, Upanishads, Puranas, Gitas and Hindu heritage articles.",
   ],
   deities: [
-    "Hindu Deity Encyclopedia | Divinity Harmony",
+    "Hindu Deity Encyclopedia | DharmDisha",
     "Explore Hindu deity stories, symbols, festivals and related mantras.",
   ],
   temples: [
-    "Hindu Temple Locator | Divinity Harmony",
+    "Hindu Temple Locator | DharmDisha",
     "Discover important Hindu temples by deity, city, state and distance.",
   ],
   priests: [
-    "Priest and Puja Directory | Divinity Harmony",
+    "Priest and Puja Directory | DharmDisha",
     "Explore verified regional priest specializations and common puja guides.",
   ],
   "my-dharma": [
-    "My Dharma | Divinity Harmony",
+    "My Dharma | DharmDisha",
     "Create a private regional tradition profile, daily practice and family ritual reminders.",
   ],
   culture: [
-    "Culture of India | Divinity Harmony",
+    "Culture of India | DharmDisha",
     "Explore calendars, festivals, living traditions and temples across every Indian state and union territory.",
   ],
   wisdom: [
-    "Pravachan and Cultural Reading | Divinity Harmony",
+    "Pravachan and Cultural Reading | DharmDisha",
     "Find official pravachan sources and publisher-direct spiritual magazines and books.",
   ],
   astrology: [
-    "Vedic Astrology Learning | Divinity Harmony",
+    "Vedic Astrology Learning | DharmDisha",
     "Learn Panchang and Jyotisha concepts with transparent calculation boundaries.",
   ],
 };

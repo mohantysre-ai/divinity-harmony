@@ -1,4 +1,4 @@
-# Divinity Harmony implementation gap analysis
+# DharmDisha implementation gap analysis
 
 Reviewed against the attached architecture and expanded temple/ritual brief on
 4 September 2026.

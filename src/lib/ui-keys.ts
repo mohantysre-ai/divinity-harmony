@@ -1,6 +1,6 @@
 /** Canonical English UI strings — semantic id → exact source text in the app. */
 export const UI_KEYS = {
-  divinityHarmony: "Divinity Harmony",
+  divinityHarmony: "DharmDisha",
   home: "Home",
   mantras: "Mantras",
   liveDarshan: "Live Darshan",
@@ -182,7 +182,7 @@ export const UI_KEYS = {
   beginWithGayatri: "Begin with Gayatri",
   enterTheTemple: "Enter the temple",
   exploreTheGita: "Explore the Gita",
-  backToDivinityHarmony: "Back to Divinity Harmony",
+  backToDharmDisha: "Back to DharmDisha",
   practiceRemembered: "Your practice, remembered securely.",
   profileAcrossDevices:
     "Keep your profile, avatar and spiritual preferences connected across devices.",
@@ -359,7 +359,7 @@ export const UI_KEYS = {
   regionalRitualGuidance: "Regional ritual guidance",
   priestHeroTitle: "Find a priest and understand the puja before you book",
   priestHeroDesc:
-    "Search live local directories for current phone numbers, reviews and availability. Divinity Harmony does not copy unverified personal numbers.",
+    "Search live local directories for current phone numbers, reviews and availability. DharmDisha does not copy unverified personal numbers.",
   searchPujaPlaceholder: "Search city, language, or puja",
   verifyDirectoryLinks:
     "Links open live Google Maps or Sulekha results so you can verify reviews and contact details.",

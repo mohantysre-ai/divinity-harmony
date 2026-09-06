@@ -6,7 +6,7 @@ import { bnPack } from "./bn-pack.mjs";
 
 /** Gujarati — full native script, no Latin transliteration. */
 export const guPack186 = {
-  divinityHarmony: "દિવ્ય સામરસ",
+  divinityHarmony: "DharmDisha",
   home: "મુખ્ય પૃષ્ઠ",
   mantras: "મંત્ર",
   liveDarshan: "લાઇવ દર્શન",
@@ -178,7 +178,7 @@ export const guPack186 = {
   beginWithGayatri: "Gayatri થી શરૂઆત",
   enterTheTemple: "મંદિરમાં પ્રવેશ",
   exploreTheGita: "Gita શોધો",
-  backToDivinityHarmony: "Divinity Harmony પર પાછા",
+  backToDharmDisha: "DharmDisha પર પાછા",
   practiceRemembered: "તમારી સાધના, સુરક્ષિત રીતે યાદ રાખવામાં આવે.",
   profileAcrossDevices: "તમારી પ્રોફાઇલ, અવતાર અને આધ્યાત્મિક પસંદગીઓ ઉપકરણોમાં જોડાયેલી રાખો.",
   authPoweredBy: "પ્રમાણીકરણ અને ફાઇલ સંગ્રહ Supabase દ્વારા",

@@ -53,7 +53,7 @@ export const teFixes = {
   beginWithGayatri: "Gayatri tho praarambhinchandi",
   enterTheTemple: "devaalayamlo praveshinchandi",
   exploreTheGita: "Gita anveshinchandi",
-  backToDivinityHarmony: "Divinity Harmony ki tirigi",
+  backToDharmDisha: "DharmDisha ki tirigi",
   practiceRemembered: "mee saadhana, surakshitamga gurtunchabadutundi.",
   profileAcrossDevices:
     "mee profile, avatar mariyu aadhyaatmika preferences devices lo connect chesi unchandi.",
@@ -123,7 +123,7 @@ export const mlFixes = {
 };
 
 export const paFixes = {
-  divinityHarmony: "ਦਿਵinity Harmony",
+  divinityHarmony: "DharmDisha",
   myDharma: "ਮera ਧਰਮ",
   cultureOfIndia: "ਭਾਰਤ ਦੀ ਸanskruti",
   pravachanReading: "ਪravachan & ਪੜ੍ਹna",
@@ -160,7 +160,7 @@ export const paFixes = {
   listenReadReflect: "ਸੁਣo · ਪੜ੍ਹo · ਸੋਚo",
   fastDiscovery: "ਤੇਜ discovery",
   exploreTheGita: "Gita explore",
-  backToDivinityHarmony: "Divinity Harmony ਤੇ ਵapas",
+  backToDharmDisha: "DharmDisha ਤੇ ਵapas",
   profileAcrossDevices: "profile, avatar, spiritual preferences devices ਵਿੱਚ connected ਰੱਖੋ।",
   authPoweredBy: "authentication ਅਤੇ file storage Supabase ਦੁਆਰਾ",
   authConfiguring: "account service configure ਹੋ ਰਿਹਾ ਹੈ",

@@ -1,6 +1,6 @@
 /** Complete Telugu UI pack — 225 semantic keys. */
 export const tePack = {
-  divinityHarmony: "దివ్య సామరస్యం",
+  divinityHarmony: "DharmDisha",
   home: "ముఖ్య పేజీ",
   mantras: "మంత్రాలు",
   liveDarshan: "లైవ్ దర్శనం",
@@ -172,7 +172,7 @@ export const tePack = {
   beginWithGayatri: "Gayatri తో ప్రారంభించండి",
   enterTheTemple: "దేవాలయంలో ప్రవేశించండి",
   exploreTheGita: "Gita అన్వేషించండి",
-  backToDivinityHarmony: "Divinity Harmony కు తిరిగి",
+  backToDharmDisha: "DharmDisha కు తిరిగి",
   practiceRemembered: "మీ సాధన, సురక్షితంగా గుర్తుంచబడుతుంది.",
   profileAcrossDevices: "మీ ప్రొఫైల్, అవతార్ మరియు ఆధ్యాత్మిక అభిరుచులను పరికరాలలో అనుసంధానించి ఉంచండి.",
   authPoweredBy: "ప్రామాణీకరణ మరియు ఫైల్ నిల్వ Supabase ద్వారా",

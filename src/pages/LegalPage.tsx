@@ -4,7 +4,7 @@ import Layout from '@/components/layout/Layout';
 import { ThemeProvider } from '@/hooks/use-theme';
 
 const pages={
- privacy:{title:'Privacy Policy',icon:ShieldCheck,intro:'How Divinity Harmony handles account, profile, location and practice information.',sections:[
+ privacy:{title:'Privacy Policy',icon:ShieldCheck,intro:'How DharmDisha handles account, profile, location and practice information.',sections:[
   ['Information we process','Account email and authentication are handled by Supabase when configured. Profile name, optional gotra, preferred language and avatar are stored in your Supabase user metadata or locally for guests. Japa, favorites and guest profile data use an anonymous browser device identifier.'],
   ['Location','Location is requested only after you select a location feature. Coordinates are used to localize Panchang or calculate temple distance and are not added to your public profile.'],
   ['Media and external services','The app may load YouTube, Wikimedia Commons, OpenStreetMap, Google Maps, Justdial and licensed sacred-text sources. Opening or embedding them may send normal browser information to those providers.'],

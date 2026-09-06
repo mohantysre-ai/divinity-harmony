@@ -384,7 +384,7 @@ def fetch_live_darshan_hub() -> list[dict[str, Any]]:
     request = Request(
         LIVE_DARSHAN_HUB_URL,
         headers={
-            "User-Agent": "DivinityHarmony/1.0 (+https://github.com/mohantysre-ai/divinity-harmony)",
+            "User-Agent": "DharmDisha/1.0 (+https://github.com/mohantysre-ai/divinity-harmony)",
             "Accept-Language": "en-IN,en;q=0.9",
         },
     )

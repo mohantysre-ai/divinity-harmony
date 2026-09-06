@@ -128,10 +128,14 @@ export default function SplashScreen({ onComplete }: Props) {
           className="relative inline-flex items-center text-sm text-orange-100/80 hover:text-white"
         >
           <ArrowLeft className="mr-2 h-4 w-4" />
-          {tk("backToDivinityHarmony")}
+          {tk("backToDharmDisha")}
         </Link>
         <div className="relative max-w-xl">
-          <span className="text-7xl text-amber-300">ॐ</span>
+          <img
+            src="/dharmdisha-logo.svg"
+            alt="DharmDisha"
+            className="h-40 w-32 rounded-3xl object-cover object-top shadow-2xl"
+          />
           <h1 className="mt-6 text-5xl font-bold leading-tight">
             {tk("practiceRemembered")}
           </h1>
@@ -147,7 +151,12 @@ export default function SplashScreen({ onComplete }: Props) {
       <div className="flex items-center justify-center p-5 py-12">
         <div className="w-full max-w-md">
           <div className="mb-8 text-center md:hidden">
-            <span className="text-5xl text-orange-700">ॐ</span>
+            <img
+              src="/dharmdisha-icon.svg"
+              alt=""
+              aria-hidden="true"
+              className="mx-auto h-20 w-20 rounded-3xl shadow-xl"
+            />
             <h1 className="mt-3 text-3xl font-bold">{tk("divinityHarmony")}</h1>
           </div>
           {!configured ? (

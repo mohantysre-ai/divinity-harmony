@@ -90,9 +90,12 @@ const Header = () => {
         <nav className="flex items-center justify-between py-3">
           <div className="flex items-center gap-2">
             <Link to="/" className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-hindu-red to-hindu-orange rounded-full flex items-center justify-center shadow-lg">
-                <span className="text-white text-xl font-bold">ॐ</span>
-              </div>
+              <img
+                src="/dharmdisha-icon.svg"
+                alt=""
+                aria-hidden="true"
+                className="h-10 w-10 rounded-xl shadow-lg"
+              />
               <span className="text-xl md:text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-hindu-red to-hindu-gold">
                 {tk("divinityHarmony")}
               </span>

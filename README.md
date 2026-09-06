@@ -1,6 +1,6 @@
-# Divinity Harmony
+# DharmDisha
 
-Divinity Harmony is a modern Hindu devotional platform for discovering mantras, reading sacred texts, watching live temple darshan, learning about deities and temples, following daily Panchang details, recording japa, and finding regional puja services.
+DharmDisha is a modern Hindu devotional platform for discovering mantras, reading sacred texts, watching live temple darshan, learning about deities and temples, following daily Panchang details, recording japa, and finding regional puja services.
 
 Production: [mantra.sigq.in](https://mantra.sigq.in)
 

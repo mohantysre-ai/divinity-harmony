@@ -31,7 +31,7 @@ CACHE_SECONDS = 12 * 60 * 60
 
 
 def _fetch_json(url: str) -> dict:
-    request = Request(url, headers={"User-Agent": "DivinityHarmony/1.0 (https://mantra.sigq.in)"})
+    request = Request(url, headers={"User-Agent": "DharmDisha/1.0 (https://mantra.sigq.in)"})
     with urlopen(request, timeout=15) as response:
         return json.loads(response.read().decode("utf-8"))
 

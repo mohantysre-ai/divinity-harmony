@@ -49,7 +49,7 @@ const teAuth = {
   beginWithGayatri: "Gayatri tho ప్రarambhinchandi",
   enterTheTemple: "దేవaalayam lo ప్రaveshinchandi",
   exploreTheGita: "Gita anveshinchandi",
-  backToDivinityHarmony: "Divinity Harmony ki tirigi",
+  backToDharmDisha: "DharmDisha ki tirigi",
   practiceRemembered: "మీ సాధన, surakshitam ga gurtunchabadutundi.",
   profileAcrossDevices:
     "మీ profile, avatar mariyu aadhyatmika preferences devices lo connect chesi unchandi.",

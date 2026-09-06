@@ -76,7 +76,7 @@ export const orSupplement = {
   beginWithGayatri: "Gayatri ରେ ଆରମ୍ଭ",
   enterTheTemple: "ମନ୍ଦିରକୁ ପ୍ରବେଶ",
   exploreTheGita: "Gita ଅନ୍ୱେଷଣ",
-  backToDivinityHarmony: "Divinity Harmony କୁ ଫେରନ୍ତୁ",
+  backToDharmDisha: "DharmDisha କୁ ଫେରନ୍ତୁ",
   practiceRemembered: "ଆପଣଙ୍କ ସାଧନା, ସୁରକ୍ଷିତ ଭାବେ ମନେ ରଖାଯାଏ।",
   profileAcrossDevices: "ପ୍ରୋଫାଇଲ, ଅବତାର ଓ ଆଧ୍ୟାତ୍ମିକ ପସନ୍ଦ ଉପକରଣରେ ସଂଯୁକ୍ତ ରଖନ୍ତୁ।",
   authPoweredBy: "ପ୍ରାମାଣିକରଣ ଓ ଫାଇଲ ସଂରକ୍ଷଣ Supabase ଦ୍ୱାରା",

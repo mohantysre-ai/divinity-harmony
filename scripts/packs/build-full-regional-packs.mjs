@@ -205,7 +205,7 @@ const EXTENDED = {
     beginWithGayatri: "Gayatri થી શરૂઆત",
     enterTheTemple: "મંદિરમાં પ્રવેશ",
     exploreTheGita: "Gita શોધો",
-    backToDivinityHarmony: "Divinity Harmony પર પાછા",
+    backToDharmDisha: "DharmDisha પર પાછા",
     practiceRemembered: "તમારી સાધના, સુરક્ષિત રીતે યાદ રાખવામાં આવે.",
     profileAcrossDevices:
       "તમારી પ્રોફાઇલ, અવતાર અને આધ્યાત્મિક પસંદગીઓ ઉપકરણોમાં જોડાયેલી રાખો.",

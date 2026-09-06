@@ -1,6 +1,6 @@
 /** Complete Malayalam UI pack — 225 semantic keys. */
 export const mlPack = {
-  divinityHarmony: "ദിവ്യ സാമരസ്യം",
+  divinityHarmony: "DharmDisha",
   home: "മുഖ്യ പേജ്",
   mantras: "മന്ത്രങ്ങൾ",
   liveDarshan: "ലൈവ് ദർശനം",
@@ -172,7 +172,7 @@ export const mlPack = {
   beginWithGayatri: "Gayatri-യോടെ ആരംഭിക്കുക",
   enterTheTemple: "ക്ഷേത്രത്തിൽ പ്രവേശിക്കുക",
   exploreTheGita: "Gita പര്യവേക്ഷണം ചെയ്യുക",
-  backToDivinityHarmony: "Divinity Harmony-ലേക്ക് മടങ്ങുക",
+  backToDharmDisha: "DharmDisha-ലേക്ക് മടങ്ങുക",
   practiceRemembered: "നിങ്ങളുടെ പരിശീലനം, സുരക്ഷിതമായി ഓർമ്മിച്ചിരിക്കുന്നു.",
   profileAcrossDevices: "നിങ്ങളുടെ പ്രൊഫൈൽ, അവതാർ, ആത്മീയ മുൻഗണനകൾ ഉപകരണങ്ങളിൽ ബന്ധിപ്പിച്ച് സൂക്ഷിക്കുക.",
   authPoweredBy: "പ്രാമാണീകരണവും ഫയൽ സംഭരണവും Supabase-ൽ നിന്ന്",

@@ -1,4 +1,4 @@
-# Smoke-test Divinity Harmony after rebuild/redeploy.
+# Smoke-test DharmDisha after rebuild/redeploy.
 # Usage:
 #   powershell -File scripts/smoke-test.ps1
 #   powershell -File scripts/smoke-test.ps1 -BaseUrl http://localhost:7800

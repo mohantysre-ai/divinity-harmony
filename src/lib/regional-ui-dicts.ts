@@ -4,7 +4,7 @@ import type { AppLocale } from "@/hooks/use-locale";
 export type UiDict = Record<string, string>;
 
 export const orDict: UiDict = {
-  "Divinity Harmony": "ଦିବ୍ୟ ସାମରସ",
+  "DharmDisha": "DharmDisha",
   Home: "ମୁଖ୍ୟ ପୃଷ୍ଠା",
   Mantras: "ମନ୍ତ୍ର",
   "Live Darshan": "ଲାଇଭ ଦର୍ଶନ",
@@ -106,7 +106,7 @@ export const orDict: UiDict = {
 };
 
 export const bnDict: UiDict = {
-  "Divinity Harmony": "দিব্য সামরস",
+  "DharmDisha": "DharmDisha",
   Home: "প্রধান পাতা",
   Mantras: "মন্ত্র",
   "Live Darshan": "লাইভ দর্শন",
@@ -148,7 +148,7 @@ export const bnDict: UiDict = {
 };
 
 export const guDict: UiDict = {
-  "Divinity Harmony": "દિવ્ય સામરસ",
+  "DharmDisha": "DharmDisha",
   Home: "મુખ્ય પૃષ્ઠ",
   Mantras: "મંત્ર",
   "Live Darshan": "લાઇવ દર્શન",
@@ -181,7 +181,7 @@ export const guDict: UiDict = {
 };
 
 export const mrDict: UiDict = {
-  "Divinity Harmony": "दिव्य सामरस",
+  "DharmDisha": "DharmDisha",
   Home: "मुख्यपृष्ठ",
   Mantras: "मंत्र",
   "Live Darshan": "थेट दर्शन",
@@ -214,7 +214,7 @@ export const mrDict: UiDict = {
 };
 
 export const taDict: UiDict = {
-  "Divinity Harmony": "திவ்ய சாமரசம்",
+  "DharmDisha": "DharmDisha",
   Home: "முகப்பு",
   Mantras: "மந்திரங்கள்",
   "Live Darshan": "நேரடி தarshan",
@@ -247,7 +247,7 @@ export const taDict: UiDict = {
 };
 
 export const teDict: UiDict = {
-  "Divinity Harmony": "దివ్య సామరస్యం",
+  "DharmDisha": "DharmDisha",
   Home: "మुख్య పేజీ",
   Mantras: "మంత్రాలు",
   "Live Darshan": "లైve darshan",
@@ -280,7 +280,7 @@ export const teDict: UiDict = {
 };
 
 export const mlDict: UiDict = {
-  "Divinity Harmony": "ദിവ്യ സാമരസ്യം",
+  "DharmDisha": "DharmDisha",
   Home: "ഹോം",
   Mantras: "മന്ത്രങ്ങൾ",
   "Live Darshan": "ലൈവ് ദർശനം",
@@ -313,7 +313,7 @@ export const mlDict: UiDict = {
 };
 
 export const paDict: UiDict = {
-  "Divinity Harmony": "ਦਿਵ्य ਸਾਮਰਸ",
+  "DharmDisha": "DharmDisha",
   Home: "ਮੁੱਖ ਪੰਨਾ",
   Mantras: "ਮੰਤਰ",
   "Live Darshan": "ਲਾਈਵ ਦਰਸ਼ਨ",
@@ -346,7 +346,7 @@ export const paDict: UiDict = {
 };
 
 export const asDict: UiDict = {
-  "Divinity Harmony": "দিব্য সামৰস",
+  "DharmDisha": "DharmDisha",
   Home: "মূল পৃষ্ঠা",
   Mantras: "মন্ত্ৰ",
   "Live Darshan": "লাইভ দৰ্শন",

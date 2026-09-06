@@ -1,6 +1,6 @@
 /** Marathi-specific overrides (remaining keys filled from Hindi in gen-locale-data.mjs). */
 export const mrOverrides = {
-  divinityHarmony: "दिव्य सामरस",
+  divinityHarmony: "DharmDisha",
   home: "मुख्यपृष्ठ",
   mantras: "मंत्र",
   liveDarshan: "थेट दर्शन",

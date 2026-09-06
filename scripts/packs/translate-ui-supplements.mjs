@@ -20,7 +20,7 @@ const UI_KEYS = JSON.parse(
 );
 
 const DO_NOT_TRANSLATE =
-  /(?:YouTube|Supabase|Google Maps|OpenStreetMap|Sulekha|LiveDarshanHub|mantra\.sigq\.in|Divinity Harmony|Email|Play|JPG|PNG|WebP|API|LIVE|Reset|ID)/g;
+  /(?:YouTube|Supabase|Google Maps|OpenStreetMap|Sulekha|LiveDarshanHub|mantra\.sigq\.in|DharmDisha|Email|Play|JPG|PNG|WebP|API|LIVE|Reset|ID)/g;
 
 function shieldPlaceholders(text) {
   const map = new Map();

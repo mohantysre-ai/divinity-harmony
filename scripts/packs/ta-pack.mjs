@@ -1,6 +1,6 @@
 /** Complete Tamil UI pack — 225 semantic keys. */
 export const taPack = {
-  divinityHarmony: "திவ்ய சாமரசம்",
+  divinityHarmony: "DharmDisha",
   home: "முகப்பு",
   mantras: "மந்திரங்கள்",
   liveDarshan: "நேரடி தர்சனம்",
@@ -172,7 +172,7 @@ export const taPack = {
   beginWithGayatri: "Gayatri உடன் தொடங்குங்கள்",
   enterTheTemple: "கோயிலில் நுழையுங்கள்",
   exploreTheGita: "Gita ஆராயுங்கள்",
-  backToDivinityHarmony: "Divinity Harmony-க்குத் திரும்பு",
+  backToDharmDisha: "DharmDisha-க்குத் திரும்பு",
   practiceRemembered: "உங்கள் பயிற்சி, பாதுகாப்பாக நினைவில் வைக்கப்படுகிறது.",
   profileAcrossDevices: "உங்கள் சுயவிவரம், அவதார் மற்றும் ஦ாத்தீக விருப்பங்களை சாதனங்களில் இணைக்கவும்.",
   authPoweredBy: "அங்கீகாரம் மற்றும் கோப்பு சேமிப்பு Supabase மூலம்",

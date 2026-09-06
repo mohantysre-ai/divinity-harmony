@@ -1,6 +1,6 @@
 /** Complete Punjabi UI pack — 225 semantic keys. */
 export const paPack = {
-  divinityHarmony: "ਦਿਵ੍ਯ ਸਾਮਰਸ",
+  divinityHarmony: "DharmDisha",
   home: "ਮੁੱਖ ਪੰਨਾ",
   mantras: "ਮੰਤਰ",
   liveDarshan: "ਲਾਈਵ ਦਰਸ਼ਨ",
@@ -172,7 +172,7 @@ export const paPack = {
   beginWithGayatri: "Gayatri ਨਾਲ ਸ਼ੁਰੂ",
   enterTheTemple: "ਮੰਦਰ ਵਿੱਚ ਦਾਖਲ",
   exploreTheGita: "Gita ਖੋਜੋ",
-  backToDivinityHarmony: "Divinity Harmony ਤੇ ਵਾਪਸ",
+  backToDharmDisha: "DharmDisha ਤੇ ਵਾਪਸ",
   practiceRemembered: "ਤੁਹਾਡੀ ਸਾਧਨਾ, ਸੁਰੱਖਿਅਤ ਯਾਦ ਰੱਖੀ ਜਾਂਦੀ ਹੈ।",
   profileAcrossDevices: "ਤੁਹਾਡੀ ਪ੍ਰੋਫਾਈਲ, ਅਵਤਾਰ ਅਤੇ ਆਇਧਿਆਤਮਿਕ ਪਸੰਦਗੀਆਂ ਡਿਵਾਈਸਾਂ ਵਿੱਚ ਜੁੜੀਆਂ ਰੱਖੋ।",
   authPoweredBy: "ਪ੍ਰਮਾਣੀਕਰਨ ਅਤੇ ਫਾਈਲ ਸਟੋਰੇਜ Supabase ਦੁਆਰਾ",

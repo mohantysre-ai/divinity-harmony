@@ -3,7 +3,7 @@ import type { AppLocale } from "@/hooks/use-locale";
 /** Real UI copy — not transliteration. Keys are exact English source strings. */
 export const uiTranslations: Partial<Record<AppLocale, Record<string, string>>> = {
   hi: {
-    "Divinity Harmony": "दिव्य सामरस",
+    "DharmDisha": "दिव्य सामरस",
     Home: "मुखपृष्ठ",
     Mantras: "मंत्र",
     "Live Darshan": "लाइव दर्शन",
@@ -99,7 +99,7 @@ export const uiTranslations: Partial<Record<AppLocale, Record<string, string>>> 
     "Continue as guest": "अतिथि के रूप में जारी रखें",
   },
   kn: {
-    "Divinity Harmony": "ದಿವ್ಯ ಸಾಮರಸ್ಯ",
+    "DharmDisha": "ದಿವ್ಯ ಸಾಮರಸ್ಯ",
     Home: "ಮುಖಪುಟ",
     Mantras: "ಮಂತ್ರಗಳು",
     "Live Darshan": "ನೇರ ದರ್ಶನ",

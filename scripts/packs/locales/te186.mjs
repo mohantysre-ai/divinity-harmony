@@ -1,6 +1,6 @@
 /** Telugu base UI pack — 186 semantic keys (187–225 in tail-supplement.json). */
 export const te186 = {
-  divinityHarmony: "దివ్య సామరస్యం",
+  divinityHarmony: "DharmDisha",
   home: "ముఖ్య పేజీ",
   mantras: "మంత్రాలు",
   liveDarshan: "లైవ్ దర్శనం",
@@ -173,7 +173,7 @@ export const te186 = {
   beginWithGayatri: "Gayatri tho prarambhinchandi",
   enterTheTemple: "devaalayamlo praveshinchandi",
   exploreTheGita: "Gita anveshinchandi",
-  backToDivinityHarmony: "Divinity Harmony ki tirigi",
+  backToDharmDisha: "DharmDisha ki tirigi",
   practiceRemembered: "mee sadhana, surakshitamga gurtunchabadutundi.",
   profileAcrossDevices: "mee profile, avatar mariyu aadhyatmika preferences devices lo connect chesi unchandi.",
   authPoweredBy: "pramanikaranam mariyu file storage Supabase dwara",

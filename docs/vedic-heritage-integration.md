@@ -25,7 +25,7 @@ The request should identify `https://mantra.sigq.in/scriptures`, explain that th
 page is a non-misleading educational catalogue, and state the exact link label
 (`Vedic Heritage Portal — IGNCA, Ministry of Culture`). Ask separately for
 permission if scanned pages, article text, cover images or other portal content
-will be reproduced inside Divinity Harmony.
+will be reproduced inside DharmDisha.
 
 To disable the outbound cards, set this build-time variable and redeploy:
 

@@ -1,6 +1,6 @@
 /** Complete as UI pack — 186 semantic keys. */
 export const as186 = {
-  divinityHarmony: "দিব্য সামৰস",
+  divinityHarmony: "DharmDisha",
   home: "মূল পৃষ্ঠা",
   mantras: "মন্ত্ৰ",
   liveDarshan: "লাইভ দৰ্শন",
@@ -172,7 +172,7 @@ export const as186 = {
   beginWithGayatri: "Gayatri-ৰে আৰম্ভ",
   enterTheTemple: "মন্দিৰত প্ৰৱেশ",
   exploreTheGita: "Gita অন্বেষণ",
-  backToDivinityHarmony: "Divinity Harmony-লৈ ঘূৰি যাওক",
+  backToDharmDisha: "DharmDisha-লৈ ঘূৰি যাওক",
   practiceRemembered: "আপোনাৰ সাধনা, সুৰক্ষিতভাৱে মনত ৰাখা হয়।",
   profileAcrossDevices: "প্ৰ'ফাইল, অৱতাৰ আৰু আধ্যাত্মিক পছন্দ ডিভাইচত সংযুক্ত ৰাখক।",
   authPoweredBy: "প্ৰমাণীকৰণ আৰু ফাইল সংৰক্ষণ Supabase-ৰ দ্বাৰা",

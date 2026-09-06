@@ -1,5 +1,5 @@
-const CACHE = 'divinity-harmony-v1';
-const CORE = ['/', '/mantras', '/scriptures', '/deities', '/temples', '/divinity-icon.svg'];
+const CACHE = 'dharmdisha-v2';
+const CORE = ['/', '/mantras', '/scriptures', '/deities', '/temples', '/dharmdisha-icon.svg'];
 self.addEventListener('install', event => event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(CORE)).catch(() => undefined)));
 self.addEventListener('activate', event => event.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(key => key !== CACHE).map(key => caches.delete(key))))));
 self.addEventListener('fetch', event => {

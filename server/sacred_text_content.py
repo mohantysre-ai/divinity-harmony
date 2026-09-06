@@ -12,7 +12,7 @@ from urllib.parse import urlencode
 from urllib.request import Request, urlopen
 
 
-USER_AGENT = "DivinityHarmony/1.0 (educational reader; https://github.com/mohantysre-ai/divinity-harmony)"
+USER_AGENT = "DharmDisha/1.0 (educational reader; https://github.com/mohantysre-ai/divinity-harmony)"
 TIMEOUT_SECONDS = 25
 MAX_CHAPTERS = 250
 

@@ -181,7 +181,7 @@ const keys = [
   "beginWithGayatri",
   "enterTheTemple",
   "exploreTheGita",
-  "backToDivinityHarmony",
+  "backToDharmDisha",
   "practiceRemembered",
   "profileAcrossDevices",
   "authPoweredBy",

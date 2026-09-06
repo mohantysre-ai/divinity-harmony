@@ -1,6 +1,6 @@
 /** English-source → translation maps from legacy ui-translations.ts */
 export const hiEn = {
-  "Divinity Harmony": "दिव्य सामरस",
+  "DharmDisha": "DharmDisha",
   Home: "मुखपृष्ठ",
   Mantras: "मंत्र",
   "Live Darshan": "लाइव दर्शन",
@@ -102,7 +102,7 @@ export const hiEn = {
 };
 
 export const knEn = {
-  "Divinity Harmony": "ದಿವ್ಯ ಸಾಮರಸ್ಯ",
+  "DharmDisha": "DharmDisha",
   Home: "ಮುಖಪುಟ",
   Mantras: "ಮಂತ್ರಗಳು",
   "Live Darshan": "ನೇರ ದರ್ಶನ",

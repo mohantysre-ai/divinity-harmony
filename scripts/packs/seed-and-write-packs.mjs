@@ -99,7 +99,7 @@ const DICT_FIXES = {
       "{count}+ പ്രാർത്ഥനകൾ, വേദ സ്തോത്രങ്ങൾ, മന്ത്രങ്ങൾ പര്യവേക്ഷണം ചെയ്യുക. ദേവത, പാഠം അല്ലെങ്കിൽ ഉദ്ദേശ്യം അനുസരിച്ച് തിരയുക.",
   },
   pa: {
-    divinityHarmony: "ਦਿਵ्य ਸਾਮਰਸ",
+    divinityHarmony: "DharmDisha",
     priests: "ਪੁਜਾਰੀ",
     myDharma: "ਮera dharma",
     cultureOfIndia: "ਭਾਰਤ ਦੀ ਸanskruti",

@@ -16,7 +16,7 @@ function parseDictBlock(block) {
 
 const dict = parseDictBlock(block);
 console.log("parsed entries", Object.keys(dict).length);
-console.log("sample", dict["Divinity Harmony"]);
+console.log("sample", dict["DharmDisha"]);
 
 const keysSrc = fs.readFileSync("src/lib/ui-keys.ts", "utf8");
 const UI_KEYS = {};

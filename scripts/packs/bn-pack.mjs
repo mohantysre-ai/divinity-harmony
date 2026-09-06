@@ -1,6 +1,6 @@
 /** Complete Bengali UI pack — 186 semantic keys. */
 export const bnPack = {
-  divinityHarmony: "দিব্য সামরস",
+  divinityHarmony: "DharmDisha",
   home: "প্রধান পাতা",
   mantras: "মন্ত্র",
   liveDarshan: "লাইভ দর্শন",
@@ -172,7 +172,7 @@ export const bnPack = {
   beginWithGayatri: "Gayatri দিয়ে শুরু",
   enterTheTemple: "মন্দিরে প্রবেশ",
   exploreTheGita: "Gita অন্বেষণ",
-  backToDivinityHarmony: "Divinity Harmony-তে ফিরুন",
+  backToDharmDisha: "DharmDisha-তে ফিরুন",
   practiceRemembered: "আপনার সাধনা, নিরাপদে মনে রাখা হয়।",
   profileAcrossDevices: "প্রোফাইল, অবতার ও আধ্যাত্মিক পছন্দ ডিভাইসে সংযুক্ত রাখুন।",
   authPoweredBy: "প্রমাণীকরণ ও ফাইল সংরক্ষণ Supabase দ্বারা",

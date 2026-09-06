@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">DharmDisha</title>
+  <desc id="desc">DharmDisha icon with Om, a guiding star and celestial orbits.</desc>
+  <defs>
+    <linearGradient id="i1" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#1B0E26"/><stop offset="1" stop-color="#0E0618"/>
+    </linearGradient>
+    <linearGradient id="i2" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FFF7DC"/><stop offset=".5" stop-color="#FFD873"/><stop offset="1" stop-color="#F2911C"/>
+    </linearGradient>
+    <radialGradient id="i3" cx=".5" cy=".5" r=".5">
+      <stop offset="0" stop-color="#FFC24B" stop-opacity=".5"/><stop offset="1" stop-color="#FFC24B" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="512" height="512" rx="112" fill="#0A0512"/>
+  <rect x="16" y="16" width="480" height="480" rx="104" fill="url(#i1)"/>
+  <g fill="#FFE9B3">
+    <circle cx="96" cy="112" r="2.5" opacity=".7"/><circle cx="150" cy="70" r="2" opacity=".5"/>
+    <circle cx="392" cy="92" r="2.5" opacity=".6"/><circle cx="440" cy="180" r="2" opacity=".5"/>
+    <circle cx="86" cy="330" r="2" opacity=".5"/><circle cx="430" cy="330" r="2.5" opacity=".6"/>
+    <circle cx="130" cy="420" r="2" opacity=".45"/><circle cx="392" cy="428" r="2" opacity=".45"/>
+  </g>
+  <g fill="none" stroke="#FFC24B">
+    <ellipse cx="256" cy="240" rx="180" ry="62" stroke-width="3.5" opacity=".5" transform="rotate(-16 256 240)"/>
+    <ellipse cx="256" cy="240" rx="150" ry="52" stroke-width="2.5" opacity=".28" transform="rotate(-16 256 240)"/>
+  </g>
+  <circle cx="256" cy="240" r="130" fill="url(#i3)"/>
+  <path d="M256 62 Q290 206 402 240 Q290 274 256 380 Q222 274 110 240 Q222 206 256 62 Z" fill="url(#i2)"/>
+  <text x="256" y="252" text-anchor="middle" font-family="'Noto Sans Devanagari','Mangal',serif" font-size="28" font-weight="700" fill="#3A0E4F">ॐ</text>
+  <path d="M368 136 l4 10 10 4 -10 4 -4 10 -4 -10 -10 -4 10 -4 Z" fill="#FFE9B3" opacity=".9"/>
+  <path d="M140 128 l3 8 8 3 -8 3 -3 8 -3 -8 -8 -3 8 -3 Z" fill="#FFD873" opacity=".8"/>
+</svg>
