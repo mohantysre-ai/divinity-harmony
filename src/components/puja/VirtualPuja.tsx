@@ -8,12 +8,18 @@ import {
   type PointerEvent as ReactPointerEvent,
 } from "react";
 import {
+  BookOpenCheck,
   Check,
   ChevronLeft,
   ChevronRight,
+  CircleCheckBig,
   Flame,
   Flower2,
+  Info,
+  ListChecks,
+  PackageCheck,
   RotateCcw,
+  Timer,
   Volume2,
   VolumeX,
   X,
@@ -25,6 +31,7 @@ import { deities, type Deity } from "@/data/deities";
 import { useLocale } from "@/hooks/use-locale";
 import { scriptForAppLocale } from "@/lib/locale-script";
 import { transliterateMantra } from "@/lib/transliterate";
+import { RITUAL_GUIDANCE } from "./ritual-guidance";
 import { virtualPujaCopy, type VirtualPujaCopyKey } from "./virtual-puja-copy";
 
 export type VirtualPujaGuide = {
@@ -92,7 +99,7 @@ const DEITY_RULES: Array<[RegExp, string]> = [
   [/ganapati|ganesha|griha|wedding|namakarana|annaprashana|upanayana|ayudha/i, "ganesha"],
 ];
 
-const FLOWERS = ["🌼", "🌺", "🌸", "🌼", "🌺"];
+const FLOWERS = ["🌼", "🌺", "🌸", "🌼", "🌺", "🌸"];
 const AARTI_ROTATION_NEEDED = 720;
 
 function deityForPuja(name: string): Deity {
@@ -292,6 +299,7 @@ export function VirtualPuja({
     puja.steps.length - 1,
     Math.floor((stepIndex * puja.steps.length) / RITUAL_STEPS.length),
   );
+  const beginnerGuide = RITUAL_GUIDANCE[step.id];
 
   return (
     <div className="vp-overlay" role="dialog" aria-modal="true" aria-label={lc(`${puja.name} guided puja`)}>
@@ -449,7 +457,54 @@ export function VirtualPuja({
                 </div>
               </div>
               <p className="vp-mantra" data-no-regionalize>{mantra}</p>
-              <p className="vp-specific-guide"><strong>{vt("guidance")}:</strong> {lc(puja.steps[guideIndex])}</p>
+
+              <div className="vp-beginner-guide">
+                <p className="vp-beginner-kicker"><BookOpenCheck />{lc("Beginner guidance")}</p>
+                <section className="vp-meaning-card">
+                  <h4>{lc("What this means")}</h4>
+                  <p>{lc(beginnerGuide.meaning)}</p>
+                  <span><strong>{lc("Why you do it")}:</strong> {lc(beginnerGuide.purpose)}</span>
+                </section>
+
+                <div className="vp-guide-facts">
+                  <section>
+                    <PackageCheck />
+                    <span><strong>{lc("What you need")}</strong>{lc(beginnerGuide.materials)}</span>
+                  </section>
+                  <section>
+                    <Timer />
+                    <span><strong>{lc("How long")}</strong>{lc(beginnerGuide.duration)}</span>
+                  </section>
+                </div>
+
+                <section className="vp-action-guide">
+                  <h4><ListChecks />{lc("Do this now")}</h4>
+                  <ol>
+                    {beginnerGuide.actions.map((action, index) => (
+                      <li key={action}><span>{index + 1}</span><p>{lc(action)}</p></li>
+                    ))}
+                  </ol>
+                </section>
+
+                <section className="vp-say-card">
+                  <span>{lc("Say this in Sanskrit or your own language")}</span>
+                  <p>“{lc(beginnerGuide.say)}”</p>
+                  <small>{lc("You may chant the displayed deity mantra once or three times. Clear pronunciation is not required for this beginner practice.")}</small>
+                </section>
+
+                <section className="vp-completion-cue">
+                  <CircleCheckBig />
+                  <span><strong>{lc("You are done when")}</strong>{lc(beginnerGuide.completeWhen)}</span>
+                </section>
+
+                {beginnerGuide.note && (
+                  <section className="vp-beginner-note"><Info /><p>{lc(beginnerGuide.note)}</p></section>
+                )}
+
+                {puja.steps[guideIndex] && (
+                  <p className="vp-specific-guide"><strong>{lc("Custom guidance for this puja")}:</strong> {lc(puja.steps[guideIndex])}</p>
+                )}
+              </div>
 
               {step.action === "flowers" && (
                 <div className="vp-flower-actions">
