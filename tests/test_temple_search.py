@@ -37,6 +37,42 @@ class TempleSearchTests(unittest.TestCase):
     def test_short_query_returns_empty(self):
         self.assertEqual(temple_search.search_temples("x"), [])
 
+    @patch.dict(
+        "temple_search.os.environ",
+        {"GOOGLE_PLACES_API_KEY": "places-key", "GOOGLE_TRANSLATE_API_KEY": "", "VITE_GOOGLE_API_KEY": ""},
+        clear=False,
+    )
+    @patch("temple_search._translate_query_to_latin", return_value="Krishna Janmabhoomi")
+    @patch("temple_search._translate_texts", return_value={})
+    @patch("temple_search.urlopen")
+    def test_google_places_finds_common_temple_alias(self, mocked_open, _mocked_texts, _mocked_query):
+        payload = {
+            "places": [{
+                "id": "krishna-janmasthan",
+                "displayName": {"text": "श्री कृष्ण जन्मस्थान मंदिर"},
+                "formattedAddress": "मथुरा, उत्तर प्रदेश, भारत",
+                "location": {"latitude": 27.5045, "longitude": 77.6696},
+                "googleMapsUri": "https://maps.google.com/?cid=123",
+                "addressComponents": [
+                    {"longText": "मथुरा", "types": ["locality"]},
+                    {"longText": "उत्तर प्रदेश", "types": ["administrative_area_level_1"]},
+                    {"longText": "भारत", "types": ["country"]},
+                ],
+            }]
+        }
+        mocked_open.return_value.__enter__.return_value = io.BytesIO(json.dumps(payload).encode())
+        temple_search._CACHE.clear()
+
+        result = temple_search.search_temples("कृष्ण जन्मभूमि", language="hi")
+
+        self.assertEqual(mocked_open.call_count, 1)
+        request = mocked_open.call_args.args[0]
+        self.assertEqual(request.full_url, temple_search._GOOGLE_PLACES_URL)
+        self.assertEqual(json.loads(request.data)["textQuery"], "Krishna Janmabhoomi Hindu temple")
+        self.assertEqual(result[0]["name"], "श्री कृष्ण जन्मस्थान मंदिर")
+        self.assertEqual(result[0]["city"], "मथुरा")
+        self.assertEqual(result[0]["mapsUrl"], "https://maps.google.com/?cid=123")
+
     @patch("temple_search._translate_texts")
     @patch("temple_search.urlopen")
     def test_normalizes_spelling_and_translates_dynamic_name(self, mocked_open, mocked_translate):
