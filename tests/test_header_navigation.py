@@ -12,9 +12,11 @@ class HeaderNavigationTests(unittest.TestCase):
         )
 
         self.assertIn("const desktopNavItemClass", header)
-        self.assertIn('w-[clamp(4.625rem,5.8vw,5.75rem)]', header)
+        self.assertIn('w-[clamp(5rem,6.15vw,6.5rem)]', header)
         self.assertGreaterEqual(header.count("desktopNavItemClass"), 3)
-        self.assertIn('truncate whitespace-nowrap', header)
+        self.assertNotIn('truncate whitespace-nowrap', header)
+        self.assertGreaterEqual(header.count('whitespace-normal break-words'), 2)
+        self.assertIn('h-14', header)
 
     def test_explore_is_an_obvious_group_on_desktop_and_mobile(self):
         header = (ROOT / "src/components/layout/Header.tsx").read_text(

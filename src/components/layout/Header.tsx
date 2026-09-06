@@ -56,7 +56,7 @@ const MoreNavigation: { key: UiKey; href: string; icon: typeof Sparkles }[] = [
   { key: "vedicAstrology", href: "/astrology", icon: Compass },
 ];
 const desktopNavItemClass =
-  "flex h-9 w-[clamp(4.625rem,5.8vw,5.75rem)] min-w-0 items-center justify-center gap-1.5 rounded-full px-2 text-sm font-medium transition-all duration-200";
+  "flex h-14 w-[clamp(5rem,6.15vw,6.5rem)] min-w-0 items-center justify-center gap-1.5 rounded-full px-2 py-1.5 text-sm font-medium transition-all duration-200";
 
 const Header = () => {
   const { locale, setLocale, tk, detectedState, elderMode, setElderMode } =
@@ -126,7 +126,7 @@ const Header = () => {
                     }`}
                   >
                     <item.icon className="h-4 w-4 flex-none" />
-                    <span className="min-w-0 truncate whitespace-nowrap">
+                    <span className="min-w-0 whitespace-normal break-words text-center leading-[1.15]">
                       {tk(item.key)}
                     </span>
                   </Link>
@@ -145,7 +145,7 @@ const Header = () => {
                     }`}
                   >
                     <Sparkles className="h-4 w-4 flex-none" />
-                    <span className="min-w-0 truncate whitespace-nowrap">
+                    <span className="min-w-0 whitespace-normal break-words text-center leading-[1.15]">
                       {tk("explore")}
                     </span>
                     <ChevronDown className="h-3.5 w-3.5 flex-none opacity-70" />
