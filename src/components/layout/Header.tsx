@@ -23,6 +23,7 @@ import {
   Compass,
   Sparkles,
   Library,
+  ChevronDown,
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -54,6 +55,8 @@ const MoreNavigation: { key: UiKey; href: string; icon: typeof Sparkles }[] = [
   { key: "pravachanReading", href: "/wisdom", icon: Library },
   { key: "vedicAstrology", href: "/astrology", icon: Compass },
 ];
+const desktopNavItemClass =
+  "flex h-9 w-[clamp(4.625rem,5.8vw,5.75rem)] min-w-0 items-center justify-center gap-1.5 rounded-full px-2 text-sm font-medium transition-all duration-200";
 
 const Header = () => {
   const { locale, setLocale, tk, detectedState, elderMode, setElderMode } =
@@ -64,6 +67,9 @@ const Header = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const location = useLocation();
+  const isMoreNavigationActive = MoreNavigation.some(
+    (item) => location.pathname === item.href,
+  );
 
   const displayName = String(
     user?.user_metadata?.display_name ||
@@ -105,43 +111,63 @@ const Header = () => {
 
           {/* Desktop navigation */}
           <div className="hidden xl:flex xl:items-center xl:gap-1">
-            <div className="bg-muted/50 rounded-full px-1 py-1 flex items-center mr-2">
+            <div className="mr-2 flex items-center gap-0.5 rounded-full border border-border/60 bg-muted/50 p-1 shadow-inner">
               {Navigation.map((item) => {
                 const isActive = location.pathname === item.href;
                 return (
                   <Link
                     key={item.key}
                     to={item.href}
-                    className={`flex items-center gap-1.5 px-4 py-2 text-sm font-medium rounded-full transition-all duration-200 ${
+                    title={tk(item.key)}
+                    className={`${desktopNavItemClass} ${
                       isActive
                         ? "bg-background text-primary shadow-sm"
                         : "text-foreground/70 hover:text-primary hover:bg-background/50"
                     }`}
                   >
-                    <item.icon className="h-4 w-4" />
-                    {tk(item.key)}
+                    <item.icon className="h-4 w-4 flex-none" />
+                    <span className="min-w-0 truncate whitespace-nowrap">
+                      {tk(item.key)}
+                    </span>
                   </Link>
                 );
               })}
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    title={tk("explore")}
+                    className={`${desktopNavItemClass} ${
+                      isMoreNavigationActive
+                        ? "bg-background text-primary shadow-sm"
+                        : "text-foreground/70 hover:bg-background/50 hover:text-primary"
+                    }`}
+                  >
+                    <Sparkles className="h-4 w-4 flex-none" />
+                    <span className="min-w-0 truncate whitespace-nowrap">
+                      {tk("explore")}
+                    </span>
+                    <ChevronDown className="h-3.5 w-3.5 flex-none opacity-70" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="min-w-64">
+                  <DropdownMenuLabel className="flex items-center gap-2">
+                    <Sparkles className="h-4 w-4 text-primary" />
+                    {tk("explore")}
+                  </DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  {MoreNavigation.map((item) => (
+                    <DropdownMenuItem key={item.href} asChild>
+                      <Link to={item.href} className="flex items-center py-2.5">
+                        <item.icon className="mr-2 h-4 w-4" />
+                        {tk(item.key)}
+                      </Link>
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
-
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="sm">
-                  {tk("explore")}
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                {MoreNavigation.map((item) => (
-                  <DropdownMenuItem key={item.href} asChild>
-                    <Link to={item.href}>
-                      <item.icon className="mr-2 h-4 w-4" />
-                      {tk(item.key)}
-                    </Link>
-                  </DropdownMenuItem>
-                ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
 
             {/* Notification icon */}
             <Button
@@ -343,17 +369,26 @@ const Header = () => {
                 </Link>
               );
             })}
-            {MoreNavigation.map((item) => (
-              <Link
-                key={item.href}
-                to={item.href}
-                className="flex items-center rounded-lg px-3 py-2.5 text-sm font-medium hover:bg-accent/50"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                <item.icon className="mr-3 h-5 w-5" />
-                {tk(item.key)}
-              </Link>
-            ))}
+            <div className="mt-2 border-t pt-2">
+              <div className="flex items-center gap-2 px-3 py-2 text-sm font-bold text-primary">
+                <Sparkles className="h-4 w-4" />
+                {tk("explore")}
+                <ChevronDown className="ml-auto h-4 w-4" />
+              </div>
+              <div className="ml-4 border-l pl-2">
+                {MoreNavigation.map((item) => (
+                  <Link
+                    key={item.href}
+                    to={item.href}
+                    className="flex items-center rounded-lg px-3 py-2.5 text-sm font-medium hover:bg-accent/50"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    <item.icon className="mr-3 h-5 w-5" />
+                    {tk(item.key)}
+                  </Link>
+                ))}
+              </div>
+            </div>
             <div className="grid grid-cols-2 gap-2 border-y py-3">
               {localeOptions.map((item) => (
                 <Button
