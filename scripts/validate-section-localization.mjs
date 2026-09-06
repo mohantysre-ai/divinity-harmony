@@ -27,6 +27,12 @@ const contentReleaseSupplementPacks = JSON.parse(
     "utf8",
   ),
 );
+const virtualPujaTranslationPacks = JSON.parse(
+  fs.readFileSync(
+    path.join(root, "src/lib/virtual-puja-translation-packs.json"),
+    "utf8",
+  ),
+);
 const uiKeys = JSON.parse(
   fs.readFileSync(path.join(root, "src/lib/ui-keys-export.json"), "utf8"),
 );
@@ -100,6 +106,7 @@ for (const [section, phrases] of Object.entries(sections)) {
           ? reviewedOdiaTempleCopy[english]
           : undefined) ??
         (section === "temples" ? reviewedTempleCopy[locale]?.[english] : undefined) ??
+        virtualPujaTranslationPacks[locale]?.[english] ??
         contentReleaseSupplementPacks[locale]?.[english] ??
         contentSupplementPacks[locale]?.[english] ??
         contentPacks[locale]?.[english];

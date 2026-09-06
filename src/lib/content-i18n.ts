@@ -2,7 +2,9 @@ import type { AppLocale } from "@/hooks/use-locale";
 import contentPacks from "@/lib/content-packs.json";
 import contentSupplementPacks from "@/lib/content-supplement-packs.json";
 import contentReleaseSupplementPacks from "@/lib/content-release-supplement-packs.json";
+import virtualPujaTranslationPacks from "@/lib/virtual-puja-translation-packs.json";
 import reviewedOdiaTempleCopy from "../../scripts/packs/odia-temples-reviewed.json";
+import reviewedOdiaVirtualPujaCopy from "../../scripts/packs/odia-virtual-puja-reviewed.json";
 import reviewedTempleCopy from "../../scripts/packs/temples-reviewed.json";
 import { regionalScriptFallback } from "@/lib/regional-fallback";
 
@@ -16,6 +18,10 @@ const releaseSupplements = contentReleaseSupplementPacks as Record<
   ContentLocale,
   Record<string, string>
 >;
+const virtualPujaTranslations = virtualPujaTranslationPacks as Record<
+  ContentLocale,
+  Record<string, string>
+>;
 const reviewedTemples = reviewedTempleCopy as Partial<
   Record<ContentLocale, Record<string, string>>
 >;
@@ -26,8 +32,10 @@ const packs = Object.fromEntries(
       ...basePacks[locale as ContentLocale],
       ...supplements[locale as ContentLocale],
       ...releaseSupplements[locale as ContentLocale],
+      ...virtualPujaTranslations[locale as ContentLocale],
       ...reviewedTemples[locale as ContentLocale],
       ...(locale === "or" ? reviewedOdiaTempleCopy : {}),
+      ...(locale === "or" ? reviewedOdiaVirtualPujaCopy : {}),
     },
   ]),
 ) as Record<ContentLocale, Record<string, string>>;
