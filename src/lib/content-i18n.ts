@@ -4,6 +4,7 @@ import contentSupplementPacks from "@/lib/content-supplement-packs.json";
 import contentReleaseSupplementPacks from "@/lib/content-release-supplement-packs.json";
 import virtualPujaTranslationPacks from "@/lib/virtual-puja-translation-packs.json";
 import cultureExperiencePacks from "@/lib/culture-experience-packs.json";
+import cultureDeepDivePacks from "@/lib/culture-deep-dive-packs.json";
 import reviewedCultureExperienceCopy from "../../scripts/packs/culture-experience-reviewed.json";
 import reviewedOdiaTempleCopy from "../../scripts/packs/odia-temples-reviewed.json";
 import reviewedOdiaVirtualPujaCopy from "../../scripts/packs/odia-virtual-puja-reviewed.json";
@@ -28,6 +29,10 @@ const cultureExperienceTranslations = cultureExperiencePacks as Record<
   ContentLocale,
   Record<string, string>
 >;
+const cultureDeepDiveTranslations = cultureDeepDivePacks as Record<
+  ContentLocale,
+  Record<string, string>
+>;
 const reviewedCultureExperience = reviewedCultureExperienceCopy as Record<
   ContentLocale,
   Record<string, string>
@@ -44,6 +49,7 @@ const packs = Object.fromEntries(
       ...releaseSupplements[locale as ContentLocale],
       ...virtualPujaTranslations[locale as ContentLocale],
       ...cultureExperienceTranslations[locale as ContentLocale],
+      ...cultureDeepDiveTranslations[locale as ContentLocale],
       ...reviewedCultureExperience[locale as ContentLocale],
       ...reviewedTemples[locale as ContentLocale],
       ...(locale === "or" ? reviewedOdiaTempleCopy : {}),

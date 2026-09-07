@@ -10,11 +10,12 @@ const base = read("src/lib/content-packs.json");
 const supplement = read("src/lib/content-supplement-packs.json");
 const release = read("src/lib/content-release-supplement-packs.json");
 const virtualPuja = read("src/lib/virtual-puja-translation-packs.json");
+const deepDive = read("src/lib/culture-deep-dive-packs.json");
 const output = {};
 
 for (const locale of locales) {
   const translated = read(`scripts/packs/content-translations-${locale}.json`);
-  const existing = { ...base[locale], ...supplement[locale], ...release[locale], ...virtualPuja[locale] };
+  const existing = { ...base[locale], ...supplement[locale], ...release[locale], ...virtualPuja[locale], ...deepDive[locale] };
   output[locale] = Object.fromEntries(
     cultureStrings
       .filter((english) => !Object.hasOwn(existing, english))
