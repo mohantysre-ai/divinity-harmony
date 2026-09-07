@@ -36,7 +36,11 @@ import { detectRegionalScript, scriptFromBrowser } from "@/lib/regional-script";
 import { useLocale } from "@/hooks/use-locale";
 import { deityUiKey } from "@/lib/deity-i18n";
 
-type Mantra = (typeof bundledData.mantras)[number];
+type Mantra = (typeof bundledData.mantras)[number] & {
+  youtubeVideoId?: string;
+  youtubeChannelTitle?: string;
+  youtubeDurationText?: string;
+};
 
 // Fallback-only deity art (used when a mantra has no image, or its own image fails to load).
 // Per-mantra images now come from mantra.imageUrl in mantras.json (hash paths verified against
@@ -549,7 +553,14 @@ const MantrasPage = () => {
                 </div>
               </article>
               <section ref={audioRef} className="scroll-mt-24">
-                <YouTubeMantraPlayer title={audioTitle || currentMantra.title} />
+                <YouTubeMantraPlayer
+                  title={audioTitle || currentMantra.title}
+                  curated={(audioTitle || currentMantra.title) === currentMantra.title ? {
+                    videoId: currentMantra.youtubeVideoId,
+                    channelTitle: currentMantra.youtubeChannelTitle,
+                    durationText: currentMantra.youtubeDurationText,
+                  } : undefined}
+                />
               </section>
               <details className="mt-4 rounded-xl border bg-card p-4">
                 <summary className="cursor-pointer text-sm font-semibold text-muted-foreground">

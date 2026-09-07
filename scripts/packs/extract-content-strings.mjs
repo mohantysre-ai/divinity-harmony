@@ -82,6 +82,31 @@ function extractCulturePacks() {
   return strings;
 }
 
+function extractCultureDeepDives() {
+  const file = "src/data/culture-deep-dives.ts";
+  const text = fs.readFileSync(path.join(root, file), "utf8");
+  const sourceFile = ts.createSourceFile(
+    file,
+    text,
+    ts.ScriptTarget.Latest,
+    true,
+    ts.ScriptKind.TS,
+  );
+  const strings = new Set();
+  const textProperties = new Set(["overview", "name", "detail", "sourceLabel"]);
+  const visit = (node) => {
+    if (ts.isPropertyAssignment(node)) {
+      const property = node.name.getText(sourceFile).replace(/["']/g, "");
+      if (textProperties.has(property) && ts.isStringLiteralLike(node.initializer)) {
+        strings.add(node.initializer.text.trim());
+      }
+    }
+    ts.forEachChild(node, visit);
+  };
+  visit(sourceFile);
+  return strings;
+}
+
 function extractPujas() {
   const text = fs.readFileSync(path.join(root, "src/pages/PriestDirectoryPage.tsx"), "utf8");
   const strings = new Set();
@@ -299,6 +324,7 @@ function extractWisdom() {
 const sacred = extractSacredTexts();
 const mantras = extractMantras();
 const culture = extractCulturePacks();
+const cultureDeepDives = extractCultureDeepDives();
 const pujas = extractPujas();
 const virtualPujaGuidance = extractVirtualPujaGuidance();
 const deityCatalog = extractDeities();
@@ -319,6 +345,7 @@ for (const text of virtualPujaGuidance) priestPageCopy.add(text);
 const culturePageCopy = extractLocalizedPageCopy([
   "src/pages/CultureIndiaPage.tsx",
 ]);
+for (const text of cultureDeepDives) culturePageCopy.add(text);
 const localizedPageCopy = new Set([
   ...scripturePageCopy,
   ...templePageCopy,
@@ -365,6 +392,7 @@ console.log(JSON.stringify({
   sacred: sacred.size,
   mantras: mantras.size,
   culture: culture.size,
+  cultureDeepDives: cultureDeepDives.size,
   pujas: pujas.size,
   virtualPujaGuidance: virtualPujaGuidance.size,
   deities: deityCatalog.size,

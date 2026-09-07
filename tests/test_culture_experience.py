@@ -30,6 +30,18 @@ class CultureExperienceTests(unittest.TestCase):
         self.assertIn("Taste of the state", page)
         self.assertIn("Open official tourism source", page)
 
+    def test_andhra_cards_open_sourced_deep_dive_stories(self):
+        page = (ROOT / "src/pages/CultureIndiaPage.tsx").read_text(encoding="utf-8")
+        deep_dives = (ROOT / "src/data/culture-deep-dives.ts").read_text(encoding="utf-8")
+
+        self.assertIn("<ModuleDetailDialog", page)
+        self.assertIn('role="button"', page)
+        self.assertIn('"andhra-pradesh"', deep_dives)
+        self.assertEqual(deep_dives.count("overview:\n"), 6)
+        self.assertIn("tirumala.org/Utsavams.aspx", deep_dives)
+        self.assertIn("srisailadevasthanam.org", deep_dives)
+        self.assertIn("krishna.ap.gov.in/cultural-tourism", deep_dives)
+
     def test_reviewed_culture_vocabulary_covers_every_regional_language(self):
         reviewed = json.loads(
             (ROOT / "scripts/packs/culture-experience-reviewed.json").read_text(

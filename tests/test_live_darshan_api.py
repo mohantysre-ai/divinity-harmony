@@ -80,6 +80,21 @@ class LiveDarshanParserTests(unittest.TestCase):
         self.assertEqual(results[0]["channelTitle"], "Bhakti Channel")
         self.assertIn("youtube-nocookie.com/embed/hanuman123", results[0]["embedUrl"])
 
+    def test_mantra_recordings_skip_live_and_missing_duration_results(self):
+        data = {"contents": [
+            {"videoRenderer": {
+                "videoId": "live123",
+                "title": {"simpleText": "Live mantra"},
+                "badges": [{"metadataBadgeRenderer": {"label": "LIVE"}}],
+            }},
+            {"videoRenderer": {
+                "videoId": "noduration123",
+                "title": {"simpleText": "Upcoming mantra"},
+            }},
+        ]}
+
+        self.assertEqual(api.parse_mantra_recordings(data), [])
+
     @patch.object(api, "urlopen")
     def test_fetches_real_youtube_thumbnail_for_pravachan(self, mocked_open):
         data = {"contents": [{"videoRenderer": {

@@ -173,19 +173,22 @@ def parse_live_results(data: dict[str, Any]) -> list[dict[str, Any]]:
     return results
 
 
-def parse_mantra_recordings(data: dict[str, Any], limit: int = 6) -> list[dict[str, Any]]:
+def parse_mantra_recordings(
+    data: dict[str, Any], limit: int = 6, require_duration: bool = True
+) -> list[dict[str, Any]]:
     """Return ordinary YouTube video results for an explicit devotional query."""
     results: list[dict[str, Any]] = []
     seen: set[str] = set()
     for node in _walk(data):
         renderer = node.get("videoRenderer")
-        if not isinstance(renderer, dict):
+        if not isinstance(renderer, dict) or _is_live(renderer):
             continue
         video_id = renderer.get("videoId")
         if not isinstance(video_id, str) or not video_id or video_id in seen:
             continue
         title = _text(renderer.get("title", {}))
-        if not title:
+        duration = _text(renderer.get("lengthText", {}))
+        if not title or (require_duration and not duration):
             continue
         seen.add(video_id)
         thumbnails = renderer.get("thumbnail", {}).get("thumbnails", [])
@@ -194,7 +197,7 @@ def parse_mantra_recordings(data: dict[str, Any], limit: int = 6) -> list[dict[s
             "videoId": video_id,
             "title": title,
             "channelTitle": _text(renderer.get("ownerText", {})) or _text(renderer.get("longBylineText", {})) or "YouTube",
-            "duration": _text(renderer.get("lengthText", {})),
+            "duration": duration,
             "thumbnailUrl": thumbnail,
             "url": f"https://www.youtube.com/watch?v={video_id}",
             "embedUrl": f"https://www.youtube-nocookie.com/embed/{video_id}?autoplay=0&rel=0",
@@ -252,7 +255,9 @@ def fetch_pravachan_thumbnail(name: str, query: str) -> dict[str, Any] | None:
     )
     with urlopen(request, timeout=REQUEST_TIMEOUT_SECONDS) as response:
         page = response.read().decode("utf-8", errors="replace")
-    videos = parse_mantra_recordings(extract_initial_data(page), limit=1)
+    videos = parse_mantra_recordings(
+        extract_initial_data(page), limit=1, require_duration=False
+    )
     if not videos:
         return None
     video = videos[0]
