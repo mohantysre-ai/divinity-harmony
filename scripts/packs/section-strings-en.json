@@ -1727,6 +1727,12 @@
     "Your intention has been spoken and the flower or rice has been placed down."
   ],
   "culture": [
+    "${itemName} carries part of ${stateName}'s language, calendar, script or oral memory.",
+    "${itemName} expresses ${stateName}'s cultural knowledge through material, movement, colour, sound or skilled making.",
+    "${itemName} is a living tradition in ${stateName}; practice can vary by district, community, family and lineage.",
+    "${itemName} is a starting point for understanding ${stateName}'s sacred geography, architecture and pilgrimage traditions.",
+    "${itemName} is part of ${stateName}'s featured festival calendar, connecting season, devotion and community memory.",
+    "${itemName} offers a doorway into ${stateName}'s geography, seasons, hospitality and everyday food memory.",
     "${name} cultural landscape",
     "A Brahmic writing system with distinctive rounded letterforms, used for Telugu literature, inscriptions, devotional poetry and contemporary communication.",
     "A coastal Telugu culture where temple towns, classical Kuchipudi and intricate Kalamkari storytelling meet.",
@@ -2210,6 +2216,7 @@
     "Open a sacred-place guide, check a current official tourism source, or search for a district-level tradition. Local communities are the final authority on living practice.",
     "Open cultural details",
     "Open official tourism source",
+    "Open the official state culture source",
     "Open the reading library",
     "Padmanabhaswamy",
     "Paithani",

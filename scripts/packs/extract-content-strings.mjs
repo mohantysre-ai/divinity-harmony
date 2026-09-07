@@ -98,7 +98,8 @@ function extractCultureDeepDives() {
     if (ts.isPropertyAssignment(node)) {
       const property = node.name.getText(sourceFile).replace(/["']/g, "");
       if (textProperties.has(property) && ts.isStringLiteralLike(node.initializer)) {
-        strings.add(node.initializer.text.trim());
+        const value = node.initializer.text.trim();
+        if (value) strings.add(value);
       }
     }
     ts.forEachChild(node, visit);

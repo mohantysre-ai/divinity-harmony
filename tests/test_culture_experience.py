@@ -42,6 +42,19 @@ class CultureExperienceTests(unittest.TestCase):
         self.assertIn("srisailadevasthanam.org", deep_dives)
         self.assertIn("krishna.ap.gov.in/cultural-tourism", deep_dives)
 
+    def test_every_state_gets_all_six_deep_dive_modules(self):
+        deep_dives = (ROOT / "src/data/culture-deep-dives.ts").read_text(encoding="utf-8")
+        page = (ROOT / "src/pages/CultureIndiaPage.tsx").read_text(encoding="utf-8")
+
+        self.assertIn("generatedModule(stateId, moduleId)", deep_dives)
+        self.assertIn("profile.arts", deep_dives)
+        self.assertIn("profile.foods", deep_dives)
+        self.assertIn("pack.festivals", deep_dives)
+        self.assertIn("pack.traditions", deep_dives)
+        self.assertIn("pack.temples", deep_dives)
+        self.assertIn("Open the official state culture source", deep_dives)
+        self.assertIn("generatedItemDetail", page)
+
     def test_reviewed_culture_vocabulary_covers_every_regional_language(self):
         reviewed = json.loads(
             (ROOT / "scripts/packs/culture-experience-reviewed.json").read_text(

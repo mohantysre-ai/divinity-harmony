@@ -1,3 +1,6 @@
+import { culturePacks } from "@/data/culture-packs";
+import { defaultCultureProfile, stateCultureProfiles } from "@/data/state-culture-profiles";
+
 /**
  * Deeper, sourced content for the six "meaning card" modules on a state's
  * culture page (see StateCultureGuide in CultureIndiaPage.tsx). culture-packs.ts
@@ -23,6 +26,7 @@ export type DeepDiveModule = {
   items: DeepDiveItem[];
   sourceLabel?: string;
   sourceUrl?: string;
+  context?: Array<{ label: string; value: string }>;
 };
 
 export type StateDeepDive = Partial<Record<
@@ -176,6 +180,38 @@ export const cultureDeepDives: Record<string, StateDeepDive> = {
   },
 };
 
+const officialStateSlug: Record<string, string> = {
+  "andaman-nicobar": "andaman-and-nicobar-islands",
+  "jammu-kashmir": "jammu-and-kashmir",
+};
+
+function generatedModule(
+  stateId: string,
+  moduleId: keyof StateDeepDive,
+): DeepDiveModule | undefined {
+  const pack = culturePacks.find((entry) => entry.id === stateId);
+  if (!pack) return undefined;
+  const profile = stateCultureProfiles[stateId] ?? defaultCultureProfile;
+  const values =
+    moduleId === "calendar" ? pack.festivals :
+    moduleId === "rituals" ? pack.traditions :
+    moduleId === "journeys" ? pack.temples :
+    moduleId === "language" ? [pack.language, pack.calendar, pack.script] :
+    moduleId === "arts" ? profile.arts : profile.foods;
+  const slug = officialStateSlug[stateId] ?? stateId;
+
+  return {
+    overview: profile.pride,
+    items: values.map((name) => ({ name, detail: "" })),
+    context: [
+      { label: "Cultural landscape", value: profile.landscape },
+      { label: "Suitable travel season", value: profile.bestSeason },
+    ],
+    sourceLabel: "Open the official state culture source",
+    sourceUrl: `https://www.incredibleindia.gov.in/en/${slug}`,
+  };
+}
+
 export function deepDiveFor(stateId: string, moduleId: keyof StateDeepDive): DeepDiveModule | undefined {
-  return cultureDeepDives[stateId]?.[moduleId];
+  return cultureDeepDives[stateId]?.[moduleId] ?? generatedModule(stateId, moduleId);
 }
