@@ -53,7 +53,19 @@ class CultureExperienceTests(unittest.TestCase):
         self.assertIn("pack.traditions", deep_dives)
         self.assertIn("pack.temples", deep_dives)
         self.assertIn("Open the official state culture source", deep_dives)
-        self.assertIn("generatedItemDetail", page)
+        self.assertIn("catalogSummary", page)
+        self.assertNotIn("generatedItemDetail", page)
+        self.assertNotIn("is part of ${stateName}'s featured festival calendar", page)
+
+    def test_regional_audio_does_not_render_raw_youtube_metadata(self):
+        player = (ROOT / "src/components/player/YouTubeMantraPlayer.tsx").read_text(
+            encoding="utf-8"
+        )
+
+        self.assertIn('const { locale, tk, lc } = useLocale()', player)
+        self.assertIn('{lc(title)}', player)
+        self.assertIn('locale === "en" ? `${current.title} · ${current.channelTitle}`', player)
+        self.assertIn('locale === "en" ? item.channelTitle : tk("playRecording")', player)
 
     def test_reviewed_culture_vocabulary_covers_every_regional_language(self):
         reviewed = json.loads(

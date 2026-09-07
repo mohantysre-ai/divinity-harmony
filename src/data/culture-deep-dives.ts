@@ -9,9 +9,9 @@ import { defaultCultureProfile, stateCultureProfiles } from "@/data/state-cultur
  * to actually explain *why* something matters, not just name it.
  *
  * Only as accurate as the sources listed per item — corrections welcome.
- * Only andhra-pradesh is filled in so far. Other states fall back to the
- * card's existing summary until they get the same research pass; see
- * moduleDetailFor() in CultureIndiaPage.tsx for that fallback behaviour.
+ * Andhra Pradesh has individually researched stories. Every other state and
+ * union territory uses its own reviewed cultural catalog as a compact factual
+ * index; the UI deliberately does not invent a generic paragraph for an item.
  */
 
 export type DeepDiveItem = {
@@ -27,6 +27,8 @@ export type DeepDiveModule = {
   sourceLabel?: string;
   sourceUrl?: string;
   context?: Array<{ label: string; value: string }>;
+  /** Catalog-backed modules show verified names without synthetic item copy. */
+  catalogSummary?: boolean;
 };
 
 export type StateDeepDive = Partial<Record<
@@ -203,6 +205,7 @@ function generatedModule(
   return {
     overview: profile.pride,
     items: values.map((name) => ({ name, detail: "" })),
+    catalogSummary: true,
     context: [
       { label: "Cultural landscape", value: profile.landscape },
       { label: "Suitable travel season", value: profile.bestSeason },

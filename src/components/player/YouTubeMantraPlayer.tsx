@@ -14,7 +14,7 @@ type CuratedRecording = {
 };
 
 export default function YouTubeMantraPlayer({ title, curated }: { title: string; curated?: CuratedRecording }) {
-  const { tk } = useLocale();
+  const { locale, tk, lc } = useLocale();
   const pinned = useMemo(() => curatedMantraAudio(curated?.videoId, title, curated?.channelTitle, curated?.durationText), [curated?.channelTitle, curated?.durationText, curated?.videoId, title]);
   const [items, setItems] = useState<MantraAudioCandidate[]>(pinned ? [pinned] : []);
   const [selected, setSelected] = useState(0);
@@ -48,7 +48,7 @@ export default function YouTubeMantraPlayer({ title, curated }: { title: string;
   return <section className="mt-6 overflow-hidden rounded-2xl border bg-card shadow-sm">
     <div className="flex flex-col gap-4 p-5 sm:flex-row sm:items-center">
       <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-red-600 to-orange-500 text-white shadow-lg"><Music2 className="h-6 w-6" /></div>
-      <div className="min-w-0 flex-1"><p className="text-xs font-semibold uppercase tracking-[.18em] text-red-700">{tk("devotionalAudio")}</p><h3 className="truncate text-lg font-bold">{title}</h3>{current && <p className="truncate text-xs text-muted-foreground">{current.title} · {current.channelTitle}{current.durationText ? ` · ${current.durationText}` : ""}</p>}</div>
+      <div className="min-w-0 flex-1"><p className="text-xs font-semibold uppercase tracking-[.18em] text-red-700">{tk("devotionalAudio")}</p><h3 className="truncate text-lg font-bold">{lc(title)}</h3>{current && <p className="truncate text-xs text-muted-foreground">{locale === "en" ? `${current.title} · ${current.channelTitle}` : tk("devotionalAudio")}{current.durationText ? ` · ${current.durationText}` : ""}</p>}</div>
       {loading ? <Loader2 className="h-6 w-6 animate-spin text-orange-700" /> : current ? <Button onClick={() => setExpanded(true)} disabled={expanded}><Play className="mr-2 h-4 w-4" />{expanded ? tk("playingBelow") : tk("playRecording")}</Button> : <Button asChild><a href={searchUrl} target="_blank" rel="noopener noreferrer">{tk("searchYouTube")}<ExternalLink className="ml-2 h-4 w-4" /></a></Button>}
       <Button size="icon" variant="ghost" onClick={() => { if (items.length > 1) { setSelected((value) => (value + 1) % items.length); setExpanded(false); } else load(); }} disabled={loading} aria-label={tk("findAnotherRecording")}><RefreshCw className="h-4 w-4" /></Button>
     </div>
@@ -62,7 +62,7 @@ export default function YouTubeMantraPlayer({ title, curated }: { title: string;
       </div>
       {player.error && <p className="mx-auto max-w-3xl px-4 pb-4 text-sm text-amber-200">{tk("recordingsUnavailable")}</p>}
     </div>}
-    {items.length > 1 && <div className="flex gap-2 overflow-x-auto border-t px-5 py-3">{items.map((item, index) => <button type="button" key={item.videoId} onClick={() => { setSelected(index); setExpanded(false); }} className={`whitespace-nowrap rounded-full border px-3 py-1.5 text-xs font-medium ${index === selected ? "border-red-600 bg-red-50 text-red-700 dark:bg-red-950/20" : "hover:border-orange-300"}`}>{index + 1}. {item.channelTitle}</button>)}</div>}
+    {items.length > 1 && <div className="flex gap-2 overflow-x-auto border-t px-5 py-3">{items.map((item, index) => <button type="button" key={item.videoId} onClick={() => { setSelected(index); setExpanded(false); }} className={`whitespace-nowrap rounded-full border px-3 py-1.5 text-xs font-medium ${index === selected ? "border-red-600 bg-red-50 text-red-700 dark:bg-red-950/20" : "hover:border-orange-300"}`}>{index + 1}. {locale === "en" ? item.channelTitle : tk("playRecording")}</button>)}</div>}
     <p className="border-t px-5 py-2 text-[10px] text-muted-foreground">{tk("audioCompactViewNote")}</p>
   </section>;
 }
