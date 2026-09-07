@@ -1,8 +1,9 @@
+import { useEffect } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import MantrasPage from "./pages/MantrasPage";
@@ -16,13 +17,50 @@ import TemplesPage from "./pages/TemplesPage";
 import PriestDirectoryPage from "./pages/PriestDirectoryPage";
 import { AuthProvider } from "./hooks/use-auth";
 import LegalPage from "./pages/LegalPage";
-import { LocaleProvider } from "./hooks/use-locale";
+import { LocaleProvider, useLocale } from "./hooks/use-locale";
 import MyDharmaPage from "./pages/MyDharmaPage";
 import CultureIndiaPage from "./pages/CultureIndiaPage";
 import WisdomLivePage from "./pages/WisdomLivePage";
 import VedicAstrologyPage from "./pages/VedicAstrologyPage";
+import type { UiKey } from "./lib/ui-keys";
+import { localizedBrandName } from "./lib/brand";
 
 const queryClient = new QueryClient();
+
+const pageTitleRoutes: readonly [string, UiKey][] = [
+  ["/scriptures/read/", "scriptures"],
+  ["/scriptures", "scriptures"],
+  ["/pdf-reader", "scriptures"],
+  ["/deities", "deities"],
+  ["/temples", "temples"],
+  ["/priests", "priests"],
+  ["/mantras", "mantras"],
+  ["/darshan", "liveDarshan"],
+  ["/my-dharma", "myDharma"],
+  ["/culture", "cultureOfIndia"],
+  ["/wisdom", "pravachanReading"],
+  ["/astrology", "vedicAstrology"],
+  ["/settings", "userSettings"],
+  ["/login", "login"],
+  ["/legal/privacy", "privacyPolicy"],
+  ["/legal/terms", "termsOfUse"],
+  ["/legal/accessibility", "accessibility"],
+];
+
+function LocalizedDocumentTitle() {
+  const { pathname } = useLocation();
+  const { locale, tk } = useLocale();
+  const brandName = localizedBrandName(locale);
+  const pageKey = pageTitleRoutes.find(([path]) =>
+    pathname.startsWith(path),
+  )?.[1];
+
+  useEffect(() => {
+    document.title = pageKey ? `${brandName} · ${tk(pageKey)}` : brandName;
+  }, [brandName, pageKey, tk]);
+
+  return null;
+}
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -31,6 +69,7 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <LocaleProvider>
+          <LocalizedDocumentTitle />
           <AuthProvider>
             <Routes>
               <Route path="/" element={<Index />} />

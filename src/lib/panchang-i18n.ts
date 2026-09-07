@@ -17,6 +17,7 @@ type PanchangData = {
 };
 
 const YOGA_EN = terms.en.yogas;
+const KARANA_EN = terms.en.karanas;
 
 function packFor(locale: AppLocale): PanchangTermPack {
   if (locale === "en") return terms.en;
@@ -28,7 +29,14 @@ export function localizePanchang(locale: AppLocale, data: PanchangData) {
   const yogaIndex =
     data.yoga_index ??
     Math.max(0, YOGA_EN.indexOf(data.yoga));
-  const karanaIndex = data.tithi_index % 7;
+  const normalizedKarana = data.karana.trim().toLowerCase();
+  const namedKaranaIndex = KARANA_EN.findIndex(
+    (name) =>
+      normalizedKarana === name.toLowerCase() ||
+      normalizedKarana.startsWith(`${name.toLowerCase()} `),
+  );
+  const karanaIndex =
+    namedKaranaIndex >= 0 ? namedKaranaIndex : data.tithi_index % 7;
 
   return {
     tithi: pack.tithis[data.tithi_index] ?? data.tithi,

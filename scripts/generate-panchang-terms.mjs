@@ -5,6 +5,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import Sanscript from "@indic-transliteration/sanscript";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.join(__dirname, "..");
@@ -89,10 +90,85 @@ const packs = {
   },
 };
 
-for (const locale of ["bn", "gu", "mr", "ta", "te", "ml", "kn", "pa", "as"]) {
-  packs[locale] = JSON.parse(JSON.stringify(packs.hi));
+const schemes = {
+  bn: "bengali",
+  gu: "gujarati",
+  ta: "tamil",
+  te: "telugu",
+  ml: "malayalam",
+  kn: "kannada",
+  pa: "gurmukhi",
+  as: "bengali",
+};
+
+function nativeTerm(value, scheme) {
+  const transliterated = Sanscript.t(value, "devanagari", scheme);
+  if (scheme !== "gurmukhi") return transliterated;
+
+  // Sanscript leaves these three Devanagari marks behind for Gurmukhi.
+  return transliterated
+    .replaceAll("ृ", "੍ਰਿ")
+    .replaceAll("ष", "ਸ਼")
+    .replaceAll("़", "਼");
 }
+
+function nativePack(pack, scheme) {
+  return {
+    tithis: pack.tithis.map((value) => nativeTerm(value, scheme)),
+    nakshatras: pack.nakshatras.map((value) => nativeTerm(value, scheme)),
+    yogas: pack.yogas.map((value) => nativeTerm(value, scheme)),
+    karanas: pack.karanas.map((value) => nativeTerm(value, scheme)),
+    moonPhases: Object.fromEntries(
+      Object.entries(pack.moonPhases).map(([key, value]) => [key, nativeTerm(value, scheme)]),
+    ),
+    paksha: Object.fromEntries(
+      Object.entries(pack.paksha).map(([key, value]) => [key, nativeTerm(value, scheme)]),
+    ),
+    weekdays: Object.fromEntries(
+      Object.entries(pack.weekdays).map(([key, value]) => [key, nativeTerm(value, scheme)]),
+    ),
+  };
+}
+
+for (const [locale, scheme] of Object.entries(schemes)) {
+  packs[locale] = nativePack(packs.hi, scheme);
+}
+
 packs.mr = JSON.parse(JSON.stringify(packs.hi));
+
+Object.assign(packs.bn.weekdays, {
+  Monday: "সোমবার", Tuesday: "মঙ্গলবার", Wednesday: "বুধবার", Thursday: "বৃহস্পতিবার",
+  Friday: "শুক্রবার", Saturday: "শনিবার", Sunday: "রবিবার",
+});
+Object.assign(packs.gu.weekdays, {
+  Monday: "સોમવાર", Tuesday: "મંગળવાર", Wednesday: "બુધવાર", Thursday: "ગુરુવાર",
+  Friday: "શુક્રવાર", Saturday: "શનિવાર", Sunday: "રવિવાર",
+});
+Object.assign(packs.mr.weekdays, { Tuesday: "मंगळवार" });
+Object.assign(packs.ta.weekdays, {
+  Monday: "திங்கட்கிழமை", Tuesday: "செவ்வாய்க்கிழமை", Wednesday: "புதன்கிழமை", Thursday: "வியாழக்கிழமை",
+  Friday: "வெள்ளிக்கிழமை", Saturday: "சனிக்கிழமை", Sunday: "ஞாயிற்றுக்கிழமை",
+});
+Object.assign(packs.te.weekdays, {
+  Monday: "సోమవారం", Tuesday: "మంగళవారం", Wednesday: "బుధవారం", Thursday: "గురువారం",
+  Friday: "శుక్రవారం", Saturday: "శనివారం", Sunday: "ఆదివారం",
+});
+Object.assign(packs.ml.weekdays, {
+  Monday: "തിങ്കളാഴ്ച", Tuesday: "ചൊവ്വാഴ്ച", Wednesday: "ബുധനാഴ്ച", Thursday: "വ്യാഴാഴ്ച",
+  Friday: "വെള്ളിയാഴ്ച", Saturday: "ശനിയാഴ്ച", Sunday: "ഞായറാഴ്ച",
+});
+Object.assign(packs.kn.weekdays, {
+  Monday: "ಸೋಮವಾರ", Tuesday: "ಮಂಗಳವಾರ", Wednesday: "ಬುಧವಾರ", Thursday: "ಗುರುವಾರ",
+  Friday: "ಶುಕ್ರವಾರ", Saturday: "ಶನಿವಾರ", Sunday: "ಭಾನುವಾರ",
+});
+Object.assign(packs.pa.weekdays, {
+  Monday: "ਸੋਮਵਾਰ", Tuesday: "ਮੰਗਲਵਾਰ", Wednesday: "ਬੁੱਧਵਾਰ", Thursday: "ਵੀਰਵਾਰ",
+  Friday: "ਸ਼ੁੱਕਰਵਾਰ", Saturday: "ਸ਼ਨੀਵਾਰ", Sunday: "ਐਤਵਾਰ",
+});
+Object.assign(packs.as.weekdays, {
+  Monday: "সোমবাৰ", Tuesday: "মঙ্গলবাৰ", Wednesday: "বুধবাৰ", Thursday: "বৃহস্পতিবাৰ",
+  Friday: "শুক্ৰবাৰ", Saturday: "শনিবাৰ", Sunday: "দেওবাৰ",
+});
 
 const out = { en: {
   tithis: tithisEn,

@@ -32,6 +32,14 @@ class BrandIdentityTests(unittest.TestCase):
             self.assertIn("localizedBrandName", source, relative)
             self.assertIn("data-no-regionalize", source, relative)
 
+    def test_browser_title_is_localized_separately_from_page_content(self):
+        app = (ROOT / "src/App.tsx").read_text(encoding="utf-8")
+        regional_ui = (ROOT / "src/lib/regional-ui.ts").read_text(encoding="utf-8")
+
+        self.assertIn("function LocalizedDocumentTitle()", app)
+        self.assertIn("`${brandName} · ${tk(pageKey)}`", app)
+        self.assertIn('"head, script, style', regional_ui)
+
 
 if __name__ == "__main__":
     unittest.main()

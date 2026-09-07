@@ -2,7 +2,7 @@ import type { AppLocale } from "@/hooks/use-locale";
 import { translateUiText } from "@/lib/ui-translations";
 
 const blockedSelector =
-  "script, style, noscript, iframe, svg, code, pre, textarea, [data-no-regionalize], .mantra-text";
+  "head, script, style, noscript, iframe, svg, code, pre, textarea, [data-no-regionalize], .mantra-text";
 const translatedAttributes = ["placeholder", "title", "aria-label", "alt"] as const;
 const translatedAttributeSelector = translatedAttributes
   .map((name) => `[${name}]`)
