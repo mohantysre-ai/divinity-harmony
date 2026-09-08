@@ -103,6 +103,41 @@ class CultureExperienceTests(unittest.TestCase):
             2,
         )
 
+    def test_state_module_copy_has_semantic_translations_in_every_locale(self):
+        source = (ROOT / "src/lib/culture-navigation-translations.ts").read_text(
+            encoding="utf-8"
+        )
+        required = [
+            "Festival calendar",
+            "Festivals connect the year to harvest, devotion and community memory.",
+            "Ritual and community",
+            "These traditions are starting points—not a single rule for every family or district.",
+            "Sacred places reveal how landscape, architecture, story and pilgrimage meet.",
+            "Language and oral memory",
+            "Language carries local names, songs, vows, proverbs and ritual vocabulary.",
+            "Arts and material culture",
+            "Art carries knowledge through bodies, cloth, colour, rhythm and craft.",
+            "Food and hospitality",
+            "Food offers an accessible doorway into season, geography and celebration.",
+        ]
+        for english in required:
+            self.assertEqual(source.count(f'"{english}":'), 11, english)
+
+        odia = source[source.index("  or: {") : source.index("  pa: {")]
+        self.assertNotIn(" କ୍ୟାଲେଣ୍ଡର", odia)
+        self.assertNotIn("|", odia)
+
+    def test_scripture_catalog_localizes_source_and_format_badges(self):
+        catalog = (ROOT / "src/components/VedicHeritageCatalog.tsx").read_text(
+            encoding="utf-8"
+        )
+        labels = (ROOT / "src/lib/catalog-label-translations.ts").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn('lc(entry.source)', catalog)
+        self.assertIn('lc(formatLabel[entry.format])', catalog)
+        self.assertEqual(labels.count('"Sri Aurobindo & The Mother":'), 11)
+
 
 if __name__ == "__main__":
     unittest.main()

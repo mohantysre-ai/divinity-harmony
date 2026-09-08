@@ -54,7 +54,7 @@ export default function VedicHeritageCatalog() {
           <div className="mt-3 flex flex-wrap gap-2">
             <Badge variant="secondary">{vedicHeritageCatalog.length}</Badge>
             {[...new Set(vedicHeritageCatalog.map((entry) => entry.source))].map((source) => (
-              <Badge key={source} variant="secondary" data-no-regionalize>{source}</Badge>
+              <Badge key={source} variant="secondary">{source === "IGNCA" ? source : lc(source)}</Badge>
             ))}
             <Badge variant="secondary"><BookMarked className="h-3.5 w-3.5" aria-hidden /></Badge>
           </div>
@@ -100,12 +100,12 @@ export default function VedicHeritageCatalog() {
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex flex-wrap gap-1.5">
                       <Badge variant="outline" className="bg-background/80">{entry.category === "Gitas" ? tk("categoryGitas") : lc(entry.category)}</Badge>
-                      <Badge variant="secondary" className="max-w-52 truncate" data-no-regionalize>{entry.source}</Badge>
+                      <Badge variant="secondary" className="max-w-52 truncate">{entry.source === "IGNCA" ? entry.source : lc(entry.source)}</Badge>
                     </div>
                     {entry.format === "flipbook" ? <BookMarked className="h-5 w-5 shrink-0 text-hindu-red" /> : entry.format === "pdf" ? <FileText className="h-5 w-5 shrink-0 text-hindu-red" /> : entry.format === "text-audio" ? <Headphones className="h-5 w-5 shrink-0 text-hindu-red" /> : <ExternalLink className="h-4 w-4 shrink-0 text-muted-foreground" />}
                   </div>
                   <h3 className="mt-4 text-base font-bold leading-snug">{lc(entry.title)}</h3>
-                  <p className="mt-3 text-[11px] font-bold tracking-[.14em] text-muted-foreground" data-no-regionalize>{formatLabel[entry.format]}</p>
+                  <p className="mt-3 text-[11px] font-bold tracking-[.14em] text-muted-foreground">{entry.format === "pdf" ? "PDF" : lc(formatLabel[entry.format])}</p>
                 </>
               );
               const className = "group min-h-32 rounded-2xl border bg-card p-5 text-left shadow-sm transition duration-300 hover:-translate-y-1 hover:border-hindu-gold/60 hover:shadow-lg animate-fade-in";

@@ -18,15 +18,17 @@ export type LiveDarshanFeed = {
   updatedAt?: string | null;
   stale?: boolean;
   source?: string;
+  locale?: string;
+  localized?: boolean;
 };
 
 // The production container serves this endpoint itself. Visitors never need a
 // YouTube API key and the browser never tries to scrape youtube.com directly.
 const FEED_URL = import.meta.env.VITE_LIVE_DARSHAN_FEED_URL || '/api/live-darshan';
 
-export async function getLiveDarshans(signal?: AbortSignal): Promise<LiveDarshanFeed> {
+export async function getLiveDarshans(locale = 'en', signal?: AbortSignal): Promise<LiveDarshanFeed> {
   const separator = FEED_URL.includes('?') ? '&' : '?';
-  const response = await fetch(`${FEED_URL}${separator}t=${Date.now()}`, {
+  const response = await fetch(`${FEED_URL}${separator}lang=${encodeURIComponent(locale)}&t=${Date.now()}`, {
     signal,
     cache: 'no-store',
   });
@@ -46,5 +48,7 @@ export async function getLiveDarshans(signal?: AbortSignal): Promise<LiveDarshan
     updatedAt: data.updatedAt,
     stale: Boolean(data.stale),
     source: data.source,
+    locale: data.locale,
+    localized: data.localized,
   };
 }

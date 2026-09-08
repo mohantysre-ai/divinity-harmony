@@ -19,23 +19,21 @@ const LiveDarshan = () => {
   const refresh = useCallback(async () => {
     setLoading(true);
     try {
-      const feed = await getLiveDarshans();
+      const feed = await getLiveDarshans(locale);
       const live = feed.items;
       setDarshans(live);
       setSelected((current) => live.find((item) => item.videoId === current?.videoId) || live[0] || null);
       if (live.length) {
-        setMessage(
-          `${live.length} stream${live.length === 1 ? '' : 's'} currently marked LIVE across connected sources${feed.stale ? ' (last successful search)' : ''}.`,
-        );
+        setMessage(tk('liveNowCountTemplate', { count: String(live.length) }));
       } else {
-        setMessage('Connected sources currently report no matching live temple stream. This page will search again automatically.');
+        setMessage(tk('searchingLiveSources'));
       }
     } catch (error) {
-      setMessage(error instanceof Error ? error.message : 'Unable to search live streams right now.');
+      setMessage(locale === 'en' && error instanceof Error ? error.message : tk('searchingLiveSources'));
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [locale, tk]);
 
   useEffect(() => {
     void refresh();
@@ -80,16 +78,13 @@ const LiveDarshan = () => {
                   />
                 </div>
                 <div className="p-6">
-                  <h2 className="text-2xl font-bold">{selected.title}</h2>
+                  <h2 className="text-2xl font-bold" data-no-regionalize>{selected.title}</h2>
                   <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-muted-foreground">
-                    <span>{selected.channelTitle}</span>
-                    {selected.watchingNow && <span>{selected.watchingNow}</span>}
+                    <span data-no-regionalize>{selected.channelTitle}</span>
+                    {selected.watchingNow && <span data-no-regionalize>{selected.watchingNow}</span>}
                   </div>
-                  {selected.description && <p className="mt-3 line-clamp-3 text-sm text-muted-foreground">{selected.description}</p>}
-                  <p className="mt-3 text-xs text-muted-foreground">
-                    This stream was marked LIVE by {selected.source === 'live-darshan-hub' ? 'LiveDarshanHub' : 'YouTube'} at the last refresh.
-                    {' '}Use judgement before donations or transactions.
-                  </p>
+                  {selected.description && <p className="mt-3 line-clamp-3 text-sm text-muted-foreground" data-no-regionalize>{selected.description}</p>}
+                  <p className="mt-3 text-xs text-muted-foreground">{tk('streamLiveNotice')}</p>
                 </div>
               </section>
 
@@ -115,12 +110,12 @@ const LiveDarshan = () => {
                         )}
                         <div className="min-w-0">
                           <p className="flex items-center gap-1 text-xs font-bold text-red-600">
-                            <Radio className="h-3 w-3" /> LIVE
+                            <Radio className="h-3 w-3" /> {tk('liveNow')}
                           </p>
-                          <h3 className="mt-1 line-clamp-2 text-sm font-medium">{item.title}</h3>
-                          <p className="mt-1 line-clamp-1 text-xs text-muted-foreground">{item.channelTitle}</p>
+                          <h3 className="mt-1 line-clamp-2 text-sm font-medium" data-no-regionalize>{item.title}</h3>
+                          <p className="mt-1 line-clamp-1 text-xs text-muted-foreground" data-no-regionalize>{item.channelTitle}</p>
                           {item.watchingNow && (
-                            <p className="line-clamp-1 text-xs text-muted-foreground">{item.watchingNow}</p>
+                            <p className="line-clamp-1 text-xs text-muted-foreground" data-no-regionalize>{item.watchingNow}</p>
                           )}
                         </div>
                       </CardContent>
@@ -132,7 +127,7 @@ const LiveDarshan = () => {
           ) : (
             <div className="mx-auto max-w-xl rounded-xl border border-dashed bg-card p-8 text-center">
               <Youtube className="mx-auto mb-3 h-8 w-8 text-red-600" />
-              <h2 className="font-semibold">{loading ? 'Searching current live streams...' : 'No live result available'}</h2>
+              <h2 className="font-semibold">{tk('searchingLiveSources')}</h2>
               <p className="mt-2 text-sm text-muted-foreground">{message}</p>
             </div>
           )}

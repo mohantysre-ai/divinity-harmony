@@ -5,6 +5,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import ts from "typescript";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(__dirname, "..");
@@ -42,6 +43,46 @@ const cultureDeepDivePacks = JSON.parse(
 const reviewedCultureExperienceCopy = JSON.parse(
   fs.readFileSync(path.join(root, "scripts/packs/culture-experience-reviewed.json"), "utf8"),
 );
+
+function readCultureNavigationTranslations() {
+  const file = path.join(root, "src/lib/culture-navigation-translations.ts");
+  const sourceText = fs.readFileSync(file, "utf8");
+  const sourceFile = ts.createSourceFile(file, sourceText, ts.ScriptTarget.Latest, true, ts.ScriptKind.TS);
+  const result = {};
+  const propertyName = (node) =>
+    ts.isStringLiteralLike(node)
+      ? node.text
+      : node.getText(sourceFile).replace(/["']/g, "");
+  const visit = (node) => {
+    if (
+      ts.isVariableDeclaration(node) &&
+      node.name.getText(sourceFile) === "cultureNavigationTranslations"
+    ) {
+      const initializer = node.initializer;
+      if (!initializer || !ts.isObjectLiteralExpression(initializer)) return;
+      for (const localeProperty of initializer.properties) {
+        if (
+          !ts.isPropertyAssignment(localeProperty) ||
+          !ts.isObjectLiteralExpression(localeProperty.initializer)
+        ) continue;
+        const locale = propertyName(localeProperty.name);
+        result[locale] = {};
+        for (const translation of localeProperty.initializer.properties) {
+          if (
+            !ts.isPropertyAssignment(translation) ||
+            !ts.isStringLiteralLike(translation.initializer)
+          ) continue;
+          result[locale][propertyName(translation.name)] = translation.initializer.text;
+        }
+      }
+    }
+    ts.forEachChild(node, visit);
+  };
+  visit(sourceFile);
+  return result;
+}
+
+const cultureNavigationTranslations = readCultureNavigationTranslations();
 const uiKeys = JSON.parse(
   fs.readFileSync(path.join(root, "src/lib/ui-keys-export.json"), "utf8"),
 );
@@ -111,6 +152,7 @@ for (const [section, phrases] of Object.entries(sections)) {
     let valid = 0;
     for (const english of phrases) {
       const translated =
+        (section === "culture" ? cultureNavigationTranslations[locale]?.[english] : undefined) ??
         reviewedCultureExperienceCopy[locale]?.[english] ??
         (section === "temples" && locale === "or"
           ? reviewedOdiaTempleCopy[english]

@@ -5,6 +5,8 @@ import contentReleaseSupplementPacks from "@/lib/content-release-supplement-pack
 import virtualPujaTranslationPacks from "@/lib/virtual-puja-translation-packs.json";
 import cultureExperiencePacks from "@/lib/culture-experience-packs.json";
 import cultureDeepDivePacks from "@/lib/culture-deep-dive-packs.json";
+import { cultureNavigationTranslations } from "@/lib/culture-navigation-translations";
+import { catalogLabelTranslations } from "@/lib/catalog-label-translations";
 import reviewedCultureExperienceCopy from "../../scripts/packs/culture-experience-reviewed.json";
 import reviewedOdiaTempleCopy from "../../scripts/packs/odia-temples-reviewed.json";
 import reviewedOdiaVirtualPujaCopy from "../../scripts/packs/odia-virtual-puja-reviewed.json";
@@ -50,6 +52,8 @@ const packs = Object.fromEntries(
       ...virtualPujaTranslations[locale as ContentLocale],
       ...cultureExperienceTranslations[locale as ContentLocale],
       ...cultureDeepDiveTranslations[locale as ContentLocale],
+      ...cultureNavigationTranslations[locale as ContentLocale],
+      ...catalogLabelTranslations[locale as ContentLocale],
       ...reviewedCultureExperience[locale as ContentLocale],
       ...reviewedTemples[locale as ContentLocale],
       ...(locale === "or" ? reviewedOdiaTempleCopy : {}),

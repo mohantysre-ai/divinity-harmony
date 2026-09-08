@@ -31,6 +31,7 @@ from panchang import daily_panchang, birth_chart as approx_birth_chart
 from region import geocode_place, regional_preference
 from temple_search import nearby_temples, search_temples
 from culture_context import culture_context
+from translation import SUPPORTED_LOCALES, localize_live_items
 
 try:
     from vedic_chart import EPHEMERIS_AVAILABLE, birth_chart
@@ -612,7 +613,17 @@ class Handler(BaseHTTPRequestHandler):
             self._json(404, {"error": "Not found"})
             return
         try:
-            self._json(200, CACHE.get())
+            payload = CACHE.get()
+            language = query.get("lang", ["en"])[0].strip().lower()
+            if language in SUPPORTED_LOCALES:
+                try:
+                    items, localized = localize_live_items(payload["items"], language)
+                    payload = {**payload, "items": items, "locale": language, "localized": localized}
+                except Exception:
+                    # Live darshan must remain usable during a temporary
+                    # translation-provider failure.
+                    payload = {**payload, "locale": language, "localized": False}
+            self._json(200, payload)
         except RuntimeError:
             self._json(
                 503,
