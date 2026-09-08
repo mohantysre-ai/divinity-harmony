@@ -42,6 +42,13 @@ const reviewedCultureExperience = reviewedCultureExperienceCopy as Record<
 const reviewedTemples = reviewedTempleCopy as Partial<
   Record<ContentLocale, Record<string, string>>
 >;
+const reviewedContentCorrections: Partial<
+  Record<ContentLocale, Record<string, string>>
+> = {
+  // Keep this Gurmukhi-only. The generated pack previously contained a
+  // Devanagari vowel sign in the Punjabi translation.
+  pa: { pitru: "ਪਿਤਰ" },
+};
 const packs = Object.fromEntries(
   Object.keys(basePacks).map((locale) => [
     locale,
@@ -54,6 +61,7 @@ const packs = Object.fromEntries(
       ...cultureDeepDiveTranslations[locale as ContentLocale],
       ...cultureNavigationTranslations[locale as ContentLocale],
       ...catalogLabelTranslations[locale as ContentLocale],
+      ...reviewedContentCorrections[locale as ContentLocale],
       ...reviewedCultureExperience[locale as ContentLocale],
       ...reviewedTemples[locale as ContentLocale],
       ...(locale === "or" ? reviewedOdiaTempleCopy : {}),
